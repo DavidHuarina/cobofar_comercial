@@ -7,11 +7,11 @@ $indice = $_GET["indice"];
 
 //
 $nroMetros=0;
-require("conexion.inc");
+require("conexionmysqli.inc");
 $cadRespuesta="";
 $consulta="select item_metraje, nro_metros from material_apoyo WHERE codigo_material='$codMaterial'";
-$rs=mysql_query($consulta);
-$registro=mysql_fetch_array($rs);
+$rs=mysqli_query($enlaceCon,$consulta);
+$registro=mysqli_fetch_array($rs);
 $cadRespuesta=$registro[0];
 $nroMetros=$registro[1];
 if($cadRespuesta=="")

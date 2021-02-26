@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Busqueda</title>
+        <link rel="icon" type="image/png" href="imagenes/icon_farma.png" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
@@ -595,17 +596,18 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
 <table class='' width='100%' style='width:100%'>
 <tr align='center' class="text-white header">
-	<th colspan="8"><img src="imagenes/farmacias_bolivia_loop.gif" height="30px"></img></th>
+	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
 </tr>
 <tr align='center' class="text-white header">
-	<th colspan="8"><label class="text-muted">Registrar Venta</label></th>
+	<th colspan="9"><label class="text-white">Registrar Venta</label></th>
 </tr>
-<tr class="bg-info text-white" align='center' style='background:rgb(20,150,123) !important;'>
+<tr class="bg-info text-white" align='center' style='background:#16B490 !important;'>
 <th>Tipo de Documento</th>
 <th>Nro.Factura</th>
 <th>Fecha</th>
 <th>Cliente</th>
 <th>Precio</th>
+<th>Tipo Pago</th>
 <th>NIT</th>
 <th>Nombre/RazonSocial</th>
 <th>Observaciones</th>
@@ -695,7 +697,22 @@ while($dat2=mysqli_fetch_array($resp2)){
 	</div>
 </td>
 
+<td>
+	<div id='divTipoVenta'>
+		<?php
+			$sql1="select cod_tipopago, nombre_tipopago from tipos_pago order by 1";
+			$resp1=mysqli_query($enlaceCon,$sql1);
+			echo "<select name='tipoVenta' class='selectpicker show-menu-arrow form-control-sm' id='tipoVenta' data-style='btn-info'>";
+			while($dat=mysqli_fetch_array($resp1)){
+				$codigo=$dat[0];
+				$nombre=$dat[1];
+				echo "<option value='$codigo'>$nombre</option>";
+			}
+			echo "</select>";
+			?>
 
+	</div>
+</td>
 
 
 <?php
@@ -721,9 +738,9 @@ if($tipoDocDefault==2){
 		</div>
 	</td>
 
-	<th align='center'>
+	<td align='center'>
 		<input type='text' class="form-control" name='observaciones' value='' size='40' rows="3">
-	</th>
+	</td>
 </tr>
 
 </table>
@@ -741,7 +758,7 @@ if($tipoDocDefault==2){
 		</td>
 	</tr>
 
-	<tr align="center" class="bg-info text-white" style='background:rgb(20,150,123) !important;'>
+	<tr align="center" class="bg-info text-white" style='background:#16B490 !important;'>
 		<td width="5%">&nbsp;</td>
 		<td width="35%">Material</td>
 		<td width="10%">Stock</td>

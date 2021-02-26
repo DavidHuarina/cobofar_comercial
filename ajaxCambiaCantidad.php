@@ -1,5 +1,5 @@
 <?php
-require('conexion.inc');
+require('conexionmysqli.inc');
 $codigo=$_GET['parrilla'];
 $id=$_GET['id'];
 $cantidad=$_GET['cantidad'];

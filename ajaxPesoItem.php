@@ -4,12 +4,12 @@ require("funciones.php");
 
 $codMaterial = $_GET["codmat"];
 //
-require("conexion.inc");
+require("conexionmysqli.inc");
 $cadRespuesta="";
 $consulta="
     select peso from material_apoyo where codigo_material='$codMaterial'";
-$rs=mysql_query($consulta);
-$registro=mysql_fetch_array($rs);
+$rs=mysqli_query($enlaceCon,$consulta);
+$registro=mysqli_fetch_array($rs);
 $cadRespuesta=$registro[0];
 if($cadRespuesta=="")
 {   $cadRespuesta=0;
