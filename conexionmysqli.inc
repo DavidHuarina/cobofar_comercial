@@ -9,7 +9,6 @@ if(!function_exists('register_globals')){
 }
 
 $enlaceCon=mysqli_connect("10.10.1.76","davidh","123456","farmacias1");
-
 if (mysqli_connect_errno())
 {
 	echo "Error en la conexión: " . mysqli_connect_error();

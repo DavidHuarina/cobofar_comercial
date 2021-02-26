@@ -6,7 +6,7 @@ if(!function_exists('register_globals')){
 	register_globals();
 }else{
 }
-$conexion=mysql_connect("127.0.0.1:8888","root","");
+$conexion=mysql_connect("10.10.1.221:8888","root","");
 $bd=mysql_select_db("farmacias");
 
 $sqlX="SET NAMES 'utf8'";
