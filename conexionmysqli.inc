@@ -1,0 +1,27 @@
+<?php
+//header('Content-Type: text/html; charset=UTF-8'); 
+date_default_timezone_set('America/La_Paz');
+
+if(!function_exists('register_globals')){
+	include('register_globals.php');
+	register_globals();
+}else{
+}
+
+$enlaceCon=mysqli_connect("localhost","root","","farmacias");
+
+if (mysqli_connect_errno())
+{
+	echo "Error en la conexión: " . mysqli_connect_error();
+}
+mysqli_set_charset($enlaceCon,"utf8");
+
+
+if (!function_exists('mysqli_result')) {
+    function mysqli_result($result, $number, $field=0) {
+        mysqli_data_seek($result, $number);
+        $row = mysqli_fetch_array($result);
+        return $row[$field];
+    }
+}
+?>
