@@ -66,17 +66,26 @@ echo "<script language='Javascript'>
 		</script>";
 	require("conexionmysqli.inc");
 	require("estilos_almacenes.inc");
-
+  ?>
+        <link rel="stylesheet" type="text/css" href="dist/bootstrap/bootstrap.css"/>
+        <link rel="stylesheet" type="text/css" href="dist/bootstrap/dataTables.bootstrap4.min.css"/>
+        <script type="text/javascript" src="dist/bootstrap/jquery-3.5.1.js"></script>
+        <script type="text/javascript" src="dist/bootstrap/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="dist/bootstrap/dataTables.bootstrap4.min.js"></script>
+        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
+        <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
+        <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
+	<?php
 	echo "<form method='post' action=''>";
 	$sql="select a.cod_almacen, c.descripcion, a.nombre_almacen, f.paterno, f.materno, f.nombres
 	from almacenes a, funcionarios f, ciudades c where
 	c.cod_ciudad=a.cod_ciudad and f.codigo_funcionario=a.responsable_almacen
 	order by c.descripcion, a.nombre_almacen";
 	$resp=mysqli_query($enlaceCon,$sql);
-	echo "<h1>Registro de Almacenes</h1>";
+	echo "<h3 class='text-muted'><center>Registro de Almacenes</center></h3>";
 
-	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Sucursal</th><th>Nombre Almacen</th><th>Responsable</th></tr>";
+	echo "<center><table class='table table-bordered' id='tablaPrincipal'><thead>";
+	echo "<tr class='bg-principal'><th>&nbsp;</th><th>Sucursal</th><th>Nombre Almacen</th><th>Responsable</th></tr></thead><tbody>";
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
@@ -85,7 +94,7 @@ echo "<script language='Javascript'>
 		$nombre_responsable="$dat[3] $dat[4] $dat[5]";
 		echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_responsable</td></tr>";
 	}
-	echo "</table></center><br>";
+	echo "</tbody></table></center><br>";
 	
 	echo "<div class='divBotones'>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
@@ -94,3 +103,5 @@ echo "<script language='Javascript'>
 	</div>";
 	echo "</form>";
 ?>
+<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>
+ <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>

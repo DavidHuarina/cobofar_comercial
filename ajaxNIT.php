@@ -1,12 +1,12 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.inc");
 $codCliente=$_GET['codCliente'];
 
 $sql="select c.`nit_cliente` from `clientes` c where c.`cod_cliente`='$codCliente'";
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 $nombre="";
-while($dat=mysql_fetch_array($resp)){
+while($dat=mysqli_fetch_array($resp)){
 	$nombre=$dat[0];
 }
 

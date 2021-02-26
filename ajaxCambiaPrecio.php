@@ -1,5 +1,5 @@
 <?php
-require('conexion.inc');
+require('conexionmysqli.inc');
 $codigo=$_GET['codigo'];
 $id=$_GET['id'];
 $precio=$_GET['precio'];

@@ -1,6 +1,6 @@
 
 <?php
-require("../../conexion.inc");
+require("../../conexionmysqli.inc");
 require("../../funciones.php");
 
 $codigo=$_GET["codigo"];
@@ -9,12 +9,12 @@ $codigo=$_GET["codigo"];
 //
 $sqlFecha="select DAY(i.fecha), MONTH(i.fecha), YEAR(i.fecha), HOUR(i.hora_ingreso), MINUTE(i.hora_ingreso) 
 from ingreso_almacenes i where i.cod_ingreso_almacen=$codigo";
-$respFecha=mysql_query($sqlFecha);
-$dia=mysql_result($respFecha,0,0);
-$mes=mysql_result($respFecha,0,1);
-$ano=mysql_result($respFecha,0,2);
-$hh=mysql_result($respFecha,0,3);
-$mm=mysql_result($respFecha,0,4);
+$respFecha=mysqli_query($enlaceCon,$sqlFecha);
+$dia=mysqli_result($respFecha,0,0);
+$mes=mysqli_result($respFecha,0,1);
+$ano=mysqli_result($respFecha,0,2);
+$hh=mysqli_result($respFecha,0,3);
+$mm=mysqli_result($respFecha,0,4);
 
 
 //generamos el codigo de confirmacion

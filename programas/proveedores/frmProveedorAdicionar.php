@@ -1,6 +1,6 @@
 <?php
 
-require("../../conexion.inc");
+require("../../conexionmysqli.inc");
 require("../../estilos_almacenes.inc");
 
 $codProv   = "";

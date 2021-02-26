@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=UTF-8'); 
 require('fpdf.php');
 require('conexionmysqli.inc');
 require('funciones.php');
