@@ -1,14 +1,14 @@
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.inc");
 require("estilos.inc");
 
 $codigo_registro=$_GET["codigo_registro"];
 
 $sql="select txt1, txt2, txt3, alineado_izq, alineado_arriba, cantidad from etiquetas where id='$codigo_registro'";
 //echo $sql;
-$resp=mysql_query($sql);
-$dat=mysql_fetch_array($resp);
+$resp=mysqli_query($enlaceCon,$sql);
+$dat=mysqli_fetch_array($resp);
 $txt1=$dat[0];
 $txt2=$dat[1];
 $txt3=$dat[2];

@@ -1,6 +1,6 @@
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $codigo_ingreso=$_POST['codigoIngreso'];
@@ -12,7 +12,7 @@ $cantidad_items=$_POST['numeroItems'];
 $consulta="update ingreso_almacenes set factura_proveedor='$factura', nro_factura_proveedor='$nro_factura', estado_liquidacion=1
 	where cod_ingreso_almacen='$codigo_ingreso'";
 
-$sql_inserta = mysql_query($consulta);
+$sql_inserta = mysqli_query($enlaceCon,$consulta);
 
 
 for ($i = 1; $i <= $cantidad_items-1; $i++) {
@@ -25,7 +25,7 @@ for ($i = 1; $i <= $cantidad_items-1; $i++) {
     
 	//echo "bbb:$consulta";
     
-	$sql_inserta2 = mysql_query($consulta);
+	$sql_inserta2 = mysqli_query($enlaceCon,$consulta);
 }
 echo "<script language='Javascript'>
     alert('Los datos fueron guardados correctamente.');

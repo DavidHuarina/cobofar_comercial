@@ -4,8 +4,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../lib/css/paneles.css"/>
         <link rel="stylesheet" type="text/css" href="../../stilos.css"/>
-        <script type="text/javascript" src="../../lib/externos/jquery/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="../../lib/js/xlibPrototipo-v0.1.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../dist/bootstrap/bootstrap.css"/>
+        <link rel="stylesheet" type="text/css" href="../../dist/bootstrap/dataTables.bootstrap4.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../../dist/css/micss.css"/>
+
+        <script type="text/javascript" src="../../dist/bootstrap/jquery-3.5.1.js"></script>
+        <script type="text/javascript" src="../../dist/bootstrap/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="../../dist/bootstrap/dataTables.bootstrap4.min.js"></script>
+        <script type="text/javascript" src="../../lib/js/xlibPrototipo-v0.1.js"></script>       
         <script type='text/javascript' language='javascript'>
 /*proceso inicial*/
 $(document).ready(function() {
@@ -27,8 +33,10 @@ function frmModificar() {
     for(var i=1;i<=total;i++) {
         tag=$("#idchk"+i);
         sel=tag.attr("checked");
+        alert(sel)
         if(sel==true) {
-            cod=tag.val(); c++;
+            cod=tag.val(); 
+            c++;        
         }
     }
     if(c==1) {
@@ -59,13 +67,15 @@ function frmEliminar() {
 }
 function adicionarCliente() {
     var nomcli = $("#nomcli").val();
+    var apcli = $("#apcli").val();
     var nit = $("#nit").val();
     var dir = $("#dir").val();
     var tel1 = $("#tel1").val();
     var mail = $("#mail").val();
     var area = $("#area").val();
     var fact = $("#fact").val();
-    var parms="nomcli="+nomcli+"&nit="+nit+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"";
+    var edad = $("#edad").val();
+    var parms="nomcli="+nomcli+"&nit="+nit+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"&edad="+edad+"&apcli="+apcli+"";
     cargarPnl("#pnl00","prgClienteAdicionar.php",parms);
 }
 function modificarCliente() {

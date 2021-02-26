@@ -1,5 +1,5 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.inc");
 
 //mysql_query("insert into ciudades values (10, 'AV. COCHABAMBA',1);");
 //mysql_query("insert into almacenes values (1010, 10, 'TIENDA AV. CBBA.',1025)");

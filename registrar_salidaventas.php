@@ -606,7 +606,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <th>Nro.Factura</th>
 <th>Fecha</th>
 <th>Cliente</th>
-<th>Precio</th>
+<!--<th>Precio</th>-->
 <th>Tipo Pago</th>
 <th>NIT</th>
 <th>Nombre/RazonSocial</th>
@@ -679,13 +679,18 @@ while($dat2=mysqli_fetch_array($resp2)){
 }
 ?>
 	</select>
+	<input type="hidden" name="tipoPrecio" value="1">
 </td>
-<td>
-	<div id='divTipoPrecio'>
-		<?php
+<!--<td>
+	<div id='divTipoPrecio' >
+		
+
+	</div>
+</td>-->
+<?php
 			$sql1="select codigo, nombre from tipos_precio order by 1";
 			$resp1=mysqli_query($enlaceCon,$sql1);
-			echo "<select name='tipoPrecio' class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' id='tipoPrecio'>";
+			echo "<select name='tipoPrecio' class='selectpicker show-menu-arrow form-control-sm d-none' data-style='btn-info' id='tipoPrecio'>";
 			while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
@@ -693,10 +698,6 @@ while($dat2=mysqli_fetch_array($resp2)){
 			}
 			echo "</select>";
 			?>
-
-	</div>
-</td>
-
 <td>
 	<div id='divTipoVenta'>
 		<?php
@@ -821,9 +822,27 @@ if($tipoDocDefault==2){
 	<table class="pie-montos">
       <tr>
         <td>
-	<table id='' width='100%' border="0">
-		<tr>
+	      <table id='' width='100%' border="0">
+	      	<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
+		</tr>
+         
+		<tr>
+			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
+		</tr>
+	</table>
+      
+        </td>
+        <td>
+        	<table id='' width='100%' border="0">
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">-</b></td>
 		</tr>
 
 		<tr>
@@ -837,23 +856,7 @@ if($tipoDocDefault==2){
 		</tr>
 
 	</table>
-      
-        </td>
-        <td>
-        	<table id='' width='100%' border="0">
-         <tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">-</b></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
-		</tr>
-	</table>
+       
 	<table id='' width='100%' border="0" style="display:none">
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#189B22;">$ USD</b></td>

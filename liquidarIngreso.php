@@ -45,7 +45,7 @@ function validar(f, numItems)
 </script>
 
 <?php
-	require("conexion.inc");
+	require("conexionmysqli.inc");
 	require('estilos_almacenes_central_sincab.php');
 	require("funciones.php");
 	$codigo_ingreso=$_GET['codigo_registro'];
@@ -55,7 +55,7 @@ function validar(f, numItems)
 	$sql="select i.cod_ingreso_almacen, i.fecha, ti.nombre_tipoingreso, i.observaciones, i.nro_correlativo 
 	FROM ingreso_almacenes i, tipos_ingreso ti
 	where i.cod_tipoingreso=ti.cod_tipoingreso and i.cod_almacen='$global_almacen' and i.cod_ingreso_almacen='$codigo_ingreso'";
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	
 	echo "<input type='hidden' name='codigoIngreso' value='$codigo_ingreso'>";
 	
@@ -63,7 +63,7 @@ function validar(f, numItems)
 	
 	echo "<table class='texto' align='center'>";
 	echo "<tr><th>Nro. Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Observaciones</th></tr>";
-	$dat=mysql_fetch_array($resp);
+	$dat=mysqli_fetch_array($resp);
 	$codigo=$dat[0];
 	$fecha_ingreso=$dat[1];
 	$fecha_ingreso_mostrar="$fecha_ingreso[8]$fecha_ingreso[9]-$fecha_ingreso[5]$fecha_ingreso[6]-$fecha_ingreso[0]$fecha_ingreso[1]$fecha_ingreso[2]$fecha_ingreso[3]";
@@ -94,17 +94,17 @@ function validar(f, numItems)
 	
 	$sql_detalle="select i.cod_material, i.cantidad_unitaria from ingreso_detalle_almacenes i, material_apoyo m
 	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material";
-	$resp_detalle=mysql_query($sql_detalle);
+	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 	echo "<br><table class='texto' align='center'>";
 	echo "<tr><th>&nbsp;</th><th>Material</th><th>Cantidad</th><th>Precio Bruto</th><th>Precio Neto</th></tr>";
 	$indice=1;
-	while($dat_detalle=mysql_fetch_array($resp_detalle))
+	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$cantidad_unitaria=$dat_detalle[1];
 		$cantidad_unitaria=redondear2($cantidad_unitaria);
 		$sql_nombre_material="select descripcion_material from material_apoyo where codigo_material='$cod_material'";
-		$resp_nombre_material=mysql_query($sql_nombre_material);
-		$dat_nombre_material=mysql_fetch_array($resp_nombre_material);
+		$resp_nombre_material=mysqli_query($enlaceCon,$sql_nombre_material);
+		$dat_nombre_material=mysqli_fetch_array($resp_nombre_material);
 		$nombre_material=$dat_nombre_material[0];
 		echo "<tr>
 		<td align='center'>$indice</td>
