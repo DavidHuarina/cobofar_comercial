@@ -7,6 +7,7 @@ require("../../estilos_almacenes.inc");
 $codCliente = "";
 $nomCliente = "";
 $apCliente = "";
+$ciCliente = "";
 $nitCliente = "";
 $dirCliente = "";
 $telefono1  = "";
@@ -61,7 +62,8 @@ while($reg1=mysqli_fetch_array($rs1))
     <table class="texto">
         <tr>
             <th>Nombre</th>
-            <th>Paterno</th>
+            <th>Apellidos</th>
+            <th>CI</th>
             <th>NIT</th>
             <th>Direccion</th>
             <th>Telefono</th>
@@ -69,6 +71,7 @@ while($reg1=mysqli_fetch_array($rs1))
         <tr>
             <td><span id="id" style="display:none"><?php echo "$codCliente"; ?></span><input type="text" class="form-control "id="nomcli" value="<?php echo "$nomCliente"; ?>"/></td>
             <td><input type="text" autocomplete="off" class="form-control "id="apcli" value="<?php echo "$apCliente"; ?>"/></td>
+            <td><input type="text" class="form-control "id="ci" value="<?php echo "$ciCliente"; ?>"/></td>
             <td><input type="text" class="form-control "id="nit" value="<?php echo "$nitCliente"; ?>"/></td>
             <td><input type="text" class="form-control "id="dir" value="<?php echo "$dirCliente"; ?>"/></td>
             <td><input type="text" class="form-control "id="tel1" value="<?php echo "$telefono1"; ?>"/></td>

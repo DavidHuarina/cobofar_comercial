@@ -154,11 +154,28 @@ function ajaxRazonSocial(f){
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
 			document.getElementById('razonSocial').focus();
+			ajaxClienteBuscar();
 		}
 	}
 	ajax.send(null);
 }
 
+function ajaxClienteBuscar(f){
+	var contenedor;
+	contenedor=document.getElementById("divCliente");
+	var nitCliente=document.getElementById("nitCliente").value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "ajaxClientes.php?nitCliente="+nitCliente,true);
+	ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			var datos_resp=ajax.responseText.split("####");
+			//alert(datos_resp[1])
+			$("#cliente").val(datos_resp[1]);
+			$("#cliente").selectpicker('refresh');
+		}
+	}
+	ajax.send(null);
+}
 
 function calculaMontoMaterial(indice){
 
@@ -473,13 +490,18 @@ function validar(f, ventaDebajoCosto){
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
 	if(cantidadItems>0){
-		
-		var item="";
-		var cantidad="";
-		var stock="";
-		var descuento="";
-						
-		for(var i=1; i<=cantidadItems; i++){
+		var validacionClientes=0;
+		if($("#validacion_clientes").val()!=0){
+          if($("#clientes").val()==146||$("#clientes").val()==""){  //146 clientes varios
+            validacionClientes=1;
+          }
+		}	
+		if(validacionClientes==0){
+          var item="";
+		  var cantidad="";
+		  var stock="";
+		  var descuento="";					
+		 for(var i=1; i<=cantidadItems; i++){
 			console.log("valor i: "+i);
 			console.log("objeto materiales: "+document.getElementById("materiales"+i));
 			if(document.getElementById("materiales"+i)!=null){
@@ -519,7 +541,11 @@ function validar(f, ventaDebajoCosto){
 					return(false);
 				}
 			}
-		}
+		  }
+		}else{
+		  alert("Debe registrar el Cliente.");
+		  return(false);
+		}		
 	}else{
 		alert("El ingreso debe tener al menos 1 item.");
 		return(false);
@@ -594,6 +620,7 @@ $respConf=mysqli_query($enlaceCon,$sqlConf);
 $ventaDebajoCosto=mysqli_result($respConf,0,0);
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
+	<input type="hidden" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
 <tr align='center' class="text-white header">
 	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
@@ -605,12 +632,12 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <th>Tipo de Documento</th>
 <th>Nro.Factura</th>
 <th>Fecha</th>
-<th>Cliente</th>
 <!--<th>Precio</th>-->
 <th>Tipo Pago</th>
 <th>NIT</th>
 <th>Nombre/RazonSocial</th>
 <th>Observaciones</th>
+<th>Cliente</th>
 </tr>
 <tr>
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
@@ -656,31 +683,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 	<input type='text' class='form-control' value='<?php echo $fecha?>' id='fecha' size='10' name='fecha' readonly>	
 </td>
 
-<td align='center'>
-	<select name='cliente' class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' id='cliente' onChange='ajaxTipoPrecio(form1);' required>
-		<option value=''>----</option>
-<?php
-$sql2="select c.`cod_cliente`, c.`nombre_cliente` from clientes c order by 2";
-$resp2=mysqli_query($enlaceCon,$sql2);
 
-while($dat2=mysqli_fetch_array($resp2)){
-   $codCliente=$dat2[0];
-	$nombreCliente=$dat2[1];
-	if($codCliente==$clienteDefault){
-?>		
-	<option value='<?php echo $codCliente?>' selected><?php echo $nombreCliente?></option>
-<?php			
-	}else{
-?>		
-	<option value='<?php echo $codCliente?>'><?php echo $nombreCliente?></option>
-<?php			
-	}
-
-}
-?>
-	</select>
-	<input type="hidden" name="tipoPrecio" value="1">
-</td>
 <!--<td>
 	<div id='divTipoPrecio' >
 		
@@ -742,6 +745,36 @@ if($tipoDocDefault==2){
 	<td align='center'>
 		<input type='text' class="form-control" name='observaciones' value='' size='40' rows="3">
 	</td>
+	<td align='center' id='divCliente'>
+		<div class="btn-group">
+			
+	<select name='cliente' class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' id='cliente' onChange='ajaxTipoPrecio(form1);' required>
+		<option value=''>----</option>
+<?php
+$sql2="select c.`cod_cliente`, c.nombre_cliente,c.paterno from clientes c order by 2";
+$resp2=mysqli_query($enlaceCon,$sql2);
+
+while($dat2=mysqli_fetch_array($resp2)){
+   $codCliente=$dat2[0];
+	$nombreCliente=$dat2[1]." ".$dat2[2];
+	if($codCliente==$clienteDefault){
+?>		
+	<option value='<?php echo $codCliente?>' selected><?php echo $nombreCliente?></option>
+<?php			
+	}else{
+?>		
+	<option value='<?php echo $codCliente?>'><?php echo $nombreCliente?></option>
+<?php			
+	}
+
+}
+?>
+	</select>
+	<a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" class="btn btn-info btn-sm text-white">+</a>
+</div>
+	<input type="hidden" name="tipoPrecio" value="1">
+
+</td>
 </tr>
 
 </table>

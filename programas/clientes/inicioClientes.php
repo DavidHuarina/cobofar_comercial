@@ -33,7 +33,7 @@ function frmModificar() {
     for(var i=1;i<=total;i++) {
         tag=$("#idchk"+i);
         sel=tag.attr("checked");
-        alert(sel)
+        //alert(sel)
         if(sel==true) {
             cod=tag.val(); 
             c++;        
@@ -68,6 +68,7 @@ function frmEliminar() {
 function adicionarCliente() {
     var nomcli = $("#nomcli").val();
     var apcli = $("#apcli").val();
+    var nit = $("#ci").val();
     var nit = $("#nit").val();
     var dir = $("#dir").val();
     var tel1 = $("#tel1").val();
@@ -75,7 +76,7 @@ function adicionarCliente() {
     var area = $("#area").val();
     var fact = $("#fact").val();
     var edad = $("#edad").val();
-    var parms="nomcli="+nomcli+"&nit="+nit+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"&edad="+edad+"&apcli="+apcli+"";
+    var parms="nomcli="+nomcli+"&nit="+nit+"&ci="+ci+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"&edad="+edad+"&apcli="+apcli+"";
     cargarPnl("#pnl00","prgClienteAdicionar.php",parms);
 }
 function modificarCliente() {
@@ -106,5 +107,7 @@ function eliminarCliente(cods) {
 </html>
 
 <?php
-
+if(isset($_GET['registrar'])){
+    ?><script>frmAdicionar()</script><?php
+}
 ?>

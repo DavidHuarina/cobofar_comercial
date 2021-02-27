@@ -5,6 +5,7 @@ require("../../conexionmysqli.inc");
 $nomCli = $_GET["nomcli"];
 $apCli = $_GET["apcli"];
 $nit = $_GET["nit"];
+$ci = $_GET["ci"];
 $dir = $_GET["dir"];
 $tel1 = $_GET["tel1"];
 $mail = $_GET["mail"];
@@ -23,8 +24,8 @@ $area = $area;
 $fact = str_replace("'", "''", $fact);
 
 $consulta="
-INSERT INTO clientes (cod_cliente, nombre_cliente,paterno, nit_cliente, dir_cliente, telf1_cliente, email_cliente, cod_area_empresa, nombre_factura, cod_tipo_precio,cod_tipo_edad)
-VALUES ( (SELECT ifnull(max(c.cod_cliente),0)+1 FROM clientes c) , '$nomCli','$apCli', '$nit', '$dir', '$tel1', '$mail', $area, '$fact', '$tipoPrecio','$edad')
+INSERT INTO clientes (cod_cliente, nombre_cliente,paterno, nit_cliente, dir_cliente, telf1_cliente, email_cliente, cod_area_empresa, nombre_factura, cod_tipo_precio,cod_tipo_edad,ci_cliente)
+VALUES ( (SELECT ifnull(max(c.cod_cliente),0)+1 FROM clientes c) , '$nomCli','$apCli', '$nit', '$dir', '$tel1', '$mail', $area, '$fact', '$tipoPrecio','$edad','$ci')
 ";
 //echo $consulta;
 $resp=mysqli_query($enlaceCon,$consulta);
