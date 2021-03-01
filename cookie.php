@@ -22,8 +22,8 @@ if ($num_filas != 0) {
 	//sacamos la gestion activa
 	$sqlGestion="select cod_gestion, nombre_gestion from gestiones where estado=1";
 	$respGestion=mysqli_query($enlaceCon,$sqlGestion);
-	$globalGestion=mysql_result($respGestion,0,0);
-	$nombreG=mysql_result($respGestion, 0, 1);
+	$globalGestion=mysqli_result($respGestion,0,0);
+	$nombreG=mysqli_result($respGestion, 0, 1);
 	
 	//almacen
 	$sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$cod_ciudad'";
