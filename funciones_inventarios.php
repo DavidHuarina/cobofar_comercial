@@ -20,7 +20,7 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 	
 	//AQUI SE DEBE CORREGIR EL DATO DE CANTIDAD RESTANTE >0 OJO
 	
-	echo $sqlExistencias."<br>";
+	//echo $sqlExistencias."<br>";
 	$respExistencias=mysqli_query($enlaceCon,$sqlExistencias);
 	while($datExistencias=mysqli_fetch_array($respExistencias)){
 		if($cantidadPivote>0){
@@ -43,7 +43,7 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 			
 			$sqlInsert="insert into salida_detalle_almacenes (cod_salida_almacen, cod_material, cantidad_unitaria, lote, fecha_vencimiento, precio_unitario,
 			descuento_unitario, monto_unitario, cod_ingreso_almacen, orden_detalle) values ('$cod_salida', '$codMaterial', '$cantidadInsert', '$loteProducto', '$fechaVencProducto', '$precio','$descuento','$montoparcial','$codIngreso','$orden')";
-			echo $sqlInsert;
+			//echo $sqlInsert;
 			$respInsert=mysqli_query($enlaceCon,$sqlInsert);
 			
 			if($respInsert!=1){

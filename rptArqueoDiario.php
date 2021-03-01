@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
 require('conexionmysqli.inc');
@@ -7,7 +8,9 @@ require('funciones.php');
 
 $fecha_ini=$_GET['fecha_ini'];
 $rpt_territorio=$_GET['rpt_territorio'];
-
+$fecha_fin=$_GET['fecha_fin'];
+$hora_ini=$_GET['hora_ini'];
+$hora_fin=$_GET['hora_fin'];
 $variableAdmin=$_GET["variableAdmin"];
 if($variableAdmin!=1){
 	$variableAdmin=0;
@@ -15,7 +18,8 @@ if($variableAdmin!=1){
 
 //desde esta parte viene el reporte en si
 $fecha_iniconsulta=$fecha_ini;
-
+$fecha_iniconsultahora=$fecha_iniconsulta." ".$hora_ini;
+$fecha_finconsultahora=$fecha_fin." ".$hora_fin;
 $fecha_reporte=date("d/m/Y");
 
 echo "<h1>Reporte Arqueo Diario de Caja</h1>
@@ -27,7 +31,7 @@ echo "<center><table class='textomediano'>";
 echo "<tr><th colspan='2'>Saldo Inicial Caja Chica</th></tr>
 <tr><th>Fecha</th><th>Monto Apertura de Caja Chica [Bs]</th></tr>";
 $consulta = "select DATE_FORMAT(c.fecha_cajachica, '%d/%m/%Y'), c.monto, c.fecha_cajachica from cajachica_inicio c where 
-c.fecha_cajachica='$fecha_iniconsulta'";
+c.fecha_cajachica BETWEEN '$fecha_iniconsulta' and '$fecha_fin'";
 $resp = mysqli_query($enlaceCon,$consulta);
 while ($dat = mysqli_fetch_array($resp)) {
 	$fechaCajaChica = $dat[0];
@@ -50,7 +54,7 @@ $sql="select s.`fecha`,
 	s.hora_salida
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_iniconsulta'";
+	and STR_TO_DATE(CONCAT(s.fecha,' ',s.hora_salida),'%Y-%m-%d %h:%i') BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' ";
 
 if($variableAdmin==1){
 	$sql.=" and s.cod_tipo_doc in (1,2,3)";
@@ -148,7 +152,7 @@ echo "<tr><th>Fecha</th><th>Tipo</th>
 
 $consulta = "select g.cod_gasto, g.descripcion_gasto, 
 	(select nombre_tipogasto from tipos_gasto where cod_tipogasto=g.cod_tipogasto)tipogasto, 
-	DATE_FORMAT(g.fecha_gasto, '%d/%m/%Y'), monto, estado from gastos g where fecha_gasto='$fecha_iniconsulta' 
+	DATE_FORMAT(g.fecha_gasto, '%d/%m/%Y'), monto, estado from gastos g where fecha_gasto BETWEEN '$fecha_iniconsulta' and '$fecha_fin'
 	and g.estado=1 order by g.cod_gasto";
 	
 $resp = mysqli_query($enlaceCon,$consulta);

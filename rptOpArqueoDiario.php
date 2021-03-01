@@ -1,11 +1,17 @@
 <script language='JavaScript'>
 function envia_formulario(f, variableAdmin)
 {	var fecha_ini;
+	var fecha_fin;
+	var hora_ini;
+	var hora_fin;
 	var rpt_territorio;
 	rpt_territorio=f.rpt_territorio.value;
 	
 	fecha_ini=f.exafinicial.value;
-	window.open('rptArqueoDiario.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&variableAdmin='+variableAdmin,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+	fecha_fin=f.exaffinal.value;
+	hora_ini=f.exahorainicial.value;
+	hora_fin=f.exahorafinal.value;
+	window.open('rptArqueoDiario.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&hora_ini='+hora_ini+'&hora_fin='+hora_fin+'&variableAdmin='+variableAdmin,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
 </script>
@@ -19,6 +25,8 @@ if($variableAdmin!=1){
 	$variableAdmin=0;
 }
 
+$fecha_rptinidefault=date("Y")."-".date("m")."-01";
+$hora_rptinidefault=date("H:i");
 $fecha_rptdefault=date("Y-m-d");
 $globalCiudad=$_COOKIE['global_agencia'];
 
@@ -40,10 +48,14 @@ echo"<form method='post' action='rptArqueoDiario.php'>";
 		}
 	}
 	echo "</select></td></tr>";
-	
-	echo "<tr><th align='left'>Fecha:</th>";
+	echo "<tr><th align='left'>Fecha Inicio:</th>";
 			echo" <TD bgcolor='#ffffff'>
-				<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial'>";
+				<INPUT  type='date' class='texto' value='$fecha_rptinidefault' id='exafinicial' size='10' name='exafinicial'><INPUT  type='time' class='texto' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>";
+    		echo"  </TD>";
+	echo "</tr>";
+	echo "<tr><th align='left'>Fecha Fin:</th>";
+			echo" <TD bgcolor='#ffffff'>
+				<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal'><INPUT  type='time' class='texto' value='$hora_rptinidefault' id='exahorafinal' size='10' name='exahorafinal'>";
     		echo"  </TD>";
 	echo "</tr>";
 	

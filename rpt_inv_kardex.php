@@ -19,7 +19,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	}
 	else
 	{	$nombre_tipoitem="Material de Apoyo";
-		$sql_item="select descripcion_material from material_apoyo where codigo_material='$rpt_item'";
+		$sql_item="select descripcion_material,'' as pres from material_apoyo where codigo_material='$rpt_item'";
 	}
 	$resp_item=mysqli_query($enlaceCon,$sql_item);
 	$dat_item=mysqli_fetch_array($resp_item);
@@ -111,7 +111,13 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	$suma_ingresos=0;
 	$suma_salidas=0;
 	for($indice=1;$indice<=$zz;$indice++)
-	{	$fecha_consulta=$vector_final_fechas[$indice];
+	{	
+        if(isset($vector_final_fechas[$indice])){
+          $fecha_consulta=$vector_final_fechas[$indice];
+        }else{
+          $fecha_consulta="";
+        }
+		
 		//hacemos la consulta para ingresos
 		$sql_ingresos="select i.nro_correlativo, id.cantidad_unitaria, i.observaciones, ti.nombre_tipoingreso
 		from ingreso_almacenes i, ingreso_detalle_almacenes id, tipos_ingreso ti

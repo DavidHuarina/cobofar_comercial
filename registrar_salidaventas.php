@@ -491,8 +491,8 @@ function validar(f, ventaDebajoCosto){
 	console.log("numero de items: "+cantidadItems);
 	if(cantidadItems>0){
 		var validacionClientes=0;
-		if($("#validacion_clientes").val()!=0){
-          if($("#clientes").val()==146||$("#clientes").val()==""){  //146 clientes varios
+		if(parseInt($("#validacion_clientes").val())!=0){
+          if($("#cliente").val()==146||$("#cliente").val()==""){  //146 clientes varios
             validacionClientes=1;
           }
 		}	
@@ -928,10 +928,10 @@ if($banderaErrorFacturacion==0){
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
             <tr>
-               <td style=' display:none;font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
+               <td style='display:none;font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
              </tr>
              <tr>
-               <td style='font-size:12px;color:#0691CD;' colspan='2'><p>&nbsp;</p></td>
+               <td style='display:none;font-size:12px;color:#0691CD;' colspan='2'><p>&nbsp;</p></td>
              </tr>
             <tr>
                <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>

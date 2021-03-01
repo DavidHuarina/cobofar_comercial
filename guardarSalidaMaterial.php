@@ -158,9 +158,9 @@ if($sql_inserta==1){
 	
 	
 	if($tipoDoc==1){
-		/*echo "<script type='text/javascript' language='javascript'>	
+		echo "<script type='text/javascript' language='javascript'>	
 		location.href='formatoFactura.php?codVenta=$codigo';
-		</script>";	*/
+		</script>";	
 		//window.open('formatoFactura.php?codVenta=$codigo','','scrollbars=yes,width=1000,height=800');	
 	}
 	if($tipoDoc!=1){
@@ -169,17 +169,17 @@ if($sql_inserta==1){
 		if($banderaCorreo==1 || $banderaCorreo==2){
 			header("location:sendEmailVenta.php?codigo=$codigo&evento=1&tipodoc=$tipoDoc");
 		}else{
-			/*echo "<script type='text/javascript' language='javascript'>
+			echo "<script type='text/javascript' language='javascript'>
 			location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
-			</script>";		*/
+			</script>";		
 		}
 	}
 	
 }else{
-		/*echo "<script type='text/javascript' language='javascript'>
+		echo "<script type='text/javascript' language='javascript'>
 		alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
 		location.href='navegador_salidamateriales.php';
-		</script>";*/
+		</script>";
 }
 
 ?>

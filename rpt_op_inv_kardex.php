@@ -80,7 +80,7 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo "</tr>";
 	echo "<tr><th align='left'>Material</th><td><select name='rpt_item' class='texto'>";
 	
-	$sql_item="select codigo_material, descripcion_material from material_apoyo where codigo_material<>0 order by descripcion_material";
+	$sql_item="select codigo_material, descripcion_material from material_apoyo where codigo_material<>0 and codigo_barras>0 order by descripcion_material";
 	
 	$resp=mysqli_query($enlaceCon,$sql_item);
 	echo "<option value=''></option>";
