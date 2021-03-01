@@ -7,8 +7,8 @@ if(!function_exists('register_globals')){
 	register_globals();
 }else{
 }
-
-$enlaceCon=mysqli_connect("localhost","root","","farmacias1");
+//$enlaceCon=mysqli_connect("10.10.1.76","davidh","Dhuarina2021","farmacias1");
+$enlaceCon=mysqli_connect("10.10.1.76","davidh","Dhuarina2021","farmacias1");
 if (mysqli_connect_errno())
 {
 	echo "Error en la conexión: " . mysqli_connect_error();

@@ -91,7 +91,7 @@ echo "<script language='Javascript'>
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		(select t.nombre_tipoventa from tipos_venta t where t.cod_tipoventa=m.cod_tipoventa), m.cantidad_presentacion, m.principio_activo 
 		from material_apoyo m
-		where m.estado='1' order by m.descripcion_material limit 200";
+		where m.estado='1' and m.codigo_barras>0 order by m.descripcion_material";
 	if(isset($vista)&&$vista==1)
 	{	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
 		(select e.nombre_empaque from empaques e where e.cod_empaque=m.cod_empaque), 
@@ -99,7 +99,7 @@ echo "<script language='Javascript'>
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		(select t.nombre_tipoventa from tipos_venta t where t.cod_tipoventa=m.cod_tipoventa), m.cantidad_presentacion, m.principio_activo 
 		from material_apoyo m
-		where m.estado='0' order by m.descripcion_material limit 200";
+		where m.estado='0' and m.codigo_barras>0 order by m.descripcion_material";
 	}
 	
 	//echo $sql;
