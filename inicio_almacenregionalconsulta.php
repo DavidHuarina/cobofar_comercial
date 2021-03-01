@@ -9,7 +9,7 @@ echo "<div id='Layer1' style='position:absolute; left:0px; top:0px; width:1000px
 echo "</div>";
 echo "<body background='imagenes/fondo_pagina.jpg'>";
 echo "<div style='position:absolute; left:0px; top:100px; width:1000px; border: 1px none #000000;'>";
-require("conexion.inc");
+require("conexionmysqli.inc");
 echo"<script language='javascript'>";
 echo"function tamanonormal()";
 echo"{ ";
@@ -22,12 +22,12 @@ echo"}";
 echo "tamanonormal();";
 echo"</script>";
 $sql="select * from ciudades where cod_ciudad=102 order by descripcion";
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 echo "<center><table border='0' class='textotit'><tr><th>Ingreso Hermes Inventarios Regional<br>Elegir Territorio</th></tr></table></center><br>";
 echo "<center><table border='1' class='texto' cellspacing='0' width='40%'>";
 echo "<tr><th>Territorio</th><th>&nbsp;</th></tr>";
 $indice_tabla=1;
-while($dat=mysql_fetch_array($resp))
+while($dat=mysqli_fetch_array($resp))
 {
 	$cod_ciudad=$dat[0];
 	$desc_ciudad=$dat[1];

@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.inc');
 require('funcion_nombres.php');
 
 $fecha_ini=$_GET['fecha_ini'];
@@ -41,7 +41,7 @@ if($rpt_ver==1){
 
 $sql.=" order by s.fecha, s.nro_correlativo";
 	
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='texto' width='70%'>
 <tr>
@@ -54,7 +54,7 @@ echo "<br><table align='center' class='texto' width='70%'>
 </tr>";
 
 $totalVenta=0;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
 	$razonSocial=$datos[2];

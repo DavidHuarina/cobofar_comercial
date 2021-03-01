@@ -10,10 +10,10 @@ echo "<script language='Javascript'>
 		f.submit();
 	}
 	</script>";
-require("conexion.inc");
+require("conexionmysqli.inc");
 require("estilos_administracion.inc");
-$sql=mysql_query("select codigo_motivo, tipo_motivo, descripcion_motivo from motivos_baja where codigo_motivo=$codigo");
-$dat=mysql_fetch_array($sql);
+$sql=mysqli_query($enlaceCon,"select codigo_motivo, tipo_motivo, descripcion_motivo from motivos_baja where codigo_motivo=$codigo");
+$dat=mysqli_fetch_array($sql);
 $codMotivo=$dat[0];
 $tipoMotivo=$dat[1];
 $motivo=$dat[2];

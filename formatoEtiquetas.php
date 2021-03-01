@@ -1,6 +1,6 @@
 <?php
 require('fpdf.php');
-require('conexion.inc');
+require('conexionmysqli.inc');
 require('funciones.php');
 require('NumeroALetras.php');
 
@@ -13,14 +13,14 @@ $pdf->SetFont('Arial','B',10);
 //desde aca
 $sqlConf="select id, txt1, txt2, txt3, alineado_izq, alineado_arriba, cantidad from etiquetas where id=1";
 //echo $sqlConf;
-$respConf=mysql_query($sqlConf);
-$txt1=mysql_result($respConf,0,1);
-$txt2=mysql_result($respConf,0,2);
-$txt3=mysql_result($respConf,0,3);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$txt1=mysqli_result($respConf,0,1);
+$txt2=mysqli_result($respConf,0,2);
+$txt3=mysqli_result($respConf,0,3);
 
-$alignIzq=mysql_result($respConf,0,4);
-$alignTop=mysql_result($respConf,0,5);
-$cantidadPrint=mysql_result($respConf,0,6);
+$alignIzq=mysqli_result($respConf,0,4);
+$alignTop=mysqli_result($respConf,0,5);
+$cantidadPrint=mysqli_result($respConf,0,6);
 
 $x=$alignIzq;
 $y=$alignTop;

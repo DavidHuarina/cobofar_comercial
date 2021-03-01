@@ -1,12 +1,17 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.inc');
 require('funcion_nombres.php');
 
 $fecha_ini=$_GET['fecha_ini'];
 $fecha_fin=$_GET['fecha_fin'];
-$rpt_ver=$_GET['rpt_ver'];
+if(!isset($_GET['rpt_ver'])){
+  $rpt_ver=0;	
+}else{
+  $rpt_ver=$_GET['rpt_ver'];
+}
+
 
 //desde esta parte viene el reporte en si
 $fecha_iniconsulta=cambia_formatofecha($fecha_ini);
@@ -38,8 +43,8 @@ where s.`cod_salida_almacenes` = sd.`cod_salida_almacen` and
                            where a.`cod_ciudad` = '$rpt_territorio'
       ) and 
       s.`cod_chofer`=f.`codigo_funcionario` group by f.`codigo_funcionario`";		
-echo $sql;
-$resp=mysql_query($sql);
+//echo $sql;
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='texto' width='100%'>
 <tr>
@@ -49,7 +54,7 @@ echo "<br><table align='center' class='texto' width='100%'>
 </tr>";
 
 $totalVenta=0;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$codItem=$datos[0];
 	$nombrePersona=$datos[1];
 	$montoVenta=$datos[2];
