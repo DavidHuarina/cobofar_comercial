@@ -3,9 +3,7 @@ require('function_formatofecha.php');
 require('function_comparafechas.php');
 
 function recalculaCostos($codigoItem, $rpt_almacen){
-
-	
-
+	/*
 	$fecha_iniconsulta="2005-01-01";
 	$fecha_finconsulta="2020-12-31";
 
@@ -141,11 +139,7 @@ function recalculaCostos($codigoItem, $rpt_almacen){
 				if($codTipoIngreso!=1002){
 					$valorNetoIngreso=$precioNetoIngreso*$cantidad_ingreso;	
 					$nuevoCostoPromedio=($valorNetoIngreso+$valor_kardex)/$cantidad_kardex;
-					
-					/*echo "<br>valor ingreso".$valorNetoIngreso;
-					echo "<br>valor anterior".$valor_kardex;
-					echo "<br>cantidad kardex".$cantidad_kardex;*/
-					
+								
 					$sqlUpdCosto="update ingreso_detalle_almacenes set costo_promedio='$nuevoCostoPromedio', costo_almacen='$precioNetoIngreso' where 
 						cod_ingreso_almacen='$codIngresoAlmacen' and cod_material='$codigoItem'";
 					$respUpdCosto=mysql_query($sqlUpdCosto);
@@ -208,6 +202,7 @@ function recalculaCostos($codigoItem, $rpt_almacen){
 		$sqlInsert="insert into costo_promedio_mes values('$rpt_almacen', '$anio', '$mes', '$codigoItem', '$suma_saldo_final', '$nuevoCostoPromedio', '$valorInventario')";
 		$respInsert=mysql_query($sqlInsert);
 	}
+	*/
 	return(1);
 }
 
