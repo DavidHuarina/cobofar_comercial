@@ -22,6 +22,7 @@
 	}
 	$sql.=" order by 3,2";	
 	
+	//echo $sql;
 	$resp1=mysqli_query($enlaceCon,$sql);
 	
 	echo "<center><table class='texto' id='main'>";
