@@ -14,12 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           if(isset($datos['tipo'])){
             $tipo=$datos['tipo'];
           } 
-          $age1="";
-          if(isset($datos['age1'])){
-            $age1=$datos['age1'];
-          }
 
-          $datosResp=obtenerDatosAlmacenes($tipo,$age1);                
+          $datosResp=obtenerDatosTraspasos($tipo);                
           if($datosResp[0]==0){
                  $estado=2;
                  $mensaje = "Lista Vacia";
@@ -53,22 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo json_encode($resp);
 }
 
-function obtenerDatosAlmacenes($tipo,$age1){
+function obtenerDatosTraspasos($tipo){
   require_once __DIR__.'/../conexion_externa_farma.php';
   $dbh = new ConexionFarma();
   $sqlTipo="";
   if($tipo!=""){
     $sqlTipo="where a.tipo='".$tipo."' ";
   }
-  $sqlEspecifico="";
-  if($age1!=""){
-    if($sqlTipo!=""){
-      $sqlEspecifico="and a.age1='".$age1."' ";
-    }else{
-      $sqlEspecifico="where a.age1='".$age1."' ";
-    }
-  }
-  $sql="SELECT a.* FROM almacen a $sqlTipo $sqlEspecifico";
+  $sql="SELECT a.* FROM almacen a $sqlTipo";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $ff=0;
@@ -79,7 +67,6 @@ function obtenerDatosAlmacenes($tipo,$age1){
      $datos[$ff]['age1']=$row['AGE1'];
      $datos[$ff]['age']=$row['AGE'];
      $datos[$ff]['tipo']=$row['TIPO'];
-     $datos[$ff]['ip']=$row['IP'];
      $ff++;
   }
 

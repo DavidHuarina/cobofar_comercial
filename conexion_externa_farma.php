@@ -17,4 +17,18 @@ public function __construct() {
          exit;
       }
    } 
- } 
+public function setHost($host){
+   $this->host=$host;
+ }
+
+ public function start(){
+   try{
+         parent::__construct($this->tipo_de_base.':server='.$this->host.';Database='.$this->nombre_de_base, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));// 
+         return true;
+      }catch(PDOException $e){
+         return false;
+      }
+  }
+} 
+
+ 

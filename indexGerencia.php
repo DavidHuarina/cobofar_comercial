@@ -97,6 +97,7 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos</a></li>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>
+					<li><a href="navegador_salidamateriales_pendientes.php" target="contenedorPrincipal">Listado de Traspasos Pendientes</a></li>
 				</ul>	
 			</li>
 			<li><span>Marcados de Personal</span>
