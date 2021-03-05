@@ -1,11 +1,21 @@
 <?php
 
 require("../../conexionmysqli.inc");
-require("../../estilos_almacenes.inc");
+//require("../../estilos_almacenes.inc");
+?>
+<div class="content">
+    <div class="container-fluid">
 
-echo "<center>";
-
-echo "<h3 class='text-muted'>Distribuidores</h3>";
+        <div class="col-md-12">
+          <form id="" class="form-horizontal" action="" method="post">
+            <div class="card">
+              <div class="card-header card-header-warning card-header-text">
+                <div class="card-text">
+                  <h4 class="card-title">Distribuidores</h4>
+                </div>
+              </div>
+              <div class="card-body ">
+                <?php
 echo "<table class='table table-bordered' id='tablaPrincipal'><thead>";
 echo "<tr class='bg-principal'>";
 echo "<th>&nbsp;</th><th>Nombre</th><th>Direccion</th><th>Telefono 1</th><th>Telefono 2</th><th>Contacto</th><th>Lineas</th>";
@@ -35,10 +45,17 @@ echo "</tbody></table>";
 echo "<input type='hidden' id='idtotal' value='$cont' >";
 echo "</center>";
 
-echo "<div class='divBotones'><input class='boton' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
-<input class='boton' type='button' value='Editar' onclick='javascript:frmModificar();'>
-<input class='boton2' type='button' value='Eliminar' onclick='javascript:frmEliminar();'></div>";
-
-
 ?>
+              </div>
+              <div  class="card-footer fixed-bottom">
+                <div class=''><input class='btn btn-primary' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
+<input class='btn btn-primary' type='button' value='Editar' onclick='javascript:frmModificar();'>
+<input class='btn btn-danger' type='button' value='Eliminar' onclick='javascript:frmEliminar();'></div>
+              </div>
+            </div>
+          </form>
+        </div>
+    
+    </div>
+</div>
  <script type="text/javascript" src="../../dist/js/functionsGeneral.js"></script>

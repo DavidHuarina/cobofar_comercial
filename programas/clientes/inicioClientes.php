@@ -21,11 +21,13 @@ $(document).ready(function() {
 });
 /*proceso inicial*/
 function listadoClientes() {
-    cargarPnl("#pnl00","prgListaClientes.php","");
+    $("#pnl00").load("prgListaClientes.php");
 }
 //procesos
 function frmAdicionar() {
-    cargarPnl("#pnl00","frmClienteAdicionar.php","");
+    cargarPnlLjn("#pnl00","#pnl00","frmClienteAdicionar.php","","","",function(){},function(){$('.dropdown-menu').on('click', function (e) {
+  e.stopPropagation();
+});});
 }
 function frmModificar() {
     var total=$("#idtotal").val();
@@ -68,7 +70,7 @@ function frmEliminar() {
 function adicionarCliente() {
     var nomcli = $("#nomcli").val();
     var apcli = $("#apcli").val();
-    var nit = $("#ci").val();
+    var ci = $("#ci").val();
     var nit = $("#nit").val();
     var dir = $("#dir").val();
     var tel1 = $("#tel1").val();
@@ -76,7 +78,8 @@ function adicionarCliente() {
     var area = $("#area").val();
     var fact = $("#fact").val();
     var edad = $("#edad").val();
-    var parms="nomcli="+nomcli+"&nit="+nit+"&ci="+ci+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"&edad="+edad+"&apcli="+apcli+"";
+    var genero = $("#genero").val();
+    var parms="nomcli="+nomcli+"&nit="+nit+"&ci="+ci+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"&edad="+edad+"&apcli="+apcli+"&genero="+genero+"";
     cargarPnl("#pnl00","prgClienteAdicionar.php",parms);
 }
 function modificarCliente() {
@@ -110,4 +113,5 @@ function eliminarCliente(cods) {
 if(isset($_GET['registrar'])){
     ?><script>frmAdicionar()</script><?php
 }
+
 ?>

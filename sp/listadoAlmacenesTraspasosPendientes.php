@@ -15,8 +15,7 @@ require_once '../function_web.php';
 <body>
 
 <?php
-$sql="DELETE FROM traspasos_pendientes";
-$sqlDelete=mysqli_query($enlaceCon,$sql);
+
 
 //DATOS PARA LISTAR DOCUMENTOS
 $fechaDesde="04/03/2021";
@@ -24,10 +23,13 @@ $fechaHasta="05/03/2021";
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";
 $codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL ALMACEN ORIGEN
-
+$age1Destino="A=";
+$codCiudadDestino=verificarAlmacenCiudadExistente($age1Destino);
+$sql="DELETE FROM traspasos_pendientes where cod_ciudad_destino=$codCiudadDestino and cod_ciudad_origen=$codCiudadOrigen";
+$sqlDelete=mysqli_query($enlaceCon,$sql);
 
 ?><br><br>Iniciando....<br><br><br><br><?php
-$listAlma=obtenerListadoAlmacenes();//web service
+$listAlma=obtenerListadoAlmacenesEspecifico($age1Destino);//web service
 $contador=0;
 foreach ($listAlma->lista as $alma) {
   $contador++;

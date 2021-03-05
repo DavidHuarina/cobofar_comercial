@@ -89,4 +89,6 @@ nav:not(.mm-menu) {
 }
 .content {
 	padding: 150px 50px 50px 50px;
+	max-height: 95vh;
+	background: #fff;
 }

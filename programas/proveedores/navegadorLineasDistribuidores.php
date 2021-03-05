@@ -63,11 +63,10 @@
 			}
 		}
 		</script>
-<form>
 <?php
 
 require("../../conexionmysqli.inc");
-require("../../estilos_almacenes.inc");
+//require("../../estilos_almacenes.inc");
 require("../../funcion_nombres.php");
 echo "<link rel='stylesheet' type='text/css' href='../../stilos.css'/>";
 ?>
@@ -81,9 +80,19 @@ echo "<link rel='stylesheet' type='text/css' href='../../stilos.css'/>";
 <?php
 $codProveedor=$_GET['codProveedor'];
 $nombreProveedor=nombreProveedor($codProveedor);
-
-echo "<center>";
-echo "<h3 class='text-muted'>Lineas de Distribuidor <br> $nombreProveedor</h3>";
+?>
+<div class="content">
+    <div class="container-fluid">
+        <div class="col-md-12">
+          <form id="" class="form-horizontal" action="" method="post">
+            <div class="card">
+              <div class="card-header card-header-warning card-header-text">
+                <div class="card-text">
+                  <h4 class="card-title">Lineas de Distribuidor  <?=$nombreProveedor?></h4>
+                </div>
+              </div>
+              <div class="card-body ">
+                <?php
 echo "<table class='table table-bordered' id='tablaPrincipal'><thead>";
 echo "<tr class='bg-principal'>";
 echo "<th>&nbsp;</th><th>Linea</th><th>Abreviatura</th><th>Procedencia</th><th>Margen de precio</th><th>Contacto 1</th><th>Contacto 2</th>";
@@ -114,13 +123,20 @@ while($reg=mysqli_fetch_array($rs)){
 echo "</table></tbody></table>";
 echo "</center>";
 
-echo "<div class='divBotones'><input class='boton' type='button' value='Adicionar' onClick='enviar_nav($codProveedor);'>
-<input class='boton' type='button' value='Editar' onClick='editar_nav(this.form, $codProveedor);'>
-<input class='boton2' type='button' value='Eliminar' onClick='eliminar_nav(this.form, $codProveedor)'>
-<input class='boton2' type='button' value='Cancelar' onClick='location.href=(\"inicioProveedores.php\");'>
-</div>";
+echo "";
 
 
 ?>
+              </div>
+              <div  class="card-footer fixed-bottom">
+               <div class=''><input class='btn btn-primary' type='button' value='Adicionar' onClick='enviar_nav($codProveedor);'>
+<input class='btn btn-primary' type='button' value='Editar' onClick='editar_nav(this.form, $codProveedor);'>
+<input class='btn btn-danger' type='button' value='Eliminar' onClick='eliminar_nav(this.form, $codProveedor)'>
+<input class='btn btn-danger' type='button' value='Cancelar' onClick='location.href=(\"inicioProveedores.php\");'>
+</div>
+            </div>
+          </form>
+        </div>
+    </div>
+</div>
 <script type="text/javascript" src="../../dist/js/functionsGeneral.js"></script>
-</form>

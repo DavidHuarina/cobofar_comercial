@@ -71,21 +71,7 @@ echo "<script language='Javascript'>
 		</script>";
 		
 	require("conexionmysqli.inc");
-	require('estilos.inc');
-	?>
-        <link rel="stylesheet" type="text/css" href="dist/bootstrap/bootstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="dist/bootstrap/dataTables.bootstrap4.min.css"/>
-        <script type="text/javascript" src="dist/bootstrap/jquery-3.5.1.js"></script>
-        <script type="text/javascript" src="dist/bootstrap/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
-        <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
-        <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
-	<?php
-	echo "<h3 class='text-muted'><center>Registro de Producto</h3>";
-
-	echo "<form method='post' action=''>";
-	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
+$sql="select m.codigo_material, m.descripcion_material, m.estado, 
 		(select e.nombre_empaque from empaques e where e.cod_empaque=m.cod_empaque), 
 		(select f.nombre_forma_far from formas_farmaceuticas f where f.cod_forma_far=m.cod_forma_far), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
@@ -101,12 +87,25 @@ echo "<script language='Javascript'>
 		from material_apoyo m
 		where m.estado='0' and m.codigo_barras>0 order by m.descripcion_material";
 	}
-	
-	//echo $sql;
+	?>
+<div class="content">
+	<div class="container-fluid">
+
+		<div class="col-md-12">
+		  <form id="" class="form-horizontal" action="" method="post">
+			<div class="card">
+			  <div class="card-header card-header-warning card-header-text">
+				<div class="card-text">
+				  <h4 class="card-title">Registro de Productos</h4>
+				</div>
+			  </div>
+			  <div class="card-body ">
+<?php
+//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	
 	echo "<table align='center' class='table table-bordered'><tr><th width='30%'>Ver Productos:</th>
-	<th width='70%'><select name='vista' class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' onChange='cambiar_vista(this, this.form)'>";
+	<th width='70%'><select name='vista' class='selectpicker form-control' data-style='btn btn-info' onChange='cambiar_vista(this, this.form)'>";
 	if($vista==0)	echo "<option value='0' selected>Activos</option><option value='1'>Retirados</option><option value='2'>Todo</option>";
 	if($vista==1)	echo "<option value='0'>Activos</option><option value='1' selected>Retirados</option><option value='2'>Todo</option>";
 	if($vista==2)	echo "<option value='0'>A</option><option value='1'>B</option><option value='2' selected>Todo</option>";
@@ -115,12 +114,6 @@ echo "<script language='Javascript'>
 	
 	echo "<center><table border='0' class='textomini'><tr><th>Leyenda:</th><th>Productos Retirados</th><td bgcolor='#ff6666' width='30%'></td></tr></table></center><br>";
 	
-	
-	echo "<div class=''>
-		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
-		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
-		<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
-		</div>";
 	
 	echo "<center><table class='table table-bordered' id='tablaPrincipal'><thead>";
 	echo "<tr class='bg-principal'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Empaque</th>
@@ -159,13 +152,20 @@ echo "<script language='Javascript'>
 	}
 	echo "</tbody></table></center><br>";
 	
-		echo "<div class='divBotones'>
-		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
-		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
-		<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
-		</div>";
-		
-	echo "</form>";
-?>
-<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>
+		?>
+			  </div>
+			   <div  class="card-footer fixed-bottom">
+				<div class='divBotones'>
+		<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+		<input type='button' value='Editar' name='Editar' class='btn btn-primary' onclick='editar_nav(this.form)'>
+		<input type='button' value='Eliminar' name='eliminar' class='btn  btn-danger' onclick='eliminar_nav(this.form)'>
+		</div>
+			  </div>
+			</div>
+		  </form>
+		</div>
+	
+	</div>
+</div>
+
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>

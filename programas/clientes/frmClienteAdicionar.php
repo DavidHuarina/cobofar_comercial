@@ -1,8 +1,6 @@
 <?php
-
 require("../../conexionmysqli.inc");
-require("../../estilos_almacenes.inc");
-
+//require("../../estilos_almacenes.inc");
 
 $codCliente = "";
 $nomCliente = "";
@@ -44,59 +42,127 @@ while($reg1=mysqli_fetch_array($rs1))
     $cadTipoPrecio=$cadTipoPrecio."<option value='$codTipo'>$nomTipo</option>";
    }
 
-  
+$cadComboGenero="";
+$consult="select t.`cod_genero`, t.`descripcion` from `generos` t where cod_estadoreferencial=1";
+$rs1=mysqli_query($enlaceCon,$consult);
+while($reg1=mysqli_fetch_array($rs1))
+   {$codTipo = $reg1["cod_genero"];
+    $nomTipo = $reg1["descripcion"];
+    $cadComboGenero=$cadComboGenero."<option value='$codTipo'>$nomTipo</option>";
+   }
 ?>
-<link rel="stylesheet" type="text/css" href="../../dist/bootstrap/bootstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="../../dist/bootstrap/dataTables.bootstrap4.min.css"/>
-        <script type="text/javascript" src="../../dist/bootstrap/jquery-3.5.1.js"></script>
-        <script type="text/javascript" src="../../dist/bootstrap/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="../../dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <script type="text/javascript" src="../lib/js/xlibPrototipo-v0.1.js"></script>
-        <link rel="stylesheet" href="selectpicker/dist/css/bootstrap-select.css">
-        <link rel="stylesheet" type="text/css" href="../../dist/css/micss.css"/>
-        <link rel="stylesheet" type="text/css" href="../../dist/demo.css"/>
-<center>
-    <br/>
-    <h1>Adicionar Cliente</h1>
-	
-    <table class="texto">
-        <tr>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>CI</th>
-            <th>NIT</th>
-            <th>Direccion</th>
-            <th>Telefono</th>
-        </tr>
-        <tr>
-            <td><span id="id" style="display:none"><?php echo "$codCliente"; ?></span><input type="text" class="form-control "id="nomcli" value="<?php echo "$nomCliente"; ?>"/></td>
-            <td><input type="text" autocomplete="off" class="form-control "id="apcli" value="<?php echo "$apCliente"; ?>"/></td>
-            <td><input type="text" class="form-control "id="ci" value="<?php echo "$ciCliente"; ?>"/></td>
-            <td><input type="text" class="form-control "id="nit" value="<?php echo "$nitCliente"; ?>"/></td>
-            <td><input type="text" class="form-control "id="dir" value="<?php echo "$dirCliente"; ?>"/></td>
-            <td><input type="text" class="form-control "id="tel1" value="<?php echo "$telefono1"; ?>"/></td>
-        </tr>
-        <tr>
-            <th>Correo</th>
-            <th>Factura</th>
-            <th>Sucursal</th>
-            <th>Edad</th>
-            <th></th>
-        </tr>
-        <tr>
-            <td><input type="text" class="form-control "id="mail" value="<?php echo "$email"; ?>"/></td>
-            <td><input type="text" class="form-control "id="fact" value="<?php echo "$nomFactura"; ?>"/></td>
-            <td><select class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' id="area"><?php echo "$cadComboCiudad"; ?></select></td>
-            <td><select class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' name="edad"id="edad"><?php echo "$cadComboEdad"; ?></select></td>
-            <td></td>
-        </tr>
-    </table>
-    <br/>
-	<div class="divBotones">
-		<input class="boton" type="button" value="Guardar" onclick="javascript:adicionarCliente();" />
-		<input class="boton2" type="button" value="Cancelar" onclick="javascript:listadoClientes();" />
-	</div>
-    <br/>
-</center>
-<script src="../../dist/selectpicker/dist/js/bootstrap-select.js"></script>
- <script type="text/javascript" src="../../dist/js/functionsGeneral.js"></script>
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="col-md-12">
+          <!--<form id="form" class="form-horizontal" action="" method="post">-->
+            <div class="card">
+              <div class="card-header card-header-info card-header-text">
+                <div class="card-text">
+                  <h4 class="card-title">Registrar Cliente</h4>
+                </div>
+              </div>
+              <span id="id" style="display:none"><?php echo "$codCliente"; ?></span>
+              <div class="card-body ">
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombre</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="nomcli" required value="<?php echo "$nomCliente"; ?>"/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">Apellidos</label>
+                  <div class="col-sm-5">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="apcli" value="<?php echo "$apCliente"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">CI</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="ci" value="<?php echo "$ciCliente"; ?>"required/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">NIT</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="nit" value="<?php echo "$nitCliente"; ?>" required/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">Teléfono</label>
+                  <div class="col-sm-2">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="tel1" value="<?php echo "$telefono1"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Dirección</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="dir" value="<?php echo "$dirCliente"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Email</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <input class="form-control" type="email" id="mail" value="<?php echo "$email"; ?>" required/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">Factura</label>
+                  <div class="col-sm-2">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="fact" value="<?php echo "$nomFactura"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Género</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="genero"id="genero" data-style="btn btn-primary" data-live-search="true" required>
+                           <?php echo "$cadComboGenero"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Edad</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="edad"id="edad" data-style="btn btn-warning" data-live-search="true" required>
+                          <?php echo "$cadComboEdad"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Sucursal</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" id="area" data-style="btn btn-warning" data-live-search="true" required>
+                          <?php echo "$cadComboCiudad"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <br><br>
+              </div>
+              <div  class="card-footer fixed-bottom">
+                <div class="">
+                <input class="btn btn-success" type="button" value="Guardar" onclick="javascript:adicionarCliente();" />
+                 <input class="btn btn-danger" type="button" value="Cancelar" onclick="javascript:listadoClientes();" />
+             </div>
+              </div>
+            </div>
+         
+        </div>
+    
+    </div>
+</div>

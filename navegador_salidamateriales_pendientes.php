@@ -294,12 +294,12 @@ echo "<center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
 	<th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>&nbsp;</th></tr>";
 	
-	
+$global_agencia=$_COOKIE['global_agencia'];    
 //
 $consulta = "
-	SELECT s.cod_documento as dcto, s.fecha_salida,'' as hora,s.tipo_documento,c.descripcion as ciudad,s.descripcion as obs,0 as estado,s.cod_documento,s.cod_ciudad_destino from traspasos_pendientes s join ciudades c on c.cod_ciudad=s.cod_ciudad_destino where s.cod_documento_entrada=0 or s.cod_documento_entrada is null";
+	SELECT s.cod_documento as dcto, s.fecha_salida,'' as hora,s.tipo_documento,c.descripcion as ciudad,s.descripcion as obs,0 as estado,s.cod_documento,s.cod_ciudad_destino from traspasos_pendientes s join ciudades c on c.cod_ciudad=s.cod_ciudad_destino where s.cod_documento_entrada=0 or s.cod_documento_entrada is null and s.cod_ciudad_destino=$global_agencia";
 
-$consulta = $consulta." ORDER BY s.fecha_salida desc, s.cod_documento DESC";
+$consulta = $consulta." ORDER BY s.fecha_salida desc, s.cod_ciudad_destino DESC";
 $resp = mysqli_query($enlaceCon,$consulta);
 
 while ($dat = mysqli_fetch_array($resp)) {

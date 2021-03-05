@@ -12,6 +12,7 @@ $mail = $_GET["mail"];
 $area = $_GET["area"];
 $fact = $_GET["fact"];
 $edad = $_GET["edad"];
+$genero = $_GET["genero"];
 $tipoPrecio=1;
 //$tipoPrecio=$_GET["tipo_precio"];
 
@@ -24,8 +25,8 @@ $area = $area;
 $fact = str_replace("'", "''", $fact);
 
 $consulta="
-INSERT INTO clientes (cod_cliente, nombre_cliente,paterno, nit_cliente, dir_cliente, telf1_cliente, email_cliente, cod_area_empresa, nombre_factura, cod_tipo_precio,cod_tipo_edad,ci_cliente)
-VALUES ( (SELECT ifnull(max(c.cod_cliente),0)+1 FROM clientes c) , '$nomCli','$apCli', '$nit', '$dir', '$tel1', '$mail', $area, '$fact', '$tipoPrecio','$edad','$ci')
+INSERT INTO clientes (cod_cliente, nombre_cliente,paterno, nit_cliente, dir_cliente, telf1_cliente, email_cliente, cod_area_empresa, nombre_factura, cod_tipo_precio,cod_tipo_edad,ci_cliente,cod_genero)
+VALUES ( (SELECT ifnull(max(c.cod_cliente),0)+1 FROM clientes c) , '$nomCli','$apCli', '$nit', '$dir', '$tel1', '$mail', $area, '$fact', '$tipoPrecio','$edad','$ci','$genero')
 ";
 //echo $consulta;
 $resp=mysqli_query($enlaceCon,$consulta);

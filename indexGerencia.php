@@ -44,7 +44,7 @@ include("datosUsuario.php");
 	
 	
 	<div class="content">
-		<iframe src="inicio_almacenes.php" name="contenedorPrincipal" id="mainFrame" border="1"></iframe>
+		<iframe src="inicio_almacenes.php" name="contenedorPrincipal" id="mainFrame" style="" border="1"></iframe>
 	</div>
 	<nav id="menu">
 		<div id="panel-menu">
@@ -90,14 +90,14 @@ include("datosUsuario.php");
 			<li><span>Ingresos</span>
 				<ul>
 					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Materiales</a></li>
+					<li><a href="navegador_salidamateriales_pendientes.php" target="contenedorPrincipal">Traspasos Pendientes</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>
 			<li><span>Salidas</span>
 				<ul>
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos</a></li>
-					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>
-					<li><a href="navegador_salidamateriales_pendientes.php" target="contenedorPrincipal">Listado de Traspasos Pendientes</a></li>
+					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>					
 				</ul>	
 			</li>
 			<li><span>Marcados de Personal</span>

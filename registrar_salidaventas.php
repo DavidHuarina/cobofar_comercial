@@ -623,10 +623,10 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 	<input type="hidden" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
 <tr align='center' class="text-white header">
-	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
+	<th colspan="10"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
 </tr>
 <tr align='center' class="text-white header">
-	<th colspan="9"><label class="text-white">Registrar Venta</label></th>
+	<th colspan="10"><label class="text-white">Registrar Venta</label></th>
 </tr>
 <tr class="bg-info text-white" align='center' style='background:#16B490 !important;'>
 <th>Tipo de Documento</th>
@@ -637,11 +637,12 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <th>NIT</th>
 <th>Nombre/RazonSocial</th>
 <th>Observaciones</th>
-<th>Cliente</th>
+<th>Datos Cliente</th>
+<th></th>
 </tr>
 <tr>
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
-<td align='center'>
+<td>
 	<?php
 		
 		if($facturacionActivada==1){
@@ -651,7 +652,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 		}
 		$resp=mysqli_query($enlaceCon,$sql);
 
-		echo "<select class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' name='tipoDoc' id='tipoDoc' onChange='ajaxNroDoc(form1)' required>";
+		echo "<select class='selectpicker form-control' data-style='btn-info' name='tipoDoc' id='tipoDoc' onChange='ajaxNroDoc(form1)' required>";
 		echo "<option value=''>-</option>";
 		while($dat=mysqli_fetch_array($resp)){
 			$codigo=$dat[0];
@@ -693,7 +694,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <?php
 			$sql1="select codigo, nombre from tipos_precio order by 1";
 			$resp1=mysqli_query($enlaceCon,$sql1);
-			echo "<select name='tipoPrecio' class='selectpicker show-menu-arrow form-control-sm d-none' data-style='btn-info' id='tipoPrecio'>";
+			echo "<select name='tipoPrecio' class='selectpicker form-control d-none' data-style='btn-info' id='tipoPrecio'>";
 			while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
@@ -706,7 +707,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 		<?php
 			$sql1="select cod_tipopago, nombre_tipopago from tipos_pago order by 1";
 			$resp1=mysqli_query($enlaceCon,$sql1);
-			echo "<select name='tipoVenta' class='selectpicker show-menu-arrow form-control-sm' id='tipoVenta' data-style='btn-info'>";
+			echo "<select name='tipoVenta' class='selectpicker form-control' id='tipoVenta' data-style='btn-info'>";
 			while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
@@ -732,23 +733,21 @@ if($tipoDocDefault==2){
 	
 	<td>
 		<div id='divNIT'>
-			<input type='number' value='<?php echo $nitDefault; ?>' name='nitCliente' id='nitCliente'  onChange='ajaxRazonSocial(this.form);' class="form-control" required>
+			<input type='number' value='<?php echo $nitDefault; ?>' name='nitCliente' id='nitCliente'  onChange='ajaxRazonSocial(this.form);' class="form-control" required placeholder="Ingrese el NIT">
 		</div>
 	</td>
 	
 	<td>
 		<div id='divRazonSocial'>
-			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required>
+			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social">
 		</div>
 	</td>
 
 	<td align='center'>
-		<input type='text' class="form-control" name='observaciones' value='' size='40' rows="3">
+		<input type='text' class="form-control" name='observaciones' value='' placeholder="Ingrese una observación">
 	</td>
-	<td align='center' id='divCliente'>
-		<div class="btn-group">
-			
-	<select name='cliente' class='selectpicker show-menu-arrow form-control-sm' data-style='btn-info' id='cliente' onChange='ajaxTipoPrecio(form1);' required>
+	<td align='center' id='divCliente'>			
+	<select name='cliente' class='selectpicker form-control' data-style='btn-info' id='cliente' onChange='ajaxTipoPrecio(form1);' required>
 		<option value=''>----</option>
 <?php
 $sql2="select c.`cod_cliente`, c.nombre_cliente,c.paterno from clientes c order by 2";
@@ -770,19 +769,18 @@ while($dat2=mysqli_fetch_array($resp2)){
 }
 ?>
 	</select>
-	<a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" class="btn btn-info btn-sm text-white">+</a>
-</div>
 	<input type="hidden" name="tipoPrecio" value="1">
 
 </td>
+<td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="alerts.showSwal('mensaje-guardar-pedido','')"
+	class="btn btn-primary btn-sm"><i class="material-icons">save</i> PEDIDO </a></td>
 </tr>
 
 </table>
-
 <br>
 <input type="hidden" id="ventas_codigo"><!--para validar la funcion mas desde ventas-->
 <div class="codigo-barras">
-               <input class="btn btn-info" type="button" value="Adicionar Item (+)" onclick="mas(this)" accesskey="a"/><input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
+               <input class="btn btn-info" style="margin-top: 0px;" type="button" value="Adicionar Item (+)" onclick="mas(this)" accesskey="a"/><input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
 </div>
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table id="data0" class='table table-sm' width='100%' style='width:100%'>
@@ -921,9 +919,9 @@ while($dat2=mysqli_fetch_array($resp2)){
 <?php
 
 if($banderaErrorFacturacion==0){
-	echo "<div class='divBotones'>
-	        <input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
-			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
+	echo "<div class=''>
+	        <input type='submit' class='btn btn-warning' value='Guardar Venta' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
+			<input type='button' class='btn btn-danger' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
             <h2 style='font-size:11px;color:#9EA09E; display:none;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
@@ -938,7 +936,7 @@ if($banderaErrorFacturacion==0){
                <td style='font-size:12px;color:#189B22; font-weight:bold; display:none;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;'  class='form-control' step='any' required></td>
+               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:white !important;'  class='form-control' step='any' required></td>
                <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
              </tr>
             </table>
