@@ -79,17 +79,18 @@ include("datosUsuario.php");
 					
 				</ul>	
 			</li>
-			<li><span>Ordenes de Compra</span>
+			<!--li><span>Ordenes de Compra</span>
 				<ul>
 					<li><a href="navegador_ordenCompra.php" target="contenedorPrincipal">Registro de O.C.</a></li>
-					<!--li><a href="registrarOCTerceros.php" target="contenedorPrincipal">Registro de O.C. de Terceros</a></li-->
-					<!--li><a href="navegadorIngresosOC.php" target="contenedorPrincipal">Generar OC a traves de Ingreso</a></li-->
+					<li><a href="registrarOCTerceros.php" target="contenedorPrincipal">Registro de O.C. de Terceros</a></li-->
+					<!--li><a href="navegadorIngresosOC.php" target="contenedorPrincipal">Generar OC a traves de Ingreso</a></li>
 					<li><a href="navegador_pagos.php" target="contenedorPrincipal">Registro de Pagos</a></li>
 				</ul>	
-			</li>
+			</li-->
 			<li><span>Ingresos</span>
 				<ul>
-					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Materiales</a></li>
+					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Productos</a></li>
+					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
 					<li><a href="navegador_salidamateriales_pendientes.php" target="contenedorPrincipal">Ingresos por Traspaso Central</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
