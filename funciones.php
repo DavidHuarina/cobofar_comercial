@@ -272,5 +272,14 @@ function numeroCorrelativo($tipoDoc){
 		}
 	}
 }
-
+function obtenerCodigoAlmacenPorCiudad($ciudad){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT cod_almacen from almacenes where cod_ciudad=$ciudad";
+  $codigo=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $codigo=$detalle[0];   		
+  }  
+  return $codigo;
+}
 ?>
