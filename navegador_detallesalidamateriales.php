@@ -1,24 +1,24 @@
 <?php
 
-	require("conexion.inc");
+	require("conexionmysqli.inc");
 	require('estilos_almacenes_central_sincab.php');
 	require("funciones.php");
 
 	$sqlEmpresa="select nombre, nit, direccion from datos_empresa";
-	$respEmpresa=mysql_query($sqlEmpresa);
-	$nombreEmpresa=mysql_result($respEmpresa,0,0);
-	$nitEmpresa=mysql_result($respEmpresa,0,1);
-	$direccionEmpresa=mysql_result($respEmpresa,0,2);
+	$respEmpresa=mysqli_query($enlaceCon,$sqlEmpresa);
+	$nombreEmpresa=mysqli_result($respEmpresa,0,0);
+	$nitEmpresa=mysqli_result($respEmpresa,0,1);
+	$direccionEmpresa=mysqli_result($respEmpresa,0,2);
 	
 	
 	$sql="select s.cod_salida_almacenes, s.fecha, ts.nombre_tiposalida, s.observaciones,
 	s.nro_correlativo, s.territorio_destino, s.almacen_destino, (select c.nombre_cliente from clientes c where c.cod_cliente=s.cod_cliente),
 	(select c.dir_cliente from clientes c where c.cod_cliente=s.cod_cliente),
-	s.monto_total, s.descuento, s.monto_final
+	s.monto_total, s.descuento, s.monto_final,(select c.nit_cliente from clientes c where c.cod_cliente=s.cod_cliente)
 	FROM salida_almacenes s, tipos_salida ts
 	where s.cod_tiposalida=ts.cod_tiposalida and s.cod_almacen='$global_almacen' and s.cod_salida_almacenes='$codigo_salida'";
-	$resp=mysql_query($sql);
-	$dat=mysql_fetch_array($resp);
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
 	$codigo=$dat[0];
 	$fecha_salida=$dat[1];
 	$fecha_salida_mostrar="$fecha_salida[8]$fecha_salida[9]-$fecha_salida[5]$fecha_salida[6]-$fecha_salida[0]$fecha_salida[1]$fecha_salida[2]$fecha_salida[3]";
@@ -28,6 +28,7 @@
 	$territorio_destino=$dat[5];
 	$almacen_destino=$dat[6];
 	$nombreCliente=$dat[7];
+	$nitCliente=$dat[12];
 	$direccionCliente=$dat[8];
 	$montoNota=$dat[9];
 	$montoNota=redondear2($montoNota);
@@ -62,12 +63,12 @@
 		from salida_detalle_almacenes s, material_apoyo m
 		where s.cod_salida_almacen='$codigo' and s.cod_material=m.codigo_material";
 	
-	$resp_detalle=mysql_query($sql_detalle);
+	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 	$indice=0;
 	$montoTotal=0;
 	$pesoTotal=0;
 
-	while($dat_detalle=mysql_fetch_array($resp_detalle))
+	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$nombre_material=$dat_detalle[1];
 		$loteProducto=$dat_detalle[2];

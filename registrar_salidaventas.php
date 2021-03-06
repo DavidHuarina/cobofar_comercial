@@ -953,7 +953,7 @@ if($banderaErrorFacturacion==0){
 </div>
 
 <input type='hidden' name='materialActivo' value="0">
-<input type='hidden' name='cantidad_material' value="0">
+<input type='hidden' id="cantidad_material" name='cantidad_material' value="0">
 
 </form>
 <script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>

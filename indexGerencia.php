@@ -90,7 +90,7 @@ include("datosUsuario.php");
 			<li><span>Ingresos</span>
 				<ul>
 					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Materiales</a></li>
-					<li><a href="navegador_salidamateriales_pendientes.php" target="contenedorPrincipal">Traspasos Pendientes</a></li>
+					<li><a href="navegador_salidamateriales_pendientes.php" target="contenedorPrincipal">Ingresos por Traspaso Central</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>

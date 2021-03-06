@@ -1,5 +1,5 @@
 <?php
-
+$estilosVenta=0; //para no ejecutar las librerias js css
 require("conexionmysqli.inc");
 $usuario = $_POST["usuario"];
 $contrasena = $_POST["contrasena"];
@@ -35,7 +35,7 @@ if ($num_filas != 0) {
 	setcookie("global_almacen",$global_almacen,time()+3600*24*30, '/');
 	setcookie("globalGestion", $nombreG,time()+3600*24*30, '/');
 	
-	if($cod_cargo==1000){
+	if($cod_cargo==1000||$cod_cargo==1016 || $cod_cargo==1017 || $cod_cargo==1018){
 		header("location:indexGerencia.php");
 	}
 	if($cod_cargo==1010){
@@ -44,9 +44,9 @@ if ($num_filas != 0) {
 	if($cod_cargo==1002){
 		header("location:indexAlmacenReg.php");
 	}
-	if($cod_cargo==1016 || $cod_cargo==1017 || $cod_cargo==1018){
+	/*if($cod_cargo==1016 || $cod_cargo==1017 || $cod_cargo==1018){
 		header("location:indexSecond.php");
-	}
+	}*/
 	if($cod_cargo==1018){
 		header("location:indexConta.php");
 	}

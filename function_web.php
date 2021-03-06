@@ -193,10 +193,11 @@ function obtenerListadoProveedoresWeb(){
     require_once __DIR__.'/conexion_externa_farma.php';
     $dbh = new ConexionFarma();
     $dbh->setHost($ip);
+    $dbh->start($ip);
     $sqlDetalle="SELECT CASE
-                      WHEN REPLACE((CAST((SELECT count(*) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO='D') AS CHAR)+
-                          CAST((SELECT SUM(APU) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO='D') AS CHAR)+
-                          CAST((SELECT SUM(CPROD) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO='D')AS CHAR)+CAST((SELECT DCTO FROM $tabla WHERE DCTO1=$dcto AND TIPO='D')AS CHAR)),' ','') = '$codigoUnico'
+                      WHEN REPLACE((CAST((SELECT count(*) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO!='K') AS CHAR)+
+                          CAST((SELECT SUM(APU) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO!='K') AS CHAR)+
+                          CAST((SELECT SUM(CPROD) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO!='K')AS CHAR)+CAST((SELECT DCTO FROM $tabla WHERE DCTO1=$dcto AND TIPO!='K')AS CHAR)),' ','') = '$codigoUnico'
                         THEN 1
                         ELSE 0
                       END as EXISTE";

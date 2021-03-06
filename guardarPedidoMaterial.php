@@ -76,7 +76,7 @@ if($tipoSalida==$tipoSalidaVencimiento){
 }
 
 
-$sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM salida_almacenes";
+$sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM pedido_almacenes";
 $resp=mysqli_query($enlaceCon,$sql);
 $codigo=mysqli_result($resp,0,0);
 
@@ -104,14 +104,16 @@ if($facturacionActivada==1 && $tipoDoc==1){
 	//FIN DATOS FACTURA
 }
 
+$created_by=$usuarioVendedor;
+$created_at=date("Y-m-d H:i:s");
 
 $sql_inserta="INSERT INTO `pedido_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
 		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
 		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
-		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo, monto_cambio,cod_tipopago)
+		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo, monto_cambio,cod_tipopago,created_by,created_at)
 		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
-		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta')";
+		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at')";
 $sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
 if($sql_inserta==1){
@@ -130,48 +132,21 @@ if($sql_inserta==1){
 			
 			$respuesta=insertar_detalle_pedido($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaVencidos,$i);
 			if($respuesta!=1){
-				echo "<script>
-					alert('Existio un error en el detalle. Contacte con el administrador del sistema.');
-				</script>";
+				echo "#_#_#_#0";
 			}
 		}			
 	}
 	
 	$montoTotalConDescuento=$montoTotalVentaDetalle-$descuentoVenta;
 	//ACTUALIZAMOS EL PRECIO CON EL DETALLE
-	$sqlUpdMonto="update salida_almacenes set monto_total='$montoTotalVentaDetalle', monto_final='$montoTotalConDescuento' 
+	$sqlUpdMonto="update pedido_almacenes set monto_total='$montoTotalVentaDetalle', monto_final='$montoTotalConDescuento' 
 				where cod_salida_almacenes='$codigo'";
 	$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-	if($facturacionActivada==1){
-		$sqlUpdMonto="update facturas_venta set importe='$montoTotalConDescuento' 
-					where cod_venta='$codigo'";
-		$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-	}
 	
-	
-	if($tipoDoc==1){
-		echo "<script type='text/javascript' language='javascript'>	
-		location.href='formatoFactura.php?codVenta=$codigo';
-		</script>";	
-		//window.open('formatoFactura.php?codVenta=$codigo','','scrollbars=yes,width=1000,height=800');	
-	}
-	if($tipoDoc!=1){
-		//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
-		$banderaCorreo=obtenerValorConfiguracion(10);
-		if($banderaCorreo==1 || $banderaCorreo==2){
-			header("location:sendEmailVenta.php?codigo=$codigo&evento=1&tipodoc=$tipoDoc");
-		}else{
-			echo "<script type='text/javascript' language='javascript'>
-			location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
-			</script>";		
-		}
-	}
+	echo "#_#_#_#1";
 	
 }else{
-		echo "<script type='text/javascript' language='javascript'>
-		alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
-		location.href='navegador_salidamateriales.php';
-		</script>";
+	echo "#_#_#_#0";
 }
 
 ?>

@@ -18,14 +18,15 @@ require_once '../function_web.php';
 
 
 //DATOS PARA LISTAR DOCUMENTOS
-$fechaDesde="04/03/2021";
-$fechaHasta="05/03/2021";
+$fechaDesde="01/01/2021";
+$fechaHasta="06/03/2021";
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";
 $codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL ALMACEN ORIGEN
-$age1Destino="A=";
+$age1Destino="A1";
 $codCiudadDestino=verificarAlmacenCiudadExistente($age1Destino);
-$sql="DELETE FROM traspasos_pendientes where cod_ciudad_destino=$codCiudadDestino and cod_ciudad_origen=$codCiudadOrigen";
+$codAlmacenDestino=
+$sql="DELETE FROM ingreso_pendientes_almacenes where cod_almacen=$codAlmacenDestino";
 $sqlDelete=mysqli_query($enlaceCon,$sql);
 
 ?><br><br>Iniciando....<br><br><br><br><?php
@@ -41,6 +42,7 @@ foreach ($listAlma->lista as $alma) {
   $dbh = new ConexionFarma(); 
   if($ipOrigen!="10.10.1.11"){// verificar si es almacen para no cambiar la ip por defecto
     $dbh->setHost($ipOrigen);
+    $dbh->start($ip);
   }
   $stmt = $dbh->prepare($sql);
   $dbh=null;
@@ -56,7 +58,7 @@ foreach ($listAlma->lista as $alma) {
      ?>DOCUMENTO: <?=$dctoOrigen?><?php         
 
      $existeCon=verificarExisteTraspasoDocumentos("VDETALLE","VMAESTRO",$dctoOrigen,$codigoUnico,$ip);
-      if($existeCon==1){
+      if((int)$existeCon==1){
         ?>SE INGRESO EL DOC <?php
         //insertar datos documento
          /*$sql="INSERT INTO traspasos_pendientes (cod_documento,cod_documento_entrada,tipo_documento,descripcion,fecha_entrada,fecha_salida,cod_ciudad_origen,cod_ciudad_destino,codigo_unico_generado) VALUES($dctoOrigen,$tipoOrigen,'$gloOrigen','$fechaOrigen')";*/
