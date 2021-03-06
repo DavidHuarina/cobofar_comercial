@@ -20,7 +20,12 @@ $nitCliente=$_POST['nitCliente'];
 $tipoVenta=$_POST['tipoVenta'];
 
 $observaciones=$_POST["observaciones"];
-$almacenOrigen=$global_almacen;
+if(!isset($_POST['almacen'])){
+	$almacenOrigen=$global_almacen;
+}else{
+	$almacenOrigen=$_POST['almacen'];
+}
+
 
 $totalVenta=$_POST["totalVenta"];
 $descuentoVenta=$_POST["descuentoVenta"];
