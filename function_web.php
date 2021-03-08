@@ -210,3 +210,25 @@ function obtenerListadoProveedoresWeb(){
     $dbh=null;
     return $existeCon;
   }
+
+  function obtenerDetalleTraspasoDocumentos($tabla_detalle,$tabla,$dcto,$codigoUnico,$ip){
+    require_once __DIR__.'/conexion_externa_farma.php';
+    $dbh = new ConexionFarma();
+    $dbh->setHost($ip);
+    $dbh->start($ip);
+    $sqlDetalle="SELECT CASE
+                      WHEN REPLACE((CAST((SELECT count(*) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO!='K') AS CHAR)+
+                          CAST((SELECT SUM(APU) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO!='K') AS CHAR)+
+                          CAST((SELECT SUM(CPROD) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO!='K')AS CHAR)+CAST((SELECT DCTO FROM $tabla WHERE DCTO1=$dcto AND TIPO!='K')AS CHAR)),' ','') = '$codigoUnico'
+                        THEN 1
+                        ELSE 0
+                      END as EXISTE";
+    $stmt = $dbh->prepare($sqlDetalle);
+    $stmt->execute();
+    $existeCon=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $existeCon=$row['EXISTE'];
+    } 
+    $dbh=null;
+    return $existeCon;
+  }

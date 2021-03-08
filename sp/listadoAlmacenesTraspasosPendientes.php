@@ -19,7 +19,7 @@ require_once '../function_web.php';
 
 //DATOS PARA LISTAR DOCUMENTOS
 $fechaDesde="01/01/2021";
-$fechaHasta="06/03/2021";
+$fechaHasta="08/03/2021";
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";
 $codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL ALMACEN ORIGEN
@@ -45,7 +45,6 @@ foreach ($listAlma->lista as $alma) {
     $dbh->start($ip);
   }
   $stmt = $dbh->prepare($sql);
-  $dbh=null;
   $stmt->execute();
   $ip=$alma->ip;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -95,8 +94,22 @@ $createdDate=date("Y-m-d H:i:s");
 
 $fecha_real=date("Y-m-d");
                $consulta="insert into ingreso_pendientes_almacenes (cod_ingreso_almacen,cod_almacen,cod_tipoingreso,fecha,hora_ingreso,observaciones,cod_salida_almacen,nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nro_factura_proveedor,factura_proveedor,estado_ingreso,cod_proveedor,created_by,modified_by,created_date,modified_date) values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','0','$nota_entrega','$nro_correlativo',0,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','')";
-           echo $consulta."<br>";
+           //echo $consulta."<br>";
                $sql_inserta = mysqli_query($enlaceCon,$consulta);
+
+               $sqlDetalle="SELECT CPROD,PREVEN,HCAN FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
+             //  echo $sqlDetalle."<br>";
+        $dbh = new ConexionFarma(); 
+        $stmtDetalle = $dbh->prepare($sqlDetalle);
+        $stmtDetalle->execute();
+        while ($rowDet = $stmtDetalle->fetch(PDO::FETCH_ASSOC)) {
+          $codMaterial=$rowDet["CPROD"];
+          $precioMaterial=$rowDet["PREVEN"];
+          $cantidadMaterial=$rowDet["HCAN"];
+          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial')";
+          echo $consultaDetalle."<br>";
+          $sql_insertaDetalle = mysqli_query($enlaceCon,$consultaDetalle);
+        }
       }
 
   ?><br><?php       
