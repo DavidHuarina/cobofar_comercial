@@ -8,6 +8,7 @@ if(!function_exists('register_globals')){
 	if(!isset($estilosVenta)){
 	    include("librerias.php");// se debe cambiar a la parte posterior
         include("librerias2.php");
+        include("librerias3.php");
         ?><style type="text/css">body{background: #fff;} .filter-option{padding-top: 5px !important;padding-left: 5px !important;padding-right: 5px !important;}.dropdown-toggle::after{margin-right: -20px !important;}</style><?php	
 	}
 }else{
