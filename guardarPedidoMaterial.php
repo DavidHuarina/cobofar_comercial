@@ -8,7 +8,7 @@ require("funciones_inventarios.php");
 $usuarioVendedor=$_COOKIE['global_usuario'];
 $globalSucursal=$_COOKIE['global_agencia'];
 
-$tipoSalida=$_POST['tipoSalida'];
+$tipoSalida=1000; //traspaso
 $tipoDoc=$_POST['tipoDoc'];
 
 $almacenDestino=2;//tienda  $_POST['almacen'];

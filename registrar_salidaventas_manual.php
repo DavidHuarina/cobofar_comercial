@@ -690,9 +690,11 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 		$nroCorrelativo=$vectorNroCorrelativo[0];
 		$banderaErrorFacturacion=$vectorNroCorrelativo[1];
 	
-		echo "<span class='textogranderojo'>$nroCorrelativo</span>";
+		//echo "<span class='textogranderojo'>$nroCorrelativo</span>";
+
 	
 		?>
+		<input type='number' class='form-control' value='<?php echo $nroCorrelativo?>' id='nro_correlativo' name='nro_correlativo'>	
 	</div>
 </td>
 
