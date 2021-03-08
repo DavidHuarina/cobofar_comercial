@@ -374,20 +374,20 @@ echo "<table class='texto' cellspacing='0' width='90%'>
 <th>Ventas Anuladas</th><td bgcolor='#e74c3c' width='5%'></td>
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 //
-echo "<div class='divBotones'>
-		<input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
-        <input type='button' value='Editar' class='boton' onclick='editar_salida(this.form)'>
-		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>";		
+echo "<div class=''>
+		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+        <input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";		
 if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>";
+	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
 }else{
-	echo "<input type='button' value='Anular' class='boton2' onclick='anular_salida2(this.form)'>";	
+	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
 }
 echo "</div>";
 		
 echo "<div id='divCuerpo'>";
-echo "<center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
+echo "<center><table class='table table-sm'>";
+echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
 	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 	
 echo "<input type='hidden' name='global_almacen' value='$global_almacen' id='global_almacen'>";
@@ -486,14 +486,14 @@ while ($dat = mysqli_fetch_array($resp)) {
 echo "</table></center><br>";
 echo "</div>";
 
-echo "<div class='divBotones'>
-		<input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
-        <input type='button' value='Editar' class='boton' onclick='editar_salida(this.form)'>
-		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>";	
+echo "<div class=''>
+		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+        <input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";	
 if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>";
+	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
 }else{
-	echo "<input type='button' value='Anular' class='boton2' onclick='anular_salida2(this.form)'>";	
+	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
 }
     echo "</div>";
 	
@@ -511,25 +511,25 @@ echo "</form>";
 			<tr>
 				<td>Fecha Ini(dd/mm/aaaa)</td>
 				<td>
-				<input type='text' name='fechaIniBusqueda' id="fechaIniBusqueda" class='texto'>
+				<input type='text' name='fechaIniBusqueda' id="fechaIniBusqueda" class='form-control'>
 				</td>
 			</tr>
 			<tr>
 				<td>Fecha Fin(dd/mm/aaaa)</td>
 				<td>
-				<input type='text' name='fechaFinBusqueda' id="fechaFinBusqueda" class='texto'>
+				<input type='text' name='fechaFinBusqueda' id="fechaFinBusqueda" class='form-control'>
 				</td>
 			</tr>
 			<tr>
 				<td>Nro. de Documento</td>
 				<td>
-				<input type='text' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='texto'>
+				<input type='text' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='form-control'>
 				</td>
 			</tr>			
 			<tr>
 				<td>Cliente:</td>
 				<td>
-					<select name="clienteBusqueda" class="texto" id="clienteBusqueda">
+					<select name="clienteBusqueda" class="selectpicker form-control" id="clienteBusqueda">
 						<option value="0">Todos</option>
 					<?php
 						$sqlClientes="select c.`cod_cliente`, c.`nombre_cliente` from clientes c order by 2";
@@ -550,7 +550,7 @@ echo "</form>";
 			<tr>
 				<td>Ver:</td>
 				<td>
-				<select name='verBusqueda' id='verBusqueda' class='texto' >
+				<select name='verBusqueda' id='verBusqueda' class='selectpicker form-control' >
 					<option value='0'>Todo</option>
 					<option value='1'>No Cancelados</option>
                     <option value='2'>Anulados</option>
@@ -559,8 +559,8 @@ echo "</form>";
 			</tr>			
 		</table>	
 		<center>
-			<input type='button' value='Buscar' onClick="ajaxBuscarVentas(this.form)">
-			<input type='button' value='Cancelar' onClick="HiddenBuscar()">
+			<input type='button' value='Buscar' class="btn btn-warning" onClick="ajaxBuscarVentas(this.form)">
+			<input type='button' value='Cancelar' class="btn btn-danger" onClick="HiddenBuscar()">
 			
 		</center>
 	</div>
