@@ -106,5 +106,15 @@ function nombreProveedor($codigo){
 }
 
 
+function obtenerNombreMaestro($tabla, $codigo){
+	require("conexionmysqli.inc");
+	$sql="select nombre from $tabla where codigo='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$nombre="";
+	while($dat=mysqli_fetch_array($resp)){
+	$nombre.=$dat[0]."-";
+	}
+	return($nombre);
+}
 
 ?>
