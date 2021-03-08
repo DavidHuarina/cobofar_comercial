@@ -30,6 +30,14 @@ $consulta="
     nombre_factura = '$fact'
     WHERE cod_cliente = $codCli
 ";
+?>
+<script type="text/javascript">
+    function listadoClientes() {
+     location.href="inicioClientes.php";
+}
+
+</script>
+<?php
 $resp=mysqli_query($enlaceCon,$consulta);
 if($resp) {
     echo "<script type='text/javascript' language='javascript'>alert('Se ha modificado el cliente.');listadoClientes();</script>";

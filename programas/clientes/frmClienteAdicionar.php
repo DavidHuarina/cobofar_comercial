@@ -51,6 +51,28 @@ while($reg1=mysqli_fetch_array($rs1))
     $cadComboGenero=$cadComboGenero."<option value='$codTipo'>$nomTipo</option>";
    }
 ?>
+<script type='text/javascript' language='javascript'>
+function listadoClientes() {
+     location.href="inicioClientes.php";
+}
+function adicionarCliente() {
+    var nomcli = $("#nomcli").val();
+    var apcli = $("#apcli").val();
+    var ci = $("#ci").val();
+    var nit = $("#nit").val();
+    var dir = $("#dir").val();
+    var tel1 = $("#tel1").val();
+    var mail = $("#mail").val();
+    var area = $("#area").val();
+    var fact = $("#fact").val();
+    var edad = $("#edad").val();
+    var genero = $("#genero").val();
+    var parms="nomcli="+nomcli+"&nit="+nit+"&ci="+ci+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"&edad="+edad+"&apcli="+apcli+"&genero="+genero+"";
+    location.href="prgClienteAdicionar.php?"+parms;
+}
+
+
+        </script>
 <div class="content">
     <div class="container-fluid">
 

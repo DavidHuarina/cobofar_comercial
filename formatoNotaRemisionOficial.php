@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 $estilosVenta=1;
 require('fpdf.php');
 require('conexionmysqli.inc');

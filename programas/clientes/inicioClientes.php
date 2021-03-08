@@ -1,16 +1,13 @@
+<?php
+$estilosVenta=1;
+?>
 <html>
     <head>
         <title>Clientes</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../lib/css/paneles.css"/>
-        <link rel="stylesheet" type="text/css" href="../../stilos.css"/>
-        <link rel="stylesheet" type="text/css" href="../../dist/bootstrap/bootstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="../../dist/bootstrap/dataTables.bootstrap4.min.css"/>
-        <link rel="stylesheet" type="text/css" href="../../dist/css/micss.css"/>
-
         <script type="text/javascript" src="../../dist/bootstrap/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="../../dist/bootstrap/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="../../dist/bootstrap/dataTables.bootstrap4.min.js"></script>
         <script type="text/javascript" src="../../lib/js/xlibPrototipo-v0.1.js"></script>       
         <script type='text/javascript' language='javascript'>
 /*proceso inicial*/
@@ -21,43 +18,38 @@ $(document).ready(function() {
 });
 /*proceso inicial*/
 function listadoClientes() {
-    $("#pnl00").load("prgListaClientes.php");
+     cargarPnl("#pnl00","prgListaClientes.php");
 }
 //procesos
 function frmAdicionar() {
-    cargarPnlLjn("#pnl00","#pnl00","frmClienteAdicionar.php","","","",function(){},function(){$('.dropdown-menu').on('click', function (e) {
-  e.stopPropagation();
-});});
+     location.href="frmClienteAdicionar.php";
 }
 function frmModificar() {
     var total=$("#idtotal").val();
     var tag,sel,cod,c=0;
     for(var i=1;i<=total;i++) {
-        tag=$("#idchk"+i);
-        sel=tag.attr("checked");
-        //alert(sel)
-        if(sel==true) {
-            cod=tag.val(); 
-            c++;        
-        }
+        if(document.getElementById("idchk"+i).checked == 1){
+           cod=document.getElementById("idchk"+i).value;
+           c++;
+        }   
     }
     if(c==1) {
-        cargarPnl("#pnl00","frmClienteEditar.php","codcli="+cod);
+        location.href="frmClienteEditar.php?codcli="+cod;
+        //cargarPnl("#pnl00","frmClienteEditar.php","codcli="+cod);
     } else if(c>1) {
-        alert("Seleccione solo un elememnto para editar.");
+        alert("Seleccione solo un elemento para editar.");
     } else {
-        alert("Seleccione un elememnto para editar.");
+        alert("Seleccione un elemento para editar.");
     }
 }
 function frmEliminar() {
     var total=$("#idtotal").val();
     var tag,sel,cods="0",c=0;
     for(var i=1;i<=total;i++) {
-        tag=$("#idchk"+i);
-        sel=tag.attr("checked");
-        if(sel==true) {
-            cods=cods+","+tag.val(); c++;
-        }
+         if(document.getElementById("idchk"+i).checked == 1){
+           cods=cods+","+document.getElementById("idchk"+i).value;
+           c++;
+        } 
     }
     if(c>0) {
         if(confirm("Esta seguro de eliminar "+c+" elemento(s) ?")) {

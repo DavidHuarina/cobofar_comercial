@@ -5,7 +5,7 @@ function guardarPedidoDesdeFacturacion(){
     var cliente=$("#cliente").val();
     var tipoPrecio=$("#tipoPrecio").val();
     var razonSocial=$("#razonSocial").val();
-    var nitCliente=$("#nitCliente").val();
+    var nitCliente=0;//$("#nitCliente").val();
     var tipoVenta=$("#tipoVenta").val();
     var observaciones=$("#observaciones").val();
     var totalVenta=$("#totalVenta").val();
@@ -26,10 +26,10 @@ function guardarPedidoDesdeFacturacion(){
       error=1;
       mensaje="Debe registrar la observación con la que desea guardar el pedido!";
     } 
-    if(nitCliente==""){
+   /* if(nitCliente==""){
       error=1;
       mensaje="Debe registrar el nit!";
-    } 
+    }*/ 
 
   if(error==0){
 	 var parametros={"tipoSalida":tipoSalida,"tipoDoc":tipoDoc,"cliente":cliente,
@@ -59,7 +59,7 @@ function guardarPedidoDesdeFacturacion(){
             if (resp_a[1]==1){
                 Swal.fire("Correcto!", "El proceso se completo correctamente!", "success")
                     .then((value) => {
-                    location.reload();
+                    //location.reload();
                 });
             }else{
                 if(resp_a[1]=="<b>Todos los campos son obligatorios</b>"){

@@ -45,11 +45,33 @@ if($nroregs==1)
    }
 
 ?>
+<script type='text/javascript' language='javascript'>
+
+/*proceso inicial*/
+function listadoClientes() {
+     location.href="inicioClientes.php";
+}
+
+
+function modificarCliente() {
+    var codcli = $("#codcli").text();
+    var nomcli = $("#nomcli").val();
+    var nit = $("#nit").val();
+    var dir = $("#dir").val();
+    var tel1 = $("#tel1").val();
+    var mail = $("#mail").val();
+    var area = $("#area").val();
+    var fact = $("#fact").val();
+    var parms="codcli="+codcli+"&nomcli="+nomcli+"&nit="+nit+"&dir="+dir+"&tel1="+tel1+"&mail="+mail+"&area="+area+"&fact="+fact+"";
+    location.href="prgClienteModificar.php?"+parms;
+}
+
+        </script>
 <center>
     <br/>
     <h1>Editar Cliente</h1>
-    <table class="texto">
-        <tr>
+    <table class="table table-sm">
+        <tr class="bg-info text-white">
             <th>Codigo</th>
             <th>Cliente</th>
             <th>NIT</th>
@@ -58,24 +80,24 @@ if($nroregs==1)
         </tr>
         <tr>
             <td><span id="codcli"><?php echo "$codCliente"; ?></span></td>
-            <td><input type="text" id="nomcli" value="<?php echo "$nomCliente"; ?>"/></td>
-            <td><input type="text" id="nit" value="<?php echo "$nitCliente"; ?>"/></td>
-            <td><input type="text" id="dir" value="<?php echo "$dirCliente"; ?>"/></td>
-            <td><input type="text" id="tel1" value="<?php echo "$telefono1"; ?>"/></td>
+            <td><input class="form-control" type="text" id="nomcli" value="<?php echo "$nomCliente"; ?>"/></td>
+            <td><input class="form-control" type="text" id="nit" value="<?php echo "$nitCliente"; ?>"/></td>
+            <td><input class="form-control" type="text" id="dir" value="<?php echo "$dirCliente"; ?>"/></td>
+            <td><input class="form-control" type="text" id="tel1" value="<?php echo "$telefono1"; ?>"/></td>
         </tr>
-        <tr>
+        <tr class="text-white bg-info">
             <th>Correo</th>
             <th>Factura</th>
             <th colspan="3">Ciudad</th>
         </tr>
         <tr>
-            <td><input type="text" id="mail" value="<?php echo "$email"; ?>"/></td>
-            <td><input type="text" id="fact" value="<?php echo "$nomFactura"; ?>"/></td>
-            <td colspan="3"><select id="area"><?php echo "$cadComboCiudad"; ?></select></td>
+            <td><input class="form-control" type="text" id="mail" value="<?php echo "$email"; ?>"/></td>
+            <td><input class="form-control" type="text" id="fact" value="<?php echo "$nomFactura"; ?>"/></td>
+            <td colspan="3"><select id="area" class="selectpicker form-control"><?php echo "$cadComboCiudad"; ?></select></td>
         </tr>
     </table>
     <br/>
-    <input class='boton' type="button" value="Modificar" onclick="javascript:modificarCliente();" />
-    <input class='boton2' type="button" value="Cancelar" onclick="javascript:listadoClientes();" />
+    <input class='btn btn-primary' type="button" value="Modificar" onclick="javascript:modificarCliente();" />
+    <input class='btn btn-danger' type="button" value="Cancelar" onclick="javascript:listadoClientes();" />
     <br/>
 </center>

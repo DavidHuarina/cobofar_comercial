@@ -17,7 +17,7 @@ require("../../conexionmysqli.inc");
               <div class="card-body ">
                 <?php
 echo "<center>";
-echo "<table class='table table-bordered' id='tablaPrincipal'><thead>";
+echo "<table class='table table-sm' id='tablaPrincipal'><thead>";
 echo "<tr class='bg-principal'>";
 echo "<th>&nbsp;</th><th>Cliente</th><th>NIT</th><th>Direccion</th><th>Ciudad</th>";
 echo "</tr></thead><tbody>";
