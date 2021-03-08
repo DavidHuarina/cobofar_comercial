@@ -418,7 +418,24 @@ function fun13(cadIdOrg,cadIdDes)
 
 num=0;
 cantidad_items=0;
-
+function ajaxPrecioItem(indice){
+	var contenedor;
+	contenedor=document.getElementById("idprecio"+indice);
+	var codmat=document.getElementById("materiales"+indice).value;
+	var tipoPrecio=document.getElementById("tipoPrecio"+indice).value;
+	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio,true);
+	ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			var respuesta=ajax.responseText.split("#####");
+			contenedor.innerHTML = respuesta[0];
+            document.getElementById("descuentoProducto"+indice).value=(respuesta[1]*parseFloat(cantidadUnitaria)); 
+			calculaMontoMaterial(indice);
+		}
+	}
+	ajax.send(null);
+}
 function mas(obj) {
 	if(num>=1000){
 		alert("No puede registrar mas de 15 items en una nota.");
@@ -446,12 +463,15 @@ function mas(obj) {
 			fi.type="style";
 			fi.appendChild(contenedor);
 			var div_material;
-			div_material=document.getElementById("div"+num);			
+			div_material=document.getElementById("div"+num);	
+			var cod_precio=document.getElementById("tipoPrecio").value;			
 			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num,true);
+			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio,true);
+
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
+					$('.selectpicker').selectpicker('refresh');
 					buscarMaterial(form1, num);
 				}
 			}		
@@ -648,7 +668,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <th>Tipo de Documento</th>
 <th>Nro.Factura</th>
 <th>Fecha</th>
-<!--<th>Precio</th>-->
+<th>Precio</th>
 <th>Tipo Pago</th>
 <th>NIT</th>
 <th>Nombre/RazonSocial</th>
@@ -701,16 +721,12 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 </td>
 
 
-<!--<td>
-	<div id='divTipoPrecio' >
-		
-
-	</div>
-</td>-->
+<td>
+	<div id='divTipoPrecio' >	
 <?php
 			$sql1="select codigo, nombre from tipos_precio order by 1";
 			$resp1=mysqli_query($enlaceCon,$sql1);
-			echo "<select name='tipoPrecio' class='selectpicker form-control d-none' data-style='btn-info' id='tipoPrecio'>";
+			echo "<select name='tipoPrecio' class='selectpicker form-control' data-style='btn-info' id='tipoPrecio'>";
 			while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
@@ -718,6 +734,9 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 			}
 			echo "</select>";
 			?>
+	</div>
+</td>
+
 <td>
 	<div id='divTipoVenta'>
 		<?php
@@ -785,7 +804,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 }
 ?>
 	</select>
-	<input type="hidden" name="tipoPrecio" value="1">
+	<!--<input type="hidden" name="tipoPrecio" value="1">-->
 
 </td>
 <td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="alerts.showSwal('mensaje-guardar-pedido','')"
@@ -805,15 +824,14 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<b>Detalle de la Venta    </b>
 		</td>
 	</tr>
-
-	<tr align="center" class="bg-info text-white" style='background:#16B490 !important;'>
+    <tr align="center" class="bg-info text-white" style='background:#16B490 !important;'>
 		<td width="5%">&nbsp;</td>
-		<td width="35%">Material</td>
+		<td width="30%">Material</td>
 		<td width="10%">Stock</td>
-		<td width="10%">Cantidad</td>
+		<td width="10%" align="left">Cantidad</td>
 		<td width="10%">Precio </td>
-		<td width="10%">Desc.(%)</td>
-		<td width="10%">Monto</td>
+		<td width="15%" align="left">Desc.</td>
+		<td width="10%" align="left">Monto</td>
 		<td width="10%">&nbsp;</td>
 	</tr>
 	</table>
