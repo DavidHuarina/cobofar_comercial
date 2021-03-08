@@ -283,15 +283,15 @@ echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>Le
 <th>Salidas locales</th><td bgcolor='#66ff99' width='5%'></td>
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 //
-echo "<div class='divBotones'>
-<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav()'>
-		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
-		<input type='button' value='Anular Salida' class='boton2' onclick='anular_salida(this.form)'>
+echo "<div class=''>
+<input type='button' value='Registrar Salida' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
+		<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
 </div>";
 
 echo "<div id='divCuerpo'>";
-echo "<center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
+echo "<center><table class='table table-sm'>";
+echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
 	<th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>&nbsp;</th></tr>";
 	
 
@@ -376,7 +376,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
-    echo "<tr bgcolor='$color_fondo'>";
+    echo "<tr>";
     echo "<td align='center'>&nbsp;$chk</td>";
     echo "<td align='center'>$nro_correlativo</td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
@@ -397,10 +397,10 @@ while ($dat = mysqli_fetch_array($resp)) {
 echo "</table></center><br>";
 echo "</div>";
 
-echo "<div class='divBotones'>
-<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav()'>
-		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
-		<input type='button' value='Anular Salida' class='boton2' onclick='anular_salida(this.form)'>
+echo "<div class=''>
+<input type='button' value='Registrar Salida' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
+		<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
 </div>";
 
 
@@ -418,25 +418,25 @@ echo "</form>";
 			<tr>
 				<td>Fecha Ini(dd/mm/aaaa)</td>
 				<td>
-				<input type='text' name='fechaIniBusqueda' id="fechaIniBusqueda" class='texto'>
+				<input type='text' name='fechaIniBusqueda' id="fechaIniBusqueda" class='form-control'>
 				</td>
 			</tr>
 			<tr>
 				<td>Fecha Fin(dd/mm/aaaa)</td>
 				<td>
-				<input type='text' name='fechaFinBusqueda' id="fechaFinBusqueda" class='texto'>
+				<input type='text' name='fechaFinBusqueda' id="fechaFinBusqueda" class='form-control'>
 				</td>
 			</tr>
 			<tr>
 				<td>Nro. de Documento</td>
 				<td>
-				<input type='text' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='texto'>
+				<input type='text' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='form-control'>
 				</td>
 			</tr>			
 			<tr>
 				<td>Ver:</td>
 				<td>
-				<select name='verBusqueda' id='verBusqueda' class='texto' >
+				<select name='verBusqueda' id='verBusqueda' class='selectpicker form-control' >
 					<option value='0'>Todo</option>
 					<option value='1'>No Cancelados</option>
 				</select>
@@ -444,8 +444,8 @@ echo "</form>";
 			</tr>			
 		</table>	
 		<center>
-			<input type='button' value='Buscar' onClick="ajaxBuscarVentas(this.form)">
-			<input type='button' value='Cancelar' onClick="HiddenBuscar()">
+			<input type='button' value='Buscar' class="btn btn-warning" onClick="ajaxBuscarVentas(this.form)">
+			<input type='button' value='Cancelar' class="btn btn-danger" onClick="HiddenBuscar()">
 			
 		</center>
 	</div>

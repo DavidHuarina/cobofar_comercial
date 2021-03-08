@@ -44,11 +44,11 @@ echo "<script language='Javascript'>
 	echo "<h1>Ingreso en Transito</h1>";
 
 	echo "<center><table class='texto'>";
-	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='editar_nav(this.form)'></td></tr></table></center>";
+	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-warning' onclick='editar_nav(this.form)'></td></tr></table></center>";
 
 
-	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Fecha Despacho</th><th>Tipo de Salida<br>(Origen)</th><th>Territorio<br>Origen</th><th>Nota de Remision<br>(Origen)</th><th>Observaciones</th><th>Detalle</th></tr>";
+	echo "<center><table class='table table-sm table-bordered'>";
+	echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Fecha Despacho</th><th>Tipo de Salida<br>(Origen)</th><th>Territorio<br>Origen</th><th>Nota de Remision<br>(Origen)</th><th>Observaciones</th><th>Detalle</th></tr>";
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
@@ -70,7 +70,7 @@ echo "<script language='Javascript'>
 	echo "</table></center><br>";
 	
 	echo "<center><table border='0' class='texto'>";
-	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='editar_nav(this.form)'></td></tr></table></center>";
+	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-warning' onclick='editar_nav(this.form)'></td></tr></table></center>";
 	
 	echo "</form>";
 ?>

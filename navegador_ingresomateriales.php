@@ -216,18 +216,18 @@ echo "<h1>Ingreso de Materiales</h1>";
 
 echo "<table border='1' cellspacing='0' class='textomini'><tr><th>Leyenda:</th><th>Ingresos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>Ingresos con movimiento</th><td bgcolor='#ffff99' width='10%'></td><th>Ingresos sin movimiento</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 
-//<input type='button' value='Editar Ingreso' class='boton' onclick='editar_ingreso(this.form)'>
-echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='enviar_nav()'>";
+//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'>
+echo "<div class=''><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>";
 if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='boton2' onclick='anular_ingreso(this.form)'>";	
+	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='boton2' onclick='anular_ingreso2(this.form)'>";
+	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
 }
-echo"<td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
+echo"<td><input type='button' value='Buscar' class='btn btn-primary' onclick='ShowBuscar()'></div>";
 
 echo "<div id='divCuerpo'>";
-echo "<br><center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Numero Ingreso</th><th>Nota de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th>
+echo "<br><center><table class='table table-sm'>";
+echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Ingreso</th><th>Nota de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
 <th>Observaciones</th><th>&nbsp;</th></tr>";
 while ($dat = mysqli_fetch_array($resp)) {
@@ -281,15 +281,15 @@ while ($dat = mysqli_fetch_array($resp)) {
 echo "</table></center><br>";
 echo "</div>";
 
-//<input type='button' value='Editar Ingreso' class='boton' onclick='editar_ingreso(this.form)'>
-echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='enviar_nav()'>";
+//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'>
+echo "<div class=''><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>";
 if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='boton2' onclick='anular_ingreso(this.form)'>";	
+	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='boton2' onclick='anular_ingreso2(this.form)'>";
+	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
 }
 
-echo "<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
+echo "<input type='button' value='Buscar' class='btn btn-primary' onclick='ShowBuscar()'></div>";
 echo "</form>";
 ?>
 
@@ -340,8 +340,8 @@ echo "</form>";
 			</tr>			
 		</table>	
 		<center><br>
-			<input type='button' value='Buscar' class='boton' onClick="ajaxBuscarIngresos(this.form)">
-			<input type='button' value='Cancelar' class='boton2' onClick="HiddenBuscar();">
+			<input type='button' value='Buscar' class='btn btn-primary' onClick="ajaxBuscarIngresos(this.form)">
+			<input type='button' value='Cancelar' class='btn btn-warning' onClick="HiddenBuscar();">
 			
 		</center>
 	</div>
