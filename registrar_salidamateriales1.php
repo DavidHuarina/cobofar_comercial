@@ -281,6 +281,7 @@ else
 }
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1'>
+	<input type="hidden" name="no_venta" value="1">
 <h1>Registrar Salida de Almacen</h1>
 
 <table class='texto' align='center' width='90%'>
