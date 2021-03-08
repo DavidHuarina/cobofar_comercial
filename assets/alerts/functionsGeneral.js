@@ -16,7 +16,23 @@ function guardarPedidoDesdeFacturacion(){
     var fecha=$("#fecha").val();
     var cantidad_material=num; //num es para obtener la cantidad
 
-	var parametros={"tipoSalida":tipoSalida,"tipoDoc":tipoDoc,"cliente":cliente,
+
+    var error=0;var mensaje="";
+    if(cantidad_material==0){
+      error=1;
+      mensaje="Debe registrar al menos un detalle para el pedido!";
+    } 
+    if(observaciones==""){
+      error=1;
+      mensaje="Debe registrar la observación con la que desea guardar el pedido!";
+    } 
+    if(nitCliente==""){
+      error=1;
+      mensaje="Debe registrar el nit!";
+    } 
+
+  if(error==0){
+	 var parametros={"tipoSalida":tipoSalida,"tipoDoc":tipoDoc,"cliente":cliente,
 	"tipoPrecio":tipoPrecio,"razonSocial":razonSocial,"nitCliente":nitCliente,"tipoVenta":tipoVenta,
     "observaciones":observaciones,"totalVenta":totalVenta,"descuentoVenta":descuentoVenta,"totalFinal":totalFinal,
     "efectivoRecibido":efectivoRecibido,"cambioEfectivo":cambioEfectivo,"fecha":fecha,"cantidad_material":cantidad_material};
@@ -46,8 +62,15 @@ function guardarPedidoDesdeFacturacion(){
                     location.reload();
                 });
             }else{
-               Swal.fire("Error!", 'El proceso tuvo un problema!. Contacte con el administrador!', "error"); 
+                if(resp_a[1]=="<b>Todos los campos son obligatorios</b>"){
+                  Swal.fire("Error!", resp_a[0], "error"); 
+                }else{
+                  Swal.fire("Error!",'El proceso tuvo un problema!. Contacte con el administrador!', "error");      
+                }               
             }          
         }
     });
+ }else{
+    Swal.fire("Error!", mensaje, "error");  
+ }
 }

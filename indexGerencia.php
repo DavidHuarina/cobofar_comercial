@@ -54,6 +54,7 @@ include("datosUsuario.php");
 					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Distribuidores</a></li>
 					<li><a href="navegador_material.php" target="contenedorPrincipal">Productos</a></li>
 					<li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li>
+					<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Precios y Descuentos</a></li>
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>
 					<!--li><a href="navegador_vehiculos.php" target="contenedorPrincipal">Vehiculos</a></li-->
 					<li><span>Gestion de Almacenes</span>
@@ -91,7 +92,7 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Productos</a></li>
 					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
-					<li><a href="navegador_salidamateriales_pendientes.php" target="contenedorPrincipal">Ingresos por Traspaso Central</a></li>
+					<li><a href="navegador_ingresotransitoalmacen.php" target="contenedorPrincipal">Ingresos por Traspaso Central</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>
@@ -99,6 +100,7 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos</a></li>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>					
+					<li><a href="navegadorPedidos.php" target="contenedorPrincipal">Listado de Pedidos</a></li>					
 				</ul>	
 			</li>
 			<li><span>Marcados de Personal</span>
@@ -119,6 +121,7 @@ include("datosUsuario.php");
 			</li-->
 			<li><a href="registrar_ingresomateriales.php" target="contenedorPrincipal">Registrar Ingreso **</a></li>
 			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar **</a></li>
+			<li><a href="registrar_salidaventas_manual.php" target="_blank">Vender / Facturar (MANUAL)**</a></li>
 			<li><a href="listadoProductosStock.php" target="_blank">Listado de Productos **</a></li>
 
 			<li><span>Reportes</span>

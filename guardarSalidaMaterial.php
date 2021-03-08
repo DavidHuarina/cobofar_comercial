@@ -85,9 +85,12 @@ $sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM salida_almacenes";
 $resp=mysqli_query($enlaceCon,$sql);
 $codigo=mysqli_result($resp,0,0);
 
-
 $vectorNroCorrelativo=numeroCorrelativo($tipoDoc);
-$nro_correlativo=$vectorNroCorrelativo[0];
+if(!isset($_POST["nro_correlativo"])){
+  $nro_correlativo=$vectorNroCorrelativo[0];
+}else{
+  $nro_correlativo=$_POST["nro_correlativo"];
+}
 $cod_dosificacion=$vectorNroCorrelativo[2];
 
 if($facturacionActivada==1 && $tipoDoc==1){
@@ -134,7 +137,13 @@ if($sql_inserta==1){
 	for($i=1;$i<=$cantidad_material;$i++)
 	{   	
 		$codMaterial=$_POST["materiales$i"];
-		if($codMaterial!=0){
+
+		if(!isset($_POST["stock$i"])){
+          $stock=1;
+		}else{
+		  $stock=$_POST["stock$i"];	
+		}		
+		if($codMaterial!=0&&$stock>0){
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
 			$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];

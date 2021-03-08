@@ -1,4 +1,3 @@
-
 function cambiarDatosProductosTable(valor){
 	$("#mensaje_input_codigo_barras").html("");
   var parametros={"codigo":valor};

@@ -282,4 +282,94 @@ function obtenerCodigoAlmacenPorCiudad($ciudad){
   }  
   return $codigo;
 }
+
+function obtenerTotalDias(){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT count(*) cantidad from dias where estado=1";
+  $cantidad=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $cantidad=$detalle[0];   		
+  }  
+  return $cantidad;
+}
+function obtenerTotalCiudades(){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT count(*) cantidad from ciudades where cod_estadoreferencial=1";
+  $cantidad=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $cantidad=$detalle[0];   		
+  }  
+  return $cantidad;
+}
+function obtenerNombreDiaCompleto($dia){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT nombre from dias where codigo=$dia";
+  $abrev="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $abrev=$detalle[0];   		
+  }  
+  return $abrev;
+}
+
+function obtenerNombreDia($dia){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT abreviatura2 from dias where codigo=$dia";
+  $abrev="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $abrev=$detalle[0];   		
+  }  
+  return $abrev;
+}
+function obtenerNombreCiudad($ciudad){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT descripcion from ciudades where cod_ciudad=$ciudad";
+  $nombre="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $nombre=$detalle[0];   		
+  }  
+  return $nombre;
+}
+function obtenerNombreDesDiasRegistrados($codigo){
+  $cantidad=obtenerTotalDias();
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=$codigo";
+  $i=0;
+  $diasArray=[];				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $diasArray[$i]=obtenerNombreDia($detalle[0]);
+       $i++;  		
+  }  
+  if(count($diasArray)==$cantidad){
+  	return "TODOS";
+  }else if(count($diasArray)==0){
+  	return "NINGUNO";
+  }else{
+  	return implode(", ",$diasArray);
+  }
+}
+function obtenerNombreDesCiudadesRegistrados($codigo){
+  $cantidad=obtenerTotalCiudades();
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=$codigo";
+  $i=0;
+  $ciudadArray=[];				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $ciudadArray[$i]=obtenerNombreCiudad($detalle[0]);
+       $i++;  		
+  }  
+  if(count($ciudadArray)==$cantidad){
+  	return "TODOS";
+  }else if(count($ciudadArray)==0){
+  	return "NINGUNO";
+  }else{
+  	return implode(", ",$ciudadArray);
+  }
+}
 ?>

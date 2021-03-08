@@ -688,7 +688,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 		}
 		$resp=mysqli_query($enlaceCon,$sql);
 
-		echo "<select class='selectpicker form-control' data-style='btn-info' name='tipoDoc' id='tipoDoc' onChange='ajaxNroDoc(form1)' required>";
+		echo "<select class='selectpicker form-control' data-style='btn-info' name='tipoDoc' id='tipoDoc'  required>";
 		echo "<option value=''>-</option>";
 		while($dat=mysqli_fetch_array($resp)){
 			$codigo=$dat[0];
@@ -710,9 +710,10 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 		$nroCorrelativo=$vectorNroCorrelativo[0];
 		$banderaErrorFacturacion=$vectorNroCorrelativo[1];
 	
-		echo "<span class='textogranderojo'>$nroCorrelativo</span>";
+		//echo "<span class='textogranderojo'>$nroCorrelativo</span>";
 	
 		?>
+		<input type='number' class='form-control' value='<?php echo $nroCorrelativo?>' id='nro_correlativo' name='nro_correlativo'>	
 	</div>
 </td>
 
