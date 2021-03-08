@@ -68,6 +68,7 @@ include("datosUsuario.php");
 
 					<li><span>Materiales y Precios</span>
 					<ul>
+						<li><a href="grupos/list.php" target="contenedorPrincipal">Clasificadores</a></li>
 						<li><a href="navegador_empaques.php" target="contenedorPrincipal">Empaques</a></li>
 						<li><a href="navegador_formasfar.php" target="contenedorPrincipal">Formas Farmaceuticas</a></li>
 						<li><a href="navegador_accionester.php" target="contenedorPrincipal">Acciones Terapeuticas</a></li>
@@ -103,12 +104,12 @@ include("datosUsuario.php");
 					<li><a href="navegadorPedidos.php" target="contenedorPrincipal">Listado de Pedidos</a></li>					
 				</ul>	
 			</li>
-			<li><span>Marcados de Personal</span>
+			<!--li><span>Marcados de Personal</span>
 				<ul>
 					<li><a href="registrar_marcado.php" target="contenedorPrincipal">Registro de Marcados</a></li>
 					<li><a href="rptOpMarcados.php" target="contenedorPrincipal">Reporte de Marcados</a></li>
 				</ul>	
-			</li>
+			</li-->
 			<!--li><span>Listado de Cobranzas</span>
 				<ul>
 					<li><a href="navegadorCobranzas.php" target="contenedorPrincipal">Listado de Cobranzas</a></li>

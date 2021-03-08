@@ -1,6 +1,6 @@
 <?php
 
-require("../conexion.inc");
+require("../conexionmysqli.inc");
 require("../estilos2.inc");
 require("configModule.php");
 require_once("../funcion_nombres.php");
