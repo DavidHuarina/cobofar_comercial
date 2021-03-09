@@ -16,6 +16,11 @@
         <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
         <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
         <link rel="stylesheet" type="text/css" href="dist/demo.css"/>
+        <style type="text/css">
+        	body{
+              zoom: 86%;
+            }
+        </style>
 	
 <script type='text/javascript' language='javascript'>
 function funcionInicio(){
@@ -537,10 +542,26 @@ require("estilos_almacenes.inc");
 require("funciones.php");
 ?>
 <script>
-function validar(f, ventaDebajoCosto,pedido){	
+function validar(f, ventaDebajoCosto,pedido){
+    if(pedido==1){
+	  $("#pedido_realizado").val(pedido);
+    }	
+    var pedidoFormu=parseInt($("#pedido_realizado").val());
 	//alert(ventaDebajoCosto);
 	f.cantidad_material.value=num;
 	var cantidadItems=num;
+	var itemsStock0=0;
+	for(var i=1; i<=cantidadItems; i++){
+			if(document.getElementById("materiales"+i)!=null){
+				if(document.getElementById("stock"+i).value==0){
+					itemsStock0++;
+				}		
+			}
+    }
+    if(pedidoFormu==2){ 
+    	//VALIDA SI SOLO SE AGREGAN STOCK EN 0 PARA YA NO FACTURAR (OPCION GUARDAR Y PEDIR)
+    	cantidadItems=cantidadItems-itemsStock0;
+    }
 	console.log("numero de items: "+cantidadItems);
 	var errores=0;
 	if(cantidadItems>0){
@@ -576,40 +597,58 @@ function validar(f, ventaDebajoCosto,pedido){
 		
 				console.log("materiales"+i+" valor: "+item);
 				console.log("stock: "+stock+" cantidad: "+cantidad+ "precio: "+precioUnit);
-
-				if(item==0){
+                
+                if(item==0){
 					errores++;
 					alert("Debe escoger un item en la fila "+i);
+					$("#pedido_realizado").val(0);
+					return(false);
+				}
+				if($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()==""){
+					errores++;
+					alert("Debe registrar el monto de efectivo recibido");
+					$("#pedido_realizado").val(0);
 					return(false);
 				}
 				//alert(costoUnit+" "+precioUnit);
 				if(costoUnit>precioUnit && ventaDebajoCosto==0){
 					errores++;
 					alert('No puede registrar una venta a perdida!!!!');
+					$("#pedido_realizado").val(0);
 					return(false);
 				}
-				if(stock<cantidad&&pedido==0){
+				if(stock<cantidad&&pedidoFormu==0){
 					errores++;
 					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);
+					$("#pedido_realizado").val(0);
 					return(false);
 				}		
 				if((cantidad<=0 || precioUnit<=0) || (Number.isNaN(cantidad)) || Number.isNaN(precioUnit)){
 					errores++;
 					alert("La cantidad y/o Precio no pueden estar vacios o ser <= 0.");
+					$("#pedido_realizado").val(0);
 					return(false);
 				}
 
 			}
 		  }
-		  if(errores==0&&pedido==1){
-              guardarPedidoDesdeFacturacion();
+		  if(errores==0&&pedidoFormu==1){
+              guardarPedidoDesdeFacturacion(1);
+              return false;
 		  }
 		}else{
 		  alert("Debe registrar el Cliente.");
+		  $("#pedido_realizado").val(0);
 		  return(false);
 		}		
 	}else{
-		alert("El ingreso debe tener al menos 1 item.");
+		if(pedidoFormu==2){
+			location.href='navegadorPedidos.php';
+		    return(false);
+		}else{
+			alert("El ingreso debe tener al menos 1 item.");
+		}		
+		$("#pedido_realizado").val(0);
 		return(false);
 	}
 }
@@ -656,6 +695,7 @@ $respConf=mysqli_query($enlaceCon,$sqlConf);
 $ventaDebajoCosto=mysqli_result($respConf,0,0);
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
+	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
 <tr align='center' class="text-white header">
@@ -688,7 +728,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 		}
 		$resp=mysqli_query($enlaceCon,$sql);
 
-		echo "<select class='selectpicker form-control' data-style='btn-info' name='tipoDoc' id='tipoDoc'  required>";
+		echo "<select class='selectpicker form-control' data-style='btn-info' name='tipoDoc' id='tipoDoc' required>";
 		echo "<option value=''>-</option>";
 		while($dat=mysqli_fetch_array($resp)){
 			$codigo=$dat[0];
@@ -808,8 +848,8 @@ while($dat2=mysqli_fetch_array($resp2)){
 	<!--<input type="hidden" name="tipoPrecio" value="1">-->
 
 </td>
-<td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="alerts.showSwal('mensaje-guardar-pedido','')"
-	class="btn btn-primary btn-sm"><i class="material-icons">save</i> PEDIDO </a></td>
+<td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" title="Registrar Nuevo Cliente" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="alerts.showSwal('mensaje-guardar-pedido','')"
+	class="btn btn-default btn-sm" title="Guardar Pedido"><i class="material-icons">save</i> PEDIDO </a></td>
 </tr>
 
 </table>
@@ -955,9 +995,11 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 if($banderaErrorFacturacion==0){
 	echo "<div class=''>
-	        <input type='submit' class='btn btn-warning' value='Guardar Venta' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto,0)'>
-	        <input type='submit' onClick='return validar(this.form, $ventaDebajoCosto,1)' id='btsubmitPedido' name='btsubmitPedido' class='btn btn-primary btn-sm float-right' value='G. PEDIDO'>
-			<input type='button' class='btn btn-danger' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
+	        <div class='btn-group' role='group' aria-label='Grupo Venta' style='position:fixed;margin-top:0 !important;'>
+               <button type='submit' class='btn btn-warning' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto,0)'>Guardar Venta</button>
+			   <button type='button' class='btn btn-danger' onClick='location.href=\"navegador_ingresomateriales.php\"';>Cancelar</button>
+			   <button type='submit' onClick='return validar(this.form, $ventaDebajoCosto,1)' id='btsubmitPedido' name='btsubmitPedido' class='btn btn-default float-right'><i class='material-icons'>save</i> Guardar Venta y Pedido</button>
+            </div>	       
             <h2 style='font-size:11px;color:#9EA09E; display:none;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
