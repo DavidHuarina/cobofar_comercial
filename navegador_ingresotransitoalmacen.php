@@ -34,7 +34,7 @@ echo "<script language='Javascript'>
 		}
 		</script>";
 	echo "<form method='post' action=''>";
-	$sql="SELECT s.cod_ingreso_almacen, s.cod_almacen, s.fecha, ts.nombre_tipoingreso, a.nombre_almacen, s.observaciones, s.nro_correlativo,s.estado_ingreso 
+	$sql="SELECT s.cod_ingreso_almacen, s.cod_almacen, s.fecha, ts.nombre_tipoingreso, a.nombre_almacen, s.observaciones, s.nro_correlativo,s.estado_ingreso, s.nota_entrega
 	FROM ingreso_pendientes_almacenes s, tipos_ingreso ts, almacenes a 
 	where s.cod_tipoingreso=ts.cod_tipoingreso and s.cod_almacen='$global_almacen' and a.cod_almacen=s.cod_almacen and s.ingreso_anulado <> 1";
 	
@@ -48,7 +48,7 @@ echo "<script language='Javascript'>
 
 
 	echo "<center><table class='table table-sm'>";
-	echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Fecha Despacho</th><th>Tipo de Salida<br>(Origen)</th><th>Territorio<br>Origen</th><th>Nota de Remision<br>(Origen)</th><th>Observaciones</th><th>Detalle</th></tr>";
+	echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Fecha Despacho</th><th>Tipo de Salida</th><th>Sucursal<br>Destino</th><th>N. Correlativo</th><th>Observaciones</th><th>N. Doc. K<br>(Origen)</th><th>Detalle</th></tr>";
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
@@ -64,10 +64,11 @@ echo "<script language='Javascript'>
 		$nombre_almacen=$dat[4];
 		$obs_salida=$dat[5];
 		$nro_correlativo=$dat[6];
+		$nro_dcto=$dat[8];
 		if($dat[7]==1){
-           echo "<tr class='text-danger'><td>Ingresado!</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen $ciudad_almacen_origen</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td><a target='_BLANK' href='detalleIngresoTransitoAlmacen.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
+           echo "<tr class='text-danger'><td>Ingresado!</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen $ciudad_almacen_origen</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td align='center'>$nro_dcto</td><td><a target='_BLANK' href='detalleIngresoTransitoAlmacen.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
 		}else{
-           echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen $ciudad_almacen_origen</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td><a target='_BLANK' href='detalleIngresoTransitoAlmacen.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
+           echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen $ciudad_almacen_origen</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td align='center'>$nro_dcto</td><td><a target='_BLANK' href='detalleIngresoTransitoAlmacen.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
 		}		
 		echo "<img src='imagenes/detalle.png' title='Ver Detalles' width='40'></a></td></tr>";
 	}

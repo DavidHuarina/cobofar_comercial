@@ -45,7 +45,7 @@ alerts = {
         buttonsStyling: false
       }).then((result) => {
           if (result.value) {
-            guardarPedidoDesdeFacturacion(); 
+            guardarPedidoDesdeFacturacion(0); 
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);

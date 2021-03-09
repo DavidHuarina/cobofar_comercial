@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
@@ -50,8 +50,17 @@ if($sql_inserta==1){
 			$cantidad=$_POST["cantidad_unitaria$i"];
 			$precioBruto=$_POST["precio$i"];
 			$lote=$_POST["lote$i"];
-			$ubicacionEstante=$_POST["ubicacion_estante$i"];
-			$ubicacionFila=$_POST["ubicacion_fila$i"];
+			if(!isset($_POST["ubicacion_estante$i"])){
+              $ubicacionEstante=0;
+			}else{
+              $ubicacionEstante=$_POST["ubicacion_estante$i"];
+			}
+			if(!isset($_POST["ubicacion_fila$i"])){
+              $ubicacionFila=0;
+			}else{
+              $ubicacionFila=$_POST["ubicacion_fila$i"];
+			}
+			
 			if($lote==""){
 				$lote=0;
 			}

@@ -1,4 +1,4 @@
-function guardarPedidoDesdeFacturacion(){
+function guardarPedidoDesdeFacturacion(guardar){
     //DATOS CABECERA
     var tipoSalida=$("#tipoSalida").val();
     var tipoDoc=$("#tipoDoc").val();
@@ -59,6 +59,8 @@ function guardarPedidoDesdeFacturacion(){
             if (resp_a[1]==1){
                 Swal.fire("Correcto!", "El proceso se completo correctamente!", "success")
                     .then((value) => {
+                    $("#pedido_realizado").val(2);
+                    $("#btsubmit").click();  
                     //location.reload();
                 });
             }else{
@@ -72,5 +74,9 @@ function guardarPedidoDesdeFacturacion(){
     });
  }else{
     Swal.fire("Error!", mensaje, "error");  
+    if(guardar==1){
+        $("#pedido_realizado").val(0);
+        return false;
+    }
  }
 }

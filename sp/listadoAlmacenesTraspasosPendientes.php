@@ -19,7 +19,7 @@ require_once '../function_web.php';
 
 //DATOS PARA LISTAR DOCUMENTOS
 $fechaDesde="01/01/2021";
-$fechaHasta="08/03/2021";
+$fechaHasta=date("d/m/Y");
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";
 $codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL ALMACEN ORIGEN
@@ -59,7 +59,7 @@ foreach ($listAlma->lista as $alma) {
      ?>DOCUMENTO: <?=$dctoOrigen?><?php         
 
      $existeCon=verificarExisteTraspasoDocumentos("VDETALLE","VMAESTRO",$dctoOrigen,$codigoUnico,$ip);
-      if((int)$existeCon==1){
+      if((int)$existeCon>0){
         ?>SE INGRESO EL DOC <?php
         //insertar datos documento
          /*$sql="INSERT INTO traspasos_pendientes (cod_documento,cod_documento_entrada,tipo_documento,descripcion,fecha_entrada,fecha_salida,cod_ciudad_origen,cod_ciudad_destino,codigo_unico_generado) VALUES($dctoOrigen,$tipoOrigen,'$gloOrigen','$fechaOrigen')";*/
@@ -84,7 +84,7 @@ $nro_correlativo=mysqli_result($resp,0,0);
 $hora_sistema = date("H:i:s");
 
 $tipo_ingreso=1000; //INGRESO POR TRASPASO CENTRAL
-$nota_entrega=0;
+$nota_entrega=$dctoOrigen;//SE ALMACENA EL DCTO
 $nro_factura=0;// NRO DE FACTURA
 $observaciones=$gloOrigen;
 $proveedor=$codProveedor;
@@ -106,7 +106,7 @@ $fecha_real=date("Y-m-d");
           $codMaterial=$rowDet["CPROD"];
           $precioMaterial=$rowDet["PREVEN"];
           $cantidadMaterial=$rowDet["HCAN"];
-          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial')";
+          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial')";
           echo $consultaDetalle."<br>";
           $sql_insertaDetalle = mysqli_query($enlaceCon,$consultaDetalle);
         }

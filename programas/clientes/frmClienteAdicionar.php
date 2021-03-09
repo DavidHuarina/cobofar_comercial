@@ -1,3 +1,9 @@
+<html>
+    <head>
+        <title>Clientes</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
 <?php
 require("../../conexionmysqli.inc");
 //require("../../estilos_almacenes.inc");
@@ -52,6 +58,9 @@ while($reg1=mysqli_fetch_array($rs1))
    }
 ?>
 <script type='text/javascript' language='javascript'>
+
+
+
 function listadoClientes() {
      location.href="inicioClientes.php";
 }
@@ -188,3 +197,5 @@ function adicionarCliente() {
     
     </div>
 </div>
+ </body>    
+ </html>

@@ -662,7 +662,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 	<th colspan="10"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
 </tr>
 <tr align='center' class="text-white header">
-	<th colspan="10"><label class="text-white">Registrar Venta</label></th>
+	<th colspan="10"><label class="text-white">Registrar Venta (MANUAL)</label></th>
 </tr>
 <tr class="bg-info text-white" align='center' style='background:#16B490 !important;'>
 <th>Tipo de Documento</th>
@@ -783,7 +783,7 @@ if($tipoDocDefault==2){
 		<input type='text' class="form-control" id='observaciones' name='observaciones' value='' placeholder="Ingrese una observación">
 	</td>
 	<td align='center' id='divCliente'>			
-	<select name='cliente' class='selectpicker form-control' data-style='btn-info' id='cliente' onChange='ajaxTipoPrecio(form1);' required>
+	<select name='cliente' class='selectpicker form-control' data-live-search="true" id='cliente' onChange='ajaxTipoPrecio(form1);' required>
 		<option value=''>----</option>
 <?php
 $sql2="select c.`cod_cliente`, c.nombre_cliente,c.paterno from clientes c order by 2";
