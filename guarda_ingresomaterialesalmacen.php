@@ -22,6 +22,11 @@ $nro_correlativo=mysqli_result($resp,0,0);
 
 $hora_sistema = date("H:i:s");
 
+$codSalidaAlmacen=0;
+if(isset($_POST["cod_salida"])){
+  $codSalidaAlmacen=$_POST["cod_salida"];
+}
+
 $tipo_ingreso=$_POST['tipo_ingreso'];
 $nota_entrega=0;
 $nro_factura=$_POST['nro_factura'];
@@ -35,10 +40,10 @@ $createdDate=date("Y-m-d H:i:s");
 $fecha_real=date("Y-m-d");
 
 
-$consulta="INSERT INTO ingreso_almacenes (cod_ingreso_almacen,cod_almacen,cod_tipoingreso,fecha,hora_ingreso,observaciones,cod_salida_almacen,
+$consulta="INSERT INTO ingreso_almacenes (cod_ingreso_almacen,cod_almacen,cod_tipoingreso,fecha,hora_ingreso,observaciones,cod_salida_almacen,cod_salida_almacen_central,
 nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nro_factura_proveedor,factura_proveedor,estado_liquidacion,
 cod_proveedor,created_by,modified_by,created_date,modified_date) 
-values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','0','$nota_entrega','$nro_correlativo',0,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','')";
+values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones',0,'$codSalidaAlmacen','$nota_entrega','$nro_correlativo',0,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','')";
 
 $sql_inserta = mysqli_query($enlaceCon,$consulta);
 //echo "aaaa:$consulta";

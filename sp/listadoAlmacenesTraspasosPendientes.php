@@ -26,8 +26,7 @@ $codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL
 $age1Destino="A=";
 $codCiudadDestino=verificarAlmacenCiudadExistente($age1Destino);
 $codAlmacenDestino=obtenerCodigoAlmacenPorCiudad($codCiudadDestino);
-$sql="DELETE FROM ingreso_pendientes_almacenes where cod_almacen=$codAlmacenDestino";
-$sqlDelete=mysqli_query($enlaceCon,$sql);
+
 
 ?><br><br>Iniciando....<br><br><br><br><?php
 $listAlma=obtenerListadoAlmacenesEspecifico($age1Destino);//web service
@@ -47,8 +46,17 @@ foreach ($listAlma->lista as $alma) {
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $ip=$alma->ip;
+
+  $dctoArray=[];$idc=0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $dctoOrigen=$row['DCTO'];
+      $dctoArray[$idc]=$dctoOrigen;
+      $idc++;
+      //BUSCAR SALIDAS
+      $sqlSalida = "SELECT IFNULL(nota_entrega,0) from ingreso_pendientes_almacenes where nota_entrega=$dctoOrigen and cod_almacen=$codAlmacenDestino";
+      $resp = mysqli_query($enlaceCon,$sqlSalida);
+      $ingreso_traspaso=mysqli_result($resp,0,0);
+     if($ingreso_traspaso==0){
       $tipoOrigen=$row['TIPO'];
       $gloOrigen=$row['GLO'];
       $fechaOrigen=$row['FECHA'];
@@ -96,8 +104,10 @@ $fecha_real=date("Y-m-d");
                $consulta="insert into ingreso_pendientes_almacenes (cod_ingreso_almacen,cod_almacen,cod_tipoingreso,fecha,hora_ingreso,observaciones,cod_salida_almacen,nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nro_factura_proveedor,factura_proveedor,estado_ingreso,cod_proveedor,created_by,modified_by,created_date,modified_date) values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','0','$nota_entrega','$nro_correlativo',0,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','')";
            //echo $consulta."<br>";
                $sql_inserta = mysqli_query($enlaceCon,$consulta);
-
-               $sqlDetalle="SELECT CPROD,PREVEN,HCAN FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
+               $sql="DELETE FROM ingreso_pendientes_detalle_almacenes WHERE cod_ingreso_almacen=$codigo";
+               $sqlDelete=mysqli_query($enlaceCon,$sql);
+                
+               $sqlDetalle="SELECT CPROD,PREVEN,HCAN,FECVEN,LOTEFAB FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
              //  echo $sqlDetalle."<br>";
         $dbh = new ConexionFarma(); 
         $stmtDetalle = $dbh->prepare($sqlDetalle);
@@ -106,14 +116,30 @@ $fecha_real=date("Y-m-d");
           $codMaterial=$rowDet["CPROD"];
           $precioMaterial=$rowDet["PREVEN"];
           $cantidadMaterial=$rowDet["HCAN"];
-          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial')";
+          $fechaVenMaterial=$rowDet["FECVEN"];
+          $loteFabMaterial=$rowDet["LOTEFAB"];
+          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial','$fechaVenMaterial','$loteFabMaterial')";
           echo $consultaDetalle."<br>";
           $sql_insertaDetalle = mysqli_query($enlaceCon,$consultaDetalle);
         }
       }
 
-  ?><br><?php       
-    }   
+  ?><br><?php    
+
+       }
+    }  //fin de WHILE
+   if(count($dctoArray)>0){
+     $stringDCTO=implode(",",$dctoArray);
+   }else{
+     $stringDCTO=-999999; // PARA ELIMINAR TODOS NO SE ENCONTRO NINGUNO
+   }
+
+   //BORRAR CABECERAS
+   $sql="DELETE FROM ingreso_pendientes_almacenes where cod_almacen=$codAlmacenDestino and nota_entrega NOT IN ($stringDCTO) and estado_ingreso=0";
+   $sqlDelete=mysqli_query($enlaceCon,$sql); 
+   //BORRAR DETALLES
+   $sql="DELETE FROM ingreso_pendientes_detalle_almacenes WHERE cod_ingreso_almacen IN (SELECT cod_ingreso_almacen FROM ingreso_pendientes_almacenes where cod_almacen=$codAlmacenDestino and nota_entrega NOT IN ($stringDCTO) and estado_ingreso=0)";
+   $sqlDelete=mysqli_query($enlaceCon,$sql); 
 }
  
 $dbh = null;
