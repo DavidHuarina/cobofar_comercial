@@ -633,7 +633,8 @@ function validar(f, ventaDebajoCosto,pedido){
 			}
 		  }
 		  if(errores==0&&pedidoFormu==1){
-              guardarPedidoDesdeFacturacion(1);
+		  	  guardarPedido(1);
+              //guardarPedidoDesdeFacturacion(1);
               return false;
 		  }
 		}else{
@@ -847,7 +848,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 	<!--<input type="hidden" name="tipoPrecio" value="1">-->
 
 </td>
-<td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" title="Registrar Nuevo Cliente" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="alerts.showSwal('mensaje-guardar-pedido','')"
+<td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" title="Registrar Nuevo Cliente" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="guardarPedido(0)"
 	class="btn btn-default btn-sm" title="Guardar Pedido"><i class="material-icons">save</i> PEDIDO </a></td>
 </tr>
 
@@ -1031,8 +1032,61 @@ if($banderaErrorFacturacion==0){
 
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' id="cantidad_material" name='cantidad_material' value="0">
-
 </form>
+
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalObservacionPedido" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-text">
+                  <div class="card-text">
+                    <h4>Registrar Como Pedido</h4>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                	<input type="hidden" name="modo_pedido" id="modo_pedido" value="0">
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Motivo</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <select class="selectpicker form-control" name="modal_motivo" id="modal_motivo" data-style="btn btn-warning">
+                                    <option selected="selected" value="0">OBSERVACIÓN ESPECÍFICA</option>
+                                    <?php 
+                                     $sqlObs="SELECT codigo,descripcion FROM observaciones_clase where cod_objeto=1 and cod_estadoreferencial=1 order by 1 desc";
+                                     $resp=mysqli_query($enlaceCon,$sqlObs);
+                                     while($filaObs=mysqli_fetch_array($resp)){
+                                     		$codigo=$filaObs[0];
+                                     		$nombre=$filaObs[1];	
+                                     		 ?><option value="<?=$codigo;?>"><?=$nombre?></option><?php 
+                                     }
+                                    ?>
+                                  </select>
+                             </div>
+                           </div>        
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Observacion</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <textarea class="form-control" id="modal_observacion" name="modal_observacion"></textarea>
+                             </div>
+                           </div>        
+                      </div>
+                      <br><br>
+                      <div class="float-right">
+                        <button class="btn btn-default" onclick="alerts.showSwal('mensaje-guardar-pedido','')">Guardar Como Pedido</button>
+                      </div> 
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
 <script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
 </body>

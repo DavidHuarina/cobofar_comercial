@@ -254,6 +254,7 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
 <?php
 
 require("conexionmysqli.inc");
+require('funciones.php');
 require('function_formatofecha.php');
 $txtnroingreso = "";
 if(isset($_GET["txtnroingreso"])){
@@ -291,7 +292,7 @@ echo "<div class=''>
 echo "<div id='divCuerpo'>";
 echo "<center><table class='table table-sm'>";
 echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-    <th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>&nbsp;</th></tr>";
+    <th>Almacen Destino</th><th>Cliente</th><th>Motivo</th><th>Observacion</th><th>&nbsp;</th></tr>";
     
 
 
@@ -300,7 +301,7 @@ $consulta = "
     SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
     (select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
     s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-    (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc 
+    (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc,s.cod_observacion 
     FROM pedido_almacenes s, tipos_salida ts 
     WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida<>1001 ";
 
@@ -311,6 +312,7 @@ if($fecha1!="" && $fecha2!="")
    {$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
    }
 $consulta = $consulta."ORDER BY s.fecha desc,s.hora_salida desc";
+//echo $consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
 
 while ($dat = mysqli_fetch_array($resp)) {
@@ -373,6 +375,7 @@ while ($dat = mysqli_fetch_array($resp)) {
         $chk = "";
     }
     
+    $motivo=obtenerDescripcionMotivo($dat[12],1);
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
@@ -380,7 +383,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     echo "<td align='center'>$nro_correlativo</td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
     echo "<td>$nombre_tiposalida</td><td>&nbsp;$nombre_almacen</td>";
-    echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$obs_salida</td>";
+    echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$motivo</td><td>&nbsp;$obs_salida</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     echo "<td><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
         <img src='imagenes/detalles.png' border='0' title='Detalle' width='40'></a></td>";

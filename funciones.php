@@ -372,4 +372,17 @@ function obtenerNombreDesCiudadesRegistrados($codigo){
   	return implode(", ",$ciudadArray);
   }
 }
+function obtenerDescripcionMotivo($codigo,$ninguna){
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT descripcion from observaciones_clase where codigo=$codigo";
+  $nombre="";
+  if($ninguna==1){
+  	$nombre="OBSERVACIÓN ESPECÍFICA";
+  }
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $nombre=$detalle[0];   		
+  }  
+  return $nombre;
+}
 ?>

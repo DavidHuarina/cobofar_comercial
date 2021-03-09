@@ -1,4 +1,11 @@
+function guardarPedido(tipo){
+    $("#modo_pedido").val(tipo);
+   $("#modalObservacionPedido").modal("show"); 
+}
 function guardarPedidoDesdeFacturacion(guardar){
+    if(guardar==1){
+       $("#modalObservacionPedido").modal("show"); 
+   }
     //DATOS CABECERA
     var tipoSalida=$("#tipoSalida").val();
     var tipoDoc=$("#tipoDoc").val();
@@ -7,7 +14,8 @@ function guardarPedidoDesdeFacturacion(guardar){
     var razonSocial=$("#razonSocial").val();
     var nitCliente=0;//$("#nitCliente").val();
     var tipoVenta=$("#tipoVenta").val();
-    var observaciones=$("#observaciones").val();
+    var observaciones=$("#modal_observacion").val();
+    var motivo=$("#modal_motivo").val();
     var totalVenta=$("#totalVenta").val();
     var descuentoVenta=$("#descuentoVenta").val();
     var totalFinal=$("#totalFinal").val();
@@ -22,9 +30,9 @@ function guardarPedidoDesdeFacturacion(guardar){
       error=1;
       mensaje="Debe registrar al menos un detalle para el pedido!";
     } 
-    if(observaciones==""){
+    if(observaciones==""&&motivo==0){
       error=1;
-      mensaje="Debe registrar la observación con la que desea guardar el pedido!";
+      mensaje="Debe registrar la observación espeficica con la que desea guardar el pedido!";
     } 
    /* if(nitCliente==""){
       error=1;
@@ -34,7 +42,7 @@ function guardarPedidoDesdeFacturacion(guardar){
   if(error==0){
 	 var parametros={"tipoSalida":tipoSalida,"tipoDoc":tipoDoc,"cliente":cliente,
 	"tipoPrecio":tipoPrecio,"razonSocial":razonSocial,"nitCliente":nitCliente,"tipoVenta":tipoVenta,
-    "observaciones":observaciones,"totalVenta":totalVenta,"descuentoVenta":descuentoVenta,"totalFinal":totalFinal,
+    "observaciones":observaciones,"motivo":motivo,"totalVenta":totalVenta,"descuentoVenta":descuentoVenta,"totalFinal":totalFinal,
     "efectivoRecibido":efectivoRecibido,"cambioEfectivo":cambioEfectivo,"fecha":fecha,"cantidad_material":cantidad_material};
     
     var index=0;
@@ -60,6 +68,7 @@ function guardarPedidoDesdeFacturacion(guardar){
                 Swal.fire("Correcto!", "El proceso se completo correctamente!", "success")
                     .then((value) => {
                     $("#pedido_realizado").val(2);
+                    $("#modalObservacionPedido").modal("hide");
                     $("#btsubmit").click();  
                     //location.reload();
                 });
