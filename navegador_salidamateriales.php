@@ -157,13 +157,20 @@ function anular_salida(f)
         }
         else
         {   
-			funOk(j_cod_registro,function() {
-				location.href='anular_salida.php?codigo_registro='+j_cod_registro+'&grupo_salida=2';
-			});
+           /*funOk(j_cod_registro,function(){
+                        location.href='anular_salida.php?codigo_registro='+j_cod_registro+'&grupo_salida=2';
+           });*/
+           $("#modal_numero").html(" - Número Salida : "+$("#numero"+j_cod_registro).html());
+           $("#j_cod_registro").val(j_cod_registro);
+          $("#modal_anular").modal("show");
         }
     }
 }
-
+function anularSalidaTraspaso(){
+  var j_cod_registro = $("#j_cod_registro").val();
+  var obs =$("#modal_observacion").val().replace(/['"]+/g, '');  
+  location.href='anular_salida.php?codigo_registro='+j_cod_registro+'&grupo_salida=2&obs='+obs;
+}
 function cambiarNoEntregado(f)
 {   var i;
     var j=0;
@@ -301,7 +308,7 @@ $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc 
+	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc,s.observaciones_transito 
 	FROM salida_almacenes s, tipos_salida ts 
 	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida<>1001 ";
 
@@ -343,8 +350,9 @@ while ($dat = mysqli_fetch_array($resp)) {
     }
     //salida despachada
     if ($estado_almacen == 1) {
-        $color_fondo = "#bbbbbb";
-        $chk = "&nbsp;";
+        $color_fondo = "#fff";
+        //$chk = "&nbsp;";
+        $chk = "<input type='checkbox' name='codigo' value='$codigo'>";
     }
     //salida recepcionada
     if ($estado_almacen == 2) {
@@ -369,6 +377,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     if ($salida_anulada == 1) {
         $color_fondo = "#ff8080";
         $chk = "&nbsp;";
+        $obs_salida=$obs_salida."<br><b class='text-danger'>(".$dat[12].")</b>";
     }
 	if ($anio_salida != $globalGestionActual) {
         $chk = "";
@@ -376,9 +385,9 @@ while ($dat = mysqli_fetch_array($resp)) {
 	
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
-    echo "<tr>";
+    echo "<tr style='background:$color_fondo'>";
     echo "<td align='center'>&nbsp;$chk</td>";
-    echo "<td align='center'>$nro_correlativo</td>";
+    echo "<td align='center' id='numero$codigo'>$nro_correlativo</td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
     echo "<td>$nombre_tiposalida</td><td>&nbsp;$nombre_almacen</td>";
     echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$obs_salida</td>";
@@ -463,5 +472,40 @@ echo "</form>";
         <div id="pnldlgArespSvr"></div>
         <div id="pnldlggeneral"></div>
         <div id="pnldlgenespera"></div>
+
+
+        <!-- small modal -->
+<div class="modal fade modal-primary" id="modal_anular" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-text">
+                  <div class="card-text">
+                    <h4>Anular Salida <b id="modal_numero"></b></h4>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="j_cod_registro" id="j_cod_registro" value="0">
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Observacion</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <textarea class="form-control" id="modal_observacion" name="modal_observacion"></textarea>
+                             </div>
+                           </div>        
+                      </div>
+                      <br><br>
+                      <div class="float-right">
+                        <button class="btn btn-danger" onclick="anularSalidaTraspaso()">ANULAR</button>
+                        <a class="btn btn-success"  data-dismiss="modal">CANCELAR</a>
+                      </div> 
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
     </body>
 </html>

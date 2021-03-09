@@ -993,13 +993,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 
 <?php
-
+//<button type='submit' onClick='return validar(this.form, $ventaDebajoCosto,1)' id='btsubmitPedido' name='btsubmitPedido' class='btn btn-default float-right'><i class='material-icons'>save</i> Guardar Venta y Pedido</button>
 if($banderaErrorFacturacion==0){
 	echo "<div class=''>
 	        <div class='btn-group' role='group' aria-label='Grupo Venta' style='position:fixed;margin-top:0 !important;'>
                <button type='submit' class='btn btn-warning' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto,0)'>Guardar Venta</button>
 			   <button type='button' class='btn btn-danger' onClick='location.href=\"navegador_ingresomateriales.php\"';>Cancelar</button>
-			   <button type='submit' onClick='return validar(this.form, $ventaDebajoCosto,1)' id='btsubmitPedido' name='btsubmitPedido' class='btn btn-default float-right'><i class='material-icons'>save</i> Guardar Venta y Pedido</button>
+			   
             </div>	       
             <h2 style='font-size:11px;color:#9EA09E; display:none;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
             

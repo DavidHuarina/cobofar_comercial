@@ -1,8 +1,12 @@
 <?php
 require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
-
 $sql="update salida_almacenes set salida_anulada=1 where cod_salida_almacenes='$codigo_registro' and salida_anulada=0";
+if(isset($_GET["obs"])){
+	$obsAnulacion=$_GET["obs"];
+  $sql="update salida_almacenes set salida_anulada=1,observaciones_transito='$obsAnulacion' where cod_salida_almacenes='$codigo_registro' and salida_anulada=0";
+}
+
 $resp=mysqli_query($enlaceCon,$sql);
 		
 $sql_detalle="select cod_ingreso_almacen, material, cantidad_unitaria, nro_lote

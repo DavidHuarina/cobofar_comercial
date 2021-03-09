@@ -101,7 +101,8 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos</a></li>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>					
-					<li><a href="navegadorPedidos.php" target="contenedorPrincipal">Listado de Pedidos</a></li>					
+					<li><a href="navegadorPedidos.php" target="contenedorPrincipal">Listado de Pedidos</a></li>	
+					<li><a href="registrar_salidaventas_manual.php" target="_blank">Registrar Factura Manual</a></li>				
 				</ul>	
 			</li>
 			<!--li><span>Marcados de Personal</span>
@@ -121,8 +122,7 @@ include("datosUsuario.php");
 				</ul>	
 			</li-->
 			<li><a href="registrar_ingresomateriales.php" target="contenedorPrincipal">Registrar Ingreso **</a></li>
-			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar **</a></li>
-			<li><a href="registrar_salidaventas_manual.php" target="_blank">Vender / Facturar (MANUAL)**</a></li>
+			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar **</a></li>			
 			<li><a href="listadoProductosStock.php" target="_blank">Listado de Productos **</a></li>
 
 			<li><span>Reportes</span>

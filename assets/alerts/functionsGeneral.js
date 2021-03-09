@@ -3,9 +3,6 @@ function guardarPedido(tipo){
    $("#modalObservacionPedido").modal("show"); 
 }
 function guardarPedidoDesdeFacturacion(guardar){
-    if(guardar==1){
-       $("#modalObservacionPedido").modal("show"); 
-   }
     //DATOS CABECERA
     var tipoSalida=$("#tipoSalida").val();
     var tipoDoc=$("#tipoDoc").val();
@@ -69,7 +66,9 @@ function guardarPedidoDesdeFacturacion(guardar){
                     .then((value) => {
                     $("#pedido_realizado").val(2);
                     $("#modalObservacionPedido").modal("hide");
-                    $("#btsubmit").click();  
+                    if(guardar>0){
+                      $("#btsubmit").click();      
+                    }                    
                     //location.reload();
                 });
             }else{

@@ -24,7 +24,7 @@ echo "<td><input type='text' disabled='true' size='40' name='' value='Salida:$co
 echo "<input type='hidden' name='nota_ingreso' value='Salida:$correlativo_salidaorigen $nombre_almacen_origen'>";
 
 echo "<td align='center'><input type='text' class='texto' name='nombre_tipoingreso' value='INGRESO NORMAL REGIONAL' size='30' readonly></td>";
-echo "<input type='hidden' name='tipo_ingreso' value='1002'>";
+echo "<input type='hidden' name='tipo_ingreso' value='1000'>";
 
 echo "<input type='hidden' name='nro_factura' value='0'>";
 echo "<input type='hidden' name='proveedor' value='0'>";

@@ -34,9 +34,9 @@ echo "<script language='Javascript'>
 		}
 		</script>";
 	echo "<form method='post' action=''>";
-	$sql="SELECT s.cod_salida_almacenes, s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo 
+	$sql="SELECT s.cod_salida_almacenes, s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito
 	FROM salida_almacenes s, tipos_salida ts, almacenes a 
-	where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and s.salida_anulada <> 1";
+	where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen";
 	
 	//echo $sql;
 	
@@ -64,7 +64,16 @@ echo "<script language='Javascript'>
 		$nombre_almacen=$dat[4];
 		$obs_salida=$dat[5];
 		$nro_correlativo=$dat[6];
-		echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen $ciudad_almacen_origen</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td><a target='_BLANK' href='detalleIngresoTransito.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
+		$salida_anulada=$dat[7];
+		$chk="<input type='checkbox' name='codigo' value='$codigo'>";
+		$color_fondo = "#fff";
+		if ($salida_anulada == 1) {
+           $color_fondo = "#ff8080";
+           $chk = "&nbsp;";
+           $obs_salida=$obs_salida."<br><b class='text-danger'>(".$dat[8].")</b>";
+        }
+		echo "<tr style='background:$color_fondo'><td>$chk</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen $ciudad_almacen_origen</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td><a target='_BLANK' href='detalleIngresoTransito.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
+		
 		echo "<img src='imagenes/detalle.png' title='Ver Detalles' width='40'></a></td></tr>";
 	}
 	echo "</table></center><br>";
