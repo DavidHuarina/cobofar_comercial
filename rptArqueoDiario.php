@@ -6,8 +6,9 @@ require('conexionmysqli.inc');
 require('funcion_nombres.php');
 require('funciones.php');
 
-$fecha_ini=$_GET['fecha_ini'];
+
 $rpt_territorio=$_GET['rpt_territorio'];
+$fecha_ini=$_GET['fecha_ini'];
 $fecha_fin=$_GET['fecha_fin'];
 $hora_ini=$_GET['hora_ini'];
 $hora_fin=$_GET['hora_fin'];

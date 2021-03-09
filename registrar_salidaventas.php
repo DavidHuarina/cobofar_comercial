@@ -765,7 +765,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <td>
 	<div id='divTipoPrecio' >	
 <?php
-			$sql1="select codigo, nombre from tipos_precio order by 1";
+			$sql1="select codigo, nombre from tipos_precio where estado=1 order by 1";
 			$resp1=mysqli_query($enlaceCon,$sql1);
 			echo "<select name='tipoPrecio' class='selectpicker form-control' data-style='btn-info' id='tipoPrecio'>";
 			while($dat=mysqli_fetch_array($resp1)){

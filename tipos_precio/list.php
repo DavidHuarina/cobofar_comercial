@@ -132,7 +132,7 @@ echo "<script language='Javascript'>
 </script>
 	<?php
 	echo "<form method='post' action=''>";
-	$sql="select codigo, nombre, abreviatura, estado from $table where estado=1 order by 2";
+	$sql="select codigo, nombre, abreviatura, estado,desde,hasta from $table where estado=1 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Lista de $moduleNamePlural</h1>";
 	
@@ -147,9 +147,16 @@ echo "<script language='Javascript'>
 	
 	echo "<center><table class='table table-sm table-bordered'>";
 	echo "<tr class='bg-info text-white'>
+	<td colspan='3'></td>
+	<td colspan='2' align='center'>Periodo del Descuento</td>
+	<td colspan='2'></td>
+	</tr>";
+	echo "<tr class='bg-info text-white'>
 	<th>&nbsp;</th>
 	<th>Nombre</th>
 	<th>Descuento</th>
+	<th>Desde</th>
+	<th>Hasta</th>
 	<th>Días</th>
 	<th>Sucursales</th>
 	</tr>";
@@ -158,12 +165,26 @@ echo "<script language='Javascript'>
 		$codigo=$dat[0];
 		$nombre=$dat[1];
 		$abreviatura=$dat[2];
+		
+		if($dat[4]==""){
+			$desde="";
+		}else{
+			$desde=strftime('%d/%m/%Y %H:%M',strtotime($dat[4]));
+		}
+		if($dat[5]==""){
+			$hasta="";
+		}else{
+			$hasta=strftime('%d/%m/%Y %H:%M',strtotime($dat[5]));
+		}
+		
 		$dias=obtenerNombreDesDiasRegistrados($codigo);
 		$ciudades=obtenerNombreDesCiudadesRegistrados($codigo);
 		echo "<tr>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombre</td>
 		<td>$abreviatura</td>
+		<td>$desde</td>
+		<td>$hasta</td>
 		<td>$dias</td>
 		<td>$ciudades</td>
 		</tr>";
