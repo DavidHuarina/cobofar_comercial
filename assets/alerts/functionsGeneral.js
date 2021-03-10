@@ -88,3 +88,13 @@ function guardarPedidoDesdeFacturacion(guardar){
     }
  }
 }
+
+ var cuentas_tabla_general=[]; 
+function filaTablaGeneral(tabla,index){
+  var html="";
+  for (var i = 0; i < cuentas_tabla_general[index-1].length; i++) {
+    html+="<tr><td>"+(i+1)+"</td><td>"+cuentas_tabla_general[index-1][i].nombre+"</td></tr>";
+  };
+  tabla.html(html);
+  $("#modalDetalles").modal("show");
+}  

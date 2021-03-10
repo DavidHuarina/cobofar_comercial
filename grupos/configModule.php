@@ -28,4 +28,8 @@ $urlSaveDet="saveDetalle.php";
 $urlSaveEditDet="saveEditDetalle.php";
 $urlSaveDelete="";
 
+
+$urlEditProducto="edit_producto.php";
+$urlSaveEditProducto="saveEditProducto.php";
+
 ?>

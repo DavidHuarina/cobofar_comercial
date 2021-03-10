@@ -76,14 +76,14 @@ echo "<script language='Javascript'>
 	echo "<h1>Lista de $moduleNamePlural</h1>";
 	
 	echo "<div class=''>
-	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
-	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
-	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
+	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+	<input type='button' value='Editar' name='Editar' class='btn btn-info' onclick='editar_nav(this.form)'>
+	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	
 	
-	echo "<center><table class='texto'>";
-	echo "<tr>
+	echo "<center><table class='table table-sm'>";
+	echo "<tr class='bg-info text-white'>
 	<th>&nbsp;</th>
 	<th>Nombre</th>
 	<th>Abreviatura</th>
@@ -104,9 +104,9 @@ echo "<script language='Javascript'>
 	echo "</table></center><br>";
 	
 	echo "<div class=''>
-	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
-	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
-	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
+	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+	<input type='button' value='Editar' name='Editar' class='btn btn-info' onclick='editar_nav(this.form)'>
+	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	
 	echo "</form>";
