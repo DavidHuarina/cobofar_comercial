@@ -33,7 +33,7 @@ echo "<script language='Javascript'>
 			{
 				if(confirm('Esta seguro de eliminar los datos.'))
 				{
-					location.href='$urlDeleteDet?datos='+datos+'';
+					location.href='$urlDeleteDet?datos='+datos+'&cod_maestro=$codMaestro';
 				}
 				else
 				{

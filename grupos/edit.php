@@ -28,7 +28,7 @@ echo "</table>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_grupos.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"$urlList2\"'>
 </div>";
 
 echo "</form>";

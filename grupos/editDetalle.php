@@ -40,7 +40,7 @@ echo "<input type='hidden' name='cod_maestro' value='$codMaestro'>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"$urlList2\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"$urlListDetalle2?codigo=$codMaestro\"'>
 ";
 
 echo "</form>";
