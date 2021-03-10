@@ -1,10 +1,10 @@
 <?php
-$table="grupos1";
+$table="grupos";
 $moduleNameSingular="Clasificador";
 $moduleNamePlural="Clasificadores";
 
 
-$tableDetalle="subgrupos1";
+$tableDetalle="subgrupos";
 $moduleDetNameSingular="Detalle del Clasificador";
 $moduleDetNamePlural="Detalle del Clasificador";
 

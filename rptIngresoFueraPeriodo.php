@@ -24,7 +24,7 @@ else
 {	require("estilos_almacenes.inc");
 }
 $fecha_rptdefault=date("Y-m-d");
-echo "<h1>Reporte Ingresos Almacen</h1>";
+echo "<h1>Reporte Ingresos por Periodo</h1>";
 
 echo"<form method='post' action=''>";
 	echo"\n<table class='texto' align='center'>\n";

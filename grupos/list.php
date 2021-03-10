@@ -75,7 +75,7 @@ echo "<script language='Javascript'>
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Lista de $moduleNamePlural</h1>";
 	
-	echo "<div class='divBotones'>
+	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
@@ -103,7 +103,7 @@ echo "<script language='Javascript'>
 	}
 	echo "</table></center><br>";
 	
-	echo "<div class='divBotones'>
+	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>

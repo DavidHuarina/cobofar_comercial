@@ -7,20 +7,36 @@ require_once '../function_web.php';
 <html>
 
 <head>
-	<title></title>
+	<title>CONEXION SUCURSALES</title>
 	<meta charset="utf-8">
+    <style type="text/css">
+        .bg-conexion{
+            background-image: url('../imagenes/conexion.jpg'); color:#CBC7C6; width: 100%; height: 100vh; 
+        }
+    </style>
 </head>
-<body>
+<body class="bg-conexion">
+<br><br>
+<center><h3><b>TEST SUCURSALES</b></h3></center>
 
-
+<center>
+    <p>Hora de inicio de consulta:<?=date("d/m/Y H:i")?></p>
+<br>
+<div class="col-sm-8 div-center">
+<table class="table table-sm table-bordered text-white">
+    <tr class="bg-info text-white">
+        <td>N.</td>
+        <td>AGE1</td>
+        <td>NOMBRE</td>
+        <td>IP</td>
+        <td>ESTADO</td>
+    </tr>
 <?php
 $listAlma=obtenerListadoAlmacenes();//web service
-echo "<br><br>Iniciando....<br><br><br><br>";
-$contador=0;
+$contador=0;$contadorError=0;
 foreach ($listAlma->lista as $alma) {
-
+    $contador++;
 	$age1=$alma->age1;
-	//echo $age1."<br>";
 	$nombre=$alma->des;
 	$direccion=$alma->direc;
 	$age=$alma->age;
@@ -30,20 +46,39 @@ foreach ($listAlma->lista as $alma) {
     if($alma->tipo=="E"){
     	$estado=2;
     }
-    echo $nombre.": ".$ip."  ";
+    
+    //CONEXION TEST
     $dbh = new ConexionFarma();
     $dbh->setHost($ip);
     $verificarCon=$dbh->start();
+    $estadoHtml="";$estiloFondo="";
     if($verificarCon==true){
-    	echo "SUCCESS<br>";
+        $estadoHtml="<i class='material-icons text-success'>check</i>";
     }else{
-    	echo "ERROR<br>";
+        $contadorError++;
+        $estadoHtml="<i class='material-icons text-danger'>close</i>";
+        $estiloFondo="bg-warning text-dark";
     }
-    $contador++;
-
+    ?>
+    <tr class="<?=$estiloFondo?>">
+        <td><?=$contador?></td>
+        <td><?=$age1?></td>
+        <td><?=$nombre?></td>
+        <td><?=$ip?></td>
+        <td><?=$estadoHtml?></td>
+    </tr>
+    <?php
 }
-echo "Realizado! Total Almacenes".$contador;
+?></table>
+<table class="table table-sm table-bordered text-white">
+    <tr><td class="font-weight-bold bg-info text-white">TOTAL SUCURSALES</td><td><?=$contador?></td></tr>
+    <tr><td class="font-weight-bold bg-info text-white">TOTAL CONEXIONES CON ERRORES</td><td><?=$contadorError?></td></tr>
+    <tr><td class="font-weight-bold bg-info text-white">TOTAL CONEXIONES EXITOSAS</td><td><?=($contador-$contadorError)?></td></tr>
+</table>
+</div>
+<br><br>
+<p>Hora de fin de consulta:<?=date("d/m/Y H:i")?></p>
+ </center>
 
-
-?></body>
+</body>
 </html>
