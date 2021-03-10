@@ -135,6 +135,7 @@ include("datosUsuario.php");
 							<li><a href="rpt_op_inv_salidas.php" target="contenedorPrincipal">Salidas</a></li>
 							<li><a href="rptPrecios.php" target="contenedorPrincipal">Precios</a></li>
 							<li><a href="rptProductosVencer.php" target="contenedorPrincipal">Productos proximos a Vencer</a></li>
+							<li><a href="rptIngresoFueraPeriodo.php?variableAdmin=1" target="contenedorPrincipal" >Verificación Tiempos Traspasos</a></li>
 							<!--li><a href="rptOCPagar.php" target="contenedorPrincipal">OC por Pagar</a></li-->
 						</ul>
 					</li>	
@@ -162,8 +163,7 @@ include("datosUsuario.php");
 							<!--li><a href="rptOpKardexCliente.php" target="contenedorPrincipal">Kardex x Cliente</a></li-->
 						</ul>	
 					</li>
-					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
-					<li><a href="rptIngresoFueraPeriodo.php?variableAdmin=1" target="contenedorPrincipal" >Reporte Ingresos en Periodo</a></li>
+					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>					
 					<!--li><span>Utilidades</span>
 						<ul>
 							<li><a href="rptOpUtilidadesDocumento.php" target="contenedorPrincipal">Utilidades x Documento</a></li>

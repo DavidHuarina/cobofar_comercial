@@ -334,6 +334,16 @@ function obtenerNombreCiudad($ciudad){
   }  
   return $nombre;
 }
+function obtenerNombreCiudadPorAlmacen($almacen){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT c.descripcion from ciudades c join almacenes a on a.cod_ciudad=c.cod_ciudad where a.cod_almacen=$almacen";
+  $nombre="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $nombre=$detalle[0];   		
+  }  
+  return $nombre;
+}
 function obtenerNombreDesDiasRegistrados($codigo){
   $cantidad=obtenerTotalDias();
   require("conexionmysqli.inc");
