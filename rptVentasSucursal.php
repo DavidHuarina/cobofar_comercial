@@ -45,12 +45,12 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
 ?>
 <br><center><table align='center' class='table table-sm table-bordered' width='70%'>
 	<thead>
-<tr class='thead-dark'><th>Sucursal</th>
+<tr class='thead-dark'><th><small>Sucursal</small></th>
 <?php
 $cantidadMes=0;
 while($tiempoInicio <= $tiempoFin){
 	$fechaActual = date("Y-m-d", $tiempoInicio);
-	?><th><?=strftime('%B %Y', strtotime($fechaActual))?></th><?php
+	?><th><small><?=strftime('%b %Y', strtotime($fechaActual))?></small></th><?php
 	$tiempoInicio += strtotime("+1 month","$fechaActual");
 	$cantidadMes++;
 }
