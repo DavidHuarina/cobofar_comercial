@@ -436,4 +436,17 @@ function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
   mysqli_close($enlaceCon);
   return $monto;
 }
+
+function obtenerPrecioProductoSucursal($codigo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sql="SELECT MAX(precio) from precios where codigo_material=$codigo";
+    $resp=mysqli_query($enlaceCon,$sql);
+    $monto=0;				
+    while($detalle=mysqli_fetch_array($resp)){	
+         $monto=$detalle[0];   		
+    }  
+    mysqli_close($enlaceCon);
+    return $monto;
+}
 ?>

@@ -93,9 +93,17 @@ function guardarPedidoDesdeFacturacion(guardar){
 function filaTablaGeneral(tabla,index){
   var html="";
   for (var i = 0; i < cuentas_tabla_general[index-1].length; i++) {
-    html+="<tr><td>"+(i+1)+"</td><td>"+cuentas_tabla_general[index-1][i].nombre+"</td></tr>";
+    html+="<tr><td>"+(i+1)+"</td><td>"+cuentas_tabla_general[index-1][i].proveedor+"</td><td>"+cuentas_tabla_general[index-1][i].linea+"</td><td>"+cuentas_tabla_general[index-1][i].nombre+"</td></tr>";
   };
   tabla.html(html);
+  $('#tablaPrincipal').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "ordering": false,
+            "pageLength": 100
+
+        });
   $("#modalDetalles").modal("show");
 }  
 

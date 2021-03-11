@@ -1,7 +1,7 @@
 <?php
-$table="tipos_precio";
-$moduleNameSingular="Gestión de Descuento";
-$moduleNamePlural="Gestión de Descuentos";
+$table="material_apoyo";
+$moduleNameSingular="Gestión de Precio";
+$moduleNamePlural="Gestión de Precios";
 
 
 $urlList="tipo_precio/list.php";

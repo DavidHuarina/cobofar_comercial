@@ -1,3 +1,8 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+</head>
+<body>
 <?php
 set_time_limit(0);
 require('estilos_reportes_almacencentral.php');
@@ -81,7 +86,11 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   	}
 
   	$montoVenta=obtenerMontoVentasGeneradas($dateInicio,$dateFin,$codigoSuc,$codTipoPago);
-  	?><td><small><?=number_format($montoVenta,2,'.',' ')?></small></td><?php
+  	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
+  		?><td><small><?=number_format($montoVenta,2,'.',' ')?></small></td><?php
+  	}else{
+  		?><td class='text-muted'><small><?=number_format($montoVenta,2,'.',' ')?></small></td><?php
+  	} 	
     // para sumar mes
   	$fechaActual = date("Y-m-d", $tiempoInicio2);  	
   	$tiempoInicio2 += (float)strtotime("+1 month","$fechaActual");
@@ -94,3 +103,4 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
 </tbody></table></center></br>
 <?php include("imprimirInc.php");
 ?>
+</body></html>

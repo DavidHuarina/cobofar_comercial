@@ -3,7 +3,7 @@
 	require_once("../estilos2.inc");
 	require_once("configModule.php");
 	require_once("../funcion_nombres.php");
-	
+	require_once("../funciones.php");
 	$codMaestro=$_GET['codigo'];
 	$nameMaestro=obtenerNombreMaestro($table,$codMaestro);
 	 
@@ -127,20 +127,24 @@ echo "<script language='Javascript'>
 	<th>Codigo</th>
 	<th>Nombre</th>
 	<th>Abreviatura</th>
-	<th>&nbsp;</th>
+	<th style='text-align:right'>Productos</th>
 	</tr>";
 	$index=1;$cont= array();
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$nc=0;
-		$sqlDetalle="SELECT m.codigo_material,m.descripcion_material from subgrupos_material s join material_apoyo m on m.codigo_material=s.cod_material where m.estado=1 and s.cod_subgrupo=".$dat[0]." order by m.descripcion_material";    
+		$sqlDetalle="SELECT m.codigo_material,m.descripcion_material,l.cod_proveedor,m.cod_linea_proveedor from subgrupos_material s join material_apoyo m on m.codigo_material=s.cod_material join proveedores_lineas l on l.cod_linea_proveedor=m.cod_linea_proveedor where m.estado=1 and s.cod_subgrupo=".$dat[0]." order by m.descripcion_material";    
 		//echo $sqlDetalle;
 		$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);                               
        while($row2=mysqli_fetch_array($respDetalle)) {
            $dato =new stdClass();
            $nombreX=$row2['descripcion_material'];
+           $proveedorX=obtenerNombreProveedor($row2['cod_proveedor']);
+           $lineaX=obtenerNombreProveedorLinea($row2['cod_linea_proveedor']);
            $dato->codigo=($nc+1);
            $dato->nombre=$nombreX;
+           $dato->proveedor=$proveedorX;
+           $dato->linea=$lineaX;
            $datos[$index-1][$nc]=$dato;                           
            $nc++;
         }
@@ -157,7 +161,7 @@ echo "<script language='Javascript'>
         ?>
         <td class="td-actions text-right">
           <a href='#' class="btn btn-warning" title="Ver Productos" onclick="filaTablaGeneral($('#tablas_registradas'),<?=$index?>)">
-            &nbsp;<i class="material-icons">settings_applications</i>&nbsp;
+            &nbsp;<?=$nc?>
           </a>
         </td> 
         <?php
@@ -181,7 +185,7 @@ for ($i=0; $i < $lan; $i++) {
   ?><script>var productos=[];</script><?php
      for ($j=0; $j < $cont[$i]; $j++) { 
          if($cont[$i]>0){
-          ?><script>productos.push({codigo:<?=$datos[$i][$j]->codigo?>,nombre:'<?=$datos[$i][$j]->nombre?>'});</script><?php         
+          ?><script>productos.push({codigo:<?=$datos[$i][$j]->codigo?>,nombre:'<?=$datos[$i][$j]->nombre?>',proveedor:'<?=$datos[$i][$j]->proveedor?>',linea:'<?=$datos[$i][$j]->linea?>'});</script><?php         
           }          
         }
     ?><script>cuentas_tabla_general.push(productos);</script><?php                    
@@ -201,11 +205,13 @@ for ($i=0; $i < $lan; $i++) {
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
-                  <table class="table table-sm table-bordered">
+                  <table class="table table-sm table-bordered table-condensed" id='tablaPrincipal'>
                     <thead>
                       <tr class="text-white bg-principal">
                       <th>#</th>
-                      <th>Nombre</th>
+                      <th>Proveedor</th>
+                      <th>Linea</th>
+                      <th>Producto</th>
                       </tr>
                     </thead>
                     <tbody id="tablas_registradas">
