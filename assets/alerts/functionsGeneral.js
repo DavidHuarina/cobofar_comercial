@@ -98,3 +98,45 @@ function filaTablaGeneral(tabla,index){
   tabla.html(html);
   $("#modalDetalles").modal("show");
 }  
+
+function buscarProductoLista(){
+  var codigo_registro=$("#tipo").val();
+  var nombre=$("#buscar_nombre").val();
+  var codigo=$("#buscar_codigo").val();
+  var lineas=$("#buscar_linea").val(); 
+  var formas=$("#buscar_forma").val(); 
+  var acciones=$("#buscar_accion").val(); 
+  
+  var parametros={"codigo_registro":codigo_registro,"codigo":codigo,"nombre":nombre,"lineas":lineas,"formas":formas,"acciones":acciones};
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_buscar_producto.php",
+        data: parametros, 
+        beforeSend: function () {
+          iniciarCargaAjax("Obteniendo productos...");
+        },     
+        success:  function (resp) {
+          detectarCargaAjax();
+          $("#tabla_productos").html(resp);
+          //$("#modalBuscarProducto").find('.modal-content').empty();         
+          $("#modalBuscarProducto").modal("hide");
+        }
+    });
+}
+
+function iniciarCargaAjax(texto=""){
+  $("#texto_ajax_titulo").html(texto); 
+  $(".cargar-ajax").removeClass("d-none");
+}
+function detectarCargaAjax(){
+  $("#texto_ajax_titulo").html("Procesando Datos");
+  $(".cargar-ajax").addClass("d-none");
+  $(".cargar-ajax").fadeOut("slow");
+}
+
+//funciones despues de cargar pantalla
+window.onload = detectarCarga;
+  function detectarCarga(){
+    $(".cargar").fadeOut("slow");
+  }

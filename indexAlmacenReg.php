@@ -1,3 +1,4 @@
+<?php $indexGerencia=1; //para no cargar en la pagina principal ?>
 <html>
 <head>
 	<meta charset="utf-8" />

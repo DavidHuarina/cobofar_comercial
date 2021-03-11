@@ -1,3 +1,4 @@
+<?php $indexGerencia=1; //para no cargar en la pagina principal ?>
 <html>
 <head>
 	<meta charset="utf-8" />
@@ -53,8 +54,7 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Distribuidores</a></li>
 					<li><a href="navegador_material.php" target="contenedorPrincipal">Productos</a></li>
-					<li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li>
-					<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Precios y Descuentos</a></li>
+					<li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li>					
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>
 					<!--li><a href="navegador_vehiculos.php" target="contenedorPrincipal">Vehiculos</a></li-->
 					<li><span>Gestion de Almacenes</span>
@@ -72,6 +72,7 @@ include("datosUsuario.php");
 						<li><a href="navegador_empaques.php" target="contenedorPrincipal">Empaques</a></li>
 						<li><a href="navegador_formasfar.php" target="contenedorPrincipal">Formas Farmaceuticas</a></li>
 						<li><a href="navegador_accionester.php" target="contenedorPrincipal">Acciones Terapeuticas</a></li>
+						<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Precios y Descuentos</a></li>
 						<li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>
 						<li><a href="navegador_precios.php?orden=2" target="contenedorPrincipal">Precios (Por Linea Proveedor)</a></li>		
 						<li><a href="navegadorUbicaciones.php" target="contenedorPrincipal">Ubicaciones</a></li>						
@@ -149,6 +150,7 @@ include("datosUsuario.php");
 					</li-->
 					<li><span>Ventas</span>
 						<ul>
+							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>
 							<li><a href="rptOpVentasxItem.php" target="contenedorPrincipal">Ventas x Item</a></li>
 							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>

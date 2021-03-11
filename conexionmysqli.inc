@@ -10,7 +10,23 @@ if(!function_exists('register_globals')){
 	    include("librerias.php");// se debe cambiar a la parte posterior
         include("librerias2.php");
         include("librerias3.php");
-        ?><style type="text/css">body{background: #fff;} .filter-option{padding-top: 5px !important;padding-left: 5px !important;padding-right: 5px !important;}.dropdown-toggle::after{margin-right: -20px !important;}.modal-backdrop.show {opacity: .0;filter: alpha(opacity=0);}</style><?php	
+        include("mycss.php");
+        if(!isset($indexGerencia)){
+            ?>
+          <div class="cargar">
+            <p style='padding-top: 35px; font-size: 14px;text-align: center;' class="text-warning font-weight-bold">Procesando Datos</p>
+         </div>
+            <?php
+        }
+        ?>
+        
+         <div class="cargar-ajax d-none">
+           <div class="div-loading text-center">
+              <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+              <p class="text-muted">Aguard&aacute; un momento por favor</p>  
+           </div>
+         </div>
+        <?php	
 	}
 }else{
 

@@ -395,4 +395,45 @@ function obtenerDescripcionMotivo($codigo,$ninguna){
   }  
   return $nombre;
 }
+function obtenerNombreProveedor($codigo){
+  $estilosVenta=1;
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT nombre_proveedor from proveedores where cod_proveedor=$codigo";
+  $proveedor="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $proveedor=$detalle[0];   		
+  } 
+  mysqli_close($enlaceCon); 
+  return $proveedor;
+}
+function obtenerNombreProveedorLinea($codigo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=$codigo";
+  $linea="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $linea=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $linea;
+}
+function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sql="select sum(s.monto_final) as monto
+	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	and s.`fecha` BETWEEN '$desde' and '$hasta' and 
+	s.cod_tipopago in ($tipoPago)";
+  //echo $sql;	
+  $resp=mysqli_query($enlaceCon,$sql);
+  $monto=0;				
+  while($detalle=mysqli_fetch_array($resp)){	
+       $monto=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $monto;
+}
 ?>
