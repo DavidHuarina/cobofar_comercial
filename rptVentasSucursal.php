@@ -48,9 +48,9 @@ setlocale(LC_ALL, 'es_ES');
 $tiempoInicio = strtotime($fecha_iniconsulta);//obtener tiempo de inicio
 $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obtener el tiempo final pero al ultimo día, para que muestre todos los meses
 ?>
-<br><center><table align='center' class='table table-sm table-bordered' width='70%'>
+<br><center><table align='center' class='texto' width='70%'>
 	<thead>
-<tr class='thead-dark'><th><small>Sucursal</small></th>
+<tr><th width="5%">N.</th><th><small>Sucursal</small></th>
 <?php
 $cantidadMes=0;
 while($tiempoInicio <= $tiempoFin){
@@ -67,10 +67,12 @@ while($tiempoInicio <= $tiempoFin){
 
 $sqlSucursal="select cod_ciudad, descripcion from ciudades where cod_ciudad in ($rpt_territorio) order by descripcion";
 $respSucursal=mysqli_query($enlaceCon,$sqlSucursal);
+$index=0;
 while($datosSuc=mysqli_fetch_array($respSucursal)){	
+  $index++;
 	$codigoSuc=$datosSuc[0];
 	$nombreSuc=$datosSuc[1];
-	?><tr><th class='bg-principal text-white'><?=$nombreSuc?></th><?php
+	?><tr><th><?=$index?></th><th><?=$nombreSuc?></th><?php
   $tiempoInicio2 = strtotime($fecha_iniconsulta);
   $cantidadMes2=0;
   while($tiempoInicio2 <= $tiempoFin){

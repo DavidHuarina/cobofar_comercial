@@ -174,13 +174,14 @@ $(document).ready(function() {
 		$linea=$dat[5];
 		$proveedor=obtenerNombreProveedor($dat['cod_proveedor']);		
 		$precioProducto=number_format(obtenerPrecioProductoSucursal($codigo),2,'.',' ');
+		$enlace="<a class='btn btn-default btn-sm' href='$urlListDetalle?codigo=$codigo' onclick=''>Mod. Sucursal</a>";
 		echo "<tr>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$proveedor</td>
 		<td>$linea</td>
 		<td>$nombre</td>
 		<td>$precioProducto</td>
-		<td>Detalle</td>
+		<td>$enlace</td>
 		</tr>";
 	}
 	echo "</tbody></table></center><br>";
