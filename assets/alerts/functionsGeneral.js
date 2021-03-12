@@ -1,3 +1,10 @@
+//funciones despues de cargar pantalla
+window.onload = detectarCarga;
+  function detectarCarga(){
+    $(".cargar").fadeOut("slow");
+  }
+
+
 function guardarPedido(tipo){
     $("#modo_pedido").val(tipo);
    $("#modalObservacionPedido").modal("show"); 
@@ -143,8 +150,3 @@ function detectarCargaAjax(){
   $(".cargar-ajax").fadeOut("slow");
 }
 
-//funciones despues de cargar pantalla
-window.onload = detectarCarga;
-  function detectarCarga(){
-    $(".cargar").fadeOut("slow");
-  }

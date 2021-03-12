@@ -105,7 +105,7 @@ $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 <div class='container'>
 		<div class='col-md-4'>
-		<select name='codLinea' id='codLinea' class='tokenize-limit-demo2'>
+		<select name='codLinea' id='codLinea' class='selectpicker form-control'>
 		<option value=''></option>";
 		while($dat1=mysqli_fetch_array($resp1))
 		{	$codLinea=$dat1[0];
@@ -129,7 +129,7 @@ $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 <div class='container'>
 		<div class='col-md-4'>
-			<select name='codForma' id='codForma' class='tokenize-limit-demo2'>
+			<select name='codForma' id='codForma' class='selectpicker form-control'>
 			<option value=''></option>";
 			while($dat1=mysqli_fetch_array($resp1))
 			{	$codForma=$dat1[0];
@@ -152,7 +152,7 @@ $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 	<div class='container'>
 		<div class='col-md-4'>
-			<select name='codEmpaque' id='codEmpaque' class='tokenize-limit-demo2'>
+			<select name='codEmpaque' id='codEmpaque' class='selectpicker form-control'>
 				<option value=''></option>";
 			while($dat1=mysqli_fetch_array($resp1))
 			{	$codEmpaque=$dat1[0];
@@ -183,7 +183,7 @@ $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 	<div class='container'>
 		<div class='col-md-4'>
-			<select name='codTipoVenta' id='codTipoVenta' class='tokenize-limit-demo2'>
+			<select name='codTipoVenta' id='codTipoVenta' class='selectpicker form-control'>
 			<option value=''></option>";
 			while($dat1=mysqli_fetch_array($resp1))
 			{	$codTipoVenta=$dat1[0];
@@ -251,9 +251,6 @@ echo "<td align='left'>
 
 	<script>
 		$('.tokenize-sample-demo1').tokenize2();
-		$('.tokenize-limit-demo2').tokenize2({
-                tokensMaxItems: 1
-        });
 	</script>
 	
 <?php
