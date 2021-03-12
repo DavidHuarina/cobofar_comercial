@@ -3,9 +3,9 @@ require("../conexionmysqli.inc");
 require("../estilos2.inc");
 require("configModule.php");
 require("../funciones.php");
-$sql="(SELECT s.cod_material,d.codigo_material,d.descripcion_material,l.cod_proveedor,d.cod_linea_proveedor from subgrupos_material s join material_apoyo d on d.codigo_material=s.cod_material join proveedores_lineas l on l.cod_linea_proveedor=d.cod_linea_proveedor where s.cod_subgrupo=$codigo_registro and d.estado=1 order by 1)
-   UNION (select d.codigo_material,0 as codigo_material,d.descripcion_material,l.cod_proveedor,d.cod_linea_proveedor from material_apoyo d
-    join proveedores_lineas l on l.cod_linea_proveedor=d.cod_linea_proveedor  where d.estado=1 and d.codigo_material not in (SELECT s.cod_material from subgrupos_material s join material_apoyo d on d.codigo_material=s.cod_material where s.cod_subgrupo=$codigo_registro and d.estado=1) order by 1 limit 50)";
+$sql="(SELECT s.cod_material,d.codigo_material,d.descripcion_material,(select cod_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor) as cod_proveedor,d.cod_linea_proveedor from subgrupos_material s join material_apoyo d on d.codigo_material=s.cod_material where s.cod_subgrupo=$codigo_registro and d.estado=1 order by 1)
+   UNION (select d.codigo_material,0 as codigo_material,d.descripcion_material,(select cod_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor) as cod_proveedor,d.cod_linea_proveedor from material_apoyo d
+      where d.estado=1 and d.codigo_material not in (SELECT s.cod_material from subgrupos_material s join material_apoyo d on d.codigo_material=s.cod_material where s.cod_subgrupo=$codigo_registro and d.estado=1) order by 1 limit 50)";
    //echo $sql;
 
 $resp=mysqli_query($enlaceCon,$sql); 
@@ -168,7 +168,7 @@ echo "</form>";
       </div>
       <br>  
       <div class="modal-footer">
-        <a href="#" class="btn btn-success btn btn-sm" style="background:#732590 !important;" onclick="buscarProductoLista()"><i class="material-icons">search</i> BUSCAR PRODUCTO</a>
+        <a href="#" class="btn btn-success btn btn-sm" style="background:#732590 !important;" onclick="buscarProductoLista('ajax_buscar_producto.php')"><i class="material-icons">search</i> BUSCAR PRODUCTO</a>
       </div>
     </div>
   </div>

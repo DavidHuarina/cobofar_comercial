@@ -139,15 +139,13 @@ function obtenerNombreProductoSimple($codigo){
 }
 function obtenerNombreProductoCompleto($codigo){
 	require("conexionmysqli.inc");
-	$sql="SELECT CONCAT(m.descripcion_material,' (',l.nombre_linea_proveedor,' - ',p.nombre_proveedor,')')
-from material_apoyo m join proveedores_lineas l 
-on l.cod_linea_proveedor=m.cod_linea_proveedor
-join proveedores p on p.cod_proveedor=l.cod_proveedor
+	$sql="SELECT m.descripcion_material,(select p.nombre_proveedor from proveedores_lineas l join proveedores p on p.cod_proveedor=l.cod_proveedor where l.cod_linea_proveedor=m.cod_linea_proveedor) as nombre_proveedor,(select l.nombre_linea_proveedor from proveedores_lineas l where l.cod_linea_proveedor=m.cod_linea_proveedor) as linea_proveedor
+from material_apoyo m 
 where m.codigo_material=$codigo";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre="";
 	while($dat=mysqli_fetch_array($resp)){
-	$nombre=$dat[0];
+	$nombre=$dat[0]." (".$dat[2]." - ".$dat[1].")";
 	}
 	return($nombre);
 }

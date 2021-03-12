@@ -107,7 +107,7 @@ function filaTablaGeneral(tabla,index){
   $("#modalDetalles").modal("show");
 }  
 
-function buscarProductoLista(){
+function buscarProductoLista(url){
   var codigo_registro=$("#tipo").val();
   var nombre=$("#buscar_nombre").val();
   var codigo=$("#buscar_codigo").val();
@@ -119,7 +119,7 @@ function buscarProductoLista(){
      $.ajax({
         type: "POST",
         dataType: 'html',
-        url: "ajax_buscar_producto.php",
+        url: url,
         data: parametros, 
         beforeSend: function () {
           iniciarCargaAjax("Obteniendo productos...");

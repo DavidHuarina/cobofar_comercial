@@ -10,7 +10,6 @@ if(!function_exists('register_globals')){
 	    include("librerias.php");// se debe cambiar a la parte posterior
         include("librerias2.php");
         include("librerias3.php");
-        include("mycss.php");
         if(!isset($indexGerencia)){
             ?>
           <div class="cargar">
