@@ -11,7 +11,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 require("conexionmysqli.inc");
 $cadRespuesta="";
 $consulta="
-    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1";
+    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1 and cod_ciudad=$globalAgencia";
 $rs=mysqli_query($enlaceCon,$consulta);
 $registro=mysqli_fetch_array($rs);
 $cadRespuesta=$registro[0];
@@ -19,7 +19,7 @@ if($cadRespuesta=="")
 {   $cadRespuesta=0;
 }
 
-$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='$codTipoPrecio'";
+$sqlTipoPrecio="select nombre from tipos_precio where codigo='$codTipoPrecio'";
 $rsTipoPrecio=mysqli_query($enlaceCon,$sqlTipoPrecio);
 $datTipoPrecio=mysqli_fetch_array($rsTipoPrecio);
 $descuentoPrecio=$datTipoPrecio[0];
@@ -51,7 +51,7 @@ while($datCosto=mysqli_fetch_array($respCosto)){
 }
 
 echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='0.01'>";
-echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecio%</span>";
+echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecio</span>";
 echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>#####".$descuentoPrecioMonto;
 
 ?>

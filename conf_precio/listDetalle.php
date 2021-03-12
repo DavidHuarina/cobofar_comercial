@@ -3,110 +3,6 @@ ini_set('post_max_size','100M');
 ?>
 
 <script language='Javascript'>
-function nuevoAjax()
-{	var xmlhttp=false;
-	try {
-			xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
-	} catch (e) {
-	try {
-		xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
-	} catch (E) {
-		xmlhttp = false;
-	}
-	}
-	if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
- 	xmlhttp = new XMLHttpRequest();
-	}
-	return xmlhttp;
-}
-
-function modifPrecioB(){
-   var main=document.getElementById('main');
-   var numFilas=main.rows.length;
-   var subtotal=0;
-   var datoModif=parseFloat(document.getElementById('valorPrecioB').value);
-   datoModif=datoModif/100;
-	for(var i=1; i<=numFilas-1; i++){
-		var dato=parseFloat(main.rows[i].cells[1].firstChild.value);
-		var datoNuevo=dato+(datoModif*dato);
-		main.rows[i].cells[2].firstChild.value=datoNuevo;
-	}
-
-}
-
-function modifPrecioC(){
-   var main=document.getElementById('main');
-   var numFilas=main.rows.length;
-   var subtotal=0;
-   var datoModif=parseFloat(document.getElementById('valorPrecioC').value);
-   datoModif=datoModif/100;
-	for(var i=1; i<=numFilas-1; i++){
-		var dato=parseFloat(main.rows[i].cells[1].firstChild.value);
-		var datoNuevo=dato+(datoModif*dato);
-		main.rows[i].cells[3].firstChild.value=datoNuevo;
-	}
-
-}
-
-function modifPrecioF(){
-   var main=document.getElementById('main');
-   var numFilas=main.rows.length;
-   var subtotal=0;
-   var datoModif=parseFloat(document.getElementById('valorPrecioF').value);
-   datoModif=datoModif/100;
-	for(var i=1; i<=numFilas-1; i++){
-		var dato=parseFloat(main.rows[i].cells[1].firstChild.value);
-		var datoNuevo=dato+(datoModif*dato);
-		main.rows[i].cells[4].firstChild.value=datoNuevo;
-	}
-
-}
-
-function modifPrecios(indice){
-	var main=document.getElementById("main");
-
-	var datoModif=parseFloat(document.getElementById('valorPrecioB').value);
-	datoModif=datoModif/100;
-	var dato=parseFloat(main.rows[indice].cells[2].firstChild.value);
-	var datoNuevo=dato+(datoModif*dato);
-	main.rows[indice].cells[2].firstChild.value=datoNuevo;
-
-	datoModif=parseFloat(document.getElementById('valorPrecioC').value);
-	datoModif=datoModif/100;
-	dato=parseFloat(main.rows[indice].cells[3].firstChild.value);
-	datoNuevo=dato+(datoModif*dato);
-	main.rows[indice].cells[3].firstChild.value=datoNuevo;
-
-	datoModif=parseFloat(document.getElementById('valorPrecioF').value);
-	datoModif=datoModif/100;
-	dato=parseFloat(main.rows[indice].cells[4].firstChild.value);
-	datoNuevo=dato+(datoModif*dato);
-	main.rows[indice].cells[4].firstChild.value=datoNuevo;
-
-
-
-}
-
-function modifPreciosAjax(indice){
-	var item=document.getElementById('item_'+indice).value;
-	var precio1=document.getElementById('precio1_'+indice).value;
-	var precio2=document.getElementById('precio2_'+indice).value;
-	var precio3=document.getElementById('precio3_'+indice).value;
-	var precio4=document.getElementById('precio4_'+indice).value;
-	contenedor = document.getElementById('contenedor_'+indice);
-	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxGuardarPrecios.php?item="+item+"&precio1="+precio1+"&precio2="+precio2+"&precio3="+precio3+"&precio4="+precio4,true);
-	ajax.onreadystatechange=function() {
-		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText
-		}else{
-			contenedor.innerHTML="Guardando...";
-		}
-	}
-	ajax.send(null)
-	
-}
-
 function cambiarPrecioIndividual(indice){
 	var item=document.getElementById('item_'+indice).value;
 	var precio1=document.getElementById('precio1_'+indice).value;
@@ -183,19 +79,16 @@ function guardarFilaPrecio(indice,solo){
 function salir(){
 	location.href="list.php";
 }
-function enviar(f){
-	f.submit();
-}
 </script>
 <?php
 
 	require("../conexionmysqli.inc");
 	require("../estilos2.inc");
 	require("../funciones.php");
-
+    require("../funcion_nombres.php");
 	$globalAlmacen=$_COOKIE['global_almacen'];
 	$codigoMaterial=$_GET['codigo'];
-	
+	$nombreProd="<small><small><b>".obtenerNombreProductoCompleto($codigoMaterial)."</b></small></small>";
 	echo "<form method='POST' action='guardarPrecios.php' name='form1'>";
 	
 	$sql="select cod_ciudad,descripcion from ciudades order by 1;";
@@ -203,7 +96,7 @@ function enviar(f){
 	//echo $sql;
 	
 	$resp=mysqli_query($enlaceCon,$sql);
-	echo "<h1>Registro y Edición de Precios</h1>";
+	echo "<h1>Registro y Edición de Precios<br>$nombreProd</h1>";
 	echo "<div class=''>
 	<input type='button' value='Guardar Todo' name='adicionar' class='btn btn-primary' onclick='guardarFilaPrecioTodos()'>
 	<input type='button' value='Cancelar' name='adicionar' class='btn btn-danger' onclick='salir()'>	

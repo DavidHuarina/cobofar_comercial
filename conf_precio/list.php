@@ -159,15 +159,17 @@ $(document).ready(function() {
 	
 	echo "<center><table class='table table-sm table-bordered' id='tablaPrincipal'><thead>";
 	echo "<tr class='bg-principal text-white'>
-	<th>&nbsp;#</th>
+	<th>N.</th>
 	<th>Proveedor</th>
 	<th>Linea</th>
 	<th>Producto</th>
 	<th>Precio</th>
 	<th>Detalle</th>
 	</tr></thead><tbody>";
+	$index=0;
 	while($dat=mysqli_fetch_array($resp))
-	{
+	{ 
+		$index++;
 		$codigo=$dat[0];
 		$nombre=$dat[1];
 		$abreviatura=$dat[2];
@@ -176,11 +178,11 @@ $(document).ready(function() {
 		$precioProducto=number_format(obtenerPrecioProductoSucursal($codigo),2,'.',' ');
 		$enlace="<a class='btn btn-default btn-sm' href='$urlListDetalle?codigo=$codigo' onclick=''>Mod. Sucursal</a>";
 		echo "<tr>
-		<td><input type='checkbox' name='codigo' value='$codigo'></td>
+		<td>$index</td>
 		<td>$proveedor</td>
 		<td>$linea</td>
 		<td>$nombre</td>
-		<td>$precioProducto</td>
+		<td><small>$precioProducto</small></td>
 		<td>$enlace</td>
 		</tr>";
 	}

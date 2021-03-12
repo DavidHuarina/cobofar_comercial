@@ -709,7 +709,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <th>Tipo de Documento</th>
 <th>Nro.Factura</th>
 <th>Fecha</th>
-<th>Precio</th>
+<th class='d-none'>Precio</th>
 <th>Tipo Pago</th>
 <th>NIT</th>
 <th>Nombre/RazonSocial</th>
@@ -762,8 +762,8 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 </td>
 
 
-<td>
-	<div id='divTipoPrecio' >	
+<td class='d-none'>
+	<div id='divTipoPrecio'>	
 <?php
 			$sql1="select codigo, nombre from tipos_precio where estado=1 order by 1";
 			$resp1=mysqli_query($enlaceCon,$sql1);

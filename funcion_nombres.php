@@ -127,4 +127,29 @@ function obtenerNombreSucursalAgrupado($sucursales){
 	return($nombre);
 }
 
+function obtenerNombreProductoSimple($codigo){
+	require("conexionmysqli.inc");
+	$sql="select descripcion_material from material_apoyo where codigo_material=$codigo";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$nombre="";
+	while($dat=mysqli_fetch_array($resp)){
+	$nombre=$dat[0];
+	}
+	return($nombre);
+}
+function obtenerNombreProductoCompleto($codigo){
+	require("conexionmysqli.inc");
+	$sql="SELECT CONCAT(m.descripcion_material,' (',l.nombre_linea_proveedor,' - ',p.nombre_proveedor,')')
+from material_apoyo m join proveedores_lineas l 
+on l.cod_linea_proveedor=m.cod_linea_proveedor
+join proveedores p on p.cod_proveedor=l.cod_proveedor
+where m.codigo_material=$codigo";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$nombre="";
+	while($dat=mysqli_fetch_array($resp)){
+	$nombre=$dat[0];
+	}
+	return($nombre);
+}
+
 ?>
