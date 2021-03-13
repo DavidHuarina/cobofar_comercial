@@ -129,6 +129,35 @@ echo "<script language='Javascript'>
 				}
 			}
 		}
+		function editar_lineas(f)
+		{
+			var i;
+			var j=0;
+			var j_cod_registro;
+			for(i=0;i<=f.length-1;i++)
+			{
+				if(f.elements[i].type=='checkbox')
+				{	if(f.elements[i].checked==true)
+					{	j_cod_registro=f.elements[i].value;
+						j=j+1;
+					}
+				}
+			}
+			if(j>1)
+			{	alert('Debe seleccionar solamente un registro para editar las líneas.');
+			}
+			else
+			{
+				if(j==0)
+				{
+					alert('Debe seleccionar un registro para editar las líneas.');
+				}
+				else
+				{
+					location.href='<?=$urlEditLinea?>?codigo_registro='+j_cod_registro+'';
+				}
+			}
+		}
 </script>
 	<?php
 	echo "<form method='post' action=''>";
@@ -141,6 +170,7 @@ echo "<script language='Javascript'>
 	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>
 	<input type='button' value='Modificar Días' name='Dias' class='btn btn-info' onclick='editar_dias(this.form)'>
 	<input type='button' value='Modificar Sucursales' name='Ciudades' class='btn btn-info' onclick='editar_ciudades(this.form)'>
+	<input type='button' value='Modificar Lineas' name='Lineas' class='btn btn-info' onclick='editar_lineas(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	
@@ -149,7 +179,7 @@ echo "<script language='Javascript'>
 	echo "<tr class='bg-info text-white'>
 	<td colspan='3'></td>
 	<td colspan='2' align='center'>Periodo del Descuento</td>
-	<td colspan='2'></td>
+	<td colspan='3'></td>
 	</tr>";
 	echo "<tr class='bg-info text-white'>
 	<th>&nbsp;</th>
@@ -159,6 +189,7 @@ echo "<script language='Javascript'>
 	<th>Hasta</th>
 	<th>Días</th>
 	<th>Sucursales</th>
+	<th>Líneas</th>
 	</tr>";
 	while($dat=mysqli_fetch_array($resp))
 	{
@@ -179,6 +210,7 @@ echo "<script language='Javascript'>
 		
 		$dias=obtenerNombreDesDiasRegistrados($codigo);
 		$ciudades=obtenerNombreDesCiudadesRegistrados($codigo);
+		$lineas=obtenerNombreDesLineasRegistrados($codigo);
 		echo "<tr>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombre</td>
@@ -187,6 +219,7 @@ echo "<script language='Javascript'>
 		<td>$hasta</td>
 		<td>$dias</td>
 		<td>$ciudades</td>
+		<td>$lineas</td>
 		</tr>";
 	}
 	echo "</table></center><br>";
@@ -196,6 +229,7 @@ echo "<script language='Javascript'>
 	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>
 	<input type='button' value='Modificar Días' name='Dias' class='btn btn-info' onclick='editar_dias(this.form)'>
 	<input type='button' value='Modificar Sucursales' name='Ciudades' class='btn btn-info' onclick='editar_ciudades(this.form)'>
+	<input type='button' value='Modificar Lineas' name='Lineas' class='btn btn-info' onclick='editar_lineas(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	

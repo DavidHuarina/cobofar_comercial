@@ -116,7 +116,7 @@ $fecha_real=date("Y-m-d");
         while ($rowDet = $stmtDetalle->fetch(PDO::FETCH_ASSOC)) {
           $codMaterial=$rowDet["CPROD"];
           $precioMaterial=$rowDet["PREVEN"];
-          $cantidadMaterial=$rowDet["HCAN"];
+          $cantidadMaterial=$rowDet["DCAN"];//DCAN HCAN
           $fechaVenMaterial=$rowDet["FECVEN"];
           $loteFabMaterial=$rowDet["LOTEFAB"];
           $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial','$fechaVenMaterial','$loteFabMaterial')";
@@ -149,3 +149,4 @@ echo "Realizado! Total Almacenes".$contador;
 
 ?></body>
 </html>
+

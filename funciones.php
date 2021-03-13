@@ -274,7 +274,7 @@ function numeroCorrelativo($tipoDoc){
 }
 function obtenerCodigoAlmacenPorCiudad($ciudad){
 	require("conexionmysqli.inc");
-  $sql_detalle="SELECT cod_almacen from almacenes where cod_ciudad=$ciudad";
+  $sql_detalle="SELECT cod_almacen from almacenes where cod_ciudad='$ciudad'";
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
@@ -305,7 +305,7 @@ function obtenerTotalCiudades(){
 }
 function obtenerNombreDiaCompleto($dia){
 	require("conexionmysqli.inc");
-  $sql_detalle="SELECT nombre from dias where codigo=$dia";
+  $sql_detalle="SELECT nombre from dias where codigo='$dia'";
   $abrev="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
@@ -316,7 +316,7 @@ function obtenerNombreDiaCompleto($dia){
 
 function obtenerNombreDia($dia){
 	require("conexionmysqli.inc");
-  $sql_detalle="SELECT abreviatura2 from dias where codigo=$dia";
+  $sql_detalle="SELECT abreviatura2 from dias where codigo='$dia'";
   $abrev="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
@@ -326,7 +326,7 @@ function obtenerNombreDia($dia){
 }
 function obtenerNombreCiudad($ciudad){
 	require("conexionmysqli.inc");
-  $sql_detalle="SELECT descripcion from ciudades where cod_ciudad=$ciudad";
+  $sql_detalle="SELECT descripcion from ciudades where cod_ciudad='$ciudad'";
   $nombre="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
@@ -336,7 +336,7 @@ function obtenerNombreCiudad($ciudad){
 }
 function obtenerNombreCiudadPorAlmacen($almacen){
 	require("conexionmysqli.inc");
-  $sql_detalle="SELECT c.descripcion from ciudades c join almacenes a on a.cod_ciudad=c.cod_ciudad where a.cod_almacen=$almacen";
+  $sql_detalle="SELECT c.descripcion from ciudades c join almacenes a on a.cod_ciudad=c.cod_ciudad where a.cod_almacen='$almacen'";
   $nombre="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
@@ -347,7 +347,7 @@ function obtenerNombreCiudadPorAlmacen($almacen){
 function obtenerNombreDesDiasRegistrados($codigo){
   $cantidad=obtenerTotalDias();
   require("conexionmysqli.inc");
-  $sql_detalle="SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=$codigo";
+  $sql_detalle="SELECT cod_dia from tipos_precio_dias where cod_tipoprecio='$codigo'";
   $i=0;
   $diasArray=[];				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -366,7 +366,7 @@ function obtenerNombreDesDiasRegistrados($codigo){
 function obtenerNombreDesCiudadesRegistrados($codigo){
   $cantidad=obtenerTotalCiudades();
   require("conexionmysqli.inc");
-  $sql_detalle="SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=$codigo";
+  $sql_detalle="SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio='$codigo'";
   $i=0;
   $ciudadArray=[];				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -384,7 +384,7 @@ function obtenerNombreDesCiudadesRegistrados($codigo){
 }
 function obtenerDescripcionMotivo($codigo,$ninguna){
   require("conexionmysqli.inc");
-  $sql_detalle="SELECT descripcion from observaciones_clase where codigo=$codigo";
+  $sql_detalle="SELECT descripcion from observaciones_clase where codigo='$codigo'";
   $nombre="";
   if($ninguna==1){
   	$nombre="OBSERVACIÓN ESPECÍFICA";
@@ -398,7 +398,7 @@ function obtenerDescripcionMotivo($codigo,$ninguna){
 function obtenerNombreProveedor($codigo){
   $estilosVenta=1;
   require("conexionmysqli.inc");
-  $sql_detalle="SELECT nombre_proveedor from proveedores where cod_proveedor=$codigo";
+  $sql_detalle="SELECT nombre_proveedor from proveedores where cod_proveedor='$codigo'";
   $proveedor="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
@@ -410,7 +410,7 @@ function obtenerNombreProveedor($codigo){
 function obtenerNombreProveedorLinea($codigo){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
-  $sql_detalle="SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=$codigo";
+  $sql_detalle="SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor='$codigo'";
   $linea="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
@@ -440,7 +440,7 @@ function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
 function obtenerPrecioProductoSucursal($codigo){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
-	$sql="SELECT MAX(precio) from precios where codigo_material=$codigo and cod_precio=1 and cod_ciudad is not null";
+	$sql="SELECT MAX(precio) from precios where codigo_material='$codigo' and cod_precio=1 and cod_ciudad is not null";
     $resp=mysqli_query($enlaceCon,$sql);
     $monto=0;				
     while($detalle=mysqli_fetch_array($resp)){	
@@ -448,5 +448,65 @@ function obtenerPrecioProductoSucursal($codigo){
     }  
     mysqli_close($enlaceCon);
     return $monto;
+}
+function obtenerCodigoCiudadPorAlmacen($almacen){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT cod_ciudad from almacenes where cod_almacen='$almacen'";
+  $codigo=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $codigo=$detalle[0];   		
+  }  
+  return $codigo;
+}
+
+function actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user){
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT MAX(precio) from precios where cod_precio=1 and codigo_material='$cod_material'";
+  $precio=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $precio=$detalle[0];   		
+  }  
+
+  if($precioUnitario>$precio){
+  	$sql_update="UPDATE precios set precio='$precioUnitario',cod_funcionario='$user' where cod_precio=1 and codigo_material='$cod_material'";	
+    $resp=mysqli_query($enlaceCon,$sql_update);
+  }
+}
+function obtenerTotalLineas(){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT count(*) cantidad from proveedores_lineas where estado=1";
+  $cantidad=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $cantidad=$detalle[0];   		
+  }  
+  return $cantidad;
+}
+function obtenerNombreDesLineasRegistrados($codigo){
+  $cantidad=obtenerTotalLineas();
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT cod_linea_proveedor from tipos_precio_lineas where cod_tipoprecio='$codigo'";
+  $i=0;
+  $lineaArray=[];				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $lineaArray[$i]=obtenerNombreProveedorLinea($detalle[0]);
+       $i++;  		
+  }  
+  if(count($lineaArray)==$cantidad){
+  	return "TODOS";
+  }else if(count($lineaArray)==0){
+  	return "NINGUNO";
+  }else{
+  	return implode(", ",$lineaArray);
+  }
+}
+function redondearMitades($n) {
+    $ent = floor($n); // Parte entera
+    $dec = $n - $ent; // Parte decimal
+    $r = ceil($dec*2) / 2; // Decimal redondeado
+    return $ent + $r;
 }
 ?>

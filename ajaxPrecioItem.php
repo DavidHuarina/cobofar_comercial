@@ -27,7 +27,14 @@ $indiceConversion=0;
 $descuentoPrecioMonto=0;
 if($descuentoPrecio>0){
 	$indiceConversion=($descuentoPrecio/100);
-	$descuentoPrecioMonto=round($cadRespuesta*($indiceConversion));
+	if(obtenerValorConfiguracion(13)==1){
+      $descuentoPrecioMonto=round($cadRespuesta*($indiceConversion));
+	}else if(obtenerValorConfiguracion(13)==2){
+      $descuentoPrecioMonto=redondearMitades($cadRespuesta*($indiceConversion));
+	}else{
+	  $descuentoPrecioMonto=$cadRespuesta*($indiceConversion);	
+	}
+	
 	//$cadRespuesta=$cadRespuesta-($cadRespuesta*($indiceConversion));
 }
 
