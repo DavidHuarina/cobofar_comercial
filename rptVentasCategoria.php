@@ -50,7 +50,7 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
 ?>
 <br><center><table align='center' class='texto' width='70%'>
 	<thead>
-<tr><th width="5%">N.</th><th><small>Sucursal</small></th>
+<tr><th width="5%">N.</th><th><small>Sub Grupo</small></th>
 <?php
 $cantidadMes=0;
 while($tiempoInicio <= $tiempoFin){
@@ -65,12 +65,12 @@ while($tiempoInicio <= $tiempoFin){
 <tbody>
 <?php
 
-$sqlSucursal="select cod_ciudad, descripcion from ciudades where cod_ciudad in ($rpt_territorio) order by descripcion";
+$sqlSucursal="select codigo, nombre from subgrupos where codigo in ($codSubGrupo) order by nombre";
 $respSucursal=mysqli_query($enlaceCon,$sqlSucursal);
 $index=0;
 while($datosSuc=mysqli_fetch_array($respSucursal)){	
   $index++;
-	$codigoSuc=$datosSuc[0];
+	$codigoSubGrupo=$datosSuc[0];
 	$nombreSuc=$datosSuc[1];
 	?><tr><th><?=$index?></th><th><?=$nombreSuc?></th><?php
   $tiempoInicio2 = strtotime($fecha_iniconsulta);
@@ -87,7 +87,7 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   		$dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
   	}
 
-  	$montoVenta=obtenerMontoVentasGeneradasCategoria($dateInicio,$dateFin,$codigoSuc,$codTipoPago,$codSubGrupo);
+  	$montoVenta=obtenerMontoVentasGeneradasCategoria($dateInicio,$dateFin,$rpt_territorio,$codTipoPago,$codigoSubGrupo);
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
   		?><td><small><?=number_format($montoVenta,2,'.',' ')?></small></td><?php
   	}else{
