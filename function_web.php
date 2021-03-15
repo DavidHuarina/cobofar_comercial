@@ -101,7 +101,7 @@ function obtenerListadoProveedoresWeb(){
   }
 
   function obtenerListadoAlmacenes(){
-    
+    $estilosVenta=1;
     $direccion=obtenerValorConfiguracion(8);//direccion del servicio web farmacias
     $sIde = "farma";
     $sKey = "89i6u32v7xda12jf96jgi30lh";

@@ -1,5 +1,5 @@
 <?php
-
+$estilosVenta=1;
 function obtenerValorConfiguracion($id){
 	require("conexionmysqli.inc");
 	$sql = "SELECT valor_configuracion from configuraciones c where id_configuracion=$id";
@@ -436,7 +436,23 @@ function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
   mysqli_close($enlaceCon);
   return $monto;
 }
-
+function obtenerMontoVentasGeneradasCategoria($desde,$hasta,$sucursal,$tipoPago,$subGrupo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sql="select (SELECT sum(sd.monto_unitario) FROM salida_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT cod_material from subgrupos_material where cod_subgrupo in ($subGrupo))) as monto
+	from salida_almacenes s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	and s.`fecha` BETWEEN '$desde' and '$hasta' and 
+	s.cod_tipopago in ($tipoPago)";
+  //echo $sql;	
+  $resp=mysqli_query($enlaceCon,$sql);
+  $monto=0;				
+  while($detalle=mysqli_fetch_array($resp)){	
+       $monto=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $monto;
+}
 function obtenerPrecioProductoSucursal($codigo){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");

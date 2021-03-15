@@ -4,6 +4,15 @@ window.onload = detectarCarga;
     $(".cargar").fadeOut("slow");
   }
 
+$(document).ready(function() {
+  $(".csp").each(function(){
+    var cantidad =  $(this).attr("colspan");
+    //alert(cantidad);
+    for (var i = 1; i < parseInt(cantidad); i++) {
+       $(this).after("<td class='d-none'></td>");
+    };
+   });
+});
 
 function guardarPedido(tipo){
     $("#modo_pedido").val(tipo);

@@ -152,6 +152,7 @@ include("datosUsuario.php");
 					<li><span>Ventas</span>
 						<ul>
 							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
+							<li><a href="rptOpVentasCategoria.php" target="contenedorPrincipal">Ventas x Categoria</a></li>
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>
 							<li><a href="rptOpVentasxItem.php" target="contenedorPrincipal">Ventas x Item</a></li>
 							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
