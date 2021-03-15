@@ -168,8 +168,12 @@ function anular_salida(f)
 }
 function anularSalidaTraspaso(){
   var j_cod_registro = $("#j_cod_registro").val();
-  var obs =$("#modal_observacion").val().replace(/['"]+/g, '');  
-  location.href='anular_salida.php?codigo_registro='+j_cod_registro+'&grupo_salida=2&obs='+obs;
+  if($("#modal_observacion").val()==""){
+    Swal.fire("Informativo!","Debe registrar la glosa para ANULAR", "warning");
+  }else{
+     var obs =$("#modal_observacion").val().replace(/['"]+/g, '');  
+     location.href='anular_salida.php?codigo_registro='+j_cod_registro+'&grupo_salida=2&obs='+obs;
+  } 
 }
 function cambiarNoEntregado(f)
 {   var i;

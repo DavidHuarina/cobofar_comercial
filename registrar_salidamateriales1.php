@@ -57,7 +57,8 @@ function ajaxTipoDoc(f){
 	ajax.open("GET", "ajaxTipoDoc.php?codTipoSalida="+codTipoSalida,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText
+			contenedor.innerHTML = ajax.responseText;
+			$(".selectpicker").selectpicker("refresh");
 		}
 	}
 	ajax.send(null);
@@ -288,7 +289,7 @@ else
 <tr><th>Tipo de Salida</th><th>Tipo de Documento</th><th>Nro. Salida</th><th>Fecha</th><th>Almacen Destino</th></tr>
 <tr>
 <td align='center'>
-	<select name='tipoSalida' id='tipoSalida' onChange='ajaxTipoDoc(form1)'>
+	<select name='tipoSalida' id='tipoSalida' class='selectpicker form-control' data-style='btn btn-primary' onChange='ajaxTipoDoc(form1)'>
 		<option value="0">--------</option>
 <?php
 	$sqlTipo="select cod_tiposalida, nombre_tiposalida from tipos_salida where cod_tiposalida<>1001 order by 2";
@@ -305,7 +306,7 @@ else
 </td>
 <td align='center'>
 	<div id='divTipoDoc'>
-		<select name='tipoDoc' id='tipoDoc'><option value="0"></select>
+		<select name='tipoDoc' id='tipoDoc' class='selectpicker form-control' data-style='btn btn-primary'><option value="0"></select>
 	</div>
 </td>
 <td align='center'>
@@ -319,7 +320,7 @@ else
 </td>
 
 <td align='center'>
-	<select name='almacen' id='almacen' class='texto'>
+	<select name='almacen' id='almacen'  class='selectpicker form-control' data-style='btn btn-primary'>
 <?php
 	$sql3="select cod_almacen, nombre_almacen from almacenes where cod_almacen<>'$global_almacen' order by nombre_almacen";
 	$resp3=mysqli_query($enlaceCon,$sql3);
@@ -364,8 +365,8 @@ else
 <?php
 
 echo "<div class='divBotones'>
-	<input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'>
-	<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_salidamateriales.php\"'>
+	<input type='submit' class='btn btn-warning' value='Guardar' onClick='return validar(this.form);'>
+	<input type='button' class='btn btn-danger' value='Cancelar' onClick='location.href=\"navegador_salidamateriales.php\"'>
 </div>";
 
 echo "</div>";
@@ -406,7 +407,7 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
 			</td>
 			<td>
-				<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">
+				<input type='button' class='btn btn-warning' value='Buscar' onClick="listaMateriales(this.form)">
 			</td>
 			</tr>
 			

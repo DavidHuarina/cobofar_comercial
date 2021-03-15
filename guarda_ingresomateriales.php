@@ -47,6 +47,9 @@ $sql_inserta = mysqli_query($enlaceCon,$consulta);
 //echo "aaaa:$consulta";
 
 if($sql_inserta==1){
+	$sqlUpdateEstado="update salida_almacenes set estado_salida=2 where cod_salida_almacenes=$codSalidaAlmacen";
+	$respEstado=mysqli_query($enlaceCon,$sqlUpdateEstado);
+
 	for ($i = 1; $i <= $cantidad_material; $i++) {
 		$cod_material = $_POST["material$i"];
 		

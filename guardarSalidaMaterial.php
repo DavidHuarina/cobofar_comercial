@@ -180,8 +180,7 @@ if($sql_inserta==1){
 		location.href='formatoFactura.php?codVenta=$codigo';
 		</script>";	
 		//window.open('formatoFactura.php?codVenta=$codigo','','scrollbars=yes,width=1000,height=800');	
-	}
-	if($tipoDoc!=1){
+	}else if($tipoDoc==2){
 		//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
 		$banderaCorreo=obtenerValorConfiguracion(10);
 		if($banderaCorreo==1 || $banderaCorreo==2){
@@ -191,6 +190,10 @@ if($sql_inserta==1){
 			location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
 			</script>";		
 		}
+	}else{
+          echo "<script type='text/javascript' language='javascript'>
+			location.href='navegador_salidamateriales.php';
+			</script>";
 	}
 	
 }else{

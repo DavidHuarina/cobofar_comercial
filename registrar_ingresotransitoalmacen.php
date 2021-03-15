@@ -61,14 +61,15 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	$dat_materiales=mysqli_fetch_array($resp_materiales);
 	$nombre_material="$dat_materiales[1]";
 	$costo_almacen=number_format($costo_almacen,2,'.','');
-
+    $cantidad_unitaria_formato=number_format($cantidad_unitaria,0,'.','');
+    $costo_almacen_formato=number_format($costo_almacen,2,'.',',');
 	echo "<td>$nombre_material</td>";
 	echo "<input type='hidden' value='$cod_material' name='material$indice_detalle'>";
 	echo "<input type='hidden' value='$cantidad_unitaria' name='cantidad_origen$indice_detalle'>";
 	echo "<input type='hidden' value='$costo_almacen' name='precio$indice_detalle'>";
 	
-	echo "<td align='center'>$lote</td><td align='center'>$fecha_ven</td><td align='center'>$costo_almacen</td><td align='center'>$cantidad_unitaria</td>";
-	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria' class='form-control' readonly required></td>
+	echo "<td align='center'>$lote</td><td align='center'>$fecha_ven</td><td align='center'>$costo_almacen_formato</td><td align='center'>$cantidad_unitaria_formato</td>";
+	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria_formato' class='form-control' readonly required></td>
 	</tr>";
 	$indice_detalle++;
 }
