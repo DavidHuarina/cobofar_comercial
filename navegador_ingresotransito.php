@@ -36,7 +36,7 @@ echo "<script language='Javascript'>
 	echo "<form method='post' action=''>";
 	$sql="SELECT s.cod_salida_almacenes, s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito
 	FROM salida_almacenes s, tipos_salida ts, almacenes a 
-	where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null)";
+	where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc";
 	
 	//echo $sql;
 	
