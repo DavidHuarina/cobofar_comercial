@@ -1,6 +1,6 @@
 <script language='JavaScript'>
 function envia_formulario(f)
-{	var fecha_ini, fecha_fin;
+{	var fecha_ini, fecha_fin, rpt_formato;
 	
 	var codTipoPago=new Array();
 	var j=0;
@@ -31,16 +31,17 @@ function envia_formulario(f)
 	
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
-	window.open('rptVentasCategoria.php?codTipoTerritorio='+codTipoTerritorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&codTipoPago='+codTipoPago+''+'&codSubGrupo='+codSubGrupo+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,height=800');			
+	rpt_formato=$("#rpt_formato").val();
+	window.open('rptVentasLineaProducto.php?codTipoTerritorio='+codTipoTerritorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&codTipoPago='+codTipoPago+''+'&codSubGrupo='+codSubGrupo+''+'&rpt_formato='+rpt_formato+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,height=800');			
 	return(true);
 }
-function cambiarSubCategoria(){
+function cambiarSubLinea(){
   var categoria=$("#rpt_categoria").val();
   var parametros={"categoria":categoria};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "ajaxCambiarComboGrupo.php",
+        url: "ajaxCambiarComboLinea.php",
         data: parametros,   
         success:  function (resp) { 
         	//alert(resp);
@@ -56,7 +57,7 @@ require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("Y-m-d");
-echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Clasificador</th></tr></table><br>";
+echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Linea y Proveedor</th></tr></table><br>";
 echo"<form method='post' action='rptOpKardexCostos.php'>";
 
 	echo"\n<table class='' align='center' cellSpacing='0' width='50%'>\n";
@@ -81,10 +82,10 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	}
 	echo "</select></td></tr>";
 
-	echo "<tr><th align='left' class='text-muted' >Clasificador:</th>
-	<td><select name='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubCategoria()'>
+	echo "<tr><th align='left' class='text-muted' >Proveedor:</th>
+	<td><select name='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubLinea()' data-live-search='true'>
 	<option value='' disabled selected>--Seleccione--</option>";
-	$sql="select codigo, nombre from grupos where estado=1 order by 2";
+	$sql="select cod_proveedor, nombre_proveedor from proveedores order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_cat=$dat[0];
@@ -92,8 +93,8 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 		echo "<option value='$codigo_cat'>$nombre_cat</option>";
 	}
 	echo "</select></td></tr>";
-	echo "<tr><th align='left' class='text-muted' >Sub Clasificador:</th>
-	<td><select name='rpt_subcategoria' id='rpt_subcategoria' class='selectpicker form-control' multiple data-style='btn btn-primary' data-actions-box='true'>";
+	echo "<tr><th align='left' class='text-muted' >Linea:</th>
+	<td><select name='rpt_subcategoria' id='rpt_subcategoria' class='selectpicker form-control' multiple data-style='btn btn-primary' data-actions-box='true' data-live-search='true'>";
 	echo "</select></td></tr>";
 
 	echo "<tr><th align='left' class='text-muted'>Fecha inicio:</th>";
@@ -114,6 +115,11 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
     		echo" click_element_id='imagenFecha1'></DLCALENDAR>";
     		echo"  </TD>";
 	echo "</tr>";
+	echo "<tr><th align='left' class='text-muted' >Formato:</th>
+	<td><select name='rpt_formato' id='rpt_formato' class='selectpicker form-control' data-style='btn btn-primary'>";
+	echo "<option value='1'>RESUMIDO</option>";
+	echo "<option value='2'>DETALLADO</option>";
+	echo "</select></td></tr>";
 	
 	echo"\n </table><br>";
 	require('home_almacen.php');
