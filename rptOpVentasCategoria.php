@@ -56,7 +56,7 @@ require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("Y-m-d");
-echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Categoria</th></tr></table><br>";
+echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Clasificadores</th></tr></table><br>";
 echo"<form method='post' action='rptOpKardexCostos.php'>";
 
 	echo"\n<table class='' align='center' cellSpacing='0' width='50%'>\n";
@@ -81,7 +81,7 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	}
 	echo "</select></td></tr>";
 
-	echo "<tr><th align='left' class='text-muted' >Categoría:</th>
+	echo "<tr><th align='left' class='text-muted' >Clasificador:</th>
 	<td><select name='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubCategoria()'>
 	<option value='' disabled selected>--Seleccione--</option>";
 	$sql="select codigo, nombre from grupos where estado=1 order by 2";
@@ -92,7 +92,7 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 		echo "<option value='$codigo_cat'>$nombre_cat</option>";
 	}
 	echo "</select></td></tr>";
-	echo "<tr><th align='left' class='text-muted' >Sub Categoría:</th>
+	echo "<tr><th align='left' class='text-muted' >Sub Clasificador:</th>
 	<td><select name='rpt_subcategoria' id='rpt_subcategoria' class='selectpicker form-control' multiple data-style='btn btn-primary' data-actions-box='true'>";
 	echo "</select></td></tr>";
 

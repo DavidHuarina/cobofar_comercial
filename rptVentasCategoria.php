@@ -38,7 +38,7 @@ $nombre_territorio=str_replace(",",", ", $nombre_territorio);
             overflow:scroll;
         }
     </style>
-<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Documento
+<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Clasificadores
 	<br> De: <?=$fecha_ini?> A: <?=$fecha_fin?>
 	<br>Fecha Reporte: <?=$fecha_reporte?></tr></table>
 	<center><div style='width:70%;text-align:center;'><b>Sucursales:</b><br><small><?=$nombre_territorio?></small></div></center>
@@ -50,7 +50,7 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
 ?>
 <br><center><table align='center' class='texto' width='70%'>
 	<thead>
-<tr><th width="5%">N.</th><th><small>Sub Grupo</small></th>
+<tr><th width="5%">N.</th><th><small>Sub Clasificador</small></th>
 <?php
 $cantidadMes=0;
 while($tiempoInicio <= $tiempoFin){
