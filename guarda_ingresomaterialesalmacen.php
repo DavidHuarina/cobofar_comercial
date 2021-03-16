@@ -47,7 +47,7 @@ values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$obs
 
 $sql_inserta = mysqli_query($enlaceCon,$consulta);
 //echo "aaaa:$consulta";
-
+$cod_ciudad=obtenerCodigoCiudadPorAlmacen($global_almacen);
 if($sql_inserta==1){
 	$sqlUpdateEstado="update ingreso_pendientes_almacenes set estado_ingreso=1 where cod_ingreso_almacen=$cod_ingreso_almacen";
 	$respEstado=mysqli_query($enlaceCon,$sqlUpdateEstado);
@@ -76,11 +76,18 @@ if($sql_inserta==1){
 
 			$fechaVencimiento=UltimoDiaMes($fechaVencimiento);
 
-			$precioUnitario=$precioBruto/$cantidad;
+			$precioUnitario=$precioBruto;//$precioBruto/$cantidad;
 			
+
 			$costo=$precioUnitario;
 						
-			
+			if(obtenerValorConfiguracion(12)==1){//VERIFICAR SI ESTA ACTIVA LA FUNCION DE ACTUALIZAR PRECIOS
+				$user=0;//USUARIO PARA EL LOG
+                if(isset($_COOKIE['global_usuario'])){
+                  $user=$_COOKIE['global_usuario'];
+                }
+               actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user);
+			}
 			$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
 			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto, cod_ubicacionestante, cod_ubicacionfila) 
 			values($codigo,'$cod_material',$cantidad,$cantidad,'$lote','$fechaVencimiento',$precioUnitario,$precioUnitario,$costo,$costo,$costo,$costo,$ubicacionEstante,$ubicacionFila)";

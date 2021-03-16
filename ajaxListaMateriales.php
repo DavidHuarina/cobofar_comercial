@@ -10,6 +10,7 @@ require("funciones.php");
 $codTipo=$_GET['codTipo'];
 $nombreItem=$_GET['nombreItem'];
 $globalAlmacen=$_COOKIE['global_almacen'];
+$codCiudad=$_COOKIE['global_agencia'];
 $itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $tipoSalida=$_GET['tipoSalida'];
 
@@ -54,7 +55,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			
 			$ubicacionProducto=ubicacionProducto($globalAlmacen, $codigo);
 			
-			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1'";
+			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='$codCiudad'";
 			$rs=mysqli_query($enlaceCon,$consulta);
 			$registro=mysqli_fetch_array($rs);
 			$precioProducto=$registro[0];

@@ -272,8 +272,9 @@ while ($dat = mysqli_fetch_array($resp)) {
 	if ($anio_ingreso != $globalGestionActual) {
         $chkbox = "";
     }
+    //$hora_ingreso $anio_ingreso $globalGestionActual ESTO MAS MOSTRABA EN FECHA
     echo "<tr bgcolor='$color_fondo'><td align='center'>$chkbox</td><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td>
-	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso $anio_ingreso $globalGestionActual</td><td>$nombre_tipoingreso</td>
+	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso</td><td>$nombre_tipoingreso</td>
 	<td>&nbsp;$proveedor</td>
 	<td>&nbsp;$obs_ingreso</td><td align='center'>
 	<a target='_BLANK' href='navegador_detalleingresomateriales.php?codigo_ingreso=$codigo'><img src='imagenes/icon_detail.png' border='0' width='30' heigth='30' alt='Ver Detalles del Ingreso'></a></td></tr>";

@@ -9,7 +9,7 @@ if($codTipoSalida==1001){
 }
 $resp=mysqli_query($enlaceCon,$sql);
 
-echo "<select name='tipoDoc' class='texto' id='tipoDoc' onChange='ajaxNroDoc(form1)'>";
+echo "<select name='tipoDoc' id='tipoDoc' class='selectpicker form-control' data-style='btn btn-primary' onChange='ajaxNroDoc(form1)'>";
 echo "<option value='0'>---</option>";
 while($dat=mysqli_fetch_array($resp)){
 	$codigo=$dat[0];

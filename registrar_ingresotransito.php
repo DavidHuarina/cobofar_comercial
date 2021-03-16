@@ -24,7 +24,7 @@ echo "<td><input type='text' disabled='true' size='40' name='' value='Salida:$co
 echo "<input type='hidden' name='nota_ingreso' value='Salida:$correlativo_salidaorigen $nombre_almacen_origen'>";
 
 echo "<td align='center'><input type='text' class='texto' name='nombre_tipoingreso' value='INGRESO NORMAL REGIONAL' size='30' readonly></td>";
-echo "<input type='hidden' name='tipo_ingreso' value='1000'>";
+echo "<input type='hidden' name='tipo_ingreso' value='1003'>";
 
 echo "<input type='hidden' name='nro_factura' value='0'>";
 echo "<input type='hidden' name='proveedor' value='0'>";
@@ -52,6 +52,9 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	$costo_almacen=$dat_detalle_salida[3];
 	$lote=$dat_detalle_salida[4];
 	$fecha_ven=$dat_detalle_salida[5];
+	$cantidad_unitaria_formato=number_format($cantidad_unitaria,0,'.','');
+    $costo_almacen_formato=number_format($costo_almacen,2,'.',',');
+
 	echo "<tr><td align='center'>$indice_detalle</td>";
 	$sql_materiales="select codigo_material, descripcion_material from material_apoyo where 
 	codigo_material='$cod_material' and codigo_material<>0 order by descripcion_material";
@@ -64,8 +67,8 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	echo "<input type='hidden' value='$cantidad_unitaria' name='cantidad_origen$indice_detalle'>";
 	echo "<input type='hidden' value='$costo_almacen' name='precio$indice_detalle'>";
 	
-	echo "<td align='center'>$lote</td><td align='center'>$fecha_ven</td><td align='center'>$cantidad_unitaria</td>";
-	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria' class='form-control' readonly required></td>
+	echo "<td align='center'>$lote</td><td align='center'>$fecha_ven</td><td align='center'>$cantidad_unitaria_formato</td>";
+	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria_formato' class='form-control' readonly required></td>
 	</tr>";
 	$indice_detalle++;
 }

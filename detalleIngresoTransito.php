@@ -35,13 +35,13 @@
 	while($dat_detalle=mysql_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$cantidad_unitaria=$dat_detalle[1];
-		
+		$cantidad_unitaria_formato=number_format($dat_detalle[1],0,'.',',');
 		$sql_nombre_material="select descripcion_material from material_apoyo where codigo_material='$cod_material'";
 
 		$resp_nombre_material=mysql_query($sql_nombre_material);
 		$dat_nombre_material=mysql_fetch_array($resp_nombre_material);
 		$nombre_material=$dat_nombre_material[0];
-		echo "<tr><td>$nombre_material</td><td align='center'>$cantidad_unitaria</td></tr>";
+		echo "<tr><td>$nombre_material</td><td align='center'>$cantidad_unitaria_formato</td></tr>";
 	}
 	echo "</table></center>";
 

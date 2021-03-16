@@ -3,6 +3,7 @@ require_once '../conexionmysqli.inc';
 require_once '../function_web.php';
 $listProd=obtenerListadoProductosWeb("A");//web service
 $contador=0;
+$user=1017;//USUARIO PARA EL LOG ADMIN
 echo "<br><br>Iniciando....<br><br><br><br>";
 foreach ($listProd->lista as $prod) {
 	//echo $prod->idproveedor."<br>";
@@ -16,7 +17,7 @@ foreach ($listProd->lista as $prod) {
 	$principio_activo=1;
 	$cod_tipoventa=1; //RECETA MEDICA
 	$codigo_barras=$prod->cod_bar;
-
+    $precioInsertar=16;//$prod->precio_venta;
 	if($contador==0){
 		$sql="DELETE FROM material_apoyo";
 		$sqlDelete=mysqli_query($enlaceCon,$sql);
@@ -26,6 +27,21 @@ foreach ($listProd->lista as $prod) {
 	$sql="INSERT INTO material_apoyo (codigo_material,descripcion_material,estado,cod_linea_proveedor,cod_forma_far,cod_empaque,cantidad_presentacion,principio_activo,cod_tipoventa,codigo_barras)
         VALUES ('$codigo','$nombre','$estado','$cod_linea','$cod_forma_far','$cod_empaque','$cantidad_presentacion','$principio_activo','$cod_tipoventa','$codigo_barras')";
     $sqlinserta=mysqli_query($enlaceCon,$sql);
+
+    //ACTUALIZACION DE PRECIOS
+    if($sqlinserta==1){
+    	$sqlCiudades="SELECT cod_ciudad from ciudades where cod_estadoreferencial=1";			
+        $respCiudades=mysqli_query($enlaceCon,$sqlCiudades);
+        while($detCiudad=mysqli_fetch_array($respCiudades)){	
+             $ciudad=$detCiudad[0];   
+             if($deletePrecios==1){
+             	$sqlDel="DELETE FROM precios where cod_precio=1 and codigo_material='$codigo' and cod_ciudad='$ciudad'";
+                $delete=mysqli_query($enlaceCon,$sqlDel);
+                $sqlIns="INSERT INTO precios ('$codigo','1','$precioInsertar','$ciudad','$user')";
+                $insert=mysqli_query($enlaceCon,$sqlIns);
+             }
+        }
+    }
 
    $contador++;
 }

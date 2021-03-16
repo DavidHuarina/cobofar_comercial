@@ -23,13 +23,13 @@
 				}
 			}
 			if(j>1)
-			{	alert('Debe seleccionar solamente un registro para editar los días.');
+			{	alert('Debe seleccionar solamente un registro para editar los productos.');
 			}
 			else
 			{
 				if(j==0)
 				{
-					alert('Debe seleccionar un registro para editar los días.');
+					alert('Debe seleccionar un registro para editar los productos.');
 				}
 				else
 				{
