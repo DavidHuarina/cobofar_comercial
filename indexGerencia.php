@@ -74,9 +74,9 @@ include("datosUsuario.php");
 						<li><a href="navegador_accionester.php" target="contenedorPrincipal">Acciones Terapeuticas</a></li>
 						<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
 						<li><a href="conf_precio/list.php" target="contenedorPrincipal">Gestión de Precios</a></li>
-						<li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>
+						<!--li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>
 						<li><a href="navegador_precios.php?orden=2" target="contenedorPrincipal">Precios (Por Linea Proveedor)</a></li>		
-						<li><a href="navegadorUbicaciones.php" target="contenedorPrincipal">Ubicaciones</a></li>						
+						<li><a href="navegadorUbicaciones.php" target="contenedorPrincipal">Ubicaciones</a></li-->						
 					</ul>
 				</li>
 					<li><a href="navegador_dosificaciones.php" target="contenedorPrincipal">Dosificaciones de Facturas</a></li>
