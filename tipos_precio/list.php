@@ -211,6 +211,10 @@ echo "<script language='Javascript'>
 		$dias=obtenerNombreDesDiasRegistrados($codigo);
 		$ciudades=obtenerNombreDesCiudadesRegistrados($codigo);
 		$lineas=obtenerNombreDesLineasRegistrados($codigo);
+		$tamanioGlosa=50; 
+        if(strlen($lineas)>$tamanioGlosa){
+           $lineas=substr($lineas, 0, $tamanioGlosa)."...";
+        }
 		echo "<tr>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombre</td>

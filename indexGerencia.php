@@ -21,7 +21,8 @@
 .boton-rojo:hover{
     color: #000000 !important;
     background-color: #ffffff !important;
-  }</style>
+  }
+</style>
      <link rel="stylesheet" href="dist/css/demo.css" />
      <link rel="stylesheet" href="dist/mmenu.css" />
      <link rel="stylesheet" href="dist/demo.css" />	
@@ -32,6 +33,7 @@ include("datosUsuario.php");
 ?>
 <div id="page">
 	<div class="header">
+
 		<a href="#menu"><span></span></a>
 		<img src="imagenes/farmacias_bolivia1.gif" height="40px"></img><!--TuFarma - <?=$nombreEmpresa;?>-->
 		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
@@ -42,7 +44,6 @@ include("datosUsuario.php");
 			[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]
 		</div>
 	</div>
-	
 	
 	<div class="content">
 		<iframe src="inicio_almacenes.php" name="contenedorPrincipal" id="mainFrame" style="" border="1"></iframe>
@@ -103,7 +104,7 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos</a></li>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>					
-					<li><a href="navegadorPedidos.php" target="contenedorPrincipal">Listado de Pedidos</a></li>	
+					<li><a href="navegadorPedidos.php" target="contenedorPrincipal">Ventas Perdidas</a></li>	
 					<li><a href="registrar_salidaventas_manual.php" target="_blank">Registrar Factura Manual</a></li>				
 				</ul>	
 			</li>

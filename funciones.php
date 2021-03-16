@@ -525,4 +525,7 @@ function redondearMitades($n) {
     $r = ceil($dec*2) / 2; // Decimal redondeado
     return $ent + $r;
 }
+function redondearCentavos($n) {
+	return number_format($n,1,'.','');
+}
 ?>

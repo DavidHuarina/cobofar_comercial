@@ -19,7 +19,31 @@ if($cadRespuesta=="")
 {   $cadRespuesta=0;
 }
 
+
+//no aplicar el descuento si no hay el tipo precio
+$fecha=0;
+if(isset($_GET["fecha"])){
+	$fecha=explode("/",$_GET["fecha"]);
+	$fechaCompleta=$fecha[2]."-".$fecha[1]."-".$fecha[0];	        	
+}
+$ciudad=$_COOKIE['global_agencia'];
+$sql1="select t.codigo from tipos_precio t where '$fechaCompleta 00:00:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) and $codMaterial in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in (SELECT cod_linea_proveedor from tipos_precio_lineas where cod_tipoprecio=t.codigo))";
+$resp1=mysqli_query($enlaceCon,$sql1);
+$contadorAux=0;
+while($dat=mysqli_fetch_array($resp1)){
+	//$codTipoPrecioAux=$dat[0];
+	$contadorAux++;
+}
+if($contadorAux>0){
+	//$codTipoPrecio=$codTipoPrecioAux;
+}else{
+	$codTipoPrecio=-9999;
+}
+// FIN DE APLICACION DE PRECIOS
+
+
 $sqlTipoPrecio="select nombre from tipos_precio where codigo='$codTipoPrecio'";
+//echo $sql1."******".$sqlTipoPrecio;
 $rsTipoPrecio=mysqli_query($enlaceCon,$sqlTipoPrecio);
 $datTipoPrecio=mysqli_fetch_array($rsTipoPrecio);
 $descuentoPrecio=$datTipoPrecio[0];
@@ -31,8 +55,10 @@ if($descuentoPrecio>0){
       $descuentoPrecioMonto=round($cadRespuesta*($indiceConversion));
 	}else if(obtenerValorConfiguracion(13)==2){
       $descuentoPrecioMonto=redondearMitades($cadRespuesta*($indiceConversion));
+	}else if(obtenerValorConfiguracion(13)==3){
+	  $descuentoPrecioMonto=redondearCentavos($cadRespuesta*($indiceConversion));
 	}else{
-	  $descuentoPrecioMonto=$cadRespuesta*($indiceConversion);	
+	  $descuentoPrecioMonto=$cadRespuesta*($indiceConversion);		
 	}
 	
 	//$cadRespuesta=$cadRespuesta-($cadRespuesta*($indiceConversion));
@@ -59,6 +85,30 @@ while($datCosto=mysqli_fetch_array($respCosto)){
 
 echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='0.01'>";
 echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecio</span>";
-echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>#####".$descuentoPrecioMonto;
+echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>#####".$descuentoPrecioMonto."#####";
 
+            $fecha=0;
+	        if(isset($_GET["fecha"])){
+	        	$fecha=explode("/",$_GET["fecha"]);
+	        	$fechaCompleta=$fecha[2]."-".$fecha[1]."-".$fecha[0];	        	
+	        }
+	        $ciudad=$_COOKIE['global_agencia'];
+			$sql1="select t.codigo, t.nombre, t.abreviatura from tipos_precio t where '$fechaCompleta 00:00:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) and $codMaterial in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in (SELECT cod_linea_proveedor from tipos_precio_lineas where cod_tipoprecio=t.codigo)) order by 3";
+			$resp1=mysqli_query($enlaceCon,$sql1);
+			if($contadorAux>0){
+			  while($dat=mysqli_fetch_array($resp1)){
+				$codigo=$dat[0];
+				$nombre=$dat[1];
+				$abreviatura=$dat[2];
+				if($codigo==$codTipoPrecio){
+                 echo "<option value='$codigo' selected>$abreviatura %</option>";					 
+				}else{
+				echo "<option value='$codigo'>$abreviatura %</option>";					
+				}
+			  }
+			}else{
+			   echo "<option value='-9999'>SIN PROMOCIONES</option>";		
+			}
+			
+		//	echo $sql1;
 ?>

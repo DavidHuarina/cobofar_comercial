@@ -23,6 +23,16 @@
         </style>
 	
 <script type='text/javascript' language='javascript'>
+function mueveReloj(){
+    momentoActual = new Date()
+    hora = momentoActual.getHours()
+    minuto = momentoActual.getMinutes()
+    segundo = momentoActual.getSeconds()
+
+    horaImprimible = hora + " : " + minuto + " : " + segundo
+    $("#hora_sistema").html(horaImprimible);
+    setTimeout("mueveReloj()",1000)
+}
 function funcionInicio(){
 	//document.getElementById('nitCliente').focus();
 }
@@ -133,7 +143,7 @@ function actStock(indice){
 	ajax.send(null);
 }
 
-function ajaxPrecioItem(indice){
+/*function ajaxPrecioItem(indice){
 	var contenedor;
 	contenedor=document.getElementById("idprecio"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
@@ -147,7 +157,7 @@ function ajaxPrecioItem(indice){
 		}
 	}
 	ajax.send(null);
-}
+}*/
 
 function ajaxRazonSocial(f){
 	var contenedor;
@@ -429,13 +439,20 @@ function ajaxPrecioItem(indice){
 	var codmat=document.getElementById("materiales"+indice).value;
 	var tipoPrecio=document.getElementById("tipoPrecio"+indice).value;
 	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
+	var fecha=document.getElementById("fecha").value;	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio,true);
+	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio+"&fecha="+fecha,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			var respuesta=ajax.responseText.split("#####");
 			contenedor.innerHTML = respuesta[0];
             document.getElementById("descuentoProducto"+indice).value=(respuesta[1]*parseFloat(cantidadUnitaria)); 
+            if($("#descuentoProducto"+indice).val()>0){
+              $("#tipoPrecio"+indice).css("background","#C0392B");
+            }else{
+              $("#tipoPrecio"+indice).css("background","#85929E");
+            }
+            $("#tipoPrecio"+indice).html(respuesta[2]);
 			calculaMontoMaterial(indice);
 		}
 	}
@@ -469,9 +486,10 @@ function mas(obj) {
 			fi.appendChild(contenedor);
 			var div_material;
 			div_material=document.getElementById("div"+num);	
-			var cod_precio=document.getElementById("tipoPrecio").value;			
+			var cod_precio=document.getElementById("tipoPrecio").value;
+			var fecha=document.getElementById("fecha").value;				
 			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio,true);
+			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio+"&fecha="+fecha,true);
 
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
@@ -694,18 +712,21 @@ $anulacionCodigo=mysqli_result($respConf,0,0);
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=5";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $ventaDebajoCosto=mysqli_result($respConf,0,0);
+include("datosUsuario.php");
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
 	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
-<tr align='center' class="text-white header">
-	<th colspan="10"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
+<tr align='center' class="text-white header" style="color:#fff;background: #C0392B ; font-size: 16px;">
+	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
 </tr>
 <tr align='center' class="text-white header">
-	<th colspan="10"><label class="text-white">Registrar Venta</label></th>
+	<th style="color:#fff;background: #C0392B ; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
+	<th colspan="7" style="color:#fff;background: #C0392B ; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
+	<th style="color:#fff;background: #C0392B ; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
 </tr>
-<tr class="bg-info text-white" align='center' style='background:#16B490 !important;'>
+<tr class="bg-info text-white" align='center' style="color:#fff;background: #F5B041  !important; font-size: 16px;">
 <th>Tipo de Documento</th>
 <th>Nro.Factura</th>
 <th>Fecha</th>
@@ -715,7 +736,7 @@ $ventaDebajoCosto=mysqli_result($respConf,0,0);
 <th>Nombre/RazonSocial</th>
 <th>Observaciones</th>
 <th>Datos Cliente</th>
-<th></th>
+<th>-</th>
 </tr>
 <tr>
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
@@ -849,7 +870,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 </td>
 <td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" title="Registrar Nuevo Cliente" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="guardarPedido(0)"
-	class="btn btn-default btn-sm" title="Guardar Pedido"><i class="material-icons">save</i> PEDIDO </a></td>
+	class="btn btn-default btn-sm" title="Guardar Venta Perdida"><i class="material-icons">save</i> Venta Perdida </a></td>
 </tr>
 
 </table>
@@ -870,7 +891,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		<td width="30%">Material</td>
 		<td width="10%">Stock</td>
 		<td width="10%" align="left">Cantidad</td>
-		<td width="10%">Precio </td>
+		<td width="10%" align="left">Precio </td>
 		<td width="15%" align="left">Desc.</td>
 		<td width="10%" align="left">Monto</td>
 		<td width="10%">&nbsp;</td>
@@ -1089,5 +1110,6 @@ if($banderaErrorFacturacion==0){
 
 <script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
+ <script type="text/javascript">mueveReloj()</script>
 </body>
 </html>

@@ -276,7 +276,7 @@ echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 
 //
 
-echo "<h1>Listado de Pedidos</h1>";
+echo "<h1>Listado de Ventas Perdidas</h1>";
 echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>Leyenda:</th>
 <th>Salidas Despachadas a otras agencias</th><td bgcolor='#bbbbbb' width='5%'></td>
 <th>Salidas recepcionadas</th><td bgcolor='#33ccff' width='5%'></td>

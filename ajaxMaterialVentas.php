@@ -45,9 +45,20 @@ require("conexionmysqli.inc");
 
 <td align="center" width="20%">
 	<?php
-			$sql1="select codigo, nombre, abreviatura from tipos_precio where estado=1 order by 3";
+	        $fecha=0;
+	        if(isset($_GET["fecha"])){
+	        	$fecha=explode("/",$_GET["fecha"]);
+	        	$fechaCompleta=$fecha[2]."-".$fecha[1]."-".$fecha[0];	        	
+	        }
+	        $ciudad=$_COOKIE['global_agencia'];
+			$sql1="select t.codigo, t.nombre, t.abreviatura from tipos_precio t where '$fechaCompleta 00:00:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) order by 3";
 			$resp1=mysqli_query($enlaceCon,$sql1);
-			echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:55px !important;float:left;background:#1CB7CD;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";
+			if($resp1>0){				
+				echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:50% !important;float:left;background:#C0392B;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";
+			}else{
+				echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:55px !important;float:left;background:#85929E;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";
+			}
+			
 			while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
@@ -59,8 +70,9 @@ require("conexionmysqli.inc");
 				}
 			}
 			echo "</select>";
+			//echo $sql1;
 			?>
-	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);'  value="0" step="0.01" readonly>
+	<input class="inputnumber"type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);'  value="0" step="0.01" readonly>
 </td>
 
 <td align="center" width="15%">

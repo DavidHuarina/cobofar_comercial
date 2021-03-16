@@ -41,11 +41,11 @@ function guardarPedidoDesdeFacturacion(guardar){
     var error=0;var mensaje="";
     if(cantidad_material==0){
       error=1;
-      mensaje="Debe registrar al menos un detalle para el pedido!";
+      mensaje="Debe registrar al menos un detalle para la venta perdida!";
     } 
     if(observaciones==""&&motivo==0){
       error=1;
-      mensaje="Debe registrar la observación espeficica con la que desea guardar el pedido!";
+      mensaje="Debe registrar la observación espeficica con la que desea guardar la venta perdida!";
     } 
    /* if(nitCliente==""){
       error=1;
