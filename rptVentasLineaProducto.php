@@ -49,7 +49,7 @@ setlocale(LC_ALL, 'es_ES');
 $tiempoInicio = strtotime($fecha_iniconsulta);//obtener tiempo de inicio
 $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obtener el tiempo final pero al ultimo día, para que muestre todos los meses
 ?>
-<br><center><table align='center' class='texto' width='70%'>
+<br><center><table align='center' class='texto' width='70%' id='ventasLinea'>
   <thead>
 <tr><th width="5%">N.</th><th><small>Proveedor</small></th><th><small>Línea</small></th>
 <?php
@@ -66,6 +66,7 @@ while($tiempoInicio <= $tiempoFin){
   $cantidadMes++;
 }
 ?>
+<th>Totales</th>
 </tr>
 </thead>
 <tbody>
@@ -79,6 +80,7 @@ $respSucursal=mysqli_query($enlaceCon,$sqlSucursal);
 //echo $sqlSucursal;
 $index=0;
 while($datosSuc=mysqli_fetch_array($respSucursal)){ 
+  $totalesHorizontal=0;
   $index++;
   $nombreLinea=$datosSuc[3];
   $nombreProveedor=$datosSuc[4];
@@ -103,6 +105,7 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
       $dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
     }
     $montoVenta=obtenerMontoVentasGeneradasLineaProducto($dateInicio,$dateFin,$rpt_territorio,$codTipoPago,$codigoSubGrupo,$rpt_formato);
+    $totalesHorizontal+=number_format($montoVenta,2,'.','');
     if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
       ?><td><small><?=number_format($montoVenta,2,'.',',')?></small></td><?php
     }else{
@@ -112,12 +115,26 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
     $fechaActual = date("Y-m-d", $tiempoInicio2);   
     $tiempoInicio2 += (float)strtotime("+1 month","$fechaActual");
   }
-  ?>
+  ?><th><?=number_format($totalesHorizontal,2,'.',',')?></th>
  </tr>
   <?php
 }
 ?>
-</tbody></table></center></br>
+</tbody><tfoot><tr></tr></tfoot></table></center></br>
 <?php include("imprimirInc.php");
+if($rpt_formato==1){
+  ?>
+  <script type="text/javascript">
+  totalesTablaVertical('ventasLinea',3,1);
+ </script>
+ <?php 
+}else{
+  ?>
+  <script type="text/javascript">
+  totalesTablaVertical('ventasLinea',4,1);
+ </script>
+ <?php
+}
 ?>
+
 </body></html>

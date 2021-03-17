@@ -48,7 +48,7 @@ setlocale(LC_ALL, 'es_ES');
 $tiempoInicio = strtotime($fecha_iniconsulta);//obtener tiempo de inicio
 $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obtener el tiempo final pero al ultimo día, para que muestre todos los meses
 ?>
-<br><center><table align='center' class='texto' width='70%'>
+<br><center><table align='center' class='texto' width='70%' id='ventasCategoria'>
 	<thead>
 <tr><th width="5%">N.</th><th><small>Sub Clasificador</small></th>
 <?php
@@ -60,6 +60,7 @@ while($tiempoInicio <= $tiempoFin){
 	$cantidadMes++;
 }
 ?>
+<th>Totales</th>
 </tr>
 </thead>
 <tbody>
@@ -69,6 +70,7 @@ $sqlSucursal="select codigo, nombre from subgrupos where codigo in ($codSubGrupo
 $respSucursal=mysqli_query($enlaceCon,$sqlSucursal);
 $index=0;
 while($datosSuc=mysqli_fetch_array($respSucursal)){	
+  $totalesHorizontal=0;
   $index++;
 	$codigoSubGrupo=$datosSuc[0];
 	$nombreSuc=$datosSuc[1];
@@ -88,21 +90,25 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   	}
 
   	$montoVenta=obtenerMontoVentasGeneradasCategoria($dateInicio,$dateFin,$rpt_territorio,$codTipoPago,$codigoSubGrupo);
+    $totalesHorizontal+=number_format($montoVenta,2,'.','');
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
-  		?><td><small><?=number_format($montoVenta,2,'.',' ')?></small></td><?php
+  		?><td><?=number_format($montoVenta,2,'.',' ')?></td><?php
   	}else{
-  		?><td class='text-muted'><small><?=number_format($montoVenta,2,'.',' ')?></small></td><?php
+  		?><td class='text-muted'><?=number_format($montoVenta,2,'.',' ')?></td><?php
   	} 	
     // para sumar mes
   	$fechaActual = date("Y-m-d", $tiempoInicio2);  	
   	$tiempoInicio2 += (float)strtotime("+1 month","$fechaActual");
   }
-  ?>
- </tr>
+  ?><th><?=number_format($totalesHorizontal,2,'.',',')?></th>
+  </tr>
   <?php
 }
 ?>
-</tbody></table></center></br>
+</tbody><tfoot><tr></tr></tfoot></table></center></br>
 <?php include("imprimirInc.php");
 ?>
+<script type="text/javascript">
+  totalesTablaVertical('ventasCategoria',2,1);
+</script>
 </body></html>
