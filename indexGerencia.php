@@ -54,8 +54,11 @@ include("datosUsuario.php");
 			<li><span>Datos Generales</span>
 				<ul>
 					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Distribuidores</a></li>
+					<li><a href="grupos/list.php" target="contenedorPrincipal">Clasificadores</a></li>
 					<li><a href="navegador_material.php" target="contenedorPrincipal">Productos</a></li>
-					<li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li>					
+					<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
+						<li><a href="conf_precio/list.php" target="contenedorPrincipal">Gestión de Precios</a></li>
+					<!--li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li-->					
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>
 					<!--li><a href="navegador_vehiculos.php" target="contenedorPrincipal">Vehiculos</a></li-->
 					<li><span>Gestion de Almacenes</span>
@@ -67,14 +70,11 @@ include("datosUsuario.php");
 						</ul>	
 					</li>
 
-					<li><span>Materiales y Precios</span>
+					<li><span>Adicionales Producto</span>
 					<ul>
-						<li><a href="grupos/list.php" target="contenedorPrincipal">Clasificadores</a></li>
 						<li><a href="navegador_empaques.php" target="contenedorPrincipal">Empaques</a></li>
 						<li><a href="navegador_formasfar.php" target="contenedorPrincipal">Formas Farmaceuticas</a></li>
 						<li><a href="navegador_accionester.php" target="contenedorPrincipal">Acciones Terapeuticas</a></li>
-						<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
-						<li><a href="conf_precio/list.php" target="contenedorPrincipal">Gestión de Precios</a></li>
 						<!--li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>
 						<li><a href="navegador_precios.php?orden=2" target="contenedorPrincipal">Precios (Por Linea Proveedor)</a></li>		
 						<li><a href="navegadorUbicaciones.php" target="contenedorPrincipal">Ubicaciones</a></li-->						
