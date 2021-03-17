@@ -482,13 +482,24 @@ function actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user){
   $precio=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
-       $precio=$detalle[0];   		
+       $precio=(float)$detalle[0];   		
   }  
 
   if($precioUnitario>$precio){
-  	$sql_update="UPDATE precios set precio='$precioUnitario',cod_funcionario='$user' where cod_precio=1 and codigo_material='$cod_material'";	
-    $resp=mysqli_query($enlaceCon,$sql_update);
+  	insertarPrecioTodasSucursales($cod_material,$user,$precioUnitario);
   }
+}
+function insertarPrecioTodasSucursales($cod_material,$user,$precioUnitario){
+  require("conexionmysqli.inc");
+  $sql_delete="DELETE FROM precios where cod_precio=1 and codigo_material='$cod_material'";	
+  $resp=mysqli_query($enlaceCon,$sql_delete);
+  $sql_ciudades="SELECT cod_ciudad FROM ciudades where cod_estadoreferencial=1";	
+  $resp_ciudad=mysqli_query($enlaceCon,$sql_ciudades);
+  while($ciudad=mysqli_fetch_array($resp_ciudad)){	
+       $cod_ciudad=$ciudad[0];  
+       $sql_update="INSERT precios VALUES('$cod_material',1,'$precioUnitario','$cod_ciudad','$user')";	
+       $resp=mysqli_query($enlaceCon,$sql_update); 		
+  } 
 }
 function obtenerTotalLineas(){
 	require("conexionmysqli.inc");

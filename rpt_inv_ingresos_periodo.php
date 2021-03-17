@@ -1,3 +1,8 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Farmacias Bolivia</title>
+</head>
 <?php
 $estilosVenta=1;
 require('estilos_reportes_almacencentral.php');
@@ -26,7 +31,7 @@ if($filtro==1){
 	$sqlFiltro="";
 }
 
-	echo "<h1>Reporte Ingresos por Periodo $titulo_perido</h1>
+	echo "<h1>Verificación de Tiempos en Traspasos $titulo_perido</h1>
 	<h1>$nombre_tipoingresomostrar Fecha inicio: <strong>$fecha_ini</strong> Fecha final: <strong>$fecha_fin</strong><br>$txt_reporte</h1>";
 
 	//desde esta parte viene el reporte en si
@@ -45,7 +50,7 @@ if($filtro==1){
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<center><br><table class='texto' width='100%'>";
-	echo "<tr class='textomini'><th>Nro.</th><th>Nota de Entrega</th><th>Fecha Ingreso</th><th>Fecha Salida</th><th>Tipo de Ingreso</th><th>Observaciones</th><th>Estado</th><th>Desde</th></tr>";
+	echo "<tr class='textomini'><th>Nro.</th><th>Nota de Entrega</th><th>Fecha Salida</th><th>Fecha Ingreso</th><th>Tipo de Ingreso</th><th>Observaciones</th><th>Estado</th><th>Desde</th></tr>";
 	$index=0;
 	while($dat=mysqli_fetch_array($resp))
 	{
@@ -112,10 +117,10 @@ if($filtro==1){
 			$color_fondo="#FF5733";
 		}
 		if($rpt_linea==0)
-		{	echo "<tr style='color:$color_fondo'><td align='center'>$index</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
+		{	echo "<tr style='color:$color_fondo'><td align='center'>$index</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
 		}
 		if($rpt_linea!=0 and $bandera==1)
-		{	echo "<tr style='color:$color_fondo'><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
+		{	echo "<tr style='color:$color_fondo'><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
 		}
 	}
 	echo "</table></center><br>";

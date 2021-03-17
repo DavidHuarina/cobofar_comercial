@@ -23,7 +23,7 @@ $fechaHasta=date("d/m/Y");
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";
 $codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL ALMACEN ORIGEN
-$age1Destino="A1";
+$age1Destino="A=";
 //$age1Destino="A=";
 $codCiudadDestino=verificarAlmacenCiudadExistente($age1Destino);
 $codAlmacenDestino=obtenerCodigoAlmacenPorCiudad($codCiudadDestino);

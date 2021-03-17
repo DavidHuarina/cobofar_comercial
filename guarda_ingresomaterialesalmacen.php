@@ -84,7 +84,7 @@ if($sql_inserta==1){
 			if(obtenerValorConfiguracion(12)==1){//VERIFICAR SI ESTA ACTIVA LA FUNCION DE ACTUALIZAR PRECIOS
 				$user=0;//USUARIO PARA EL LOG
                 if(isset($_COOKIE['global_usuario'])){
-                  $user=$_COOKIE['global_usuario'];
+                  $user=$_COOKIE['global_usuario'];             
                 }
                actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user);
 			}
