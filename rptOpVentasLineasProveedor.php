@@ -83,7 +83,7 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	echo "</select></td></tr>";
 
 	echo "<tr><th align='left' class='text-muted' >Proveedor:</th>
-	<td><select name='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubLinea()' data-live-search='true'>
+	<td><select name='rpt_categoria'  id='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubLinea()' data-live-search='true'>
 	<option value='' disabled selected>--Seleccione--</option>";
 	$sql="select cod_proveedor, nombre_proveedor from proveedores order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);

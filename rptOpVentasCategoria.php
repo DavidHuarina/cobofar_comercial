@@ -82,7 +82,7 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	echo "</select></td></tr>";
 
 	echo "<tr><th align='left' class='text-muted' >Clasificador:</th>
-	<td><select name='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubCategoria()'>
+	<td><select name='rpt_categoria' id='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubCategoria()'>
 	<option value='' disabled selected>--Seleccione--</option>";
 	$sql="select codigo, nombre from grupos where estado=1 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);

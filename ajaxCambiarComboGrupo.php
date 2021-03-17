@@ -2,7 +2,7 @@
 $estilosVenta=1;
 require("conexionmysqli.inc");
 $categoria=$_GET["categoria"];
-$sql="SELECT codigo,nombre from subgrupos where estado=1 order by 2";
+$sql="SELECT codigo,nombre from subgrupos where estado=1 and cod_grupo=$categoria order by 2";
 $resp=mysqli_query($enlaceCon,$sql);
 while($dat=mysqli_fetch_array($resp))
 { $codigo_cat=$dat[0];
