@@ -37,7 +37,7 @@ $nombre_territorio=str_replace(",",", ", $nombre_territorio);
             overflow:scroll;
         }
     </style>
-<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Sucursal
+<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas Perdidas x Sucursal
 	<br> De: <?=$fecha_ini?> A: <?=$fecha_fin?>
 	<br>Fecha Reporte: <?=$fecha_reporte?></tr></table>
 	<center><div style='width:70%;text-align:center;'><b>Sucursales:</b><br><small><?=$nombre_territorio?></small></div></center>

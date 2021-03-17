@@ -29,13 +29,12 @@ $fecha_rptinidefault=date("Y")."-".date("m")."-01";
 $hora_rptinidefault=date("H:i");
 $fecha_rptdefault=date("Y-m-d");
 $globalCiudad=$_COOKIE['global_agencia'];
-
-echo "<table align='center' class='textotit'><tr><th>Reporte Arqueo Diario de Caja</th></tr></table><br>";
+echo "<h1>Reporte Arqueo Diario de Caja</h1><br>";
 echo"<form method='post' action='rptArqueoDiario.php'>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	
-	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='texto'>";
+	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker form-control'>";
 	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))

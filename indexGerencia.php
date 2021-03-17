@@ -165,7 +165,7 @@ include("datosUsuario.php");
 					<li><span>Ventas Perdidas</span>
 						<ul>
 							<li><a href="rptOpVentasSucursalPerdido.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
-							<li><a href="enconstrucion.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>
+							<li><a href="rptOpVentasLineasProveedorPerdido.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>
 							<li><a href="enconstrucion.php" target="contenedorPrincipal">Ventas x Item</a></li>							
 						</ul>	
 					</li>

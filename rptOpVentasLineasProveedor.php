@@ -57,7 +57,7 @@ require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("Y-m-d");
-echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Linea y Proveedor</th></tr></table><br>";
+echo "<h1>Reporte Ventas x Linea y Proveedor</h1><br>";
 echo"<form method='post' action='rptOpKardexCostos.php'>";
 
 	echo"\n<table class='' align='center' cellSpacing='0' width='50%'>\n";

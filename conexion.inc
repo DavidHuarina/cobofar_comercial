@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 //header('Content-Type: text/html; charset=UTF-8'); 
 if(!function_exists('register_globals')){
 	include('register_globals.php');
