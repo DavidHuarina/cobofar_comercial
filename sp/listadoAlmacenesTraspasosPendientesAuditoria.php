@@ -119,9 +119,7 @@ $fecha_real=date("Y-m-d");
           $cantidadMaterial=$rowDet["DCAN"];//DCAN HCAN
           $fechaVenMaterial=$rowDet["FECVEN"];
           $loteFabMaterial=$rowDet["LOTEFAB"];
-          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial','$fechaVenMaterial','$loteFabMaterial')";
-          echo $consultaDetalle."<br>";
-          $sql_insertaDetalle = mysqli_query($enlaceCon,$consultaDetalle);
+
         }
       }
 
@@ -135,12 +133,6 @@ $fecha_real=date("Y-m-d");
      $stringDCTO=-999999; // PARA ELIMINAR TODOS NO SE ENCONTRO NINGUNO
    }
 
-   //BORRAR CABECERAS
-   $sql="DELETE FROM ingreso_pendientes_almacenes where cod_almacen=$codAlmacenDestino and nota_entrega NOT IN ($stringDCTO) and estado_ingreso=0";
-   $sqlDelete=mysqli_query($enlaceCon,$sql); 
-   //BORRAR DETALLES
-   $sql="DELETE FROM ingreso_pendientes_detalle_almacenes WHERE cod_ingreso_almacen IN (SELECT cod_ingreso_almacen FROM ingreso_pendientes_almacenes where cod_almacen=$codAlmacenDestino and nota_entrega NOT IN ($stringDCTO) and estado_ingreso=0)";
-   $sqlDelete=mysqli_query($enlaceCon,$sql); 
 }
  
 $dbh = null;

@@ -448,7 +448,7 @@ function obtenerMontoVentasPerdido($desde,$hasta,$sucursal){
   $resp=mysqli_query($enlaceCon,$sql);
   $monto=0;				
   while($detalle=mysqli_fetch_array($resp)){	
-       $monto=$detalle[0];   		
+       $monto+=$detalle[0];   		
   }  
   mysqli_close($enlaceCon);
   return $monto;
@@ -609,4 +609,5 @@ function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
   mysqli_close($enlaceCon);
   return $monto;
 }
+
 ?>
