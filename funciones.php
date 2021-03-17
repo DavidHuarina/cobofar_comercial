@@ -431,7 +431,7 @@ function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
   $resp=mysqli_query($enlaceCon,$sql);
   $monto=0;				
   while($detalle=mysqli_fetch_array($resp)){	
-       $monto=$detalle[0];   		
+       $monto+=$detalle[0];   		
   }  
   mysqli_close($enlaceCon);
   return $monto;
@@ -467,7 +467,7 @@ function obtenerMontoVentasGeneradasCategoria($desde,$hasta,$sucursal,$tipoPago,
   $resp=mysqli_query($enlaceCon,$sql);
   $monto=0;				
   while($detalle=mysqli_fetch_array($resp)){	
-       $monto=$detalle[0];   		
+       $monto+=$detalle[0];   		
   }  
   mysqli_close($enlaceCon);
   return $monto;
@@ -580,7 +580,7 @@ function obtenerMontoVentasGeneradasLineaProducto($desde,$hasta,$sucursal,$tipoP
   $resp=mysqli_query($enlaceCon,$sql);
   $monto=0;				
   while($detalle=mysqli_fetch_array($resp)){	
-       $monto=$detalle[0];   		
+       $monto+=$detalle[0];   		
   }  
   mysqli_close($enlaceCon);
   return $monto;
@@ -589,12 +589,12 @@ function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
 	if($formato=="2"){//REPORTE DETALLADO
-      $sql="select (SELECT sum(sd.monto_unitario) FROM salida_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo)) as monto
+      $sql="select (SELECT sum(sd.monto_unitario) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo)) as monto
 	from pedido_almacenes s where s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
 	and s.`fecha` BETWEEN '$desde' and '$hasta'";
 	}else{
-      $sql="select (SELECT sum(sd.monto_unitario) FROM salida_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in ($subGrupo))) as monto
+      $sql="select (SELECT sum(sd.monto_unitario) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in ($subGrupo))) as monto
 	from pedido_almacenes s where s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
 	and s.`fecha` BETWEEN '$desde' and '$hasta'";
@@ -604,7 +604,7 @@ function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
   $resp=mysqli_query($enlaceCon,$sql);
   $monto=0;				
   while($detalle=mysqli_fetch_array($resp)){	
-       $monto=$detalle[0];   		
+       $monto+=$detalle[0];   		
   }  
   mysqli_close($enlaceCon);
   return $monto;
