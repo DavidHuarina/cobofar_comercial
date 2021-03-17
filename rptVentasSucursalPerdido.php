@@ -88,7 +88,7 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   		$dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
   	}
 
-  	$montoVenta=obtenerMontoVentasGeneradas($dateInicio,$dateFin,$codigoSuc,$codTipoPago);
+  	$montoVenta=obtenerMontoVentasPerdido($dateInicio,$dateFin,$codigoSuc);
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
   		?><td><?=number_format($montoVenta,2,'.',',')?></td><?php

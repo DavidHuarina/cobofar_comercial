@@ -49,6 +49,7 @@ if($filtro==1){
 	order by i.nro_correlativo)) l $sqlFiltro order by l.fecha_ingreso desc;";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
+	echo "<p>Los Traspasos Ingresados fuera de las $titulo_perido Están marcados con <b style='color:#FF5733'>color rojo</b><p>";
 	echo "<center><br><table class='texto' width='100%'>";
 	echo "<tr class='textomini'><th>Nro.</th><th>Nota de Entrega</th><th>Fecha Salida</th><th>Fecha Ingreso</th><th>Tipo de Ingreso</th><th>Observaciones</th><th>Estado</th><th>Desde</th></tr>";
 	$index=0;

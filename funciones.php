@@ -436,6 +436,25 @@ function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
   mysqli_close($enlaceCon);
   return $monto;
 }
+
+function obtenerMontoVentasPerdido($desde,$hasta,$sucursal){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sql="select sum(s.monto_final) as monto
+	from `pedido_almacenes` s where s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	and s.`fecha` BETWEEN '$desde' and '$hasta'";
+  //echo $sql;	
+  $resp=mysqli_query($enlaceCon,$sql);
+  $monto=0;				
+  while($detalle=mysqli_fetch_array($resp)){	
+       $monto=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $monto;
+}
+
+
 function obtenerMontoVentasGeneradasCategoria($desde,$hasta,$sucursal,$tipoPago,$subGrupo){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");

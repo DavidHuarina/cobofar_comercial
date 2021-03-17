@@ -208,7 +208,7 @@ $consulta = "
 	(select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as proveedor
     FROM ingreso_almacenes i, tipos_ingreso ti
     WHERE i.cod_tipoingreso=ti.cod_tipoingreso
-    AND i.cod_almacen='$global_almacen'";
+    AND i.cod_almacen='$global_almacen' and i.ingreso_anulado!=1 ";
    $consulta = $consulta."ORDER BY i.nro_correlativo DESC limit 0, 50 ";
 //echo "MAT:$sql";
 $resp = mysqli_query($enlaceCon,$consulta);
