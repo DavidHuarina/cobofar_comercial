@@ -108,15 +108,24 @@ $fecha_real=date("Y-m-d");
                $sql="DELETE FROM ingreso_pendientes_detalle_almacenes WHERE cod_ingreso_almacen=$codigo";
                $sqlDelete=mysqli_query($enlaceCon,$sql);
                 
-               $sqlDetalle="SELECT CPROD,PREVEN,HCAN,FECVEN,LOTEFAB FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
+               $sqlDetalle="SELECT CPROD,PREVEN,PREUNIT,HCAN,FECVEN,HCAN1,DCAN,DCAN1,LOTEFAB FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
              //  echo $sqlDetalle."<br>";
         $dbh = new ConexionFarma(); 
         $stmtDetalle = $dbh->prepare($sqlDetalle);
         $stmtDetalle->execute();
         while ($rowDet = $stmtDetalle->fetch(PDO::FETCH_ASSOC)) {
           $codMaterial=$rowDet["CPROD"];
-          $precioMaterial=(float)$rowDet["PREVEN"]-(float)$rowDet["PREVEN"]*0.18;//APLICAR EL PORCENTAJE 18% DE DESCUENTO
-          $cantidadMaterial=$rowDet["DCAN"];//DCAN HCAN
+          $precioMaterial=(float)$rowDet["PREUNIT"]-(float)$rowDet["PREUNIT"]*0.18;//APLICAR EL PORCENTAJE 18% DE DESCUENTO
+          $cantidadMaterial=$rowDet["DCAN"];
+          if($cantidadMaterial==0){
+            $cantidadMaterial=$rowDet["DCAN1"];
+          }
+          if($cantidadMaterial==0){
+            $cantidadMaterial=$rowDet["HCAN"];
+          }
+          if($cantidadMaterial==0){
+            $cantidadMaterial=$rowDet["HCAN1"];
+          }
           $fechaVenMaterial=$rowDet["FECVEN"];
           $loteFabMaterial=$rowDet["LOTEFAB"];
           $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial','$fechaVenMaterial','$loteFabMaterial')";

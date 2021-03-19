@@ -130,7 +130,8 @@ function obtenerListadoProveedoresWeb(){
     $sIde = "farma";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DEL SERVICIO
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoAlmacenes","tipo"=>obtenerValorConfiguracion(9),"age1"=>$age1);
+    //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoAlmacenes","tipo"=>obtenerValorConfiguracion(9),"age1"=>$age1);
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoAlmacenes","age1"=>$age1);
 
     $parametros=json_encode($parametros);
     // abrimos la sesión cURL
@@ -210,6 +211,67 @@ function obtenerListadoProveedoresWeb(){
     } 
     $dbh=null;
     return $existeCon;
+  }
+  
+  function verificarExisteTraspasoDocumentosSucursal($tabla_detalle,$tabla,$dcto,$ip){
+    //TIPO A (INGRESO DESDE EL ALMACEN)
+    require_once __DIR__.'/conexion_externa_farma.php';
+    $dbh = new ConexionFarma();
+    $dbh->setHost($ip);
+    $dbh->start();
+    $sqlDetalle="SELECT DCTO as EXISTE FROM $tabla WHERE DCTO1=$dcto AND TIPO='D'";
+    $stmt = $dbh->prepare($sqlDetalle);
+    $stmt->execute();
+    $existeCon=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $existeCon=$row['EXISTE'];
+    } 
+    $dbh=null;
+    return $existeCon;
+  }
+  function obtenerNombreProductoObservacion($codprod){
+    //TIPO A (INGRESO DESDE EL ALMACEN)
+    require_once __DIR__.'/conexion_externa_farma.php';
+    $dbh = new ConexionFarma();
+    $sqlDetalle="SELECT p.DES FROM aproductos p where CPROD=$codprod";
+    $stmt = $dbh->prepare($sqlDetalle);
+    $stmt->execute();
+    $desprod="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $desprod=$row['DES'];
+    } 
+    $dbh=null;
+    return $desprod;
+  }
+  function verificarIpDestinoAlmacen($age1){
+    require_once __DIR__.'/conexion_externa_farma.php';
+    $dbh = new ConexionFarma();
+    $sqlDetalle="SELECT IP,DES FROM ALMACEN WHERE AGE1='$age1'";
+    $stmt = $dbh->prepare($sqlDetalle);
+    $stmt->execute();
+    $ip=0;$sucursal="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $ip=$row['IP'];
+      $sucursal=$row['DES'];
+    } 
+    $dbh=null;
+    return array($ip,$sucursal);
+  }
+  function obtenerNombrePersonalAbreviado($idper,$ip){
+    require_once __DIR__.'/conexion_externa_farma.php';
+    $dbh = new ConexionFarma();
+    $dbh->setHost($ip);
+    $dbh->setBase('General');
+    $dbh->start();
+    $sqlDetalle="SELECT DES FROM USUARIO WHERE PASO='$idper'";
+    $stmt = $dbh->prepare($sqlDetalle);
+    $stmt->execute();
+    $nombre="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombre=$row['DES'];
+    } 
+    $dbh=null;
+    return $nombre;
   }
 
   function obtenerDetalleTraspasoDocumentos($tabla_detalle,$tabla,$dcto,$codigoUnico,$ip){

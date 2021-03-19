@@ -46,7 +46,11 @@ foreach ($listAlma->lista as $alma) {
 
 }
 echo "Realizado!";
-
-
+/*
+INSERTAR ALMACENES 
+$sql="INSERT INTO almacenes (cod_ciudad,nombre_almacen,responsable_almacen)
+SELECT cod_ciudad,descripcion,0 FROM ciudades where cod_ciudad not in (SELECT c.cod_ciudad FROM ciudades c WHERE c.cod_ciudad in (SELECT cod_ciudad FROM almacenes where cod_ciudad=c.cod_ciudad));";
+        $sqlinserta=mysqli_query($enlaceCon,$sql);
+*/
 ?></body>
 </html>
