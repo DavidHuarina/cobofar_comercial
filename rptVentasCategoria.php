@@ -73,6 +73,7 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   $totalesHorizontal=0;
   $index++;
 	$codigoSubGrupo=$datosSuc[0];
+  $materiales=obtenerMaterialesStringDeSubGrupo($codigoSubGrupo);
 	$nombreSuc=$datosSuc[1];
 	?><tr><th><?=$index?></th><th><?=$nombreSuc?></th><?php
   $tiempoInicio2 = strtotime($fecha_iniconsulta);
@@ -89,7 +90,7 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   		$dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
   	}
 
-  	$montoVenta=obtenerMontoVentasGeneradasCategoria($dateInicio,$dateFin,$rpt_territorio,$codTipoPago,$codigoSubGrupo);
+  	$montoVenta=obtenerMontoVentasGeneradasCategoriaMaterial($dateInicio,$dateFin,$rpt_territorio,$codTipoPago,$materiales);
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
   		?><td><?=number_format($montoVenta,2,'.',' ')?></td><?php

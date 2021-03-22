@@ -23,7 +23,7 @@ $dbh = new ConexionFarmaSucursal();
 //$fechaHasta=date("d/m/Y");
 ?><br><br><h4>ACTUALIZACION DE VENTAS</h4><br><br>
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("AG");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
+$listAlma=obtenerListadoAlmacenesEspecifico("AL");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
 $contador=0;
 $sql = "select IFNULL(MAX(cod_salida_almacenes)+1,1) from salida_almacenes order by cod_salida_almacenes desc";
 $resp = mysqli_query($enlaceCon,$sql);

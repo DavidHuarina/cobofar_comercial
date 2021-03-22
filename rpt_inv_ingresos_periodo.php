@@ -51,7 +51,7 @@ if($filtro==1){
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<p>Los Traspasos Ingresados fuera de las $titulo_perido Están marcados con <b style='color:#FF5733'>color rojo</b><p>";
 	echo "<center><br><table class='texto' width='100%'>";
-	echo "<tr class='textomini'><th>Nro.</th><th>Nota de Entrega</th><th>Fecha Salida</th><th>Fecha Ingreso</th><th>Tipo de Ingreso</th><th>Observaciones</th><th>Estado</th><th>Desde</th></tr>";
+	echo "<tr class='textomini'><th>Nro.</th><th>Nota de Entrega</th><th>Fecha Salida</th><th>Fecha Ingreso</th><th>Tiempo Transcurrido</th><th>Tipo de Ingreso</th><th>Observaciones</th><th>Estado</th><th>Desde</th></tr>";
 	$index=0;
 	while($dat=mysqli_fetch_array($resp))
 	{
@@ -117,11 +117,16 @@ if($filtro==1){
 		if($dat[9]==0){
 			$color_fondo="#FF5733";
 		}
+		$date1 = new DateTime($dat[7]);
+        $date2 = new DateTime($dat[1]);
+        $diff = $date1->diff($date2);
+        // will output 2 days
+        $hora_rest=$diff->days;
 		if($rpt_linea==0)
-		{	echo "<tr style='color:$color_fondo'><td align='center'>$index</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
+		{	echo "<tr style='color:$color_fondo'><td align='center'>$index</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$hora_rest Días</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
 		}
 		if($rpt_linea!=0 and $bandera==1)
-		{	echo "<tr style='color:$color_fondo'><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
+		{	echo "<tr style='color:$color_fondo'><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$hora_rest Días</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td>&nbsp;$estado_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
 		}
 	}
 	echo "</table></center><br>";

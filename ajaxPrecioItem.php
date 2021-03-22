@@ -11,7 +11,8 @@ $globalAgencia=$_COOKIE["global_agencia"];
 require("conexionmysqli.inc");
 $cadRespuesta="";
 $consulta="
-    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1 and cod_ciudad=$globalAgencia";
+    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1 and cod_ciudad=$globalAgencia and cod_ciudad>0";
+    //echo $consulta;
 $rs=mysqli_query($enlaceCon,$consulta);
 $registro=mysqli_fetch_array($rs);
 $cadRespuesta=$registro[0];
@@ -27,11 +28,11 @@ if(isset($_GET["fecha"])){
 	$fechaCompleta=$fecha[2]."-".$fecha[1]."-".$fecha[0];	        	
 }
 $ciudad=$_COOKIE['global_agencia'];
-$sql1="select t.codigo from tipos_precio t where '$fechaCompleta 00:00:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) and $codMaterial in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in (SELECT cod_linea_proveedor from tipos_precio_lineas where cod_tipoprecio=t.codigo))";
+$sql1="select t.codigo, t.nombre, t.abreviatura from tipos_precio t where '$fechaCompleta 00:00:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) and $codMaterial in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in (SELECT cod_linea_proveedor from tipos_precio_lineas where cod_tipoprecio=t.codigo)) order by 1";
 $resp1=mysqli_query($enlaceCon,$sql1);
 $contadorAux=0;
 while($dat=mysqli_fetch_array($resp1)){
-	//$codTipoPrecioAux=$dat[0];
+	//$codTipoPrecio=$dat[0];
 	$contadorAux++;
 }
 if($contadorAux>0){
@@ -42,11 +43,17 @@ if($contadorAux>0){
 // FIN DE APLICACION DE PRECIOS
 
 
-$sqlTipoPrecio="select nombre from tipos_precio where codigo='$codTipoPrecio'";
+$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='$codTipoPrecio'";
 //echo $sql1."******".$sqlTipoPrecio;
 $rsTipoPrecio=mysqli_query($enlaceCon,$sqlTipoPrecio);
 $datTipoPrecio=mysqli_fetch_array($rsTipoPrecio);
 $descuentoPrecio=$datTipoPrecio[0];
+
+$sqlTipoPrecioNombre="select nombre from tipos_precio where codigo='$codTipoPrecio'";
+$rsTipoPrecioNombre=mysqli_query($enlaceCon,$sqlTipoPrecioNombre);
+$datTipoPrecioNombre=mysqli_fetch_array($rsTipoPrecioNombre);
+$descuentoPrecioNombre=$datTipoPrecioNombre[0];
+
 $indiceConversion=0;
 $descuentoPrecioMonto=0;
 if($descuentoPrecio>0){
@@ -84,7 +91,7 @@ while($datCosto=mysqli_fetch_array($respCosto)){
 }
 
 echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='0.01'>";
-echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecio</span>";
+echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecioNombre</span>";
 echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>#####".$descuentoPrecioMonto."#####";
 
             $fecha=0;
@@ -94,8 +101,10 @@ echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='
 	        }
 	        $ciudad=$_COOKIE['global_agencia'];
 			$sql1="select t.codigo, t.nombre, t.abreviatura from tipos_precio t where '$fechaCompleta 00:00:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) and $codMaterial in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in (SELECT cod_linea_proveedor from tipos_precio_lineas where cod_tipoprecio=t.codigo)) order by 3";
+
 			$resp1=mysqli_query($enlaceCon,$sql1);
 			if($contadorAux>0){
+				echo "<option value='-9999'>-</option>";		
 			  while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
@@ -110,5 +119,5 @@ echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='
 			   echo "<option value='-9999'>SIN PROMOCIONES</option>";		
 			}
 			
-		//	echo $sql1;
+			//echo $sql1;
 ?>

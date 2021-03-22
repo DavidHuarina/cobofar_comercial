@@ -54,7 +54,7 @@ echo"<form method='post' action=''>";
 	echo "</select></td>";
 	echo "<tr><th align='left'>Filtro</th>";
 	echo "<td><select name='filtro' class='selectpicker form-control' data-style='btn btn-default'>";
-	echo "<option value='1'>Ver Ingresos Puntuales</option>";
+	echo "<option value='1'>Ver Ingresos con Problemas</option>";
 	echo "<option value='2'>Ver Todo</option>";
 	echo "</select></td>";
 	echo "<tr><th align='left'>Fecha inicio:</th>";

@@ -446,7 +446,7 @@ function ajaxPrecioItem(indice){
 		if (ajax.readyState==4) {
 			var respuesta=ajax.responseText.split("#####");
 			contenedor.innerHTML = respuesta[0];
-            document.getElementById("descuentoProducto"+indice).value=(respuesta[1]*parseFloat(cantidadUnitaria)); 
+            document.getElementById("descuentoProducto"+indice).value=respuesta[1]; 
             if($("#descuentoProducto"+indice).val()>0){
               $("#tipoPrecio"+indice).css("background","#C0392B");
             }else{

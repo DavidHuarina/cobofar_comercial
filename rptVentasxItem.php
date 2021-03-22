@@ -44,10 +44,9 @@ echo "<br><table align='center' class='texto' width='100%'>
 <th>Item</th>
 <th>Cantidad</th>
 <th>Monto Venta</th>
-<th>Total Venta</th>
 </tr>";
 
-$totalVenta=0;$totalFilaPtr=0;
+$totalVenta=0;
 while($datos=mysqli_fetch_array($resp)){	
 	$codItem=$datos[0];
 	$nombreItem=$datos[1];
@@ -56,14 +55,14 @@ while($datos=mysqli_fetch_array($resp)){
 	
 	$montoPtr=number_format($montoVenta,2,".",",");
 	$cantidadFormat=number_format($cantidad,0,".",",");
-	$totalFilaPtr+=number_format($montoVenta*$cantidad,2,".","");
+	
 	$totalVenta=$totalVenta+$montoVenta;
 	echo "<tr>
 	<td>$codItem</td>
 	<td>$nombreItem</td>
 	<td>$cantidadFormat</td>
 	<td>$montoPtr</td>
-	<td>".number_format($montoVenta*$cantidad,2,".","")."</td>
+	
 	</tr>";
 }
 $totalPtr=number_format($totalVenta,2,".",",");
@@ -71,8 +70,7 @@ echo "<tr>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>Total:</td>
-	<td>&nbsp;</td>
-	<td>$totalFilaPtr</td>
+	<td>$totalPtr</td>
 <tr>";
 
 echo "</table>";

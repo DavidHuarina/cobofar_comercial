@@ -20,6 +20,7 @@ require_once '../function_web.php';
 //DATOS PARA LISTAR DOCUMENTOS
 $fechaDesde="01/03/2021";
 $fechaHasta=date("d/m/Y");
+$fechaHastaFormato=date("Y-m-d");
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";
 $codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL ALMACEN ORIGEN
@@ -31,7 +32,7 @@ $codAlmacenDestino=obtenerCodigoAlmacenPorCiudad($codCiudadDestino);
 
 ?><br><br><H4>LISTADO TRASPASOS PENDIENTES ENTRE SUCURSALES</H4><br><br>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-condensed">
   <tr class='bg-sucess'><th>TIPO</th><th>DOCUMENTO</th><th>FECHA</th><th>SUCURSAL DESTINO</th><th>RESPONSABLE</th><th>SUCURSAL ORIGEN</th></tr>
 <?php
 $listAlma=obtenerListadoAlmacenes();//web service
@@ -62,10 +63,18 @@ if($verificarConexion==true){
       $ipDestino=$datos[0];
       $sucDestino=$datos[1];
       $codCiudadDestino=$cod_existe;  
-     $existeCon=verificarExisteTraspasoDocumentosSucursal("VDETALLE","VMAESTRO",$dctoOrigen,$ipDestino);
+     $existeCon=verificarExisteTraspasoDocumentosSucursal("VDETALLE","VMAESTRO",$dctoOrigen,$ipDestino,strftime('%d/%m/%Y', strtotime($fechaOrigen)));          
       if((int)$existeCon>0){
       }else{
-        ?><tr><td><?=$tipoOrigen?></td><td><?=$dctoOrigen?></td><td><?=strftime('%d/%m/%Y', strtotime($fechaOrigen))?></td><td><?=$sucDestino?></td></td><td><?=obtenerNombrePersonalAbreviado($codPaso,$ip)?></td><td><?=$alma->des?></tr><?php
+        $date1 = new DateTime($fechaOrigen);
+        $date2 = new DateTime($fechaHastaFormato);
+        $diff = $date1->diff($date2);
+        $dias_restantes=$diff->days;
+        $background="#fff";
+        if((int)$dias_restantes>=2){
+          $background="#F1C40F";
+        }
+        ?><tr style="background:<?=$background?>"><td><?=$tipoOrigen?></td><td><?=$dctoOrigen?></td><td><?=strftime('%d/%m/%Y', strtotime($fechaOrigen))?></td><td><?=$sucDestino?></td></td><td><?=obtenerNombrePersonalAbreviado($codPaso,$ip)?></td><td><?=$alma->des?></tr><?php
       }
     }  //fin de WHILE <?=obtenerNombrePersonalAbreviado($codPersonal,$ip)
   }

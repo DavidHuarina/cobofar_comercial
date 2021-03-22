@@ -24,6 +24,7 @@ public function setBase($base){
    $this->nombre_de_base=$base;
  }
  public function start(){
+  set_time_limit(0);
    try{
          parent::__construct($this->tipo_de_base.':server='.$this->host.';Database='.$this->nombre_de_base, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));// 
          return true;
@@ -36,7 +37,7 @@ public function setBase($base){
 class ConexionFarmaSucursal extends PDO {    
 
     private $tipo_de_base = 'sqlsrv';
-    private $host = '10.10.12.12';  
+    private $host = '10.10.16.12';  
     private $nombre_de_base = 'Gestion';
     private $usuario = 'sistema';
     private $contrasena = 'sistema';

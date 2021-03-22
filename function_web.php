@@ -213,13 +213,13 @@ function obtenerListadoProveedoresWeb(){
     return $existeCon;
   }
   
-  function verificarExisteTraspasoDocumentosSucursal($tabla_detalle,$tabla,$dcto,$ip){
+  function verificarExisteTraspasoDocumentosSucursal($tabla_detalle,$tabla,$dcto,$ip,$fecha_salida){
     //TIPO A (INGRESO DESDE EL ALMACEN)
     require_once __DIR__.'/conexion_externa_farma.php';
     $dbh = new ConexionFarma();
     $dbh->setHost($ip);
     $dbh->start();
-    $sqlDetalle="SELECT DCTO as EXISTE FROM $tabla WHERE DCTO1=$dcto AND TIPO='D'";
+    $sqlDetalle="SELECT DCTO as EXISTE FROM $tabla WHERE DCTO1=$dcto AND TIPO='D' AND FECHA>='$fecha_salida'";
     $stmt = $dbh->prepare($sqlDetalle);
     $stmt->execute();
     $existeCon=0;
