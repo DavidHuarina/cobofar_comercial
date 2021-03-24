@@ -201,7 +201,6 @@ $pdf->MultiCell(60,3,$txt3,0,"C");
 $sqlGlosa="select cod_tipopreciogeneral from `salida_almacenes` s where s.`cod_salida_almacenes`=$codigoVenta";
 $respGlosa=mysqli_query($enlaceCon,$sqlGlosa);
 $codigoPrecio=mysqli_result($respGlosa,0,0);
-
 $txtGlosaDescuento="";
 $sql1="SELECT glosa_factura from tipos_preciogeneral where codigo=$codigoPrecio and glosa_estado=1";
 $resp1=mysqli_query($enlaceCon,$sql1);

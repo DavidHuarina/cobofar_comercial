@@ -105,27 +105,28 @@ $pdf->SetXY(5,$y+9);		$pdf->MultiCell(70,3,$direccionTxt, 0,"C");
 $y=$y+6;
 $pdf->SetXY(0,$y+12);		$pdf->Cell(0,0,"FACTURA", 0,0,"C");
 $pdf->SetXY(0,$y+15);		$pdf->Cell(0,0,$ciudadTxt,0,0,"C");
-$pdf->SetXY(0,$y+18);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
-$pdf->SetXY(0,$y+21);		$pdf->Cell(0,0,"NIT: $nitTxt", 0,0,"C");
-$pdf->SetXY(0,$y+24);		$pdf->Cell(0,0,"$nombreTipoDoc Nro. $nroDocVenta", 0,0,"C");
-$pdf->SetXY(0,$y+27);		$pdf->Cell(0,0,"Autorizacion Nro. $nroAutorizacion", 0,0,"C");
+$pdf->SetXY(0,$y+18);		$pdf->Cell(0,0,"Telefono ".$telefonoTxt,0,0,"C");
+$pdf->SetXY(0,$y+21);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(0,$y+24);		$pdf->Cell(0,0,"NIT: $nitTxt", 0,0,"C");
+$pdf->SetXY(0,$y+27);		$pdf->Cell(0,0,"$nombreTipoDoc Nro. $nroDocVenta", 0,0,"C");
+$pdf->SetXY(0,$y+30);		$pdf->Cell(0,0,"Autorizacion Nro. $nroAutorizacion", 0,0,"C");
 
 
-$pdf->SetXY(0,$y+30);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
-$pdf->SetXY(0,$y+32);		$pdf->MultiCell(0,3,utf8_decode($txt1),0,"C");
-$pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(0,$y+33);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(0,$y+35);		$pdf->MultiCell(0,3,utf8_decode($txt1),0,"C");
+$pdf->SetXY(0,$y+45);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
 
 $y=$y+7;
-$pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,"FECHA: $fechaFactura $horaFactura",0,0,"C");
-$pdf->SetXY(0,$y+45);		$pdf->Cell(0,0,"Sr(es): ".utf8_decode($razonSocialCliente)."",0,0,"C");
-$pdf->SetXY(0,$y+48);		$pdf->Cell(0,0,"NIT/CI:	$nitCliente",0,0,"C");
+$pdf->SetXY(0,$y+45);		$pdf->Cell(0,0,"FECHA: $fechaFactura $horaFactura",0,0,"C");
+$pdf->SetXY(0,$y+48);		$pdf->Cell(0,0,"Sr(es): ".utf8_decode($razonSocialCliente)."",0,0,"C");
+$pdf->SetXY(0,$y+51);		$pdf->Cell(0,0,"NIT/CI:	$nitCliente",0,0,"C");
 
 $y=$y+3;
-$pdf->SetXY(0,$y+51);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-$pdf->SetXY(15,$y+54);		$pdf->Cell(0,0,"CANT.");
-$pdf->SetXY(40,$y+54);		$pdf->Cell(0,0,"P.U.");
-$pdf->SetXY(58,$y+54);		$pdf->Cell(0,0,"IMPORTE");
-$pdf->SetXY(0,$y+58);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
+$pdf->SetXY(0,$y+54);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
+$pdf->SetXY(15,$y+57);		$pdf->Cell(0,0,"CANT.");
+$pdf->SetXY(40,$y+57);		$pdf->Cell(0,0,"P.U.");
+$pdf->SetXY(58,$y+57);		$pdf->Cell(0,0,"IMPORTE");
+$pdf->SetXY(0,$y+61);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
 
 
 $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
@@ -135,7 +136,7 @@ $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcio
 		order by s.orden_detalle";
 $respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 
-$yyy=62;
+$yyy=65;
 
 $montoTotal=0;
 while($datDetalle=mysqli_fetch_array($respDetalle)){
@@ -213,6 +214,8 @@ $pdf->Image($fileName , 23 ,$y+$yyy+38, 30, 30,'PNG');
 $pdf->SetXY(5,$y+$yyy+68);		$txt3=iconv('utf-8', 'windows-1252', $txt3); $pdf->MultiCell(60,3,$txt3,0,"C");
 //$pdf->Output();
 
+$pdf->SetXY(5,$y+$yyy+78);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
+
 //consulta cuantos items tiene el detalle
 $sqlGlosa="select cod_tipopreciogeneral from `salida_almacenes` s where s.`cod_salida_almacenes`=$codigoVenta";
 $respGlosa=mysqli_query($enlaceCon,$sqlGlosa);
@@ -224,7 +227,7 @@ while($filaDesc=mysqli_fetch_array($resp1)){
 	    $txtGlosaDescuento=iconv('utf-8', 'windows-1252', $filaDesc[0]);		
 }
 if($txtGlosaDescuento!=""){
-	$pdf->SetXY(5,$y+$yyy+80); 
+	$pdf->SetXY(5,$y+$yyy+82); 
 	$pdf->SetFont('Arial','',6); $pdf->MultiCell(60,3,$txtGlosaDescuento,15,"C");
 }
 
@@ -233,66 +236,6 @@ if($txtGlosaDescuento!=""){
 
 
 $tamanoLargo=200+($nroItems*3)-3;
-
-//$pdf=new FPDF('P','mm',array(76,$tamanoLargo));
-//$pdf->SetMargins(0,0,0);
-$pdf->AddPage(); 
-$pdf->SetFont('Arial','',8);
-
-$y=0;
-$incremento=3;
-
-$y=$y+(-12);
-$pdf->SetXY(0,$y+21);		$pdf->Cell(0,0,$nombreTxt,0,0,"C");
-$pdf->SetXY(0,$y+24);		$pdf->Cell(0,0,"$nombreTipoDoc Nro. $nroDocVenta", 0,0,"C");
-
-$y=$y+(-8);
-$pdf->SetXY(0,$y+36);		$pdf->Cell(0,0,"FECHA: $fechaVenta",0,0,"C");
-$pdf->SetXY(0,$y+39);		$pdf->Cell(0,0,"Sr(es): $razonSocialCliente",0,0,"C");
-
-$pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,utf8_decode("Válido para cambio por 7 días."),0,0,"C");
-
-
-$y=$y+(2);
-$pdf->SetXY(0,$y+45);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-$pdf->SetXY(15,$y+48);		$pdf->Cell(0,0,"ITEM");
-$pdf->SetXY(50,$y+48);		$pdf->Cell(0,0,"Cant.");
-//$pdf->SetXY(58,$y+48);		$pdf->Cell(0,0,"Importe");
-$pdf->SetXY(0,$y+52);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-
-
-$sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
-		sum(s.`descuento_unitario`), sum(s.`monto_unitario`), m.codigo_barras from `salida_detalle_almacenes` s, `material_apoyo` m where 
-		m.`codigo_material`=s.`cod_material` and s.`cod_salida_almacen`=$codigoVenta 
-		group by s.cod_material
-		order by 3";
-$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
-
-$yyy=55;
-
-$montoTotal=0;
-while($datDetalle=mysqli_fetch_array($respDetalle)){
-	$codInterno=$datDetalle[0];
-	$cantUnit=$datDetalle[1];
-	$cantUnit=redondear2($cantUnit);
-	$nombreMat=$datDetalle[2];
-	$precioUnit=$datDetalle[3];
-	$precioUnit=redondear2($precioUnit);
-	$descUnit=$datDetalle[4];
-	$montoUnit=$datDetalle[5];
-	$codigoBarras=$datDetalle[6];
-	$montoUnit=redondear2($montoUnit);
-	
-	$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(50,3,"$codigoBarras","C");
-	$pdf->SetXY(56,$y+$yyy+1);		$pdf->Cell(0,0,"$cantUnit");
-	//$pdf->SetXY(61,$y+$yyy+1);		$pdf->Cell(0,0,"$montoUnit");
-	$montoTotal=$montoTotal+$montoUnit;
-	
-	$yyy=$yyy+6;
-}
-$pdf->SetXY(0,$y+$yyy+2);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");		
-$yyy=$yyy+5;
-
 
 
 $pdf->Output();
