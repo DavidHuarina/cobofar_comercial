@@ -19,6 +19,11 @@ if(!isset($_POST['no_venta'])){
    $almacenOrigen=$global_almacen;
 }
 
+$cod_tipopreciogeneral=0;
+if(isset($_POST['codigoDescuentoGeneral'])){
+   $cod_tipopreciogeneral=$_POST['codigoDescuentoGeneral'];
+}
+
 $codCliente=$_POST['cliente'];
 
 $tipoPrecio=$_POST['tipoPrecio'];
@@ -119,10 +124,10 @@ $created_at=date("Y-m-d H:i:s");
 $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
 		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
 		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
-		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo, monto_cambio,cod_tipopago,created_by,created_at)
+		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo, monto_cambio,cod_tipopago,created_by,created_at,cod_tipopreciogeneral)
 		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
-		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at')";
+		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral')";
 	//	echo $sql_inserta;
 $sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 

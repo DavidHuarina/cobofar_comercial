@@ -176,8 +176,10 @@ $pdf->SetXY(5,$y+$yyy+16);		$pdf->Cell(0,0,"CODIGO DE CONTROL: $codigoControl",0
 $pdf->SetXY(5,$y+$yyy+20);		$pdf->Cell(0,0,"FECHA LIMITE DE EMISION: $fechaLimiteEmision",0,0,"C");
 $pdf->SetXY(5,$y+$yyy+23);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------",0,0,"C");
 
-
 $pdf->SetXY(10,$y+$yyy+25);		$pdf->MultiCell(60,3,$txt2,0,"C");
+
+
+
 
 //GENERAMOS LA CADENA DEL QR
 $cadenaQR=$nitTxt."|".$nroDocVenta."|".$nroAutorizacion."|".$fechaVenta."|".$montoTotal."|".$montoTotal."|".$codigoControl."|".$nitCliente."|0|0|0|0";
@@ -190,7 +192,26 @@ QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
 
 $pdf->Image($fileName , 23 ,$y+$yyy+38, 30, 30,'PNG');
 
-$pdf->SetXY(5,$y+$yyy+68);		$pdf->MultiCell(60,3,$txt3,0,"C");
+$pdf->SetXY(5,$y+$yyy+68);		
+$txt3=iconv('utf-8', 'windows-1252', $txt3);
+$pdf->MultiCell(60,3,$txt3,0,"C");
+
+
+//consulta cuantos items tiene el detalle
+$sqlGlosa="select cod_tipopreciogeneral from `salida_almacenes` s where s.`cod_salida_almacenes`=$codigoVenta";
+$respGlosa=mysqli_query($enlaceCon,$sqlGlosa);
+$codigoPrecio=mysqli_result($respGlosa,0,0);
+
+$txtGlosaDescuento="";
+$sql1="SELECT glosa_factura from tipos_preciogeneral where codigo=$codigoPrecio and glosa_estado=1";
+$resp1=mysqli_query($enlaceCon,$sql1);
+while($filaDesc=mysqli_fetch_array($resp1)){	
+	    $txtGlosaDescuento=iconv('utf-8', 'windows-1252', $filaDesc[0]);		
+}
+if($txtGlosaDescuento!=""){
+	$pdf->SetXY(5,$y+$yyy+80); 
+	$pdf->SetFont('Arial','',6); $pdf->MultiCell(60,3,$txtGlosaDescuento,15,"C");
+}
 
 $pdf->Output();
 ?>

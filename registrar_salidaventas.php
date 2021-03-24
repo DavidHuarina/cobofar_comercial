@@ -206,7 +206,7 @@ function calculaMontoMaterial(indice){
 	totales();
 }
 
-function totales(){
+function totales(){	
 	var subtotal=0;
     for(var ii=1;ii<=num;ii++){
 	 	if(document.getElementById('materiales'+ii)!=null){
@@ -241,6 +241,7 @@ function totales(){
 	document.getElementById("descuentoVentaUSD").value=0;
 	aplicarCambioEfectivo();
 	minimoEfectivo();
+	aplicarDescuentoPorcentaje();
 }
 
 function aplicarDescuento(f){
@@ -301,6 +302,8 @@ function aplicarDescuentoPorcentaje(f){
 	minimoEfectivo();
 	//totales();
 }
+
+
 function aplicarDescuentoUSDPorcentaje(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 	var total=document.getElementById("totalVenta").value;
@@ -453,7 +456,7 @@ function ajaxPrecioItem(indice){
               $("#tipoPrecio"+indice).css("background","#85929E");
             }
             $("#tipoPrecio"+indice).html(respuesta[2]);
-			calculaMontoMaterial(indice);
+			calculaMontoMaterial(indice);			
 		}
 	}
 	ajax.send(null);
@@ -712,6 +715,24 @@ $anulacionCodigo=mysqli_result($respConf,0,0);
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=5";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $ventaDebajoCosto=mysqli_result($respConf,0,0);
+
+
+$fechaDesc=explode("/",$fecha);
+$fechaCompleta=$fechaDesc[2]."-".$fechaDesc[1]."-".$fechaDesc[0];
+$ciudad=$_COOKIE['global_agencia'];
+$sql1="select t.codigo,t.abreviatura,t.nombre from tipos_preciogeneral t where '$fechaCompleta 00:10:00' between t.desde and t.hasta  and estado=1 and cod_estadodescuento=3 and $ciudad in (SELECT cod_ciudad from tipos_preciogeneral_ciudad where cod_tipoprecio=t.codigo) LIMIT 1";
+//echo $sql1;
+$resp1=mysqli_query($enlaceCon,$sql1);
+$codigoDescuentoGeneral=0;
+$porcentajeDescuentoReal=0;
+$porcentajeDescuentoRealNombre="Descuento";
+while($filaDesc=mysqli_fetch_array($resp1)){
+	    $codigoDescuentoGeneral=$filaDesc[0];	
+		$porcentajeDescuentoReal=$filaDesc[1];	
+		$porcentajeDescuentoRealNombre="(".$filaDesc[2].")";	
+}
+
+
 include("datosUsuario.php");
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
@@ -976,10 +997,10 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:27px;font-size:22px;width:100%;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" step='0.01' required></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?></td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:27px;font-size:22px;width:100%;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" readonly step='any' required></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaPorcentaje' id='descuentoVentaPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoPorcentaje(form1);' onkeyup='aplicarDescuentoPorcentaje(form1);' onkeydown='aplicarDescuentoPorcentaje(form1);' value="0" step='0.01'></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?> %</td><td><input type='number' name='descuentoVentaPorcentaje' id='descuentoVentaPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoPorcentaje(form1);' onkeyup='aplicarDescuentoPorcentaje(form1);' onkeydown='aplicarDescuentoPorcentaje(form1);' value="<?=$porcentajeDescuentoReal?>" readonly step='any'></td>
 		</tr>
 
 	</table>
@@ -992,10 +1013,10 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3"></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='0.01' required></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='any' required></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaUSDPorcentaje' id='descuentoVentaUSDPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSDPorcentaje(form1);' onkeyup='aplicarDescuentoUSDPorcentaje(form1);' onkeydown='aplicarDescuentoUSDPorcentaje(form1);' value="0" step='0.01'></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaUSDPorcentaje' id='descuentoVentaUSDPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSDPorcentaje(form1);' onkeyup='aplicarDescuentoUSDPorcentaje(form1);' onkeydown='aplicarDescuentoUSDPorcentaje(form1);' value="0" step='any'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:27px;font-size:22px;width:100%;color:#fff;"> </td>
@@ -1052,7 +1073,8 @@ if($banderaErrorFacturacion==0){
 </div>
 
 <input type='hidden' name='materialActivo' value="0">
-<input type='hidden' id="cantidad_material" name='cantidad_material' value="0">
+<input type='hidden' id="cantidad_material" name='cantidad_material' value="0">}
+<input type='hidden' name='codigoDescuentoGeneral' value="<?=$codigoDescuentoGeneral?>">
 </form>
 
 

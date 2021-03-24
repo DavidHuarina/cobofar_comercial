@@ -199,17 +199,14 @@ echo "<script language='Javascript'>
 </script>
 	<?php
 	echo "<form method='post' action='' onsubmit='return false;'>";
-	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.por_linea,e.cod_estadodescuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado,e.observacion_descuento from $table e where e.estado=1 order by 2";
+	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.cod_estadodescuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado,e.observacion_descuento,e.glosa_factura,e.glosa_estado from $table e where e.estado=1 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Lista de $moduleNamePlural</h1>";
 	
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>
-	<button title='Modificar Días' name='Dias' class='btn btn-default' onclick='editar_dias(this.form)'><i class='material-icons'>today</i>&nbsp;</button>
 	<button title='Modificar Sucursales' name='Ciudades' class='btn btn-default' onclick='editar_ciudades(this.form)'><i class='material-icons'>business</i>&nbsp;</button>
-	<button title='Modificar Lineas' name='Lineas' class='btn btn-default' onclick='editar_lineas(this.form)'><i class='material-icons'>people_alt</i>&nbsp;</button>
-	<button title='Modificar Productos' name='Productos' class='btn btn-default' onclick='editar_productos(this.form)'><i class='material-icons'>watch</i>&nbsp;</button>
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	
@@ -226,10 +223,8 @@ echo "<script language='Javascript'>
 	<th>Descuento</th>
 	<th>Desde</th>
 	<th>Hasta</th>
-	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>today</i> Días</th>
 	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>business</i> Sucursales</th>
-	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>people_alt</i> Líneas</th>
-	<th width='15%' style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>watch</i> Productos</th>
+	<th width='18%'>Glosa</th>
 	<th>Estado</th>
 	</tr>";
 	while($dat=mysqli_fetch_array($resp))
@@ -248,30 +243,20 @@ echo "<script language='Javascript'>
 		}else{
 			$hasta=strftime('%d/%m/%Y %H:%M',strtotime($dat[5]));
 		}
+		if($dat["glosa_estado"]==1){
+			$glosa_estado="<b class='text-success'>(Activado)</b>";
+		}else{
+			$glosa_estado="<b class='text-danger'>(Desactivado)</b>";
+		}
+		$glosa=$glosa_estado." ".$dat["glosa_factura"];
 		
-		$dias=obtenerNombreDesDiasRegistrados($codigo);
-		$ciudades=obtenerNombreDesCiudadesRegistrados($codigo);
+		$ciudades=obtenerNombreDesCiudadesRegistradosGeneral($codigo);
 		$tamanioGlosa=50; 
         if(strlen($ciudades)>$tamanioGlosa){
            $ciudades=substr($ciudades, 0, $tamanioGlosa)."...";
         }
-		if($dat['por_linea']==1){
-			$lineas=obtenerNombreDesLineasRegistrados($codigo);
-		    $tamanioGlosa=50; 
-            if(strlen($lineas)>$tamanioGlosa){
-               $lineas=substr($lineas, 0, $tamanioGlosa)."...";
-            }
-            $productos="";
-		}else{
-			$productos=obtenerNombreDesProdRegistrados($codigo);
-		    $tamanioGlosa=50; 
-            if(strlen($productos)>$tamanioGlosa){
-               $productos=substr($productos, 0, $tamanioGlosa)."...";
-            }
-            $lineas="";
-		}
-        $por_linea=$dat['por_linea'];
-		$inputcheck="<input type='checkbox' name='codigo' value='$codigo'><input type='hidden' id='por_linea$codigo' value='$por_linea'>";
+
+		$inputcheck="<input type='checkbox' name='codigo' value='$codigo'>";
 		if($dat["cod_estadodescuento"]==3||$dat["cod_estadodescuento"]==2){
           $inputcheck="";
 		}
@@ -293,10 +278,8 @@ echo "<script language='Javascript'>
 		<td>$abreviatura</td>
 		<td>$desde</td>
 		<td>$hasta</td>
-		<td>$dias</td>
 		<td>$ciudades</td>
-		<td>$lineas</td>
-		<td>$productos</td>
+		<td><small><small>$glosa</small></small></td>
 		<td>$estado</td>
 		</tr>";
 	}
@@ -305,10 +288,7 @@ echo "<script language='Javascript'>
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>
-	<button title='Modificar Días' name='Dias' class='btn btn-default' onclick='editar_dias(this.form)'><i class='material-icons'>today</i>&nbsp;</button>
 	<button title='Modificar Sucursales' name='Ciudades' class='btn btn-default' onclick='editar_ciudades(this.form)'><i class='material-icons'>business</i>&nbsp;</button>
-	<button title='Modificar Lineas' name='Lineas' class='btn btn-default' onclick='editar_lineas(this.form)'><i class='material-icons'>people_alt</i>&nbsp;</button>
-	<button title='Modificar Productos' name='Productos' class='btn btn-default' onclick='editar_productos(this.form)'><i class='material-icons'>watch</i>&nbsp;</button>
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	

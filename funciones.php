@@ -382,6 +382,27 @@ function obtenerNombreDesCiudadesRegistrados($codigo){
   	return implode(", ",$ciudadArray);
   }
 }
+
+function obtenerNombreDesCiudadesRegistradosGeneral($codigo){
+  $cantidad=obtenerTotalCiudades();
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT cod_ciudad from tipos_preciogeneral_ciudad where cod_tipoprecio='$codigo'";
+  $i=0;
+  $ciudadArray=[];				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $ciudadArray[$i]=obtenerNombreCiudad($detalle[0]);
+       $i++;  		
+  }  
+  if(count($ciudadArray)==$cantidad){
+  	return "TODOS";
+  }else if(count($ciudadArray)==0){
+  	return "NINGUNO";
+  }else{
+  	return implode(", ",$ciudadArray);
+  }
+}
+
 function obtenerDescripcionMotivo($codigo,$ninguna){
   require("conexionmysqli.inc");
   $sql_detalle="SELECT descripcion from observaciones_clase where codigo='$codigo'";
@@ -394,6 +415,18 @@ function obtenerDescripcionMotivo($codigo,$ninguna){
        $nombre=$detalle[0];   		
   }  
   return $nombre;
+}
+function obtenerNombreProveedorDeLinea($codigo){
+  $estilosVenta=1;
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT p.nombre_proveedor from proveedores p join proveedores_lineas l where l.cod_linea_proveedor='$codigo'";
+  $proveedor="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $proveedor=$detalle[0];   		
+  } 
+  mysqli_close($enlaceCon); 
+  return $proveedor;
 }
 function obtenerNombreProveedor($codigo){
   $estilosVenta=1;

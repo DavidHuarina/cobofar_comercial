@@ -37,8 +37,8 @@ if($sqlCodigo==""&&$sqlNombre==""&&$stringLineasX==""&&$stringFormasX==""&&$stri
   $sqllimit="LIMIT 100";
 }
 
-$sql="(SELECT s.cod_material,d.codigo_material,d.descripcion_material,(select cod_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor) as cod_proveedor,d.cod_linea_proveedor from subgrupos_material s join material_apoyo d on d.codigo_material=s.cod_material where s.cod_subgrupo=$codigo_registro and d.estado=1 order by 1)
-   UNION (select d.codigo_material,0 as codigo_material,d.descripcion_material,(select cod_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor) as cod_proveedor,d.cod_linea_proveedor from material_apoyo d where d.estado=1 and d.codigo_material not in (SELECT s.cod_material from subgrupos_material s join material_apoyo d on d.codigo_material=s.cod_material where s.cod_subgrupo=$codigo_registro and d.estado=1) $sqlCodigo $stringLineasX $sqlNombre $stringFormasX $stringAccionesX order by 1 $sqllimit)";
+$sql="(SELECT s.cod_material,d.codigo_material,d.descripcion_material,(select cod_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor) as cod_proveedor,d.cod_linea_proveedor from tipos_precio_productos s join material_apoyo d on d.codigo_material=s.cod_material where s.cod_tipoprecio=$codigo_registro and d.estado=1 order by 1)
+   UNION (select d.codigo_material,0 as codigo_material,d.descripcion_material,(select cod_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor) as cod_proveedor,d.cod_linea_proveedor from material_apoyo d where d.estado=1 and d.codigo_material not in (SELECT s.cod_material from tipos_precio_productos s join material_apoyo d on d.codigo_material=s.cod_material where s.cod_tipoprecio=$codigo_registro and d.estado=1) $sqlCodigo $stringLineasX $sqlNombre $stringFormasX $stringAccionesX order by 1 $sqllimit)";
  // echo $sql;
 
 $resp=mysqli_query($enlaceCon,$sql); 

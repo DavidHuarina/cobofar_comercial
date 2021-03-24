@@ -3,6 +3,7 @@ require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
 require('conexionmysqli.inc');
 require('funcion_nombres.php');
+require('funciones.php');
 set_time_limit(0);
 $fecha_ini=$_GET['fecha_ini'];
 $fecha_fin=$_GET['fecha_fin'];
@@ -29,7 +30,7 @@ echo "<table align='center' class='textotit' width='100%'><tr><td align='center'
 	<br>Fecha Reporte: $fecha_reporte</tr></table>";
 	
 $sql="select m.`codigo_material`, m.`descripcion_material`, 
-	sum(sd.monto_unitario)montoVenta, sum(sd.cantidad_unitaria),sum(sd.cantidad_unitaria*sd.monto_unitario)
+	sum(sd.monto_unitario)montoVenta, sum(sd.cantidad_unitaria),sum(sd.cantidad_unitaria*sd.monto_unitario),(SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor) as linea,(SELECT nombre_proveedor from proveedores where cod_proveedor=(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor)) as proveedor,m.cod_linea_proveedor
 	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
 	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta'
 	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and
@@ -41,6 +42,8 @@ $resp=mysqli_query($enlaceCon,$sql);
 echo "<br><table align='center' class='texto' width='100%'>
 <tr>
 <th>Codigo</th>
+<th>Proveedor</th>
+<th>Linea</th>
 <th>Item</th>
 <th>Cantidad</th>
 <th>Monto Venta</th>
@@ -52,7 +55,8 @@ while($datos=mysqli_fetch_array($resp)){
 	$nombreItem=$datos[1];
 	$montoVenta=$datos[4];//$datos[2]; el monto es la sumatoria del monto unitario
 	$cantidad=$datos[3];
-	
+	$nombreLinea=$datos["linea"];
+	$nombreProveedor=$datos["proveedor"];
 	$montoPtr=number_format($montoVenta,2,".",",");
 	$cantidadFormat=number_format($cantidad,0,".",",");
 	
@@ -60,6 +64,8 @@ while($datos=mysqli_fetch_array($resp)){
 	echo "<tr>
 	<td>$codItem</td>
 	<td>$nombreItem</td>
+	<td>$nombreLinea</td>
+	<td>$nombreProveedor</td>
 	<td>$cantidadFormat</td>
 	<td>$montoPtr</td>
 	
@@ -67,6 +73,8 @@ while($datos=mysqli_fetch_array($resp)){
 }
 $totalPtr=number_format($totalVenta,2,".",",");
 echo "<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>Total:</td>

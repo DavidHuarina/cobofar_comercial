@@ -56,12 +56,23 @@ include("datosUsuario.php");
 					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Distribuidores</a></li>
 					<li><a href="grupos/list.php" target="contenedorPrincipal">Clasificadores</a></li>
 					<li><a href="navegador_material.php" target="contenedorPrincipal">Productos</a></li>
-					<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
-					<?php if($global_usuario==2019){
-                       ?>
-                     <li><a href="tipos_precio/listAdmin.php" target="contenedorPrincipal">Autorización de Descuentos</a></li>
+					
+					<li><span>Descuentos</span>
+					<ul>
+						<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
+					   <?php if($global_usuario==2019){
+                         ?>
+                        <li><a href="tipos_precio/listAdmin.php" target="contenedorPrincipal">Autorización de Descuentos</a></li>
                        <?php
-					}?>					
+					      }?>	
+					    <li><a href="tipos_preciogeneral/list.php" target="contenedorPrincipal">Gestión Desc. Precio Final</a></li>
+					    <?php if($global_usuario==2019){
+                         ?>
+                        <li><a href="tipos_preciogeneral/listAdmin.php" target="contenedorPrincipal">Autorización de Desc. Precio Final</a></li>
+                       <?php
+					      }?>	
+						</ul>	
+					</li>				
 						<li><a href="conf_precio/list.php" target="contenedorPrincipal">Gestión de Precios</a></li>
 					<!--li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li-->					
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>
