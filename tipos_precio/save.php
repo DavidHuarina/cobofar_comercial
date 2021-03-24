@@ -14,7 +14,7 @@ $sql="SELECT IFNULL(max(codigo)+1,1) FROM $table";
 $resp=mysqli_query($enlaceCon,$sql);
 $codigo=mysqli_result($resp,0,0);
 
-$sql="insert into $table (codigo,nombre, abreviatura,desde,hasta, estado) values($codigo,'$nombre','$abreviatura','$fecha_hora_ini','$fecha_hora_fin','1')";
+$sql="insert into $table (codigo,nombre, abreviatura,desde,hasta, estado,por_linea) values($codigo,'$nombre','$abreviatura','$fecha_hora_ini','$fecha_hora_fin','1','$nivel_descuento')";
 //echo $sql;
 $sql_inserta=mysqli_query($enlaceCon,$sql);
 

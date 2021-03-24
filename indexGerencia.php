@@ -59,7 +59,7 @@ include("datosUsuario.php");
 					<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
 					<?php if($global_usuario==2019){
                        ?>
-                     <li><a href="tipos_precio/listAdmin.php" target="contenedorPrincipal">Autorizacion de Descuentos</a></li>
+                     <li><a href="tipos_precio/listAdmin.php" target="contenedorPrincipal">Autorización de Descuentos</a></li>
                        <?php
 					}?>					
 						<li><a href="conf_precio/list.php" target="contenedorPrincipal">Gestión de Precios</a></li>

@@ -4,6 +4,9 @@
 	require("configModule.php");
 
 	$vector=explode(",",$datos);
+	if(isset($_GET["admin"])){
+		$urlList2=$urlList3;
+	}
 	$n=sizeof($vector);
 	for($i=0;$i<$n;$i++)
 	{

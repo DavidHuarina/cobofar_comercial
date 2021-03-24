@@ -29,7 +29,7 @@ echo "<table align='center' class='textotit' width='100%'><tr><td align='center'
 	<br>Fecha Reporte: $fecha_reporte</tr></table>";
 	
 $sql="select m.`codigo_material`, m.`descripcion_material`, 
-	sum(sd.monto_unitario)montoVenta, sum(sd.cantidad_unitaria)
+	sum(sd.monto_unitario)montoVenta, sum(sd.cantidad_unitaria),sum(sd.cantidad_unitaria*sd.monto_unitario)
 	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
 	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta'
 	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and
@@ -50,7 +50,7 @@ $totalVenta=0;
 while($datos=mysqli_fetch_array($resp)){	
 	$codItem=$datos[0];
 	$nombreItem=$datos[1];
-	$montoVenta=$datos[2];
+	$montoVenta=$datos[4];//$datos[2]; el monto es la sumatoria del monto unitario
 	$cantidad=$datos[3];
 	
 	$montoPtr=number_format($montoVenta,2,".",",");

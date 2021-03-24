@@ -59,7 +59,7 @@ function enviar_nav(f){
 			{
 				if(confirm('Esta seguro de eliminar los datos.'))
 				{
-					location.href='<?=$urlDelete?>?datos='+datos+'';
+					location.href='<?=$urlDelete?>?datos='+datos+'&admin=1';
 				}
 				else
 				{
@@ -201,7 +201,7 @@ function enviar_nav(f){
          function anularSalidaTraspaso(){
            var j_cod_registro = $("#j_cod_registro_anular").val();
            if($("#modal_observacion_anular").val()==""){
-             Swal.fire("Informativo!","Debe registrar la glosa para ANULAR", "warning");
+             Swal.fire("Informativo!","Debe registrar la observación para ANULAR", "warning");
            }else{
               var obs =$("#modal_observacion_anular").val().replace(/['"]+/g, '');  
               location.href='cambiar_estado.php?codigo_registro='+j_cod_registro+'&estado=2&obs='+obs;
@@ -210,7 +210,7 @@ function enviar_nav(f){
 </script>
 	<?php
 	echo "<form method='post' action=''>";
-	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.cod_estadodescuento,e.observacion_descuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado from $table e where e.estado=1 order by 2";
+	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.cod_estadodescuento,e.observacion_descuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado,por_linea from $table e where e.estado=1 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Autorización de Descuentos</h1>";
 	
@@ -225,7 +225,7 @@ function enviar_nav(f){
 	echo "<tr class='bg-principal text-white'>
 	<th colspan='3'></th>
 	<th colspan='2' align='center'>Periodo del Descuento</th>
-	<th colspan='4'></th>
+	<th colspan='5'></th>
 	</tr>";
 	echo "<tr class='bg-principal text-white'>
 	<th>&nbsp;</th>
@@ -233,9 +233,10 @@ function enviar_nav(f){
 	<th>Descuento</th>
 	<th>Desde</th>
 	<th>Hasta</th>
-	<th>Días</th>
-	<th>Sucursales</th>
-	<th>Líneas</th>
+	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>today</i> Días</th>
+	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>business</i> Sucursales</th>
+	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>people_alt</i> Líneas</th>
+	<th width='15%' style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>watch</i> Productos</th>
 	<th>Estado</th>
 	</tr>";
 	while($dat=mysqli_fetch_array($resp))
@@ -257,24 +258,40 @@ function enviar_nav(f){
 		
 		$dias=obtenerNombreDesDiasRegistrados($codigo);
 		$ciudades=obtenerNombreDesCiudadesRegistrados($codigo);
-		$lineas=obtenerNombreDesLineasRegistrados($codigo);
 		$tamanioGlosa=50; 
-        if(strlen($lineas)>$tamanioGlosa){
-           $lineas=substr($lineas, 0, $tamanioGlosa)."...";
+        if(strlen($ciudades)>$tamanioGlosa){
+           $ciudades=substr($ciudades, 0, $tamanioGlosa)."...";
         }
+		if($dat['por_linea']==1){
+			$lineas=obtenerNombreDesLineasRegistrados($codigo);
+		    $tamanioGlosa=50; 
+            if(strlen($lineas)>$tamanioGlosa){
+               $lineas=substr($lineas, 0, $tamanioGlosa)."...";
+            }
+            $productos="";
+		}else{
+			$productos=obtenerNombreDesProdRegistrados($codigo);
+		    $tamanioGlosa=50; 
+            if(strlen($productos)>$tamanioGlosa){
+               $productos=substr($productos, 0, $tamanioGlosa)."...";
+            }
+            $lineas="";
+		}
+		$por_linea=$dat['por_linea'];
         
         $estado_descripcion=$dat['nombre_estado'];
         $observacion_descuento=$dat['observacion_descuento'];
         $est_estado="";
+        $icon="vpn_lock";
         $inputcheck="<input type='checkbox' name='codigo' value='$codigo'>";
         switch ($dat['cod_estadodescuento']) {
         	case 1: $est_estado="style='background:#3498DB;color:#fff;'"; break;
         	case 2: $est_estado="style='background:#C0392B;color:#fff;'";$inputcheck=""; break;
-        	case 3: $est_estado="style='background:#2AC012;color:#fff;'"; break;
+        	case 3: $est_estado="style='background:#2AC012;color:#fff;'";$icon="cloud_done"; break;
         	case 4: $est_estado="style='background:#F7DC6F;color:#636563;'"; break;
         	default: $est_estado=""; break;
         }        
-        $estado="<a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>keyboard_arrow_down</i> ".$dat['nombre_estado']."</a><br>$observacion_descuento<input type='hidden' id='nombre$codigo' value='$nombre'>";
+        $estado="<a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a><br><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";
         //estado
 		echo "<tr>
 		<td>$inputcheck</td>
@@ -285,6 +302,7 @@ function enviar_nav(f){
 		<td>$dias</td>
 		<td>$ciudades</td>
 		<td>$lineas</td>
+		<td>$productos</td>
 		<td>$estado</td>
 		</tr>";
 	}

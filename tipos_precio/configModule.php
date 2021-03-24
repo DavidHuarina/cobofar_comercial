@@ -12,6 +12,7 @@ $urlEdit="edit.php";
 $urlEditDia="edit_dia.php";
 $urlEditCiudad="edit_ciudad.php";
 $urlEditLinea="edit_linea.php";
+$urlEditProducto="edit_producto.php";
 $urlDelete="delete.php";
 $urlSave="save.php";
 $urlSaveEdit="saveEdit.php";
@@ -20,5 +21,7 @@ $urlSaveEditCiudad="saveEditCiudad.php";
 $urlSaveEditLinea="saveEditLinea.php";
 $urlSaveDelete="";
 
+$urlEditProducto="edit_producto.php";
+$urlSaveEditProducto="saveEditProducto.php";
 
 ?>

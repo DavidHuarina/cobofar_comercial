@@ -584,6 +584,16 @@ function obtenerTotalLineas(){
   }  
   return $cantidad;
 }
+function obtenerTotalProd(){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT count(*) cantidad from material_apoyo where estado=1";
+  $cantidad=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $cantidad=$detalle[0];   		
+  }  
+  return $cantidad;
+}
 function obtenerNombreDesLineasRegistrados($codigo){
   $cantidad=obtenerTotalLineas();
   require("conexionmysqli.inc");
@@ -593,6 +603,39 @@ function obtenerNombreDesLineasRegistrados($codigo){
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
   	   $lineaArray[$i]=obtenerNombreProveedorLinea($detalle[0]);
+       $i++;  		
+  }  
+  if(count($lineaArray)==$cantidad){
+  	return "TODOS";
+  }else if(count($lineaArray)==0){
+  	return "NINGUNO";
+  }else{
+  	return implode(", ",$lineaArray);
+  }
+}
+
+function obtenerNombreProductoLinea($codigo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT descripcion_material from material_apoyo where codigo_material='$codigo'";
+  $linea="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $linea=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $linea;
+}
+
+function obtenerNombreDesProdRegistrados($codigo){
+  $cantidad=obtenerTotalProd();
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT cod_material from tipos_precio_productos where cod_tipoprecio='$codigo'";
+  $i=0;
+  $lineaArray=[];				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $lineaArray[$i]=obtenerNombreProductoLinea($detalle[0]);
        $i++;  		
   }  
   if(count($lineaArray)==$cantidad){

@@ -8,7 +8,7 @@ require('function_formatofecha.php');
 require('conexion.inc');
 
 $rptOrdenar=$_GET["rpt_ordenar"];
-
+$codSubGrupo=$_GET['codSubGrupo'];
 $rpt_fecha=cambia_formatofecha($rpt_fecha);
 $fecha_reporte=date("d/m/Y");
 $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
@@ -27,11 +27,11 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 		
 		if($rptOrdenar==1){
 			$sql_item="select codigo_material, descripcion_material, cantidad_presentacion from material_apoyo
-			where codigo_material<>0 and estado='1' order by descripcion_material";
+			where codigo_material<>0 and estado='1' and cod_linea_proveedor in ($codSubGrupo) order by descripcion_material";
 		}else{
 			$sql_item="select m.codigo_material, 
 			m.descripcion_material, cantidad_presentacion, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor)as linea  from proveedores p, proveedores_lineas pl, 
-			material_apoyo m where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor and m.estado='1' order by 4,2";
+			material_apoyo m where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor and m.estado='1' and m.cod_linea_proveedor in ($codSubGrupo) order by 4,2";
 		}
 		
 		//echo $sql_item;

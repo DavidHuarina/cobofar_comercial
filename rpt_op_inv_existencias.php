@@ -7,8 +7,16 @@ echo "<script language='JavaScript'>
 			rpt_ver=f.rpt_ver.value;
 			rpt_fecha=f.rpt_fecha.value;
 			rpt_ordenar=f.rpt_ordenar.value;
+			var codSubGrupo=new Array();
+	        var j=0;
+	        for(var i=0;i<=f.rpt_subcategoria.options.length-1;i++)
+	        {	if(f.rpt_subcategoria.options[i].selected)
+	        	{	codSubGrupo[j]=f.rpt_subcategoria.options[i].value;
+	        		j++;
+	        	}
+	        }
 			var j=0;
-			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
+			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&codSubGrupo='+codSubGrupo,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
 
 			return(true);
 		}
@@ -25,7 +33,26 @@ echo "<script language='JavaScript'>
 			return(true);
 		}
 		</script>";
-require("conexion.inc");
+		?>
+<script type="text/javascript">
+ function cambiarSubLinea(){
+  var categoria=$("#rpt_categoria").val();
+  var parametros={"categoria":categoria};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxCambiarComboLinea.php",
+        data: parametros,   
+        success:  function (resp) { 
+        	//alert(resp);
+          $("#rpt_subcategoria").html(resp);
+          $(".selectpicker").selectpicker("refresh");
+        }
+    });
+ }	
+</script>
+		<?php
+require("conexionmysqli.inc");
 if($global_tipoalmacen==1)
 {	require("estilos_almacenes_central.inc");
 }
@@ -33,18 +60,18 @@ else
 {	require("estilos_almacenes.inc");
 }
 $fecha_rptdefault=date("d/m/Y");
-echo "<h1>Reporte Existencias Almacen</h1>";
+echo "<h1>Reporte Existencias Sucursales</h1>";
 
 echo"<form method='post' action=''>";
 	
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
-	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='texto' onChange='envia_select(this.form)'>";
+	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker form-control' onChange='envia_select(this.form)' data-style='btn btn-primary'>";
 	
 	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value='0'>Todos</option>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
 		if($rpt_territorio==$codigo_ciudad)
@@ -55,10 +82,10 @@ echo"<form method='post' action=''>";
 		}
 	}
 	echo "</select></td></tr>";
-	echo "<tr><th align='left'>Almacen</th><td><select name='rpt_almacen' class='texto'>";
+	echo "<tr><th align='left'>Sucursal</th><td><select name='rpt_almacen' class='selectpicker form-control' data-style='btn btn-primary'>";
 	$sql="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$rpt_territorio'";
-	$resp=mysql_query($sql);
-	while($dat=mysql_fetch_array($resp))
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_almacen=$dat[0];
 		$nombre_almacen=$dat[1];
 		if($rpt_almacen==$codigo_almacen)
@@ -71,7 +98,7 @@ echo"<form method='post' action=''>";
 	echo "</select></td></tr>";
 
 	echo "<tr><th align='left'>Ver:</th>";
-	echo "<td><select name='rpt_ver' class='texto'>";
+	echo "<td><select name='rpt_ver' class='selectpicker form-control' data-style='btn btn-primary'>";
 	echo "<option value='1'>Todo</option>";
 	echo "<option value='2'>Con Existencia</option>";
 	echo "<option value='3'>Sin existencia</option>";
@@ -87,9 +114,22 @@ echo"<form method='post' action=''>";
     		echo" click_element_id='imagenFecha'></DLCALENDAR>";
     		echo"  </TD>";
 	echo "</tr>";
-
+    echo "<tr><th align='left' class='' >Proveedor:</th>
+	<td><select name='rpt_categoria'  id='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubLinea()' data-live-search='true'>
+	<option value='' disabled selected>--Seleccione--</option>";
+	$sql="select cod_proveedor, nombre_proveedor from proveedores order by 2";
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp))
+	{	$codigo_cat=$dat[0];
+		$nombre_cat=$dat[1];
+		echo "<option value='$codigo_cat'>$nombre_cat</option>";
+	}
+	echo "</select></td></tr>";
+	echo "<tr><th align='left' class='' >Linea:</th>
+	<td><select name='rpt_subcategoria' id='rpt_subcategoria' class='selectpicker form-control' multiple data-style='btn btn-primary' data-actions-box='true' data-live-search='true'>";
+	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Ordenar Por:</th>";
-	echo "<td><select name='rpt_ordenar' class='texto'>";
+	echo "<td><select name='rpt_ordenar' class='selectpicker form-control' data-style='btn btn-primary'>";
 	echo "<option value='1'>Producto</option>";
 	echo "<option value='2'>Linea y Producto</option>";
 	echo "</tr>";
