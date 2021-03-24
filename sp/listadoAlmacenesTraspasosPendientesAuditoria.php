@@ -33,7 +33,7 @@ $codAlmacenDestino=obtenerCodigoAlmacenPorCiudad($codCiudadDestino);
 ?><br><br><H4>LISTADO TRASPASOS PENDIENTES ENTRE SUCURSALES</H4><br><br>
 
 <table class="table table-bordered table-condensed">
-  <tr class='bg-sucess'><th>TIPO</th><th>DOCUMENTO</th><th>FECHA</th><th>SUCURSAL DESTINO</th><th>RESPONSABLE</th><th>SUCURSAL ORIGEN</th></tr>
+  <tr class='bg-success'><th>TIPO</th><th>DOCUMENTO</th><th>FECHA</th><th>SUCURSAL DESTINO</th><th>RESPONSABLE</th><th>SUCURSAL ORIGEN</th></tr>
 <?php
 $listAlma=obtenerListadoAlmacenes();//web service
 $contador=0;

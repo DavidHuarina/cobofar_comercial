@@ -21,7 +21,7 @@ $fecha_finconsulta=$fecha_fin;
 
 
 $rpt_territorio=$_GET['codTipoTerritorio'];
-
+$almacenes=obtenerAlmacenesDeCiudadString($rpt_territorio);
 $fecha_reporte=date("d/m/Y");
 
 $nombre_territorio=obtenerNombreSucursalAgrupado($rpt_territorio);
@@ -89,8 +89,9 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
    $codigoSubGrupo=$datosSuc[0];
    ?><th><?=$datosSuc[1];?></th><?php
   }else{
-   $codigoSubGrupo=$datosSuc[2];
+   $codigoSubGrupo=obtenerMaterialesStringDeLinea($datosSuc[2]);
   }
+
   $tiempoInicio2 = strtotime($fecha_iniconsulta);
   $cantidadMes2=0;
   while($tiempoInicio2 <= $tiempoFin){
@@ -104,7 +105,7 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
     if($cantidadMes2==$cantidadMes){
       $dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
     }
-    $montoVenta=obtenerMontoVentasGeneradasLineaProducto($dateInicio,$dateFin,$rpt_territorio,$codTipoPago,$codigoSubGrupo,$rpt_formato);
+    $montoVenta=obtenerMontoVentasGeneradasLineaProducto($dateInicio,$dateFin,$almacenes,$codTipoPago,$codigoSubGrupo,$rpt_formato);
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
     if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
       ?><td><small><?=number_format($montoVenta,2,'.',',')?></small></td><?php

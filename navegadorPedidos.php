@@ -277,22 +277,22 @@ echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 //
 
 echo "<h1>Listado de Ventas Perdidas</h1>";
-echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>Leyenda:</th>
+/*echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>Leyenda:</th>
 <th>Salidas Despachadas a otras agencias</th><td bgcolor='#bbbbbb' width='5%'></td>
 <th>Salidas recepcionadas</th><td bgcolor='#33ccff' width='5%'></td>
 <th>Salidas Anuladas</th><td bgcolor='#ff8080' width='5%'></td>
 <th>Salidas locales</th><td bgcolor='#66ff99' width='5%'></td>
-<td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
+<td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";*/
 //
-echo "<div class=''>
+/*echo "<div class=''>
         <input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
         
-</div>";
+</div>";*/
 
 echo "<div id='divCuerpo'>";
 echo "<center><table class='table table-sm'>";
 echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-    <th>Almacen Destino</th><th>Cliente</th><th>Motivo</th><th>Observacion</th><th>&nbsp;</th></tr>";
+    <th>Cliente</th><th>Motivo</th><th>Observacion</th><th>&nbsp;</th></tr>";
     
 
 
@@ -382,7 +382,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     echo "<td align='center'>&nbsp;$chk</td>";
     echo "<td align='center'>$nro_correlativo</td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
-    echo "<td>$nombre_tiposalida</td><td>&nbsp;$nombre_almacen</td>";
+    echo "<td>VENTA PERDIDA</td>";//<td>&nbsp;$nombre_almacen</td>
     echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$motivo</td><td>&nbsp;$obs_salida</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     echo "<td><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
@@ -399,9 +399,9 @@ while ($dat = mysqli_fetch_array($resp)) {
 echo "</table></center><br>";
 echo "</div>";
 
-echo "<div class=''>
+/*echo "<div class=''>
         <input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
-</div>";
+</div>";*/
 
 
 echo "</form>";

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Farmacias Bolivia</title>
-    <link rel="icon" type="image/png" href="imagenes/icon_farma.png" />
+    <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
 	<link type="text/css" rel="stylesheet" href="menuLibs/css/demo.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
@@ -57,6 +57,11 @@ include("datosUsuario.php");
 					<li><a href="grupos/list.php" target="contenedorPrincipal">Clasificadores</a></li>
 					<li><a href="navegador_material.php" target="contenedorPrincipal">Productos</a></li>
 					<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
+					<?php if($global_usuario==2019){
+                       ?>
+                     <li><a href="tipos_precio/listAdmin.php" target="contenedorPrincipal">Autorizacion de Descuentos</a></li>
+                       <?php
+					}?>					
 						<li><a href="conf_precio/list.php" target="contenedorPrincipal">Gestión de Precios</a></li>
 					<!--li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li-->					
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>

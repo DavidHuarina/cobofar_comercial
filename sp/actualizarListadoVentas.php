@@ -23,7 +23,7 @@ $dbh = new ConexionFarmaSucursal();
 //$fechaHasta=date("d/m/Y");
 ?><br><br><h4>ACTUALIZACION DE VENTAS</h4><br><br>
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("AL");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
+$listAlma=obtenerListadoAlmacenesEspecifico("Aë");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
 $contador=0;
 $sql = "select IFNULL(MAX(cod_salida_almacenes)+1,1) from salida_almacenes order by cod_salida_almacenes desc";
 $resp = mysqli_query($enlaceCon,$sql);
@@ -96,8 +96,8 @@ if($verificarConexion==true){
     $sqlInsertDetalleAc = substr_replace($sqlInsertDetalleAc, '', -1, 1);
     $sqlInsertDet="INSERT INTO salida_detalle_almacenes (cod_salida_almacen,cod_material,cantidad_unitaria,lote,fecha_vencimiento,precio_unitario,descuento_unitario,monto_unitario) VALUES ".$sqlInsertDetalleAc.";";
     $sqlinsertadetalle=mysqli_query($enlaceCon,$sqlInsertDet);
-    echo $sqlInsertCab."<br>";
-    //echo $sqlInsertDet."<br>";
+    //echo $sqlInsertCab."<br>";
+    echo $sqlInsertDet."<br>";
   }
    //$dbh = null;
 }

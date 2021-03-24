@@ -466,6 +466,31 @@ function obtenerMaterialesStringDeSubGrupo($subGrupo){
     }  
     return implode(",", $datos);
 }
+function obtenerMaterialesStringDeLinea($subGrupo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sql="SELECT GROUP_CONCAT(codigo_material) from material_apoyo where cod_linea_proveedor in ($subGrupo) GROUP BY cod_linea_proveedor;";
+    $resp=mysqli_query($enlaceCon,$sql);
+    $datos=[];$index=0;				
+    while($detalle=mysqli_fetch_array($resp)){
+       $datos[$index]=$detalle[0];
+       $index++;		 		
+    }  
+    return implode(",", $datos);
+}
+
+function obtenerAlmacenesDeCiudadString($subGrupo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sql="SELECT GROUP_CONCAT(cod_almacen) from almacenes where cod_ciudad in ($subGrupo) GROUP BY cod_ciudad;";
+    $resp=mysqli_query($enlaceCon,$sql);
+    $datos=[];$index=0;				
+    while($detalle=mysqli_fetch_array($resp)){
+       $datos[$index]=$detalle[0];
+       $index++;		 		
+    }  
+    return implode(",", $datos);
+}
 
 function obtenerMontoVentasGeneradasCategoria($desde,$hasta,$sucursal,$tipoPago,$subGrupo){
 	$estilosVenta=1;
@@ -588,29 +613,27 @@ function redondearCentavos($n) {
 	return number_format($n,1,'.','');
 }
 
-function obtenerMontoVentasGeneradasLineaProducto($desde,$hasta,$sucursal,$tipoPago,$subGrupo,$formato){
+function obtenerMontoVentasGeneradasLineaProducto($desde,$hasta,$almacenes,$tipoPago,$subGrupo,$formato){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
-	if($formato=="2"){//REPORTE DETALLADO
-      $sql="select SUM((SELECT sum(sd.monto_unitario) FROM salida_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo))) as monto
+      $sql="select s.cod_salida_almacenes
 	from salida_almacenes s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
-	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	s.`cod_almacen` in ($almacenes)
 	and s.`fecha` BETWEEN '$desde' and '$hasta' and 
 	s.cod_tipopago in ($tipoPago)";
-	}else{
-      $sql="select SUM((SELECT sum(sd.monto_unitario) FROM salida_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in ($subGrupo)))) as monto
-	from salida_almacenes s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
-	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
-	and s.`fecha` BETWEEN '$desde' and '$hasta' and 
-	s.cod_tipopago in ($tipoPago)";
-	}
-	
-  //echo $sql;	
   $resp=mysqli_query($enlaceCon,$sql);
-  $monto=0;				
-  while($detalle=mysqli_fetch_array($resp)){	
-       $monto+=$detalle[0];   		
-  }  
+  $datos=[];$index=0;			
+  while($detalle=mysqli_fetch_array($resp)){
+  	   $datos[$index]=$detalle[0];
+       $index++;
+  } 
+  $codigoSalida=implode(",", $datos);
+  $sqlDetalle="SELECT sum(cantidad_unitaria*monto_unitario) FROM salida_detalle_almacenes where cod_salida_almacen in ($codigoSalida) and cod_material in ($subGrupo)";
+  $respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
+  $monto=0;		
+  while($detalleLinea=mysqli_fetch_array($respDetalle)){	
+     $monto+=$detalleLinea[0];   		
+  } 
   mysqli_close($enlaceCon);
   return $monto;
 }

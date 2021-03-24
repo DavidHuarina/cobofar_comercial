@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Busqueda</title>
-        <link rel="icon" type="image/png" href="imagenes/icon_farma.png" />
+        <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
@@ -1063,7 +1063,7 @@ if($banderaErrorFacturacion==0){
     <div class="modal-content card">
                <div class="card-header card-header-primary card-header-text">
                   <div class="card-text">
-                    <h4>Registrar Como Pedido</h4>      
+                    <h4>Registrar Como Venta Perdida</h4>      
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -1100,7 +1100,7 @@ if($banderaErrorFacturacion==0){
                       </div>
                       <br><br>
                       <div class="float-right">
-                        <button class="btn btn-default" onclick="alerts.showSwal('mensaje-guardar-pedido','')">Guardar Como Pedido</button>
+                        <button class="btn btn-default" onclick="alerts.showSwal('mensaje-guardar-pedido','')">Guardar Como Venta Perdida</button>
                       </div> 
                 </div>
       </div>  

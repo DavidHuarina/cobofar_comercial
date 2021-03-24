@@ -51,7 +51,7 @@ require("conexionmysqli.inc");
 	        	$fechaCompleta=$fecha[2]."-".$fecha[1]."-".$fecha[0];	        	
 	        }
 	        $ciudad=$_COOKIE['global_agencia'];
-			$sql1="select t.codigo, t.nombre, t.abreviatura from tipos_precio t where '$fechaCompleta 00:00:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) order by 3";
+			$sql1="select t.codigo, t.nombre, t.abreviatura from tipos_precio t where '$fechaCompleta 00:10:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) order by 3";
 			$resp1=mysqli_query($enlaceCon,$sql1);
 			if($resp1>0){				
 				echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:50% !important;float:left;background:#C0392B;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";

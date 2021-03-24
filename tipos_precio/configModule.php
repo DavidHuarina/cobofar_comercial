@@ -6,6 +6,7 @@ $moduleNamePlural="Gestión de Descuentos";
 
 $urlList="tipo_precio/list.php";
 $urlList2="list.php";
+$urlList3="listAdmin.php";
 $urlRegister="register.php";
 $urlEdit="edit.php";
 $urlEditDia="edit_dia.php";
