@@ -1,3 +1,8 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+</head>
+<body>
 <script language='JavaScript'>
 
 function nuevoAjax()
@@ -77,11 +82,13 @@ function ajaxBuscarItems(f){
 
 </script>
 <?php
-
-	require("conexion.inc");
-	require("estilos_almacenes.inc");
-	require("funciones.php");
-
+require('estilos_reportes_almacencentral.php');
+require('function_formatofecha.php');
+require('conexionmysqli.inc');
+require('funcion_nombres.php');
+require('funciones.php');
+    $almacenes=obtenerAlmacenesDeCiudadString($_GET["codTipoTerritorio"]);
+    $lineas=$_GET["codSubGrupo"];
 	$fechaActual=date("Y-m-d");
 	
 	$nroMeses=3;
@@ -90,14 +97,14 @@ function ajaxBuscarItems(f){
 	
 	echo "<form method='POST' action='guardarPrecios.php' name='form1'>";
 	
-	echo "<h1>Reporte de Productos Proximos a Vencer</h1>";
+	echo "<table style='margin-top:0 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte de Productos Proximos a Vencer</td></tr></table><br>";
 	
-	$sql="select m.descripcion_material, DATE_FORMAT(id.fecha_vencimiento, '%d/%m/%Y'), id.cantidad_restante, id.fecha_vencimiento from material_apoyo m, ingreso_detalle_almacenes id, ingreso_almacenes i
+	$sql="select m.descripcion_material, DATE_FORMAT(id.fecha_vencimiento, '%d/%m/%Y'), id.cantidad_restante, id.fecha_vencimiento 
+	from material_apoyo m, ingreso_detalle_almacenes id, ingreso_almacenes i
 		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and id.cod_material=m.codigo_material and 
-		i.ingreso_anulado=0 and id.fecha_vencimiento<='$fechaFin' and id.cantidad_restante>0 
-		order by 2,1";
-		
-	$resp=mysql_query($sql);
+		i.ingreso_anulado=0 and id.fecha_vencimiento<='$fechaFin' and id.cantidad_restante>0 and m.cod_linea_proveedor in ($lineas) and i.cod_almacen in ($almacenes)
+		order by 2,1";	
+	$resp=mysqli_query($enlaceCon,$sql);
 	
 	echo "<center><table class='texto'>";
 	echo "<tr>
@@ -107,7 +114,7 @@ function ajaxBuscarItems(f){
 	<th>Cantidad</th>
 	</tr>";
 	$indice=1;
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$nombreMaterial=$dat[0];
 		$fechaVencimiento=$dat[1];
@@ -117,10 +124,10 @@ function ajaxBuscarItems(f){
 		//echo $fechaVencimientoSF." ".$fechaActual;
 		
 		if($fechaVencimientoSF<=$fechaActual){
-			echo "<td align='center'><div class='textogranderojo'>$indice</div></td>";
-			echo "<td align='left'><div class='textogranderojo'>$nombreMaterial</div></td>";
-			echo "<td align='center'><div class='textogranderojo'>$fechaVencimiento</div></td>";
-			echo "<td align='center'><div class='textogranderojo'>$cantidadUnitaria</div></td>";
+			echo "<td align='center'>$indice</td>";
+			echo "<td align='left'>$nombreMaterial</td>";
+			echo "<td align='center'>$fechaVencimiento</td>";
+			echo "<td align='center'>$cantidadUnitaria</td>";
 		}else{
 			echo "<td align='center'>$indice</td>";
 			echo "<td align='left'>$nombreMaterial</td>";
@@ -134,3 +141,4 @@ function ajaxBuscarItems(f){
 	}
 	echo "</table></center><br>";	
 ?>
+</body></html>
