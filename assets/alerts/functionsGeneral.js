@@ -3,8 +3,18 @@ window.onload = detectarCarga;
   function detectarCarga(){
     $(".cargar").fadeOut("slow");
   }
+var tablaPrincipalGeneral=null;
 
 $(document).ready(function() {
+  tablaPrincipalGeneral=$('#tablaPrincipalGeneral').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "ordering": false,
+            "pageLength": 100
+
+        });
+
   $(".csp").each(function(){
     var cantidad =  $(this).attr("colspan");
     //alert(cantidad);
@@ -13,6 +23,21 @@ $(document).ready(function() {
     };
    });
 });
+function RefreshTable(tableId, urlData) {
+    $.getJSON(urlData, null, function(json) {
+        table = $(tableId).dataTable();
+        oSettings = table.fnSettings();
+
+        table.fnClearTable(this);
+
+        for (var i = 0; i < json.aaData.length; i++) {
+            table.oApi._fnAddData(oSettings, json.aaData[i]);
+        }
+
+        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+        table.fnDraw();
+    });
+}
 
 function guardarPedido(tipo){
     $("#modo_pedido").val(tipo);

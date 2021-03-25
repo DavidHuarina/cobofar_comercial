@@ -394,6 +394,24 @@ function buscarMaterial(f, numMaterial){
 	document.getElementById('itemNombreMaterial').focus();	
 	
 }
+function encontrarMaterial(numMaterial){
+	var cod_material = $("#materiales"+numMaterial).val();
+	var parametros={"cod_material":cod_material};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_encontrar_productos.php",
+        data: parametros,
+        success:  function (resp) { 
+           // alert(resp);           
+        	$("#modalProductosCercanos").modal("show");
+        	//RefreshTable('tablaPrincipalGeneral', 'ajax_encontrar_productos.php');
+        	$("#tabla_datos").html(resp); 
+        	//tablaPrincipalGeneral.ajax.reload();        	   
+        }
+    });	
+}
+
 function Hidden(){
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -1124,6 +1142,42 @@ if($banderaErrorFacturacion==0){
                       <div class="float-right">
                         <button class="btn btn-default" onclick="alerts.showSwal('mensaje-guardar-pedido','')">Guardar Como Venta Perdida</button>
                       </div> 
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalProductosCercanos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+                <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">place</i>
+                  </div>
+                  <h4 class="card-title">Stock de Productos en Sucursales</h4>
+                </div>
+                <div class="card-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  <i class="material-icons">close</i>
+                </button>
+                  <table class="table table-sm table-bordered" id='tablaPrincipalGeneralQUITAR'>
+                    <thead>
+                      <tr style='background: #ADADAD;color:#000;'>
+                      <th>#</th>
+                      <th>Producto</th>
+                      <th>Sucursal</th>
+                      <th width="45%">Dirección</th>
+                      <th>Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabla_datos">
+                      
+                    </tbody>
+                  </table>
+                  <br><br>
                 </div>
       </div>  
     </div>

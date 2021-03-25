@@ -17,11 +17,12 @@ require("conexionmysqli.inc");
 <table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
 <tr bgcolor="#FFFFFF">
 
-<td width="5%" align="center">
-	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
+<td width="8%" align="center">
+	<a href="javascript:encontrarMaterial(<?php echo $num;?>)" class="btn btn-primary btn-sm btn-fab"><i class='material-icons float-left' title="Encontrar Producto">place</i></a>
+	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" class="btn btn-info btn-sm btn-fab"><i class='material-icons float-left' title="Buscar Producto">search</i></a>
 </td>
 
-<td width="30%" align="center">
+<td width="30%" align="left">
 	<input type="hidden" name="materiales<?php echo $num;?>" id="materiales<?php echo $num;?>" value="0">
 	<div id="cod_material<?php echo $num;?>" class='textomedianonegro'>-</div>
 </td>
