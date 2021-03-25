@@ -30,7 +30,7 @@ $resp = mysqli_query($enlaceCon,$sql);
 $codigo=mysqli_result($resp,0,0);
 foreach ($listAlma->lista as $alma) {
   $sqlInsertCabecera="";
-  $$sqlInsertDetalleAc="";
+  $sqlInsertDetalleAc="";
   $contador++;
   $age1=$alma->age1;
   $cod_existe=verificarAlmacenCiudadExistente($age1);
