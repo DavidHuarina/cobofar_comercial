@@ -327,13 +327,19 @@ function enviar_nav(f){
         $observacion_descuento=$dat['glosa_inventario'];
         $est_estado="";
         $icon="delete_forever";
-        $enlaceDetalles="<a href='$urlListDetalle?c=$codigo' target='_blank' class='btn btn-sm btn-default'><i class='material-icons'>assignment</i>&nbsp;</a>";
+        $enlaceDetalles="<a href='$urlListDetalle?c=$codigo&b=0' target='_blank' class='btn btn-sm btn-default'><i class='material-icons'>assignment</i>&nbsp;</a>";
         $inputcheck="<input type='checkbox' name='codigo' value='$codigo'>";
+        $enrevisionporcentaje="";
         switch ($dat['estado_inventario']) {
         	case 1: $est_estado="style='background:#3498DB;color:#fff;'";$icon=""; break;
         	case 2: $est_estado="style='background:#C0392B;color:#fff;'";$inputcheck="";$enlaceDetalles=""; break;
         	case 3: $est_estado="style='background:#2AC012;color:#fff;'";$inputcheck="";$icon="assignment_turned_in"; break;
-        	case 4: $est_estado="style='background:#F7DC6F;color:#636563;'";$icon="pending"; break;
+        	case 4: 
+        	$enrevisionporcentaje=porcentajeAvanceInventario($codigo);
+        	$est_estado="style='background:#F7DC6F;color:#636563;'";
+        	$icon="pending";
+        	$enlaceDetalles="<a href='$urlListDetalle?c=$codigo&b=1' target='_blank' class='btn btn-sm btn-default'><i class='material-icons'>assignment</i>&nbsp;$enrevisionporcentaje</a>"; 
+        	break;
         	default: $est_estado=""; break;
         }        
         $estado="<div class='btn-group'><a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a>$enlaceDetalles</div><br><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";

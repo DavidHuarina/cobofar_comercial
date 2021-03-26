@@ -295,6 +295,38 @@ function enviar_nav(f){
   	var cantidad_registrada=$("#cantidad_registrada"+fila).val();
   	$("#diferencia"+fila).html(parseInt(cantidad)-parseInt(cantidad_registrada));
   }
+  function guardarFilaInventario(fila){
+   var codigo=fila;
+   var cantidad=$("#cantidad_registrada"+fila).val();
+   var observacion=$("#observacion_registrada"+fila).val();
+   var parametros={"codigo":codigo,"cantidad_registrada":cantidad,"observacion":observacion};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_guardar_inventario_detalle.php",
+        data: parametros,
+        beforeSend: function () {
+          iniciarCargaAjax("Registrando Inventario...");
+        },
+        success:  function (resp) {
+        	var r=parseInt(resp.split("#####")[1]);
+        	detectarCargaAjax();
+        	if(r==1){
+        		actualizarRegistrado(fila);
+        	}           
+        }
+    });
+
+  }
+  function actualizarRegistrado(fila){
+    var cantidad=parseInt($("#cantidad"+fila).val());
+    var cantidad_registrada=parseInt($("#cantidad_registrada"+fila).val());
+    if(cantidad!=cantidad_registrada){
+       $("#estado_glosa"+fila).html("<i class='material-icons text-warning'>report_problem</i>");
+    }else{
+       $("#estado_glosa"+fila).html("<i class='material-icons text-success'>check_circle</i>");
+    }
+  }
 </script>
 	<?php
 	$cod_ciudad=$_COOKIE['global_agencia'];
@@ -317,11 +349,24 @@ function enviar_nav(f){
 	<th width='35%'>Producto</th>
 	<th width='3%'>Cantidad Presentación</th>
 	<th width='3%'>Cantidad Registrada</th>
-	<th style='background:#999999 !important'>Diferencia</th>
+	<th style='background:#999999 !important' colspan='2'>Diferencia</th>
 	<th style='background:#999999 !important'>Observacion</th>
 	<th>Opciones</th>	
 	</tr>";
+
+	$sqlConf="select estado_inventario from $table where codigo=$cod_inventario";
+    $respConf=mysqli_query($enlaceCon,$sqlConf);
+    $estadoInv=mysqli_result($respConf,0,0);
+
+
 	$index=0;
+	$readonly='readonly';	
+	$disabled='d-none';	
+	$admin=$_GET['b'];
+	if($admin==1&&$estadoInv==4){
+		$readonly='';
+		$disabled='';	
+	}
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$index++;
@@ -333,19 +378,27 @@ function enviar_nav(f){
 		$observacion=$dat[5];
 		$dif=$dat[3]-$dat[4];
 		$estiloCheck="btn btn-warning";
-		if($dat[6]==1){
+		$estado_glosa="<i class='material-icons text-muted'>pending</i>";
+		if($dat[6]==1){		
 			$estiloCheck="btn btn-success";
+			$estado_glosa="<i class='material-icons text-warning'>report_problem</i>";
+			if($dif==0){
+			  $estado_glosa="<i class='material-icons text-success'>check_circle</i>";
+		    }
+		}else{
+			$cantidad_registrada=$dat[3];
 		}
 
 		echo "<tr id='fila$codigo' class='filas'>
 		<td>$index</td>
 		<td style='background:#FCF6DA;font-weight:bold;'>$cod_material</td>
-		<td align='left' style='text-align:left;background:#FCF6DA;'>$nombre</td>
+		<td align='left' style='text-align:left;'>$nombre</td>
 		<td align='right' style='text-align:right'>$cantidad</td>
-		<td><input type='hidden' value='$cantidad' id='cantidad$codigo'><input type='number' class='texto' value='$cantidad_registrada' onfocus='marcarFila($codigo)' style='text-align:right' id='cantidad_registrada$codigo' onchange='restarFila($codigo)' onkeypress='restarFila($codigo)' onkeydown='restarFila($codigo)'></td>
+		<td><input type='hidden' value='$cantidad' id='cantidad$codigo'><input type='number' class='texto' value='$cantidad_registrada' onfocus='marcarFila($codigo)' style='text-align:right' id='cantidad_registrada$codigo' onchange='restarFila($codigo)' onkeypress='restarFila($codigo)' onkeydown='restarFila($codigo)' $readonly></td>
 		<td id='diferencia$codigo'>$dif</td>
-		<td><input class='texto' value='$observacion' onfocus='marcarFila($codigo)' style='text-align:left' id='observacion_registrada$codigo' placeholder='Ingrese la observación...'></td>
-		<td><button class='btn btn-info btn-sm btn-fab'><i class='material-icons' title='Guardar Fila'>save</i></button><button class='btn $estiloCheck btn-sm btn-fab'><i class='material-icons' title='Cantidad Exacta'>check</i></button></td>
+		<td id='estado_glosa$codigo'>$estado_glosa</td>
+		<td><input class='texto' value='$observacion' onfocus='marcarFila($codigo)' style='text-align:left' id='observacion_registrada$codigo' placeholder='Ingrese la observación...' $readonly></td>
+		<td><button class='btn btn-info btn-sm btn-fab $disabled'><i class='material-icons' title='Guardar Inventario' onclick='guardarFilaInventario($codigo);return false;'>save</i></button></td>
 		</tr>";
 	}
 	echo "</table></center><br>";

@@ -738,4 +738,22 @@ function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
   return $monto;
 }
 
+function porcentajeAvanceInventario($codigo){
+   $estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sqlConf="SELECT count(*) from inventarios_sucursal_detalle where cod_inventariosucursal='$codigo' and revisado=1";
+    $respConf=mysqli_query($enlaceCon,$sqlConf);
+    $revisados=mysqli_result($respConf,0,0);
+
+    $sqlConf="SELECT count(*) from inventarios_sucursal_detalle where cod_inventariosucursal='$codigo'";
+    $respConf=mysqli_query($enlaceCon,$sqlConf);
+    $totales=mysqli_result($respConf,0,0);
+    mysqli_close($enlaceCon);
+    if((int)$totales>0){
+       return number_format(((int)$revisados*100)/(int)$totales,0,'.','')." %";
+    }else{
+    	return "0 %";
+    }
+}
+
 ?>
