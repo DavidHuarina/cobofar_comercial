@@ -281,7 +281,7 @@ function enviar_nav(f){
 	<?php
 	$cod_ciudad=$_COOKIE['global_agencia'];
 	echo "<form method='post' action=''>";
-	$sql="select e.codigo, e.nombre,e.estado_inventario,e.fecha_iniciorevision,e.fecha_finrevision,e.glosa_inventario,(SELECT nombre from estados_inventario where codigo=e.estado_inventario) as nombre_estado,e.cod_funcionario,e.cod_ciudad from $table e where e.cod_estadoreferencial=1 and cod_ciudad=$cod_ciudad order by 2";
+	$sql="select e.codigo, e.nombre,e.estado_inventario,e.fecha_iniciorevision,e.fecha_finrevision,e.glosa_inventario,(SELECT nombre from estados_inventario where codigo=e.estado_inventario) as nombre_estado,e.cod_funcionario,e.cod_ciudad,e.fecha_reporte from $table e where e.cod_estadoreferencial=1 and cod_ciudad=$cod_ciudad order by e.fecha_reporte desc,e.nombre";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural</h1>";
@@ -302,6 +302,7 @@ function enviar_nav(f){
 	<th width='20%'>Nombre</th>
 	<th>Sucursal</th>
 	<th>Responsable</th>
+	<th>Fecha</th>
 	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>today</i> F. Inicio Revisión</th>
 	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>today</i> F. Fin Revisión</th>
 	<th>Estado</th>
@@ -321,6 +322,14 @@ function enviar_nav(f){
 		}else{
 			$hasta=strftime('%d/%m/%Y %H:%M',strtotime($dat["fecha_finrevision"]));
 		}
+
+		if($dat['fecha_reporte']==""){
+			$fecha="";
+		}else{
+			$fecha=strftime('%d/%m/%Y',strtotime($dat["fecha_reporte"]));
+		}
+
+
 		$ciudad=nombreTerritorio($dat["cod_ciudad"]);
         $responsable=nombreVisitador($dat["cod_funcionario"]);
         $estado_descripcion=$dat['nombre_estado'];
@@ -338,17 +347,19 @@ function enviar_nav(f){
         	$enrevisionporcentaje=porcentajeAvanceInventario($codigo);
         	$est_estado="style='background:#F7DC6F;color:#636563;'";
         	$icon="pending";
-        	$enlaceDetalles="<a href='$urlListDetalle?c=$codigo&b=1' target='_blank' class='btn btn-sm btn-default'><i class='material-icons'>assignment</i>&nbsp;$enrevisionporcentaje</a>"; 
+        	$enlaceDetalles="<a href='$urlListDetalle?c=$codigo&b=1' target='_blank' class='btn btn-sm btn-default'><i class='material-icons'>assignment</i>&nbsp;</a>"; 
         	break;
         	default: $est_estado=""; break;
         }        
         $estado="<div class='btn-group'><a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a>$enlaceDetalles</div><br><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";
         //estado
+        $nombre.=" ".$enrevisionporcentaje."";
 		echo "<tr>
 		<td>$inputcheck</td>
 		<td>$nombre</td>
 		<td>$ciudad</td>
-		<td>$responsable</td>
+		<td><small>$responsable</small></td>
+		<td>$fecha</td>
 		<td>$desde</td>
 		<td>$hasta</td>
 		<td>$estado</td>

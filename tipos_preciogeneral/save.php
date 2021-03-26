@@ -14,7 +14,12 @@ $sql="SELECT IFNULL(max(codigo)+1,1) FROM $table";
 $resp=mysqli_query($enlaceCon,$sql);
 $codigo=mysqli_result($resp,0,0);
 
-$sql="insert into $table (codigo,nombre, abreviatura,desde,hasta, estado,glosa_factura,glosa_estado) values($codigo,'$nombre','$abreviatura','$fecha_hora_ini','$fecha_hora_fin','1','$glosa_factura','$glosa_estado')";
+$user=0;
+if(isset($_COOKIE['global_usuario'])){
+  $user=$_COOKIE['global_usuario'];
+}
+
+$sql="insert into $table (codigo,nombre, abreviatura,desde,hasta, estado,glosa_factura,glosa_estado,cod_funcionario) values($codigo,'$nombre','$abreviatura','$fecha_hora_ini','$fecha_hora_fin','1','$glosa_factura','$glosa_estado','$user')";
 //echo $sql;
 $sql_inserta=mysqli_query($enlaceCon,$sql);
 

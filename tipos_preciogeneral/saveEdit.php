@@ -15,7 +15,11 @@ $fecha_hora_fin=$fecha_fin." ".$hora_fin;
 
 $glosa_estado=$_POST["glosa_estado"];
 $glosa_factura=$_POST["glosa_factura"];
-$sql_upd=mysqli_query($enlaceCon,"update $table set nombre='$nombre', abreviatura='$abreviatura', desde='$fecha_hora_ini', hasta='$fecha_hora_fin',glosa_estado='$glosa_estado',glosa_factura='$glosa_factura' where codigo='$codigo'");
+$user=0;
+if(isset($_COOKIE['global_usuario'])){
+  $user=$_COOKIE['global_usuario'];
+}
+$sql_upd=mysqli_query($enlaceCon,"update $table set nombre='$nombre', abreviatura='$abreviatura', desde='$fecha_hora_ini', hasta='$fecha_hora_fin',glosa_estado='$glosa_estado',glosa_factura='$glosa_factura',cod_funcionario='$user' where codigo='$codigo'");
 
 echo "<script language='Javascript'>
 			alert('Los datos fueron modificados correctamente.');

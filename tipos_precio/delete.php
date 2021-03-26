@@ -7,10 +7,14 @@
 	if(isset($_GET["admin"])){
 		$urlList2=$urlList3;
 	}
+	if(isset($_COOKIE['global_usuario'])){
+      $user=$_COOKIE['global_usuario'];
+    }
+    
 	$n=sizeof($vector);
 	for($i=0;$i<$n;$i++)
 	{
-		$sql="update $table set estado=2 where codigo=$vector[$i]";
+		$sql="update $table set estado=2,cod_funcionario='$user' where codigo=$vector[$i]";
 		$resp=mysqli_query($enlaceCon,$sql);
 	}
 	echo "<script language='Javascript'>

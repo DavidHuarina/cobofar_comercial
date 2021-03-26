@@ -12,7 +12,12 @@ $hora_ini=$_POST["hora_ini"];
 $hora_fin=$_POST["hora_fin"];
 $fecha_hora_ini=$fecha_ini." ".$hora_ini;
 $fecha_hora_fin=$fecha_fin." ".$hora_fin;
-$sql_upd=mysqli_query($enlaceCon,"update $table set nombre='$nombre', abreviatura='$abreviatura', desde='$fecha_hora_ini', hasta='$fecha_hora_fin' where codigo='$codigo'");
+$user=0;
+if(isset($_COOKIE['global_usuario'])){
+  $user=$_COOKIE['global_usuario'];
+}
+
+$sql_upd=mysqli_query($enlaceCon,"update $table set nombre='$nombre', abreviatura='$abreviatura', desde='$fecha_hora_ini', hasta='$fecha_hora_fin',cod_funcionario='$user' where codigo='$codigo'");
 
 echo "<script language='Javascript'>
 			alert('Los datos fueron modificados correctamente.');

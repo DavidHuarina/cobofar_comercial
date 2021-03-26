@@ -193,7 +193,14 @@ include("datosUsuario.php");
 						</ul>	
 					</li>
 					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
-					<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>					
+					<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>	
+					<li><span>Reportes Logs</span>
+						<ul>
+							<li><a href="reportes_logs/rptOpLogPrecios.php" target="contenedorPrincipal">Log de Precios</a></li>
+							<li><a href="reportes_logs/rptOpLogDescuentos.php" target="contenedorPrincipal">Log de Descuentos</a></li>
+							<li><a href="reportes_logs/rptOpLogDescuentosFinal.php" target="contenedorPrincipal">Log de Desc. Precio Final</a></li>
+						</ul>	
+					</li>				
 					<!--li><span>Utilidades</span>
 						<ul>
 							<li><a href="rptOpUtilidadesDocumento.php" target="contenedorPrincipal">Utilidades x Documento</a></li>

@@ -750,7 +750,7 @@ function porcentajeAvanceInventario($codigo){
     $totales=mysqli_result($respConf,0,0);
     mysqli_close($enlaceCon);
     if((int)$totales>0){
-       return number_format(((int)$revisados*100)/(int)$totales,0,'.','')." %";
+       return "<b class='text-success'>(".number_format(((int)$revisados*100)/(int)$totales,0,'.','')." %)</b>";
     }else{
     	return "0 %";
     }

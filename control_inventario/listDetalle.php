@@ -376,10 +376,10 @@ function enviar_nav(f){
 		$cantidad=$dat[3];
 		$cantidad_registrada=$dat[4];
 		$observacion=$dat[5];
-		$dif=$dat[3]-$dat[4];
 		$estiloCheck="btn btn-warning";
 		$estado_glosa="<i class='material-icons text-muted'>pending</i>";
-		if($dat[6]==1){		
+		if($dat[6]==1){
+		    $dif=$dat[3]-$dat[4];		
 			$estiloCheck="btn btn-success";
 			$estado_glosa="<i class='material-icons text-warning'>report_problem</i>";
 			if($dif==0){
@@ -387,6 +387,7 @@ function enviar_nav(f){
 		    }
 		}else{
 			$cantidad_registrada=$dat[3];
+			$dif=0;
 		}
 
 		echo "<tr id='fila$codigo' class='filas'>
