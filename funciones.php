@@ -571,6 +571,7 @@ function obtenerPrecioProductoSucursal($codigo){
     mysqli_close($enlaceCon);
     return $monto;
 }
+
 function obtenerCodigoCiudadPorAlmacen($almacen){
 	require("conexionmysqli.inc");
   $sql_detalle="SELECT cod_ciudad from almacenes where cod_almacen='$almacen'";
@@ -717,12 +718,12 @@ function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
 	if($formato=="2"){//REPORTE DETALLADO
-      $sql="select (SELECT sum(sd.monto_unitario) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo)) as monto
+      $sql="select (SELECT sum(sd.monto_unitario * sd.cantidad_unitaria) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo)) as monto
 	from pedido_almacenes s where s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
 	and s.`fecha` BETWEEN '$desde' and '$hasta'";
 	}else{
-      $sql="select (SELECT sum(sd.monto_unitario) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in ($subGrupo))) as monto
+      $sql="select (SELECT sum(sd.monto_unitario * sd.cantidad_unitaria) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in ($subGrupo))) as monto
 	from pedido_almacenes s where s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
 	and s.`fecha` BETWEEN '$desde' and '$hasta'";
@@ -730,12 +731,36 @@ function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
 	
   //echo $sql;	
   $resp=mysqli_query($enlaceCon,$sql);
-  $monto=0;				
+  $monto=0;		
   while($detalle=mysqli_fetch_array($resp)){	
        $monto+=$detalle[0];   		
   }  
   mysqli_close($enlaceCon);
   return $monto;
+}
+function obtenerStockVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal,$subGrupo,$formato){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	if($formato=="2"){//REPORTE DETALLADO
+      $sql="select (SELECT sum(sd.stock) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo)) as monto
+	from pedido_almacenes s where s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	and s.`fecha` BETWEEN '$desde' and '$hasta'";
+	}else{
+      $sql="select (SELECT sum(sd.stock) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT codigo_material from material_apoyo where cod_linea_proveedor in ($subGrupo))) as monto
+	from pedido_almacenes s where s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	and s.`fecha` BETWEEN '$desde' and '$hasta'";
+	}
+	
+  //echo $sql;	
+  $resp=mysqli_query($enlaceCon,$sql);
+  $stock=0;		
+  while($detalle=mysqli_fetch_array($resp)){	
+       $stock+=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $stock;
 }
 
 function porcentajeAvanceInventario($codigo){

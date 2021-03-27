@@ -48,6 +48,7 @@ require("../conexionmysqli.inc");
 require("../estilos_almacenes.inc");
 
 $fecha_rptdefault=date("Y-m-d");
+$fecha_rptinidefault=date("Y-m")."-01";
 echo "<center><h3><b>Reporte Log de Precios</b></h3></center><br>";
 echo"<form method='post' action='rptOpLogPrecios.php'>";
 
@@ -78,7 +79,7 @@ echo"<form method='post' action='rptOpLogPrecios.php'>";
 	echo "</select></td></tr>";
 
 	echo "<tr><th align='left' class='text-muted'>Fecha inicio:</th>";
-			echo" <TD bgcolor='#ffffff'><INPUT  type='date' class='form-control' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial'>";
+			echo" <TD bgcolor='#ffffff'><INPUT  type='date' class='form-control' value='$fecha_rptinidefault' id='exafinicial' size='10' name='exafinicial'>";
     		echo" <DLCALENDAR tool_tip='Seleccione la Fecha' ";
     		echo" daybar_style='background-color: DBE1E7; font-family: verdana; color:000000;' ";
     		echo" navbar_style='background-color: 7992B7; color:ffffff;' ";

@@ -52,7 +52,12 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
   <thead>
 <tr><th width="5%">N.</th><th><small>Proveedor</small></th><th><small>Línea</small></th>
 <th><small>Producto</small></th>
-<th>Detalles</th>
+<th><small>Precio Anterior</small></th>
+<th><small>Precio Modificado</small></th>
+<?php if($rpt_formato==2){
+    ?><th><small>Detalles</small></th><?php
+ } ?>
+
 </tr>
 </thead>
 <tbody>
@@ -67,10 +72,13 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   $index++;
   $nombreLinea=$datosSuc[3];
   $nombreProveedor=$datosSuc[4];
+  $detalle="";
   ?><tr><th><?=$index?></th><th><?=$nombreProveedor?></th><th><?=$nombreLinea?></th><?php
    $codigoSubGrupo=$datosSuc[0];
-   ?><th><?=$datosSuc[1];?></th><?php
-  ?><th>0</th>
+   ?><td><?=$datosSuc[1];?></td><td>0</td><td>0</td>
+   <?php if($rpt_formato==2){
+    ?><td><?=$detalle?></td><?php
+     } ?>
  </tr>
   <?php
 }

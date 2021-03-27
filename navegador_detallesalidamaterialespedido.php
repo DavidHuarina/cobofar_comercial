@@ -53,13 +53,13 @@
 	
 	echo "<tr><th>Material</th><th>Lote</th><th>Vencimiento</th>
 	<th>Cantidad</th><th>Precio</th>
-		<th>Desc. U.</th><th>Importe</th></tr>";
+		<th>Desc. U.</th><th>Importe</th><th>Stock Capturado</th></tr>";
 	
 	echo "<tr><td colspan='7'>&nbsp;</td></tr>";
 	echo "<form method='post' action=''>";
 	
 	$sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_vencimiento, 
-		s.cantidad_unitaria, s.precio_unitario, s.`descuento_unitario`, s.`monto_unitario` 
+		s.cantidad_unitaria, s.precio_unitario, s.`descuento_unitario`, s.`monto_unitario`,s.stock 
 		from pedido_detalle_almacenes s, material_apoyo m
 		where s.cod_salida_almacen='$codigo' and s.cod_material=m.codigo_material";
 	
@@ -80,14 +80,15 @@
 		$descuentoUnitario=redondear2($descuentoUnitario);
 		$montoUnitario=$dat_detalle[7];
 		$montoUnitario=redondear2($montoUnitario);
-		
+		$stock=$dat_detalle['stock'];
 		echo "<tr><td class='bordeNegroTdMod'>$nombre_material</td>
 			<td align='center' class='bordeNegroTdMod'>$loteProducto</td>
 			<td align='center' class='bordeNegroTdMod'>$fechaVencimiento</td>
 			<td class='bordeNegroTdMod'>$cantidad_unitaria</td>
 			<td class='bordeNegroTdMod'>$precioUnitario</td>
 			<td class='bordeNegroTdMod'>$descuentoUnitario</td>
-			<td class='bordeNegroTdMod' align='center'>$montoUnitario</td></tr>";
+			<td class='bordeNegroTdMod' align='center'>$montoUnitario</td>
+			<td class='bordeNegroTdMod' align='center'>$stock</td></tr>";
 		$indice++;
 		$montoTotal=$montoTotal+$montoUnitario;
 		$montoTotal=redondear2($montoTotal);
@@ -103,9 +104,9 @@
 			<td align='center'>-</td></tr>";
 	}*/
 	
-	echo "<tr><th></th><th></th><th></th><th></th><th></th><th>Total Venta</th><th>$montoNota</th></tr>";
-	echo "<tr><th></th><th></th><th></th><th></th><th></th><th>Descuento</th><th>$descuentoNota</th></tr>";
-	echo "<tr><th></th><th></th><th>Total Peso:</th><th>$pesoTotal</th><th></th><th>Total Final</th><th>$montoFinal</th></tr>";
+	echo "<tr><th></th><th></th><th></th><th></th><th></th><th>Total Venta</th><th>$montoNota</th><th></th></tr>";
+	echo "<tr><th></th><th></th><th></th><th></th><th></th><th>Descuento</th><th>$descuentoNota</th><th></th></tr>";
+	echo "<tr><th></th><th></th><th>Total Peso:</th><th>$pesoTotal</th><th></th><th>Total Final</th><th>$montoFinal</th><th></th></tr>";
 	echo "</table><br><br><br>";
 	echo "<div><table width='90%'>
 	<tr class='bordeNegroTdMod'><td width='33%' align='center'>Despachado</td><td width='33%' align='center'>Entregue Conforme</td><td width='33%' align='center'>Recibi Conforme</td></tr>

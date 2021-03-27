@@ -50,22 +50,35 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
 ?>
 <br><center><table align='center' class='texto' width='70%' id='ventasLinea'>
   <thead>
-<tr><th width="5%">N.</th><th><small>Proveedor</small></th><th><small>Línea</small></th>
+<tr><th width="5%" rowspan="2">N.</th><th rowspan="2"><small>Proveedor</small></th><th rowspan="2"><small>Línea</small></th>
 <?php
 if($rpt_formato==2){
   ?>
-   <th><small>Producto</small></th>
+   <th rowspan="2"><small>Producto</small></th>
   <?php
 }
 $cantidadMes=0;
 while($tiempoInicio <= $tiempoFin){
   $fechaActual = date("Y-m-d", $tiempoInicio);
-  ?><th><small><?=strftime('%b %Y', strtotime($fechaActual))?></small></th><?php
+  ?><th colspan="2"><small><?=strftime('%b %Y', strtotime($fechaActual))?></small></th><?php
   $tiempoInicio += strtotime("+1 month","$fechaActual");
   $cantidadMes++;
 }
 ?>
-<th>Totales</th>
+<th rowspan="2">Totales</th>
+</tr>
+<tr>
+<?php
+$cantidadMes=0;
+$tiempoInicio = strtotime($fecha_iniconsulta);//obtener tiempo de inicio
+$tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obtener el tiempo 
+while($tiempoInicio <= $tiempoFin){
+  $fechaActual = date("Y-m-d", $tiempoInicio);
+  ?><th><small>+MONTO</small></th><th><small>+STOCK</small></th><?php
+  $tiempoInicio += strtotime("+1 month","$fechaActual");
+  $cantidadMes++;
+}
+?>
 </tr>
 </thead>
 <tbody>
@@ -104,11 +117,12 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
       $dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
     }
     $montoVenta=obtenerMontoVentasGeneradasLineaProductoPerdido($dateInicio,$dateFin,$rpt_territorio,$codigoSubGrupo,$rpt_formato);
+    $stockVenta=obtenerStockVentasGeneradasLineaProductoPerdido($dateInicio,$dateFin,$rpt_territorio,$codigoSubGrupo,$rpt_formato);
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
     if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
-      ?><td><small><?=number_format($montoVenta,2,'.',',')?></small></td><?php
+      ?><td><small><?=number_format($montoVenta,2,'.',',')?></small></td><td><small><?=number_format($stockVenta,0,'.',',')?></small></td><?php
     }else{
-      ?><td class='text-muted'><small><?=number_format($montoVenta,2,'.',',')?></small></td><?php
+      ?><td class='text-muted'><small><?=number_format($montoVenta,2,'.',',')?></small></td><td><small><?=number_format($stockVenta,0,'.',',')?></small></td><?php
     }   
     // para sumar mes
     $fechaActual = date("Y-m-d", $tiempoInicio2);   

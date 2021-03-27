@@ -125,13 +125,14 @@ if($sql_inserta==1){
 		$codMaterial=$_POST["materiales$i"];
 		if($codMaterial!=0){
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
-			$precioUnitario=$_POST["precio_unitario$i"];
+			$precioUnitario=obtenerPrecioProductoSucursal($codMaterial);
+			//$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];
 			$montoMaterial=$_POST["montoMaterial$i"];
-			
+			$stock=$_POST["stock$i"];
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterial;
 			
-			$respuesta=insertar_detalle_pedido($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaVencidos,$i);
+			$respuesta=insertar_detalle_pedido($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaVencidos,$i,$stock);
 			if($respuesta!=1){
 				echo "#_#_#_#0";
 			}

@@ -62,12 +62,12 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 	return($banderaError);
 }
 
-function insertar_detalle_pedido($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaVencidos, $orden){
+function insertar_detalle_pedido($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaVencidos, $orden,$stock){
 	 require("conexionmysqli.inc");	
 	 $fechaVencProducto=date("Y-m-d");
 	$sqlInsert="insert into pedido_detalle_almacenes (cod_salida_almacen, cod_material, cantidad_unitaria, lote, fecha_vencimiento, precio_unitario,
-			descuento_unitario, monto_unitario, cod_ingreso_almacen, orden_detalle) values 
-     ('$cod_salida', '$cod_material', '$cantidad', '$loteProducto', '$fechaVencProducto', '$precio','$descuento','$montoparcial','0','$orden')";
+			descuento_unitario, monto_unitario, cod_ingreso_almacen, orden_detalle,stock) values 
+     ('$cod_salida', '$cod_material', '$cantidad', '$loteProducto', '$fechaVencProducto', '$precio','$descuento','$montoparcial','0','$orden','$stock')";
 			//echo $sqlInsert;
 	$respInsert=mysqli_query($enlaceCon,$sqlInsert);
 	return($respInsert);

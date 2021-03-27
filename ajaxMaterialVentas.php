@@ -17,9 +17,12 @@ require("conexionmysqli.inc");
 <table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
 <tr bgcolor="#FFFFFF">
 
-<td width="8%" align="center">
-	<a href="javascript:encontrarMaterial(<?php echo $num;?>)" class="btn btn-primary btn-sm btn-fab"><i class='material-icons float-left' title="Encontrar Producto">place</i></a>
-	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" class="btn btn-info btn-sm btn-fab"><i class='material-icons float-left' title="Buscar Producto">search</i></a>
+<td width="10%" align="center">
+	<div class="btn-group">
+		<!--<a id="receta_boton<?php // echo $num;?>" href="javascript:registrarReceta(<?php //echo $num;?>)" class="btn btn-danger btn-sm btn-fab"><i class='material-icons float-left' title="Registrar Receta">medical_services</i></a>-->
+	    <a href="javascript:encontrarMaterial(<?php echo $num;?>)" class="btn btn-primary btn-sm btn-fab"><i class='material-icons float-left' title="Encontrar Producto">place</i></a>
+	    <a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" class="btn btn-info btn-sm btn-fab"><i class='material-icons float-left' title="Buscar Producto">search</i></a>
+	</div>	
 </td>
 
 <td width="30%" align="left">
@@ -52,24 +55,8 @@ require("conexionmysqli.inc");
 	        	$fechaCompleta=$fecha[2]."-".$fecha[1]."-".$fecha[0];	        	
 	        }
 	        $ciudad=$_COOKIE['global_agencia'];
-			$sql1="select t.codigo, t.nombre, t.abreviatura from tipos_precio t where '$fechaCompleta 00:10:00' between t.desde and t.hasta and DAYOFWEEK('$fechaCompleta') in (SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=t.codigo) and estado=1 and cod_estadodescuento=3 and $ciudad in (SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio=t.codigo) order by 3";
-			$resp1=mysqli_query($enlaceCon,$sql1);
-			if($resp1>0){				
-				echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:50% !important;float:left;background:#C0392B;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";
-			}else{
-				echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:55px !important;float:left;background:#85929E;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";
-			}
-			
-			while($dat=mysqli_fetch_array($resp1)){
-				$codigo=$dat[0];
-				$nombre=$dat[1];
-				$abreviatura=$dat[2];
-				if($codigo==$cod_precio){
-                 echo "<option value='$codigo' selected>$abreviatura %</option>";					 
-				}else{
-				echo "<option value='$codigo'>$abreviatura %</option>";					
-				}
-			}
+			echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:55px !important;float:left;background:#85929E;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";
+             echo "<option value='-9999'>SIN PROMOCIONES</option>";	
 			echo "</select>";
 			//echo $sql1;
 			?>

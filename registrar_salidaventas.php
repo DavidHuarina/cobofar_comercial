@@ -139,6 +139,7 @@ function actStock(indice){
 			ajaxPrecioItem(indice);
 		}
 	}
+	//verificarReceta(codmat,indice);
 	totales();
 	ajax.send(null);
 }
@@ -432,7 +433,27 @@ function setMateriales(f, cod, nombreMat){
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 
-	actStock(numRegistro);
+	actStock(numRegistro);	
+}
+function verificarReceta(cod,numRegistro){
+	ajax=nuevoAjax();
+	ajax.open("GET","ajaxMaterialReceta.php?fila="+numRegistro+"&codigo="+cod,true);
+
+	ajax.onreadystatechange=function(){
+	   if (ajax.readyState==4) {
+	   //	alert(ajax.responseText);
+	   	if(parseInt(ajax.responseText)==0){
+          if(!$("#receta_boton"+numRegistro).hasClass("d-none")){
+            $("#receta_boton"+numRegistro).addClass("d-none");
+          }
+	   	}else{
+	   	   if($("#receta_boton"+numRegistro).hasClass("d-none")){
+            $("#receta_boton"+numRegistro).removeClass("d-none");
+          }	
+	   	}	   	
+	   }
+   }		
+   ajax.send(null);
 }
 		
 function precioNeto(fila){
@@ -465,6 +486,7 @@ function ajaxPrecioItem(indice){
 	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio+"&fecha="+fecha,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
+			//alert(ajax.responseText);
 			var respuesta=ajax.responseText.split("#####");
 			contenedor.innerHTML = respuesta[0];
             document.getElementById("descuentoProducto"+indice).value=respuesta[1]; 
