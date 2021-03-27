@@ -69,6 +69,8 @@ while($tiempoInicio <= $tiempoFin){
 $sqlSucursal="select codigo, nombre from subgrupos where codigo in ($codSubGrupo) order by nombre";
 $respSucursal=mysqli_query($enlaceCon,$sqlSucursal);
 $index=0;
+$almacenes=obtenerAlmacenesStringDeSubGrupo($rpt_territorio);
+
 while($datosSuc=mysqli_fetch_array($respSucursal)){	
   $totalesHorizontal=0;
   $index++;
@@ -90,7 +92,7 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   		$dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
   	}
 
-  	$montoVenta=obtenerMontoVentasGeneradasCategoriaMaterial($dateInicio,$dateFin,$rpt_territorio,$codTipoPago,$materiales);
+  	$montoVenta=obtenerMontoVentasGeneradasCategoriaMaterial($dateInicio,$dateFin,$almacenes,$codTipoPago,$materiales);
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
   		?><td><?=number_format($montoVenta,2,'.',' ')?></td><?php

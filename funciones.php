@@ -487,6 +487,19 @@ function obtenerMontoVentasPerdido($desde,$hasta,$sucursal){
   return $monto;
 }
 
+function obtenerAlmacenesStringDeSubGrupo($ciudades){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+	$sql="SELECT GROUP_CONCAT(cod_almacen) from almacenes where cod_ciudad in ($ciudades) GROUP BY cod_ciudad;";
+    $resp=mysqli_query($enlaceCon,$sql);
+    $datos=[];$index=0;				
+    while($detalle=mysqli_fetch_array($resp)){
+       $datos[$index]=$detalle[0];
+       $index++;		 		
+    }  
+    return implode(",", $datos);
+}
+
 function obtenerMaterialesStringDeSubGrupo($subGrupo){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
@@ -545,11 +558,11 @@ function obtenerMontoVentasGeneradasCategoria($desde,$hasta,$sucursal,$tipoPago,
 function obtenerMontoVentasGeneradasCategoriaMaterial($desde,$hasta,$sucursal,$tipoPago,$materiales){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
-	$sql="select SUM((SELECT sum(sd.monto_unitario) FROM salida_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($materiales))) as monto
-	from salida_almacenes s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
-	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
-	and s.`fecha` BETWEEN '$desde' and '$hasta' and 
-	s.cod_tipopago in ($tipoPago)";
+	$sql="SELECT sum(sd.monto_unitario) FROM salida_detalle_almacenes sd 
+	join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen
+	where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($materiales) and 
+	s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($sucursal) and s.salida_anulada=0 and 
+	s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$desde' and '$hasta'";
   //echo $sql;	
   $resp=mysqli_query($enlaceCon,$sql);
   $monto=0;				
