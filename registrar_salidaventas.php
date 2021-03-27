@@ -136,12 +136,30 @@ function actStock(indice){
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
-			ajaxPrecioItem(indice);
+			ajaxCargarSelectDescuentos(indice);
 		}
 	}
 	//verificarReceta(codmat,indice);
 	totales();
 	ajax.send(null);
+}
+function ajaxCargarSelectDescuentos(indice){
+	var contenedor;
+	contenedor=document.getElementById("idprecio"+indice);
+	var codmat=document.getElementById("materiales"+indice).value;
+	var tipoPrecio=document.getElementById("tipoPrecio"+indice).value;
+	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
+	var fecha=document.getElementById("fecha").value;	
+	ajax=nuevoAjax();
+	ajax.open("GET", "ajaxLoadDescuento.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio+"&fecha="+fecha,true);
+	ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			var respuesta=ajax.responseText.split("#####");			
+            $("#tipoPrecio"+indice).html(respuesta[2]);
+			ajaxPrecioItem(indice);		
+		}
+	}
+	ajax.send(null);	
 }
 
 /*function ajaxPrecioItem(indice){
@@ -242,9 +260,26 @@ function totales(){
 	document.getElementById("descuentoVentaUSD").value=0;
 	aplicarCambioEfectivo();
 	minimoEfectivo();
-	aplicarDescuentoPorcentaje();
+	cargarDescuentoTotalVenta(subtotal);
+	
 }
-
+function cargarDescuentoTotalVenta(total){
+	var parametros={"monto_total":total};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxDescuentoGeneralVenta.php",
+        data: parametros,
+        success:  function (resp) { 
+           var r=resp.split("#####");
+           $("#codigoDescuentoGeneral").val(r[1]); 
+           $("#descuentoVentaPorcentaje").val(r[2]); 
+           $("#porcentajeDescuentoRealNombre").html(r[3]); 
+           $("#porcentajeDescuentoRealNombre2").html("<small>"+r[3]+"</small> %"); 
+           aplicarDescuentoPorcentaje();       	   
+        }
+    });	
+}
 function aplicarDescuento(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 	var total=document.getElementById("totalVenta").value;
@@ -486,16 +521,14 @@ function ajaxPrecioItem(indice){
 	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio+"&fecha="+fecha,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			//alert(ajax.responseText);
 			var respuesta=ajax.responseText.split("#####");
 			contenedor.innerHTML = respuesta[0];
-            document.getElementById("descuentoProducto"+indice).value=respuesta[1]; 
+            document.getElementById("descuentoProducto"+indice).value=respuesta[1];
             if($("#descuentoProducto"+indice).val()>0){
               $("#tipoPrecio"+indice).css("background","#C0392B");
             }else{
               $("#tipoPrecio"+indice).css("background","#85929E");
-            }
-            $("#tipoPrecio"+indice).html(respuesta[2]);
+            }             
 			calculaMontoMaterial(indice);			
 		}
 	}
@@ -755,23 +788,10 @@ $anulacionCodigo=mysqli_result($respConf,0,0);
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=5";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $ventaDebajoCosto=mysqli_result($respConf,0,0);
-
-
-$fechaDesc=explode("/",$fecha);
-$fechaCompleta=$fechaDesc[2]."-".$fechaDesc[1]."-".$fechaDesc[0];
 $ciudad=$_COOKIE['global_agencia'];
-$sql1="select t.codigo,t.abreviatura,t.nombre from tipos_preciogeneral t where '$fechaCompleta 00:10:00' between t.desde and t.hasta  and estado=1 and cod_estadodescuento=3 and $ciudad in (SELECT cod_ciudad from tipos_preciogeneral_ciudad where cod_tipoprecio=t.codigo) LIMIT 1";
-//echo $sql1;
-$resp1=mysqli_query($enlaceCon,$sql1);
 $codigoDescuentoGeneral=0;
 $porcentajeDescuentoReal=0;
 $porcentajeDescuentoRealNombre="Descuento";
-while($filaDesc=mysqli_fetch_array($resp1)){
-	    $codigoDescuentoGeneral=$filaDesc[0];	
-		$porcentajeDescuentoReal=$filaDesc[1];	
-		$porcentajeDescuentoRealNombre="(".$filaDesc[2].")";	
-}
-
 
 include("datosUsuario.php");
 ?>
@@ -1037,10 +1057,10 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?></td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:27px;font-size:22px;width:100%;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" readonly step='any' required></td>
+			<td align='right' width='90%' id='porcentajeDescuentoRealNombre' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?></td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:27px;font-size:22px;width:100%;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" readonly step='any' required></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?> %</td><td><input type='number' name='descuentoVentaPorcentaje' id='descuentoVentaPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoPorcentaje(form1);' onkeyup='aplicarDescuentoPorcentaje(form1);' onkeydown='aplicarDescuentoPorcentaje(form1);' value="<?=$porcentajeDescuentoReal?>" readonly step='any'></td>
+			<td align='right' width='90%' id='porcentajeDescuentoRealNombre2' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?> %</td><td><input type='number' name='descuentoVentaPorcentaje' id='descuentoVentaPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoPorcentaje(form1);' onkeyup='aplicarDescuentoPorcentaje(form1);' onkeydown='aplicarDescuentoPorcentaje(form1);' value="<?=$porcentajeDescuentoReal?>" readonly step='any'></td>
 		</tr>
 
 	</table>

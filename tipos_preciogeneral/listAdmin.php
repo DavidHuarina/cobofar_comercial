@@ -210,7 +210,7 @@ function enviar_nav(f){
 </script>
 	<?php
 	echo "<form method='post' action=''>";
-	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.cod_estadodescuento,e.observacion_descuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado,glosa_factura,glosa_estado from $table e where e.estado=1 order by 2";
+	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.cod_estadodescuento,e.observacion_descuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado,glosa_factura,glosa_estado,monto_inicio,monto_final from $table e where e.estado=1 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Autorización de Descuentos Precio Final</h1>";
 	
@@ -225,12 +225,15 @@ function enviar_nav(f){
 	echo "<tr class='bg-principal text-white'>
 	<th colspan='3'></th>
 	<th colspan='2' align='center'>Periodo del Descuento</th>
+	<th colspan='2' align='center'>$ Rango Precios $</th>
 	<th colspan='3'></th>
 	</tr>";
 	echo "<tr class='bg-principal text-white'>
 	<th>&nbsp;</th>
 	<th>Nombre</th>
 	<th>Descuento</th>
+	<th>Del</th>
+	<th>Al</th>
 	<th>Desde</th>
 	<th>Hasta</th>
 	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>business</i> Sucursales</th>
@@ -254,7 +257,7 @@ function enviar_nav(f){
 			$hasta=strftime('%d/%m/%Y %H:%M',strtotime($dat[5]));
 		}
 		
-		$ciudades=obtenerNombreDesCiudadesRegistrados($codigo);
+		$ciudades=obtenerNombreDesCiudadesRegistradosGeneral($codigo);
 		$tamanioGlosa=50; 
         if(strlen($ciudades)>$tamanioGlosa){
            $ciudades=substr($ciudades, 0, $tamanioGlosa)."...";
@@ -283,12 +286,16 @@ function enviar_nav(f){
 
         $estado="<a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a><br><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";
         //estado
+        $monto_inicio=number_format($dat["monto_inicio"],2,'.',',');
+		$monto_final=number_format($dat["monto_final"],2,'.',',');
 		echo "<tr>
 		<td>$inputcheck</td>
 		<td>$nombre</td>
 		<td>$abreviatura</td>
 		<td>$desde</td>
 		<td>$hasta</td>
+		<td>$monto_inicio</td>
+		<td>$monto_final</td>
 		<td>$ciudades</td>
 		<td><small><small>$glosa</small></small></td>
 		<td>$estado</td>
