@@ -1,3 +1,5 @@
+
+
 <?php
 
 echo "<script language='Javascript'>
@@ -113,14 +115,19 @@ while($reg1=mysqli_fetch_array($rs1))
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	
-	
 	echo "<div class=''>
+		<input type='button' value='Editar Producto' name='Editar' class='btn btn-default' onclick='editar_nav_prod(this.form)'>
+		<div class='float-right'><a href='#' class='btn btn-default btn-sm' data-toggle='modal' data-target='#modalBuscarProducto'>&nbsp;<i class='material-icons'>search</i></a>  
+  </div>
+		</div>";
+
+	/*echo "<div class=''>
 		<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 		<input type='button' value='Editar' name='Editar' class='btn btn-primary' onclick='editar_nav(this.form)'>
 		<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 		<div class='float-right'><a href='#' class='btn btn-default btn-sm' data-toggle='modal' data-target='#modalBuscarProducto'>&nbsp;<i class='material-icons'>search</i></a>  
   </div>
-		</div>";
+		</div>";*/
 	
 	echo "<center><table class='table table-sm' id='tabla_productos'>";
 	echo "<tr class='bg-info text-white'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Empaque</th>
@@ -159,10 +166,13 @@ while($reg1=mysqli_fetch_array($rs1))
 	}
 	echo "</table></center><br>";
 	
-		echo "<div class=''>
+		/*echo "<div class=''>
 		<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 		<input type='button' value='Editar' name='Editar' class='btn btn-primary' onclick='editar_nav(this.form)'>
 		<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
+		</div>";*/
+		echo "<div class=''>
+		<input type='button' value='Editar Producto' name='Editar' class='btn btn-default' onclick='editar_nav_prod(this.form)'>
 		</div>";
 		
 	echo "</form>";
@@ -170,7 +180,7 @@ while($reg1=mysqli_fetch_array($rs1))
 
 <!-- modal devolver solicitud -->
 <div class="modal fade" id="modalBuscarProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background:#732590; !important;color:#fff;">
         <h4 class="modal-title">Buscar Producto</h4>
@@ -204,7 +214,7 @@ while($reg1=mysqli_fetch_array($rs1))
         <div class="row">
                     <div class="col-sm-6">
                       <div class="row">
-                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Forma Farmacéutica</small></label>
+                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Forma Farmaceutica</small></label>
                        <div class="col-sm-10">
                         <div class="form-group">
                               <select class="selectpicker form-control form-control-sm" name="buscar_forma[]" id="buscar_forma" data-style="select-with-transition" multiple data-actions-box="true" data-live-search="true" data-size="10">
@@ -216,7 +226,7 @@ while($reg1=mysqli_fetch_array($rs1))
                      </div>
                     <div class="col-sm-6">
                       <div class="row">
-                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Acción Terapéutica</small></label>
+                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Accion Terapeutica</small></label>
                        <div class="col-sm-10">
                         <div class="form-group">
                                 <select class="selectpicker form-control form-control-sm" name="buscar_accion[]" id="buscar_accion" data-style="select-with-transition" multiple data-actions-box="true" data-size="10" data-live-search="true">

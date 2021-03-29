@@ -59,7 +59,7 @@ echo "<table class='table table-sm table-bordered' id='tabla_productos'>";
     $proveedor=obtenerNombreProveedor($dat[3]);
     $linea=obtenerNombreProveedorLinea($dat[4]);
     $precioProducto=number_format(obtenerPrecioProductoSucursal($codigo),2,'.',' ');
-    $enlace="<a class='btn btn-warning btn-sm' href='$urlListDetalle?codigo=$codigo' onclick=''>Mod. Sucursal</a>";
+    $enlace="<a class='btn btn-warning btn-sm' style='background:#F5921B !important;' title='Modificar en Sucursales' href='$urlListDetalle?codigo=$codigo' onclick=''><i class='material-icons'>edit</i>&nbsp;<i class='material-icons'>business</i></a>";
     echo "<tr>
     <td>$index</td>
     <td>$proveedor</td>

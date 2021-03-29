@@ -204,7 +204,7 @@ while($reg1=mysqli_fetch_array($rs1))
 		$linea=$dat[5];
 		$proveedor=$dat[9];
 		$precioProducto=number_format(obtenerPrecioProductoSucursal($codigo),2,'.',' ');
-		$enlace="<a class='btn btn-warning btn-sm' href='$urlListDetalle?codigo=$codigo' onclick=''>Mod. Sucursal</a>";
+		$enlace="<a class='btn btn-warning btn-sm' style='background:#F5921B !important;' title='Modificar en Sucursales' href='$urlListDetalle?codigo=$codigo' onclick=''><i class='material-icons'>edit</i>&nbsp;<i class='material-icons'>business</i></a>";
 		echo "<tr>
 		<td>$index</td>
 		<td>$proveedor</td>
