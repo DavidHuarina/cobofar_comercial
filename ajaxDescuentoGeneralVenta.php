@@ -17,9 +17,17 @@ $porcentajeDescuentoReal=0;
 $porcentajeDescuentoRealNombre="Descuento";
 while($filaDesc=mysqli_fetch_array($resp1)){
 	    $codigoDescuentoGeneral=$filaDesc[0];	
-		$porcentajeDescuentoReal=$filaDesc[1];	
+		$porcentajeDescuentoReal=$monto_total*($filaDesc[1]/100);	
 		$porcentajeDescuentoRealNombre="(".$filaDesc[2].")";	
+}
+if(obtenerValorConfiguracion(13)==1){
+    $porcentajeDescuentoReal=round($porcentajeDescuentoReal);
+}else if(obtenerValorConfiguracion(13)==2){
+    $porcentajeDescuentoReal=redondearMitades($porcentajeDescuentoReal);
+}else if(obtenerValorConfiguracion(13)==3){
+    $porcentajeDescuentoReal=redondearCentavos($porcentajeDescuentoReal);
 }
 
 echo "#####".$codigoDescuentoGeneral."#####".$porcentajeDescuentoReal."#####".$porcentajeDescuentoRealNombre;
+
 ?>

@@ -39,12 +39,12 @@ if($filtro==1){
 	$fecha_iniconsulta=$fecha_ini;	
 	$fecha_finconsulta=$fecha_fin;
 
-	$sql="SELECT l.* FROM ((select i.cod_ingreso_almacen, CONCAT(i.fecha,' ',i.hora_ingreso) as fecha_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,(SELECT CONCAT(fecha,' ',hora_salida) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as fecha_salida,0 as central,(SELECT IFNULL(cod_almacen,0) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen and CONCAT(fecha,' ',hora_salida)>=DATE_SUB(CONCAT(i.fecha,' ',i.hora_ingreso), INTERVAL $periodo DAY)) as atiempo
+	$sql="SELECT l.* FROM ((select i.cod_ingreso_almacen, CONCAT(i.fecha,' ',i.hora_ingreso) as fecha_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,(SELECT CONCAT(fecha,' ',hora_salida) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as fecha_salida,0 as central,(SELECT IFNULL(cod_almacen,0) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen and CONCAT(fecha,' ',hora_salida)>=DATE_SUB(CONCAT(i.fecha,' ',i.hora_ingreso), INTERVAL $periodo DAY)) as atiempo,i.cod_almacen
 		FROM ingreso_almacenes i, tipos_ingreso ti
 		where i.cod_tipoingreso=ti.cod_tipoingreso and i.cod_almacen in ($rpt_almacen) and i.fecha>='$fecha_iniconsulta'
 		and i.fecha<='$fecha_finconsulta' and i.ingreso_anulado=0 and (i.cod_salida_almacen_central=0 or i.cod_salida_almacen_central is null)
 		order by i.nro_correlativo)
-		UNION (select i.cod_ingreso_almacen, CONCAT(i.fecha,' ',i.hora_ingreso) as fecha_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,(SELECT CONCAT(fecha,' ',hora_ingreso) FROM ingreso_pendientes_almacenes where cod_ingreso_almacen=i.cod_salida_almacen_central) as fecha_salida,1 as central,(SELECT IFNULL(cod_almacen,0) FROM ingreso_pendientes_almacenes where cod_ingreso_almacen=i.cod_salida_almacen_central and CONCAT(fecha,' ',hora_ingreso)>=DATE_SUB(CONCAT(i.fecha,' ',i.hora_ingreso), INTERVAL $periodo DAY)) as atiempo
+		UNION (select i.cod_ingreso_almacen, CONCAT(i.fecha,' ',i.hora_ingreso) as fecha_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,(SELECT CONCAT(fecha,' ',hora_ingreso) FROM ingreso_pendientes_almacenes where cod_ingreso_almacen=i.cod_salida_almacen_central) as fecha_salida,1 as central,(SELECT IFNULL(cod_almacen,0) FROM ingreso_pendientes_almacenes where cod_ingreso_almacen=i.cod_salida_almacen_central and CONCAT(fecha,' ',hora_ingreso)>=DATE_SUB(CONCAT(i.fecha,' ',i.hora_ingreso), INTERVAL $periodo DAY)) as atiempo,i.cod_almacen
 	FROM ingreso_almacenes i, tipos_ingreso ti
 	where i.cod_tipoingreso=ti.cod_tipoingreso and i.cod_almacen in ($rpt_almacen) and i.fecha>='$fecha_iniconsulta' and i.fecha<='$fecha_finconsulta' and i.ingreso_anulado=0 and (i.cod_salida_almacen=0 or i.cod_salida_almacen is null)
 	order by i.nro_correlativo)) l $sqlFiltro order by l.fecha_ingreso desc;";
@@ -52,7 +52,7 @@ if($filtro==1){
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<p>Los Traspasos Ingresados fuera de las $titulo_perido Están marcados con <b style='color:#FF5733'>color rojo</b><p>";
 	echo "<center><br><table class='texto' width='100%'>";
-	echo "<tr class='textomini'><th>Nro.</th><th>Nota de Entrega</th><th>Fecha Salida</th><th>Fecha Ingreso</th><th>Tiempo Transcurrido</th><th>Tipo de Ingreso</th><th>Observaciones</th><th>Desde</th></tr>";
+	echo "<tr class='textomini'><th>Nro.</th><th>Origen</th><th>Destino</th><th>Fecha Salida</th><th>Fecha Ingreso</th><th>Tiempo Transcurrido</th><th>Tipo de Ingreso</th><th>Observaciones</th></tr>";
 	$index=0;
 	while($dat=mysqli_fetch_array($resp))
 	{
@@ -83,6 +83,7 @@ if($filtro==1){
 		if($dat[8]==1){
 			$detalle_ingreso="ALMACEN CENTRAL";
 		}
+		$detalle_destino=obtenerNombreCiudadPorAlmacen($dat[10]);		
 		
 		$date1 = new DateTime($dat[7]);
         $date2 = new DateTime($dat[1]);
@@ -107,10 +108,10 @@ if($filtro==1){
         }
         //$hora_rest=$dat[9];
 		if($rpt_linea==0)
-		{	echo "<tr style='color:$color_fondo' class='$estiloMostrarFila'><td align='center'>$index</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$hora_rest</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
+		{	echo "<tr style='color:$color_fondo' class='$estiloMostrarFila'><td align='center'>$index</td><td align='center'>$detalle_ingreso</td><td align='center'>$detalle_destino</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$hora_rest</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td></tr>";
 		}
 		if($rpt_linea!=0 and $bandera==1)
-		{	echo "<tr style='color:$color_fondo' class='$estiloMostrarFila'><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$hora_rest</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td><td align='center'>$detalle_ingreso</td></tr>";
+		{	echo "<tr style='color:$color_fondo' class='$estiloMostrarFila'><td align='center'>$nro_correlativo</td><td align='center'>$detalle_ingreso</td><td align='center'>$detalle_destino</td><td align='center'>$fecha_salida_mostrar</td><td align='center'>$fecha_ingreso_mostrar</td><td align='center'>$hora_rest</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td></tr>";
 		}
 	}
 	echo "</table></center><br>";

@@ -6,7 +6,7 @@ $codMaterial = $_GET["codmat"];
 $indice = $_GET["indice"];
 $codTipoPrecio=$_GET["tipoPrecio"];
 $globalAgencia=$_COOKIE["global_agencia"];
-
+$cantidad_unitaria=$_GET["cantidad_unitaria"];
 //
 require("conexionmysqli.inc");
 $cadRespuesta="";
@@ -59,13 +59,13 @@ $descuentoPrecioMonto=0;
 if($descuentoPrecio>0){
 	$indiceConversion=($descuentoPrecio/100);
 	if(obtenerValorConfiguracion(13)==1){
-      $descuentoPrecioMonto=round($cadRespuesta*($indiceConversion));
+      $descuentoPrecioMonto=round($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
 	}else if(obtenerValorConfiguracion(13)==2){
-      $descuentoPrecioMonto=redondearMitades($cadRespuesta*($indiceConversion));
+      $descuentoPrecioMonto=redondearMitades($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
 	}else if(obtenerValorConfiguracion(13)==3){
-	  $descuentoPrecioMonto=redondearCentavos($cadRespuesta*($indiceConversion));
+	  $descuentoPrecioMonto=redondearCentavos($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
 	}else{
-	  $descuentoPrecioMonto=$cadRespuesta*($indiceConversion);		
+	  $descuentoPrecioMonto=$cadRespuesta*($indiceConversion)*$cantidad_unitaria;		
 	}
 	
 	//$cadRespuesta=$cadRespuesta-($cadRespuesta*($indiceConversion));

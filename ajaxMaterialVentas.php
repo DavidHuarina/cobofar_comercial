@@ -37,13 +37,13 @@ require("conexionmysqli.inc");
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" min="1" id="cantidad_unitaria<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' name="cantidad_unitaria<?php echo $num;?>" onChange='calculaMontoMaterial(<?php echo $num;?>);' step="1" value="1" required> 
+	<input class="inputnumber" type="number" min="1" id="cantidad_unitaria<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' name="cantidad_unitaria<?php echo $num;?>" onChange='ajaxPrecioItem(<?php echo $num;?>);' step="1" value="1" required> 
 </td>
 
 
 <td align="center" width="10%">
 	<div id='idprecio<?php echo $num;?>'>
-		<input class="inputnumber" type="number" min="1" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required>
+		<input class="inputnumber" type="number" min="1" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' onChange='ajaxPrecioItem(<?php echo $num;?>);' step="0.01" required>
 	</div>
 </td>
 
@@ -60,7 +60,7 @@ require("conexionmysqli.inc");
 			echo "</select>";
 			//echo $sql1;
 			?>
-	<input class="inputnumber"type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);'  value="0" step="0.01" readonly>
+	<input class="inputnumber"type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' onChange='ajaxPrecioItem(<?php echo $num;?>);'  value="0" step="0.01" readonly>
 </td>
 
 <td align="center" width="15%">

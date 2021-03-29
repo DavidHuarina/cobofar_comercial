@@ -9,7 +9,7 @@ $fecha_rptdefault=date("Y-m-d");
 <script type="text/javascript">
 	$(document).ready(function() {
 	  $("#precio_general").submit(function(e) {
-		if($("#monto_ini").val()>$("#monto_fin").val()){
+		if(parseFloat($("#monto_ini").val())>parseFloat($("#monto_fin").val())){
 			Swal.fire("Informativo!", "Revise el rango de precios!", "warning");
 			return false;   
 		}    

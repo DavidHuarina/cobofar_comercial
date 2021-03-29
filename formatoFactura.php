@@ -157,11 +157,13 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	
 	$precioUnitFactura=redondear2($precioUnitFactura);
 	
-	
+	$pdf->SetFont('Arial','',7);
+
 	$pdf->SetXY(5,$y+$yyy);		
 	$pdf->MultiCell(30,3,utf8_decode($codInterno),"C"); 
 	$pdf->SetXY(15,$y+$yyy);
 	$pdf->MultiCell(50,3,utf8_decode($nombreMat),"C");
+	$pdf->SetFont('Arial','',8);
 	$pdf->SetXY(20,$y+$yyy+4);		$pdf->Cell(0,0,"$cantUnit");
 	$pdf->SetXY(40,$y+$yyy+4);		$pdf->Cell(0,0,"$precioUnitFactura");
 	$pdf->SetXY(61,$y+$yyy+4);		$pdf->Cell(0,0,"$montoUnit");
@@ -169,6 +171,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	
 	$yyy=$yyy+6;
 }
+$pdf->SetFont('Arial','',8);
 $pdf->SetXY(0,$y+$yyy+2);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");		
 $yyy=$yyy+5;
 

@@ -217,7 +217,8 @@ function calculaMontoMaterial(indice){
 	var precioUnitario=document.getElementById("precio_unitario"+indice).value;
 	var descuentoUnitario=document.getElementById("descuentoProducto"+indice).value;
 	
-	var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) -(parseFloat(cantidadUnitaria)*parseFloat(descuentoUnitario));
+	/*var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) -(parseFloat(cantidadUnitaria)*parseFloat(descuentoUnitario));*/
+	var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario))-(descuentoUnitario);
 	montoUnitario=Math.round(montoUnitario*100)/100
 		
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;
@@ -273,10 +274,10 @@ function cargarDescuentoTotalVenta(total){
         success:  function (resp) { 
            var r=resp.split("#####");
            $("#codigoDescuentoGeneral").val(r[1]); 
-           $("#descuentoVentaPorcentaje").val(r[2]); 
+           $("#descuentoVenta").val(r[2]); 
            $("#porcentajeDescuentoRealNombre").html(r[3]); 
            $("#porcentajeDescuentoRealNombre2").html("<small>"+r[3]+"</small> %"); 
-           aplicarDescuentoPorcentaje();       	   
+           aplicarDescuento();       	   
         }
     });	
 }
@@ -518,7 +519,7 @@ function ajaxPrecioItem(indice){
 	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
 	var fecha=document.getElementById("fecha").value;	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio+"&fecha="+fecha,true);
+	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio+"&fecha="+fecha+"&cantidad_unitaria="+cantidadUnitaria,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			var respuesta=ajax.responseText.split("#####");
@@ -1134,7 +1135,7 @@ if($banderaErrorFacturacion==0){
 
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' id="cantidad_material" name='cantidad_material' value="0">}
-<input type='hidden' name='codigoDescuentoGeneral' value="<?=$codigoDescuentoGeneral?>">
+<input type='hidden' name='codigoDescuentoGeneral' id="codigoDescuentoGeneral" value="<?=$codigoDescuentoGeneral?>">
 </form>
 
 
