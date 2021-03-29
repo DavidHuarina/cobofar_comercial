@@ -209,8 +209,9 @@ function enviar_nav(f){
          }
 </script>
 	<?php
+	$fechaActual=date("Y-m-d H:i:s");
 	echo "<form method='post' action=''>";
-	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.cod_estadodescuento,e.observacion_descuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado,glosa_factura,glosa_estado,monto_inicio,monto_final from $table e where e.estado=1 order by 2";
+	$sql="select e.codigo, e.nombre, e.abreviatura, e.estado,e.desde,e.hasta,e.cod_estadodescuento,e.observacion_descuento,(SELECT nombre from estados_descuentos where codigo=e.cod_estadodescuento) as nombre_estado,glosa_factura,glosa_estado,monto_inicio,monto_final from $table e where e.estado=1 and '$fechaActual' BETWEEN e.desde and e.hasta order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Autorización de Descuentos Precio Final</h1>";
 	

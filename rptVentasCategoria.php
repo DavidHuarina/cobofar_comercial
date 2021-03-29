@@ -95,9 +95,9 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   	$montoVenta=obtenerMontoVentasGeneradasCategoriaMaterial($dateInicio,$dateFin,$almacenes,$codTipoPago,$materiales);
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
-  		?><td><?=number_format($montoVenta,2,'.',' ')?></td><?php
+  		?><td><?=number_format($montoVenta,2,'.',',')?></td><?php
   	}else{
-  		?><td class='text-muted'><?=number_format($montoVenta,2,'.',' ')?></td><?php
+  		?><td class='text-muted'><?=number_format($montoVenta,2,'.',',')?></td><?php
   	} 	
     // para sumar mes
   	$fechaActual = date("Y-m-d", $tiempoInicio2);  	

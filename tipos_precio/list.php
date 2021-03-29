@@ -285,7 +285,7 @@ echo "<script language='Javascript'>
         	case 4: $est_estado="style='background:#F7DC6F;color:#636563;'"; break;
         	default: $est_estado=""; break;
         } 
-        $estado="<a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a><br><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";
+        $estado="<div class='btn-group'><a title='Ver Descuento' href='verDescuento.php?codigo_registro=$codigo' target='_blank' class='btn btn-default btn-sm btn-fab'><i class='material-icons'>preview</i></a><a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a></div><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";
 		
 		echo "<tr>
 		<td>$inputcheck</td>
