@@ -285,7 +285,7 @@ function enviar_nav(f){
 		}
 		$glosa=$glosa_estado." ".$dat["glosa_factura"];
 
-        $estado="<a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a><br><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";
+        $estado="<div class='btn-group'><a title='Ver Descuento' href='verDescuento.php?codigo_registro=$codigo' target='_blank' class='btn btn-default btn-sm btn-fab'><i class='material-icons'>preview</i></a><a href='#' class='btn btn-default btn-sm' $est_estado> <i class='material-icons'>$icon</i> ".$dat['nombre_estado']."</a></div><br><small class='text-muted font-weight-bold'>$observacion_descuento</small><input type='hidden' id='nombre$codigo' value='$nombre'>";
         //estado
         $monto_inicio=number_format($dat["monto_inicio"],2,'.',',');
 		$monto_final=number_format($dat["monto_final"],2,'.',',');

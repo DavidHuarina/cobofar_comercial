@@ -13,7 +13,7 @@ require_once '../conexionmysqli.inc';
 require_once 'configModule.php';
 require_once '../funciones.php';
 
-$sql=mysqli_query($enlaceCon,"SELECT n.nombre, n.abreviatura,n.desde,n.hasta,e.nombre as estado,n.por_linea from $table n join estados_descuentos e on e.codigo=n.cod_estadodescuento where n.codigo=$codigo_registro");
+$sql=mysqli_query($enlaceCon,"SELECT n.nombre, n.abreviatura,n.desde,n.hasta,e.nombre as estado,n.monto_inicio,n.monto_final from $table n join estados_descuentos e on e.codigo=n.cod_estadodescuento where n.codigo=$codigo_registro");
 $dat=mysqli_fetch_array($sql);
 
 $nombre=$dat[0];
@@ -25,11 +25,10 @@ $hastaFormato=strftime('%d/%m/%Y',strtotime($dat[3]));
 $desde_hora=strftime('%H:%M',strtotime($dat[2]));
 $hasta_hora=strftime('%H:%M',strtotime($dat[3]));
 $estado=$dat['estado'];
-$por_linea=$dat['por_linea'];
-$tipoDescuentoDescripcion="Productos Ingresados";
-if($por_linea==1){
-  $tipoDescuentoDescripcion="Líneas Registradas";
-}
+$monto_inicio=$dat['monto_inicio'];
+$monto_final=$dat['monto_final'];
+$desdeMonto=number_format($monto_inicio,2,'.',',');
+$hastaMonto=number_format($monto_final,2,'.',',');
 ?>
 <div id="logo_carga" class="logo-carga" style="display:none;"></div>
 <div class="content">
@@ -92,23 +91,11 @@ if($por_linea==1){
 </div>
                     </div>
                     <br><br>
- <div class="col-sm-12 div-center"><center><h3>Días del Descuento</h3></center></div>
-<?php 
-$sql="select d.codigo,(SELECT cod_dia from tipos_precio_dias where cod_tipoprecio=$codigo_registro and cod_dia=d.codigo) from dias d where d.estado=1 order by 1";
-$resp=mysqli_query($enlaceCon,$sql);
-$index=0;
-?><table class='table'><tr><?php
-  while($dat=mysqli_fetch_array($resp))
-  {
-    $index++;    
-    $dias=obtenerNombreDiaCompleto($dat[0]);
-    $estilo="btn-default btn-sm";
-    if($dat[1]>0){
-         $estilo="btn-success btn-lg";
-    }
-    ?><th class=''><a class='btn <?=$estilo?> text-white'><?=$dias?></a></th><?php  
-  }
-  ?></tr></table>
+                    <div class="col-sm-12 div-center"><center><h3>Rango del Monto</h3></center></div>
+<table class='table'>
+  <tr><th class='text-right'>DESDE</th><th class='text-left'>HASTA</th></tr>
+  <tr><th class='text-right'><a class='btn btn-warning text-white'><?=$desdeMonto?></a></th><th class='text-left'><a class='btn btn-warning text-white'><?=$hastaMonto?></a></th></tr></table>
+
           <br>
           <hr>
 					<div class="col-sm-12 div-center"><center><h3>Sucursales Beneficiadas</h3></center></div>
@@ -145,70 +132,6 @@ $index=0;
 						</table>
 					</div>  
 
-          <br>
-          <hr>
-          <div class="col-sm-12 div-center"><center><h3><?=$tipoDescuentoDescripcion?></h3></center></div>
-          <div class="col-sm-12 div-center">  
-            <table class="table table-bordered">
-              <thead>
-                <tr class="text-dark bg-plomo">
-                  <th class="text-right text-white" style="background:#3498DB;">#</th>
-                  <th class=" text-white" style="background:#3498DB;">Proveedor</th>
-                  <th class=" text-white" style="background:#3498DB;">Líneas</th>
-                  <?php 
-                    if($por_linea!=1){
-                      ?> <th class=" text-white" style="background:#3498DB;">Productos</th><?php
-                    }
-                  ?>
-                </tr>
-              </thead>
-              <tbody>
-              <?php 
-  if($por_linea==1){
-    $sql="select t.cod_linea_proveedor,d.nombre_linea_proveedor,(SELECT nombre_proveedor from proveedores where cod_proveedor=d.cod_proveedor) 
-      from tipos_precio_lineas t join proveedores_lineas d 
-      on d.cod_linea_proveedor=t.cod_linea_proveedor
-      where t.cod_tipoprecio=$codigo_registro and d.estado=1 order by 2,3 ";
-   $resp=mysqli_query($enlaceCon,$sql);
-   $index=0;
-   while($dat=mysqli_fetch_array($resp))
-   {
-    $index++;   
-    $lineas=$dat[1];
-    $proveedor=$dat[2]; 
-      echo "<tr>
-       <td>$index</td>
-       <td>$proveedor</td>
-       <td>$lineas</td>
-      </tr>";   
-   }
-}else{
-   $sql="select t.cod_material,d.descripcion_material,(SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor) as nombre_linea_proveedor,(SELECT nombre_proveedor from proveedores where cod_proveedor=(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=d.cod_linea_proveedor)) as proveedor 
-      from tipos_precio_productos t join material_apoyo d 
-      on d.codigo_material=t.cod_material
-      where t.cod_tipoprecio=$codigo_registro and d.estado=1 order by 2,3 ";
-   $resp=mysqli_query($enlaceCon,$sql);
-   $index=0;
-   while($dat=mysqli_fetch_array($resp))
-   {
-    $index++;   
-    $lineas=$dat[2];
-    $proveedor=$dat[3]; 
-    $producto=$dat[1];
-      echo "<tr>
-       <td>$index</td>
-       <td>$proveedor</td>
-       <td>$lineas</td>
-       <td>$producto</td>
-      </tr>";   
-   }
-}
-   
-   
-              ?>
-              </tbody>
-            </table>
-          </div>  
 
           <div class="row col-sm-12">
          
