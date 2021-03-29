@@ -32,21 +32,16 @@
 include("datosUsuario.php");
 ?>
 <div id="page">
-	<div class="header">
-
-		<a href="#menu"><span></span></a>
-		<img src="imagenes/farmacias_bolivia1.gif" height="40px"></img><!--TuFarma - <?=$nombreEmpresa;?>-->
-		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
-			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]
-			<button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton boton-rojo"><i class="fa fa-close"></i></button>			
-		</div>
-		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
-			[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]
+	<div class="" style='position: absolute;top:0px;left:0;width: 100%;background: #30CA99;z-index:999999;'>
+		<img style="position:absolute;z-index:99999;" src="imagenes/farmacias_bolivia1.gif" height="40px"></img>
+		<div style="position:relative; width:95%; height:50px; text-align:right; top:0px; font-size: 14px; font-weight: bold; color: #fff;z-index:99999;">
+			[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]&nbsp;&nbsp;&nbsp;[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]
+			<button onclick="location.href='salir.php'" style="position:relative;right:-30 !important;z-index:99999;background:#EF6A09 !important;" class="btn btn-success btn-fab btn-sm"><i class="fa fa-close"></i></button>			
 		</div>
 	</div>
 	
 	<div class="content">
-		<iframe src="inicio_almacenes.php" name="contenedorPrincipal" id="mainFrame" style="" border="1"></iframe>
+		<iframe src="inicio_almacenes.php" name="contenedorPrincipal" id="mainFrame" style="top:50px;" border="1"></iframe>
 	</div>
 	<nav id="menu">
 		<div id="panel-menu">
@@ -182,7 +177,7 @@ include("datosUsuario.php");
 						<ul>
 							<li><a href="rptOpVentasSucursalPerdido.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
 							<li><a href="rptOpVentasLineasProveedorPerdido.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>
-							<li><a href="enconstrucion.php" target="contenedorPrincipal">Ventas x Item</a></li>							
+							<li><a href="rptOpVentasxItemPerdido.php" target="contenedorPrincipal">Ventas x Item</a></li>							
 						</ul>	
 					</li>
 					<li><span>Reportes Contables</span>

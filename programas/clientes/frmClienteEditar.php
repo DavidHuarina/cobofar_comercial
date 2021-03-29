@@ -126,7 +126,7 @@ function modificarCliente() {
         </script>
 <center>
     <br/>
-    <h1>Editar Cliente</h1>
+    <center><h3>Editar Cliente</h3></center>
     <table class="table table-sm">
         <tr class="bg-info text-white">
             <th>Codigo</th>

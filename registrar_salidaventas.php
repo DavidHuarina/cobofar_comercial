@@ -29,7 +29,7 @@ function mueveReloj(){
     minuto = momentoActual.getMinutes()
     segundo = momentoActual.getSeconds()
 
-    horaImprimible = hora + " : " + minuto + " : " + segundo
+    horaImprimible = hora + " : " + minuto
     $("#hora_sistema").html(horaImprimible);
     setTimeout("mueveReloj()",1000)
 }
@@ -800,13 +800,13 @@ include("datosUsuario.php");
 	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
-<tr align='center' class="text-white header" style="color:#fff;background:#16B490; font-size: 16px;">
+<tr align='center' class="text-white header" style="color:#fff;background:#30CA99; font-size: 16px;">
 	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
 </tr>
 <tr align='center' class="text-white header">
-	<th style="color:#fff;background:#16B490; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
-	<th colspan="7" style="color:#fff;background:#16B490; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
-	<th style="color:#fff;background:#16B490; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
+	<th style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
+	<th colspan="7" style="color:#fff;background:#30CA99; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
+	<th style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
 </tr>
 <tr class="bg-info text-white" align='center' style="color:#fff;background:#16B490 !important; font-size: 16px;">
 <th>Tipo de Documento</th>

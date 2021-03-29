@@ -34,7 +34,7 @@ alerts = {
     }
     else if (type == 'mensaje-guardar-pedido') {
       swal({
-        title: 'Guardar Pedido',
+        title: 'Guardar Venta Perdida',
         text: "¿Está seguro? se guardará como venta perdida",
         type: 'warning',
         showCancelButton: true,

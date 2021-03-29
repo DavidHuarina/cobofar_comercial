@@ -1,25 +1,16 @@
 <?php
-
 require("../../conexionmysqli.inc");
-//require("../../estilos_almacenes.inc");
-?>
-<div class="content">
-    <div class="container-fluid">
+require("../../estilos_almacenes.inc");
 
-        <div class="col-md-12">
-          <form id="" class="form-horizontal" action="" method="post">
-            <div class="card">
-              <div class="card-header card-header-warning card-header-text">
-                <div class="card-text">
-                  <h4 class="card-title">Distribuidores</h4>
-                </div>
-              </div>
-              <div class="card-body ">
-                <?php
-echo "<table class='table table-bordered' id='tablaPrincipal'><thead>";
-echo "<tr class='bg-principal'>";
+echo "<center>";
+echo "<h3>Distribuidores</h3></center>";
+echo "<div class=''><input class='btn btn-primary' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
+<input class='btn btn-primary' type='button' value='Editar' onclick='javascript:frmModificar();'>
+<input class='btn btn-danger' type='button' value='Eliminar' onclick='javascript:frmEliminar();'></div>";
+echo "<center><table class='table table-bordered'>";
+echo "<tr class='bg-info text-white'>";
 echo "<th>&nbsp;</th><th>Nombre</th><th>Direccion</th><th>Telefono 1</th><th>Telefono 2</th><th>Contacto</th><th>Lineas</th>";
-echo "</tr></thead><tbody>";
+echo "</tr>";
 $consulta="
     SELECT p.cod_proveedor, p.nombre_proveedor, p.direccion, p.telefono1, p.telefono2, p.contacto
     FROM proveedores AS p 
@@ -37,25 +28,16 @@ while($reg=mysqli_fetch_array($rs))
     $contacto  = $reg["contacto"];
     echo "<tr>";
     echo "<td><input type='checkbox' id='idchk$cont' value='$codProv' ></td><td>$nomProv</td><td>$direccion</td><td>$telefono1</td>
-    <td>$telefono2</td><td>$contacto</td>";
+  <td>$telefono2</td><td>$contacto</td>";
     echo "<td><a href='navegadorLineasDistribuidores.php?codProveedor=$codProv'><img src='../../imagenes/detalle.png' width='40' title='Ver Lineas'></a></td>";
-    echo "</tr>";
+  echo "</tr>";
    }
-echo "</tbody></table>";
+echo "</table>";
 echo "<input type='hidden' id='idtotal' value='$cont' >";
 echo "</center>";
 
-?>
-              </div>
-              <div  class="card-footer fixed-bottom">
-                <div class=''><input class='btn btn-primary' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
+echo "<div class=''><input class='btn btn-primary' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
 <input class='btn btn-primary' type='button' value='Editar' onclick='javascript:frmModificar();'>
-<input class='btn btn-danger' type='button' value='Eliminar' onclick='javascript:frmEliminar();'></div>
-              </div>
-            </div>
-          </form>
-        </div>
-    
-    </div>
-</div>
- <script type="text/javascript" src="../../dist/js/functionsGeneral.js"></script>
+<input class='btn btn-danger' type='button' value='Eliminar' onclick='javascript:frmEliminar();'></div>";
+?>
+<br><br><br>

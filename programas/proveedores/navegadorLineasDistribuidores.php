@@ -63,40 +63,28 @@
 			}
 		}
 		</script>
+<form>
 <?php
 
 require("../../conexionmysqli.inc");
-//require("../../estilos_almacenes.inc");
+require("../../estilos_almacenes.inc");
 require("../../funcion_nombres.php");
 echo "<link rel='stylesheet' type='text/css' href='../../stilos.css'/>";
-?>
-        <link rel="stylesheet" type="text/css" href="../../dist/bootstrap/bootstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="../../dist/bootstrap/dataTables.bootstrap4.min.css"/>
-        <script type="text/javascript" src="../../dist/bootstrap/jquery-3.5.1.js"></script>
-        <script type="text/javascript" src="../../dist/bootstrap/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="../../dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <script type="text/javascript" src="../../lib/js/xlibPrototipo-v0.1.js"></script>
-        <link rel="stylesheet" type="text/css" href="../../dist/css/micss.css"/>
-<?php
+
 $codProveedor=$_GET['codProveedor'];
 $nombreProveedor=nombreProveedor($codProveedor);
-?>
-<div class="content">
-    <div class="container-fluid">
-        <div class="col-md-12">
-          <form id="" class="form-horizontal" action="" method="post">
-            <div class="card">
-              <div class="card-header card-header-warning card-header-text">
-                <div class="card-text">
-                  <h4 class="card-title">Lineas de Distribuidor  <?=$nombreProveedor?></h4>
-                </div>
-              </div>
-              <div class="card-body ">
-                <?php
-echo "<table class='table table-bordered' id='tablaPrincipal'><thead>";
-echo "<tr class='bg-principal'>";
+
+echo "<center>";
+echo "<h1>Lineas de Distribuidor <br> $nombreProveedor</h1></center>";
+echo "<div class=''><input class='btn btn-primary' type='button' value='Adicionar' onClick='enviar_nav($codProveedor);'>
+<input class='btn btn-primary' type='button' value='Editar' onClick='editar_nav(this.form, $codProveedor);'>
+<input class='btn btn-danger' type='button' value='Eliminar' onClick='eliminar_nav(this.form, $codProveedor)'>
+<input class='btn btn-danger' type='button' value='Cancelar' onClick='location.href=(\"inicioProveedores.php\");'>
+</div>";
+echo "<center><table class='table table-bordered'>";
+echo "<tr class='bg-info text-white'>";
 echo "<th>&nbsp;</th><th>Linea</th><th>Abreviatura</th><th>Procedencia</th><th>Margen de precio</th><th>Contacto 1</th><th>Contacto 2</th>";
-echo "</tr></thead><tbody>";
+echo "</tr>";
 $consulta="select p.cod_linea_proveedor, p.nombre_linea_proveedor, p.abreviatura_linea_proveedor, p.contacto1, 
 	p.contacto2, (select t.nombre_procedencia from tipos_procedencia t where t.cod_procedencia=p.cod_procedencia), 
 	margen_precio
@@ -120,23 +108,16 @@ while($reg=mysqli_fetch_array($rs)){
 	<td>$contacto1</td><td>$contacto2</td>";
     echo "</tr>";
    }
-echo "</table></tbody></table>";
+echo "</table>";
 echo "</center>";
 
-echo "";
-
-
-?>
-              </div>
-              <div  class="card-footer fixed-bottom">
-               <div class=''><input class='btn btn-primary' type='button' value='Adicionar' onClick='enviar_nav($codProveedor);'>
+echo "<div class=''><input class='btn btn-primary' type='button' value='Adicionar' onClick='enviar_nav($codProveedor);'>
 <input class='btn btn-primary' type='button' value='Editar' onClick='editar_nav(this.form, $codProveedor);'>
 <input class='btn btn-danger' type='button' value='Eliminar' onClick='eliminar_nav(this.form, $codProveedor)'>
 <input class='btn btn-danger' type='button' value='Cancelar' onClick='location.href=(\"inicioProveedores.php\");'>
-</div>
-            </div>
-          </form>
-        </div>
-    </div>
-</div>
-<script type="text/javascript" src="../../dist/js/functionsGeneral.js"></script>
+</div>";
+
+
+?>
+<br><br>
+</form>

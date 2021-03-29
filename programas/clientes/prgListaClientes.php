@@ -1,28 +1,25 @@
 <?php
 
 require("../../conexionmysqli.inc");
-//require("../../estilos_almacenes.inc");
-?>
-<div class="content">
-    <div class="container-fluid">
+require("../../estilos_almacenes.inc");
 
-        <div class="col-md-12">
-          <form id="" class="form-horizontal" action="" method="post">
-            <div class="card">
-              <div class="card-header card-header-warning card-header-text">
-                <div class="card-text">
-                  <h4 class="card-title">Clientes</h4>
-                </div>
-              </div>
-              <div class="card-body ">
-                <?php
+
+echo "<br>";
+echo "<center><h3>Clientes</h3></center>";
+
+echo "<div class=''>
+<input class='btn btn-primary' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
+<input class='btn btn-primary' type='button' value='Editar' onclick='javascript:frmModificar();'>
+<input class='btn btn-danger' type='button' value='Eliminar' onclick='javascript:frmEliminar();'>
+</div>";
+
 echo "<center>";
-echo "<table class='table table-sm' id='tablaPrincipal'><thead>";
-echo "<tr class='bg-principal'>";
-echo "<th>&nbsp;</th><th>Cliente</th><th>NIT</th><th>Direccion</th><th>Sucursal</th>";
-echo "</tr></thead><tbody>";
+echo "<table class='table table-bordered'>";
+echo "<tr class='bg-info text-white'>";
+echo "<th>&nbsp;</th><th>Cliente</th><th>NIT</th><th>Direccion</th><th>Ciudad</th>";
+echo "</tr>";
 $consulta="
-    SELECT c.cod_cliente, c.nombre_cliente,c.paterno,c.ci_cliente, c.nit_cliente, c.dir_cliente, c.cod_area_empresa, a.descripcion
+    SELECT c.cod_cliente, c.nombre_cliente, c.nit_cliente, c.dir_cliente, c.cod_area_empresa, a.descripcion,c.paterno
     FROM clientes AS c INNER JOIN ciudades AS a ON c.cod_area_empresa = a.cod_ciudad 
     WHERE 1 = 1 ORDER BY c.nombre_cliente ASC
 ";
@@ -32,8 +29,8 @@ while($reg=mysqli_fetch_array($rs))
    {$cont++;
     $codCliente = $reg["cod_cliente"];
     $nomCliente = $reg["nombre_cliente"]." ".$reg["paterno"];
+    $patCliente = $reg["paterno"];
     $nitCliente = $reg["nit_cliente"];
-    $ciCliente = $reg["ci_cliente"];
     $dirCliente = $reg["dir_cliente"];
     $codArea = $reg["cod_area_empresa"];
     $nomArea = $reg["descripcion"];
@@ -41,24 +38,14 @@ while($reg=mysqli_fetch_array($rs))
     echo "<td><input type='checkbox' id='idchk$cont' value='$codCliente' ></td><td>$nomCliente</td><td>$nitCliente</td><td>$dirCliente</td><td>$nomArea</td>";
     echo "</tr>";
    }
-echo "</tbody></table>";
+echo "</table>";
 echo "<input type='hidden' id='idtotal' value='$cont' >";
 echo "</center>";
 
-?>
-              </div>
-              <div  class="card-footer fixed-bottom">
-                <div class=''>
+echo "<div class=''>
 <input class='btn btn-primary' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
 <input class='btn btn-primary' type='button' value='Editar' onclick='javascript:frmModificar();'>
 <input class='btn btn-danger' type='button' value='Eliminar' onclick='javascript:frmEliminar();'>
-</div>
-              </div>
-            </div>
-          </form>
-        </div>
-    
-    </div>
-</div>
+</div>";
 
- <script type="text/javascript" src="../../dist/js/functionsGeneral.js"></script>
+?>
