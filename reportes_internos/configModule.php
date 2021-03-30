@@ -1,0 +1,2 @@
+<?php
+$urlRepoCodBarras="rptOpProductosSinCodigoBarras.php";

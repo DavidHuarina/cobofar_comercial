@@ -77,6 +77,8 @@ function obtenerDatosProductos($estado,$des){
      $datos[$ff]['descaj']=$row['PASO'];
      $datos[$ff]['proveedor']=$row['IDPROVEEDOR'];
      $datos[$ff]['sta']=$row['STA'];
+     $datos[$ff]['div']=$row['DIV'];
+     $datos[$ff]['sico']=$row['SICO'];
      $datos[$ff]['cod_bar']=$row['COD_BAR'];
      $ff++;
   }

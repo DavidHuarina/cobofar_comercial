@@ -213,12 +213,39 @@ function verificarAlmacenCiudadExistente($age1){
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	
-       if($detalle[1]==$age1){
+       if($detalle[1]==$age1){  //aui se está validando OJO no en el where porque no reconoce algunos simbolos
          $codigo=$detalle[0];
        }   		
   }  
   return $codigo;
 }
+
+function verificarProductoExistente($codigo){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT count(*) from material_apoyo where codigo_material='$codigo'";
+  $codigo=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+    $codigo=$detalle[0];   		
+  }  
+  return $codigo;
+}
+
+function obtenerProductoCantidadLinea($codigo,$cb){
+  $queryCb="";
+  if($cb==0){
+  	$queryCb=" and (codigo_barras='' or codigo_barras is null)";
+  }	
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT count(*) from material_apoyo where cod_linea_proveedor='$codigo' $queryCb";
+  $codigo=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+    $codigo=$detalle[0];   		
+  }  
+  return $codigo;
+}
+
 function numeroCorrelativo($tipoDoc){
 	require("conexionmysqli.inc");
 	$banderaErrorFacturacion=0;
