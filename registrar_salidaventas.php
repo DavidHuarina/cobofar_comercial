@@ -72,6 +72,9 @@ function nuevoAjax()
 function listaMateriales(f){
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
+	var codForma=f.itemFormaMaterial.value;
+	var codAccion=f.itemAccionMaterial.value;
+	var codPrincipio=f.itemPrincipioMaterial.value;
 	var nombreItem=f.itemNombreMaterial.value;
 	var tipoSalida=(f.tipoSalida.value);
 	
@@ -88,7 +91,7 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText
@@ -449,6 +452,21 @@ function encontrarMaterial(numMaterial){
     });	
 }
 
+function similaresMaterial(numMaterial){
+	var cod_material = $("#materiales"+numMaterial).val();
+	var parametros={"cod_material":cod_material};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_encontrar_productos_similares.php",
+        data: parametros,
+        success:  function (resp) {          
+        	$("#modalProductosSimilares").modal("show");
+        	$("#tabla_datos_similares").html(resp);    	   
+        }
+    });	
+}
+
 function Hidden(){
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -456,6 +474,17 @@ function Hidden(){
 	document.getElementById('divboton').style.visibility='hidden';
 
 }
+function setMaterialesSimilar(f, cod, nombreMat){
+	var numRegistro=f.materialActivo.value;
+	
+	document.getElementById('materiales'+numRegistro).value=cod;
+	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
+	
+	document.getElementById("cantidad_unitaria"+numRegistro).focus();
+    $("#modalProductosSimilares").modal("hide");
+	actStock(numRegistro);	
+}
+
 function setMateriales(f, cod, nombreMat){
 	var numRegistro=f.materialActivo.value;
 	
@@ -983,17 +1012,17 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 400px; top:30px; left:50px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
-<div id="divboton" style="position: absolute; top:20px; left:920px;visibility:hidden; text-align:center; z-index:3">
+<div id="divboton" style="position: absolute; top:20px; left:1210px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:1150px; height:350px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
-			<tr><th>Linea</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><th>Linea</th><th>Forma F.</th><th>Accion T.</th></tr>
 			<tr>
 			<td><select class="textogranderojo" name='itemTipoMaterial' style="width:300px">
 			<?php
@@ -1010,13 +1039,60 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
+			<td><select class="textogranderojo" name='itemFormaMaterial' style="width:300px">
+			<?php
+			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
+			where pl.estado=1 order by 2;";
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
+			echo "<option value='0'>--</option>";
+			while($datTipo=mysqli_fetch_array($respTipo)){
+				$codTipoMat=$datTipo[0];
+				$nombreTipoMat=$datTipo[1];
+				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+			}
+			?>
+
+			</select>
+			</td>
+			<td><select class="textogranderojo" name='itemAccionMaterial' style="width:300px">
+			<?php
+			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
+			where pl.estado=1 order by 2;";
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
+			echo "<option value='0'>--</option>";
+			while($datTipo=mysqli_fetch_array($respTipo)){
+				$codTipoMat=$datTipo[0];
+				$nombreTipoMat=$datTipo[1];
+				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+			}
+			?>
+
+			</select>
+			</td>
+			<tr><th>Principio Act.</th><th>Material</th><th>&nbsp;</th></tr>
+	     <tr>		
+			<td><select class="textogranderojo" name='itemPrincipioMaterial' style="width:300px">
+			<?php
+			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
+			where pl.estado=1 order by 2;";
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
+			echo "<option value='0'>--</option>";
+			while($datTipo=mysqli_fetch_array($respTipo)){
+				$codTipoMat=$datTipo[0];
+				$nombreTipoMat=$datTipo[1];
+				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+			}
+			?>
+
+			</select>
+			</td>
 			<td>
 				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
 			</td>
 			<td>
-				<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">
+				<input type='button' class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
 			</td>
-			</tr>
+ 			</tr>
 			
 		</table>
 		<div id="divListaMateriales">
@@ -1200,12 +1276,12 @@ if($banderaErrorFacturacion==0){
                   <div class="card-icon">
                     <i class="material-icons">place</i>
                   </div>
-                  <h4 class="card-title">Stock de Productos en Sucursales</h4>
+                  <h4 class="card-title text-primary font-weight-bold">Stock de Productos en Sucursales</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
                 </div>
                 <div class="card-body">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                  <i class="material-icons">close</i>
-                </button>
                   <table class="table table-sm table-bordered" id='tablaPrincipalGeneralQUITAR'>
                     <thead>
                       <tr style='background: #ADADAD;color:#000;'>
@@ -1217,6 +1293,44 @@ if($banderaErrorFacturacion==0){
                       </tr>
                     </thead>
                     <tbody id="tabla_datos">
+                      
+                    </tbody>
+                  </table>
+                  <br><br>
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalProductosSimilares" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+                <div class="card-header card-header-success card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">device_hub</i>
+                  </div>
+                  <h4 class="card-title text-success font-weight-bold">Productos Similares</h4>
+                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                  <table class="table table-sm table-bordered">
+                    <thead>
+                      <tr style='background: #ADADAD;color:#000;'>
+                      <th>#</th>
+                      <th>Proveedor</th>
+                      <th>Linea</th>
+                      <th width="45%">Producto</th>
+                      <th>Principio Activo</th>
+                      <th>Stock</th>
+                      <th>Precio</th>
+                      <th>&nbsp;</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabla_datos_similares">
                       
                     </tbody>
                   </table>

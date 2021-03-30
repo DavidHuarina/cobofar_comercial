@@ -3,9 +3,10 @@ $estilosVenta=1;
 require("conexionmysqli.inc");
 require("funciones.php");
 require("funcion_nombres.php");
+$globalAgencia=$_COOKIE['global_agencia'];
 
   $cod_material=$_GET["cod_material"];
-  $sql="SELECT a.cod_almacen,c.descripcion,c.direccion from ciudades c join almacenes a on a.cod_ciudad=c.cod_ciudad where c.cod_estadoreferencial=1 order by c.descripcion";
+  $sql="SELECT a.cod_almacen,c.descripcion,c.direccion from ciudades c join almacenes a on a.cod_ciudad=c.cod_ciudad where c.cod_estadoreferencial=1 and c.cod_ciudad!='$globalAgencia' order by c.descripcion";
   //echo $sql;
   $resp=mysqli_query($enlaceCon,$sql); 
 

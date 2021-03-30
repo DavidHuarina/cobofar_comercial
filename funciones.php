@@ -153,6 +153,18 @@ function stockProducto($almacen, $item){
 	return($stock2);
 }
 
+function precioProductoAlmacen($ciudad, $item){
+	require("conexionmysqli.inc");
+	$sqlPrecio="SELECT p.`precio` from `precios` p where p.`cod_precio`=1 and p.`cod_ciudad`=$ciudad and p.`codigo_material`=$item";
+	$resp_precio=mysqli_query($enlaceCon,$sqlPrecio);
+	$precio=0;
+	while($dat_detalle=mysqli_fetch_array($resp_precio))
+	{
+       $precio=$dat_detalle[0];
+	}
+	return($precio);
+}
+
 function stockProductoVencido($almacen, $item){
 	//
 	require("conexionmysqli.inc");

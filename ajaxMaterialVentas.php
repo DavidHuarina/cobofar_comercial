@@ -19,7 +19,8 @@ require("conexionmysqli.inc");
 
 <td width="10%" align="center">
 	<div class="btn-group">
-		<!--<a id="receta_boton<?php // echo $num;?>" href="javascript:registrarReceta(<?php //echo $num;?>)" class="btn btn-danger btn-sm btn-fab"><i class='material-icons float-left' title="Registrar Receta">medical_services</i></a>-->
+		<!--  shuffle  <a id="receta_boton<?php // echo $num;?>" href="javascript:registrarReceta(<?php //echo $num;?>)" class="btn btn-danger btn-sm btn-fab"><i class='material-icons float-left' title="Registrar Receta">medical_services</i></a>-->
+		<a href="javascript:similaresMaterial(<?php echo $num;?>)" class="btn btn-success btn-sm btn-fab"><i class='material-icons float-left' title="Productos Similares">device_hub</i></a>
 	    <a href="javascript:encontrarMaterial(<?php echo $num;?>)" class="btn btn-primary btn-sm btn-fab"><i class='material-icons float-left' title="Encontrar Producto">place</i></a>
 	    <a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" class="btn btn-info btn-sm btn-fab"><i class='material-icons float-left' title="Buscar Producto">search</i></a>
 	</div>	

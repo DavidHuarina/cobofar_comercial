@@ -8,6 +8,10 @@ require("conexionmysqli.inc");
 require("funciones.php");
 
 $codTipo=$_GET['codTipo'];
+$codForma=$_GET['codForma'];
+$codAccion=$_GET['codAccion'];
+$codPrincipio=$_GET['codPrincipio'];
+
 $nombreItem=$_GET['nombreItem'];
 $globalAlmacen=$_COOKIE['global_almacen'];
 $codCiudad=$_COOKIE['global_agencia'];
@@ -27,6 +31,24 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 	if($nombreItem!=""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
 	}
+
+    if((int)$codTipo>0){
+        $sql=$sql." and m.cod_linea_proveedor=".$codTipo."";
+    }
+
+    if((int)$codForma>0){
+        $sql=$sql." and m.cod_forma_far=".$codForma."";
+    }
+
+    if((int)$codAccion>0){
+        $sql=$sql." and m.codigo_material in (SELECT codigo_material FROM material_accionterapeutica where cod_accionterapeutica=".$codAccion.")";
+    }
+
+    if((int)$codPrincipio>0){
+        $sql=$sql." and m.codigo_material in (SELECT cod_material FROM principios_activosproductos where cod_principioactivo=".$codAccion.")";
+    }
+
+
 	if($tipoSalidaVencimiento==$tipoSalida){
 		$sql=$sql. " and m.codigo_material in (select id.cod_material from ingreso_almacenes i, ingreso_detalle_almacenes id 
 		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$globalAlmacen' and i.ingreso_anulado=0 
@@ -72,7 +94,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			</tr>";
 		}
 	}else{
-		echo "<tr><td colspan='3'>Sin Resultados en la busqueda.</td></tr>";
+		echo "<tr><td colspan='5'>Sin Resultados en la busqueda.</td></tr>";
 	}
 	
 ?>
