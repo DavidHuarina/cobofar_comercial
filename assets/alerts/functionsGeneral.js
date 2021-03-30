@@ -23,6 +23,10 @@ $(document).ready(function() {
     };
    });
 });
+
+function alert(texto){
+  Swal.fire("Informativo!", texto, "warning");
+}
 function RefreshTable(tableId, urlData) {
     $.getJSON(urlData, null, function(json) {
         table = $(tableId).dataTable();

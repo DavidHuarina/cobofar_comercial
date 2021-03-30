@@ -21,7 +21,7 @@ echo "<script language='Javascript'>
 				}
 			}
 			if(j==0)
-			{	alert('Debe seleccionar al menos un material de apoyo para proceder a su eliminación.');
+			{	alert('Debe seleccionar al menos un producto para proceder a su eliminación.');
 			}
 			else
 			{
@@ -50,17 +50,45 @@ echo "<script language='Javascript'>
 				}
 			}
 			if(j>1)
-			{	alert('Debe seleccionar solamente un material de apoyo para editar sus datos.');
+			{	alert('Debe seleccionar solamente un producto para editar sus datos.');
 			}
 			else
 			{
 				if(j==0)
 				{
-					alert('Debe seleccionar un material de apoyo para editar sus datos.');
+					alert('Debe seleccionar un producto para editar sus datos.');
 				}
 				else
 				{
 					location.href='editar_material_apoyo.php?cod_material='+j_ciclo+'';
+				}
+			}
+		}
+		function editar_nav_prod(f){
+            var i;
+			var j=0;
+			var j_ciclo;
+			for(i=0;i<=f.length-1;i++)
+			{
+				if(f.elements[i].type=='checkbox')
+				{	if(f.elements[i].checked==true)
+					{	j_ciclo=f.elements[i].value;
+						j=j+1;
+					}
+				}
+			}
+			if(j>1)
+			{	alert('Debe seleccionar solamente un producto para editar sus datos.');
+			}
+			else
+			{
+				if(j==0)
+				{
+					alert('Debe seleccionar un producto para editar sus datos.');
+				}
+				else
+				{
+					location.href='editar_producto.php?cod_material='+j_ciclo+'';
 				}
 			}
 		}
@@ -130,8 +158,7 @@ while($reg1=mysqli_fetch_array($rs1))
 		</div>";*/
 	
 	echo "<center><table class='table table-sm' id='tabla_productos'>";
-	echo "<tr class='bg-info text-white'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Empaque</th>
-		<th>Cant.Presentacion</th><th>Forma Farmaceutica</th><th>Linea Distribuidor</th><th>Principio Activo</th><th>Tipo Venta</th>
+	echo "<tr class='bg-info text-white'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Forma Farmaceutica</th><th>Linea Distribuidor</th><th>Principio Activo</th><th>Tipo Venta</th>
 		<th>Accion Terapeutica</th></tr>";
 	
 	$indice_tabla=1;
@@ -147,6 +174,17 @@ while($reg1=mysqli_fetch_array($rs1))
 		$cantPresentacion=$dat[7];
 		$principioActivo=$dat[8];
 		
+		$txtPrincipioActivo="";
+		$sqlAccion="select a.nombre from principios_activos a, principios_activosproductos m
+			where m.cod_principioactivo=a.codigo and 
+			m.cod_material='$codigo'";
+		$respAccion=mysqli_query($enlaceCon,$sqlAccion);
+		while($datAccion=mysqli_fetch_array($respAccion)){
+			$nombrePrinAct=$datAccion[0];
+			$txtPrincipioActivo=$txtPrincipioActivo." - ".$nombrePrinAct;
+		}
+
+
 		$txtAccionTerapeutica="";
 		$sqlAccion="select a.nombre_accionterapeutica from acciones_terapeuticas a, material_accionterapeutica m
 			where m.cod_accionterapeutica=a.cod_accionterapeutica and 
@@ -159,9 +197,8 @@ while($reg1=mysqli_fetch_array($rs1))
 		
 		echo "<tr><td align='center'>$indice_tabla</td><td align='center'>
 		<input type='checkbox' name='codigo' value='$codigo'></td>
-		<td>$nombreProd</td><td>$empaque</td>
-		<td>$cantPresentacion</td><td>$formaFar</td>
-		<td>$nombreLinea</td><td>$principioActivo</td><td>$tipoVenta</td><td>$txtAccionTerapeutica</td></tr>";
+		<td>$nombreProd</td><td>$formaFar</td>
+		<td>$nombreLinea</td><td>$txtPrincipioActivo</td><td>$tipoVenta</td><td>$txtAccionTerapeutica</td></tr>";
 		$indice_tabla++;
 	}
 	echo "</table></center><br>";

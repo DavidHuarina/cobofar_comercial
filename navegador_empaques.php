@@ -67,11 +67,15 @@ echo "<script language='Javascript'>
 	require("conexionmysqli.inc");
 	require("estilos_almacenes.inc");
 
-	echo "<form method='post' action=''>";
+	echo "<form method='post' action=''><br>";
 	$sql="select e.cod_empaque, e.nombre_empaque from empaques e where e.estado=1 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Empaque</h1>";
-
+    echo "<div class=''>
+	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+	<input type='button' value='Editar' name='Editar' class='btn btn-primary' onclick='editar_nav(this.form)'>
+	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
+	</div>";
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Nombre</th></tr>";
 	while($dat=mysqli_fetch_array($resp))
@@ -85,10 +89,10 @@ echo "<script language='Javascript'>
 	}
 	echo "</table></center><br>";
 	
-	echo "<div class='divBotones'>
-	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
-	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
-	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
+	echo "<div class=''>
+	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+	<input type='button' value='Editar' name='Editar' class='btn btn-primary' onclick='editar_nav(this.form)'>
+	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	echo "</form>";
 ?>

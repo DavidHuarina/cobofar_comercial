@@ -86,6 +86,7 @@ include("datosUsuario.php");
 						<li><a href="navegador_empaques.php" target="contenedorPrincipal">Empaques</a></li>
 						<li><a href="navegador_formasfar.php" target="contenedorPrincipal">Formas Farmaceuticas</a></li>
 						<li><a href="navegador_accionester.php" target="contenedorPrincipal">Acciones Terapeuticas</a></li>
+						<li><a href="navegador_principiosact.php" target="contenedorPrincipal">Principios Activos</a></li>
 						<!--li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>
 						<li><a href="navegador_precios.php?orden=2" target="contenedorPrincipal">Precios (Por Linea Proveedor)</a></li>		
 						<li><a href="navegadorUbicaciones.php" target="contenedorPrincipal">Ubicaciones</a></li-->						

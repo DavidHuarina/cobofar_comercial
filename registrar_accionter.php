@@ -15,7 +15,7 @@ echo "<tr>
 echo "</table></center>";
 
 echo "<div class='divBotones'><input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='javascript:location.href=\"navegador_formasfar.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='javascript:location.href=\"navegador_accionester.php\"'>
 </div>";
 
 echo "</form>";

@@ -47,8 +47,7 @@ $sql="select m.codigo_material, m.descripcion_material, m.estado,
 //echo $sql;    
 $resp=mysqli_query($enlaceCon,$sql); 
 echo "<center><table class='table table-sm' id='tabla_productos'>";
-  echo "<tr class='bg-info text-white'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Empaque</th>
-    <th>Cant.Presentacion</th><th>Forma Farmaceutica</th><th>Linea Distribuidor</th><th>Principio Activo</th><th>Tipo Venta</th>
+  echo "<tr class='bg-info text-white'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Forma Farmaceutica</th><th>Linea Distribuidor</th><th>Principio Activo</th><th>Tipo Venta</th>
     <th>Accion Terapeutica</th></tr>";
   $indice_tabla=1;
   while($dat=mysqli_fetch_array($resp))
@@ -63,6 +62,16 @@ echo "<center><table class='table table-sm' id='tabla_productos'>";
     $cantPresentacion=$dat[7];
     $principioActivo=$dat[8];
     
+    $txtPrincipioActivo="";
+    $sqlAccion="select a.nombre from principios_activos a, principios_activosproductos m
+      where m.cod_principioactivo=a.codigo and 
+      m.cod_material='$codigo'";
+    $respAccion=mysqli_query($enlaceCon,$sqlAccion);
+    while($datAccion=mysqli_fetch_array($respAccion)){
+      $nombrePrinAct=$datAccion[0];
+      $txtPrincipioActivo=$txtPrincipioActivo." - ".$nombrePrinAct;
+    }
+    
     $txtAccionTerapeutica="";
     $sqlAccion="select a.nombre_accionterapeutica from acciones_terapeuticas a, material_accionterapeutica m
       where m.cod_accionterapeutica=a.cod_accionterapeutica and 
@@ -75,9 +84,8 @@ echo "<center><table class='table table-sm' id='tabla_productos'>";
     
     echo "<tr><td align='center'>$indice_tabla</td><td align='center'>
     <input type='checkbox' name='codigo' value='$codigo'></td>
-    <td>$nombreProd</td><td>$empaque</td>
-    <td>$cantPresentacion</td><td>$formaFar</td>
-    <td>$nombreLinea</td><td>$principioActivo</td><td>$tipoVenta</td><td>$txtAccionTerapeutica</td></tr>";
+    <td>$nombreProd</td><td>$formaFar</td>
+    <td>$nombreLinea</td><td>$txtPrincipioActivo</td><td>$tipoVenta</td><td>$txtAccionTerapeutica</td></tr>";
     $indice_tabla++;
   }
   echo "</table>";
