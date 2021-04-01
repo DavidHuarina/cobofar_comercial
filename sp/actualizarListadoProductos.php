@@ -12,8 +12,6 @@ foreach ($listProd->lista as $prod) {
 	$estado=1;
 	$cod_linea=$prod->idslinea;
 	$cod_forma_far=1;
-	$cod_empaque=1;
-	$cantidad_presentacion=1;
 	$principio_activo=1;
 	$cod_tipoventa=1; //RECETA MEDICA
 	$codigo_barras=$prod->cod_bar;
@@ -33,9 +31,12 @@ foreach ($listProd->lista as $prod) {
       $div=1;
     }
 
+    $cantidad_presentacion=$prod->canenvase;
+    $cod_empaque=$prod->idenvase;
+
   $cod_existe=verificarProductoExistente($codigo);
   if($cod_existe>0){
-        $sql="UPDATE material_apoyo SET descripcion_material='nombre',estado='$estado',cod_linea_proveedor='$cod_linea',cod_forma_far='$cod_forma_far',cod_empaque='$cod_empaque',cantidad_presentacion='$cantidad_presentacion',principio_activo='$principio_activo',cod_tipoventa='$cod_tipoventa',producto_controlado='$sico',divi='$div' 
+        $sql="UPDATE material_apoyo SET descripcion_material='$nombre',estado='$estado',cod_linea_proveedor='$cod_linea',cod_forma_far='$cod_forma_far',cod_empaque='$cod_empaque',cantidad_presentacion='$cantidad_presentacion',principio_activo='$principio_activo',cod_tipoventa='$cod_tipoventa',producto_controlado='$sico',divi='$div' 
         where codigo_material='$codigo'";
         $sqlinserta=mysqli_query($enlaceCon,$sql);
   }else{      

@@ -18,7 +18,7 @@ require("funcion_nombres.php");
   $stringPrincipios=implode(",",$dataPrin);
 
   $sql="SELECT m.codigo_material,m.descripcion_material,(SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor),(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor),(SELECT MIN(orden) from principios_activosproductos where cod_principioactivo in ($stringPrincipios)) as orden,
-    (SELECT GROUP_CONCAT(p.nombre) from principios_activos p where p.codigo in (SELECT cod_principioactivo from principios_activosproductos where cod_material=m.codigo_material))
+    (SELECT GROUP_CONCAT(p.nombre) from principios_activos p where p.codigo in (SELECT cod_principioactivo from principios_activosproductos where cod_material=m.codigo_material)),m.cantidad_presentacion
    FROM material_apoyo m where m.codigo_material in (SELECT cod_material from principios_activosproductos where cod_principioactivo in ($stringPrincipios)) and m.estado=1 and m.codigo_material!='$cod_material' ORDER BY 5 desc";
   //echo $sql;
   $resp=mysqli_query($enlaceCon,$sql); 
@@ -33,8 +33,9 @@ require("funcion_nombres.php");
     $stock=stockProducto($codAlmacen, $codMat);
     $precio=number_format(precioProductoAlmacen($codCiudad, $codMat),2,'.',',');
     $principiostring=$dat[5];
+    $cantidadPres=$dat[6];
     $estiloTexto="";
-   $cambio="<a href='javascript:setMaterialesSimilar(form1, $codMat, \"$producto\")' class='btn btn-warning btn-fab' title='Cambiar Producto'><i class='material-icons'>compare_arrows</i></a>";
+   $cambio="<a href='javascript:setMaterialesSimilar(form1, $codMat, \"$producto\",\"$cantidadPres\")' class='btn btn-warning btn-fab' title='Cambiar Producto'><i class='material-icons'>compare_arrows</i></a>";
    // if($stock>0){
       $index++; 
       echo "<tr $estiloTexto>

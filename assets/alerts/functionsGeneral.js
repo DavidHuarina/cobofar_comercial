@@ -178,6 +178,28 @@ function buscarProductoLista(url){
     });
 }
 
+function buscarLineaLista(url){
+  var codigo_registro=$("#tipo").val();
+  var nombre=$("#buscar_nombre").val();
+  var prov=$("#buscar_proveedor").val(); 
+  
+  var parametros={"codigo_registro":codigo_registro,"nombre":nombre,"proveedor":prov};
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: url,
+        data: parametros, 
+        beforeSend: function () {
+          iniciarCargaAjax("Obteniendo productos...");
+        },     
+        success:  function (resp) {
+          detectarCargaAjax();
+          $("#tabla_lineas").html(resp);       
+          $("#modalBuscarLinea").modal("hide");
+        }
+    });
+}
+
 function iniciarCargaAjax(texto=""){
   $("#texto_ajax_titulo").html(texto); 
   $(".cargar-ajax").removeClass("d-none");

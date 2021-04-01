@@ -27,7 +27,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 
 	$sql="select m.codigo_material, m.descripcion_material,
 	(select concat(p.nombre_proveedor,' ',pl.abreviatura_linea_proveedor)
-	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor) from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
+	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),m.cantidad_presentacion,m.divi from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
 	if($nombreItem!=""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
 	}
@@ -45,7 +45,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
     }
 
     if((int)$codPrincipio>0){
-        $sql=$sql." and m.codigo_material in (SELECT cod_material FROM principios_activosproductos where cod_principioactivo=".$codAccion.")";
+        $sql=$sql." and m.codigo_material in (SELECT cod_material FROM principios_activosproductos where cod_principioactivo=".$codPrincipio.")";
     }
 
 
@@ -66,7 +66,8 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			$codigo=$dat[0];
 			$nombre=$dat[1];
 			$linea=$dat[2];
-			
+			$cantidadPresentacion=$dat[3];
+			$divi=$dat[4];
 			$nombre=addslashes($nombre);
 			
 			if($tipoSalida==$tipoSalidaVencimiento){
@@ -86,7 +87,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			}
 			$precioProducto=redondear2($precioProducto);
 			
-			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\")'>$nombre</a></div></td>
+			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>$nombre</a></div></td>
 			<td>$linea</td>
 			<td>$ubicacionProducto</td>
 			<td>$stockProducto</td>

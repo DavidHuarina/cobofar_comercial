@@ -113,7 +113,7 @@ function soloMasVentas(obj){
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
-					setMaterialesSoloVentas(obj[1],obj[2]+"(<small>"+obj[6]+" "+obj[8]+" "+obj[7]+"</small>)");
+					setMaterialesSoloVentas(obj[1],obj[2]+"(<small>"+obj[6]+" "+obj[8]+" "+obj[7]+"</small>)",obj[3],obj[9]);
 				}
 			}		
 			ajax.send(null);
@@ -212,11 +212,18 @@ function setMaterialesSolo(cod, nombreMat, cantidadPresentacion,costoItem){
 
 }
 
-function setMaterialesSoloVentas(cod, nombreMat){
+function setMaterialesSoloVentas(cod, nombreMat,cantPre,divi){
 	var numRegistro=$('input[name=materialActivo]').val();
+	$("#cantidad_presentacionboton"+numRegistro).css("color","#EC341B");
+	if(divi==1){
+      $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
+	}
 	console.log("fila:"+numRegistro);
 	$('#materiales'+numRegistro).val(cod);
 	$('#cod_material'+numRegistro).html(nombreMat);
+	$('#cantidad_presentacion'+numRegistro).val(cantPre);
+	$('#divi'+numRegistro).val(divi);
+	$('#cantidad_presentacionboton'+numRegistro).html(cantPre);
 	$("#input_codigo_barras").focus();
 	actStock(numRegistro);
 	$("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);

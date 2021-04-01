@@ -453,6 +453,7 @@ function encontrarMaterial(numMaterial){
 }
 
 function similaresMaterial(numMaterial){
+	$("#materialActivo").val(numMaterial);
 	var cod_material = $("#materiales"+numMaterial).val();
 	var parametros={"cod_material":cod_material};
 	$.ajax({
@@ -474,23 +475,33 @@ function Hidden(){
 	document.getElementById('divboton').style.visibility='hidden';
 
 }
-function setMaterialesSimilar(f, cod, nombreMat){
+function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){	
 	var numRegistro=f.materialActivo.value;
-	
+	$("#cantidad_presentacionboton"+numRegistro).css("color","#EC341B");
+	if(divi==1){
+      $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
+	}
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
-	
+	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
+	document.getElementById('divi'+numRegistro).value=divi;
+	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
     $("#modalProductosSimilares").modal("hide");
 	actStock(numRegistro);	
 }
 
-function setMateriales(f, cod, nombreMat){
+function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	var numRegistro=f.materialActivo.value;
-	
+	$("#cantidad_presentacionboton"+numRegistro).css("color","#EC341B");
+	if(divi==1){
+      $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
+	}	
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
-	
+	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
+	document.getElementById('divi'+numRegistro).value=divi;
+	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
 	document.getElementById('divProfileDetail').style.visibility='hidden';
@@ -698,6 +709,8 @@ function validar(f, ventaDebajoCosto,pedido){
 		if(validacionClientes==0){
           var item="";
 		  var cantidad="";
+		  var cantidadPres="";
+		  var divi=0;
 		  var stock="";
 		  var descuento="";					
 		 for(var i=1; i<=cantidadItems; i++){
@@ -706,6 +719,8 @@ function validar(f, ventaDebajoCosto,pedido){
 			if(document.getElementById("materiales"+i)!=null){
 				item=parseFloat(document.getElementById("materiales"+i).value);
 				cantidad=parseFloat(document.getElementById("cantidad_unitaria"+i).value);
+				cantidadPres=parseFloat(document.getElementById("cantidad_presentacion"+i).value);
+				divi=parseInt(document.getElementById("divi"+i).value);
 				
 				//VALIDACION DE VARIABLE DE STOCK QUE NO SE VALIDA
 				stock=document.getElementById("stock"+i).value;
@@ -754,6 +769,12 @@ function validar(f, ventaDebajoCosto,pedido){
 					return(false);
 				}
 
+				if(divi==0&&cantidadPres>0&&(cantidad%cantidadPres)!=0){
+					errores++;
+					alert("El item de la fila "+i+" no es divisible!, la cantidad unitaria debe ser multiple a la cantidad de presentación");
+					$("#pedido_realizado").val(0);
+					return(false);
+				}
 			}
 		  }
 		  if(errores==0&&pedidoFormu==1){
@@ -998,9 +1019,9 @@ while($dat2=mysqli_fetch_array($resp2)){
 		</td>
 	</tr>
     <tr align="center" class="bg-info text-white" style='background:#16B490 !important;'>
-		<td width="5%">&nbsp;</td>
-		<td width="30%">Material</td>
-		<td width="10%">Stock</td>
+		<td width="15%" align="left">Cant. Pres / Opciones</td>
+		<td width="25%">Material</td>
+		<td width="10%" align="center">Stock</td>
 		<td width="10%" align="left">Cantidad</td>
 		<td width="10%" align="left">Precio </td>
 		<td width="15%" align="left">Desc.</td>
@@ -1209,7 +1230,7 @@ if($banderaErrorFacturacion==0){
 
 </div>
 
-<input type='hidden' name='materialActivo' value="0">
+<input type='hidden' name='materialActivo' id='materialActivo' value="0">
 <input type='hidden' id="cantidad_material" name='cantidad_material' value="0">}
 <input type='hidden' name='codigoDescuentoGeneral' id="codigoDescuentoGeneral" value="<?=$codigoDescuentoGeneral?>">
 </form>

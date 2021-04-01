@@ -80,6 +80,8 @@ function obtenerDatosProductos($estado,$des){
      $datos[$ff]['div']=$row['DIV'];
      $datos[$ff]['sico']=$row['SICO'];
      $datos[$ff]['cod_bar']=$row['COD_BAR'];
+     $datos[$ff]['canenvase']=$row['CANENVASE'];
+     $datos[$ff]['idenvase']=$row['IDENVASE'];
      $ff++;
   }
 

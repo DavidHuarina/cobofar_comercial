@@ -59,7 +59,7 @@ echo"<form method='post' action='rptProductosSinBarras.php'>";
 
 	echo"\n<table class='' align='center' cellSpacing='0' width='50%'>\n";
 
-	echo "<tr><th align='left' class='text-muted' width='20%' >Proveedor:</th>
+	/*echo "<tr><th align='left' class='text-muted' width='20%' >Proveedor:</th>
 	<td><select name='rpt_categoria'  id='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' data-style='btn btn-primary' onchange='cambiarSubLinea(this.form)' multiple data-live-search='true' data-actions-box='true'>
 	";
 	$sql="select cod_proveedor, nombre_proveedor from proveedores order by 2";
@@ -69,9 +69,18 @@ echo"<form method='post' action='rptProductosSinBarras.php'>";
 		$nombre_cat=$dat[1];
 		echo "<option value='$codigo_cat'>$nombre_cat</option>";
 	}
-	echo "</select></td></tr>";
+	echo "</select></td></tr>";*/
 	echo "<tr><th align='left' class='text-muted' width='20%' >Linea:</th>
 	<td><select name='rpt_subcategoria[]' id='rpt_subcategoria' class='selectpicker form-control' multiple data-style='btn btn-primary' data-actions-box='true' data-live-search='true'>";
+
+	$sql="SELECT cod_linea_proveedor,nombre_linea_proveedor from proveedores_lineas where estado=1 order by cod_proveedor,2";
+     echo $sql;
+     $resp=mysqli_query($enlaceCon,$sql);
+     while($dat=mysqli_fetch_array($resp))
+     { $codigo_cat=$dat[0];
+       $nombre_cat=$dat[1];
+       echo "<option value='$codigo_cat'>$nombre_cat</option>";
+     }
 	echo "</select></td></tr>";
 	
 	echo"\n </table><br>";

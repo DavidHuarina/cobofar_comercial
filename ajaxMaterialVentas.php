@@ -14,12 +14,13 @@ require("conexionmysqli.inc");
 
 ?>
 
-<table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
+<table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" style='width:100%'>
 <tr bgcolor="#FFFFFF">
 
 <td width="10%" align="center">
 	<div class="btn-group">
 		<!--  shuffle  <a id="receta_boton<?php // echo $num;?>" href="javascript:registrarReceta(<?php //echo $num;?>)" class="btn btn-danger btn-sm btn-fab"><i class='material-icons float-left' title="Registrar Receta">medical_services</i></a>-->
+		<a href="#" class="btn btn-default btn-sm btn-link" title="Cantidad Presentación" id="cantidad_presentacionboton<?php echo $num;?>" style='color:#81C88D;'></a>
 		<a href="javascript:similaresMaterial(<?php echo $num;?>)" class="btn btn-success btn-sm btn-fab"><i class='material-icons float-left' title="Productos Similares">device_hub</i></a>
 	    <a href="javascript:encontrarMaterial(<?php echo $num;?>)" class="btn btn-primary btn-sm btn-fab"><i class='material-icons float-left' title="Encontrar Producto">place</i></a>
 	    <a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" class="btn btn-info btn-sm btn-fab"><i class='material-icons float-left' title="Buscar Producto">search</i></a>
@@ -28,6 +29,8 @@ require("conexionmysqli.inc");
 
 <td width="30%" align="left">
 	<input type="hidden" name="materiales<?php echo $num;?>" id="materiales<?php echo $num;?>" value="0">
+	<input type="hidden" name="divi<?php echo $num;?>" id="divi<?php echo $num;?>" value="1">
+	<input type="hidden" name="cantidad_presentacion<?php echo $num;?>" id="cantidad_presentacion<?php echo $num;?>" value="1">
 	<div id="cod_material<?php echo $num;?>" class='textomedianonegro'>-</div>
 </td>
 
