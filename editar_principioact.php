@@ -22,7 +22,7 @@ echo "<tr>
 	<input type='text' class='texto' name='nombre' value='$nombre' size='40' onKeyUp='javascript:this.value=this.value.toUpperCase();'>
 </td>";
 
-echo "<tr><th>Abreviatura</th></tr>";
+echo "<tr><th>Descripción</th></tr>";
 echo "<tr>
 <td align='center'>
 	<input type='text' class='texto' name='abreviatura' value='$abrev' size='40' onKeyUp='javascript:this.value=this.value.toUpperCase();'>

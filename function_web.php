@@ -229,6 +229,22 @@ function obtenerListadoProveedoresWeb(){
     $dbh=null;
     return $existeCon;
   }
+  function verificarExisteTraspasoDocumentosSucursalA($tabla_detalle,$tabla,$dcto,$ip,$fecha_salida){
+    //TIPO A (INGRESO DESDE EL ALMACEN)
+    require_once __DIR__.'/conexion_externa_farma.php';
+    $dbh = new ConexionFarma();
+    $dbh->setHost($ip);
+    $dbh->start();
+    $sqlDetalle="SELECT DCTO as EXISTE FROM $tabla WHERE DCTO1=$dcto AND TIPO='A' AND FECHA>='$fecha_salida'";
+    $stmt = $dbh->prepare($sqlDetalle);
+    $stmt->execute();
+    $existeCon=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $existeCon=$row['EXISTE'];
+    } 
+    $dbh=null;
+    return $existeCon;
+  }
   function obtenerNombreProductoObservacion($codprod){
     //TIPO A (INGRESO DESDE EL ALMACEN)
     require_once __DIR__.'/conexion_externa_farma.php';

@@ -2,15 +2,15 @@
 ini_set('memory_limit','1G');
 set_time_limit(0);
 require_once __DIR__.'/../conexion_externa_farma.php';
+$estilosVenta=1;
 require '../conexionmysqli.inc';
 require_once '../function_web.php';
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
-	<title></title>
-	<meta charset="utf-8">
+  <title>CONEXION SUCURSALES</title>
+  <meta charset="utf-8">
 </head>
 <body>
 
@@ -42,7 +42,7 @@ foreach ($listAlma->lista as $alma) {
   $age1=$alma->age1;
   $cod_existe=verificarAlmacenCiudadExistente($age1);
   //QUERY SUCURSAL ORIGEN (ALMACEN)
-  $sql="SELECT am.DCTO,am.TIPO,am.GLO,am.FECHA,am.IDPROVEEDOR,am.IDPER2,am.DAGE1,am.PASO   FROM VMAESTRO am where am.STA!='B' AND am.TIPO='K' AND FECHA BETWEEN '$fechaDesde' AND '$fechaHasta' AND am.AGE1='$age1' AND DAGE1 IN (SELECT AGE1 FROM ALMACEN WHERE TIPO='X')";
+  $sql="SELECT am.DCTO,am.TIPO,am.GLO,am.FECHA,am.IDPROVEEDOR,am.IDPER2,am.DAGE1,am.PASO   FROM VMAESTRO am where am.STA!='B' AND am.TIPO='K' AND FECHA BETWEEN '$fechaDesde' AND '$fechaHasta' AND DAGE1 IN (SELECT AGE1 FROM ALMACEN WHERE TIPO='X')";
   $ip=$alma->ip;
   $dbh = new ConexionFarma(); 
   $dbh->setHost($ip);
@@ -65,6 +65,7 @@ if($verificarConexion==true){
       $codCiudadDestino=$cod_existe;  
      $existeCon=verificarExisteTraspasoDocumentosSucursal("VDETALLE","VMAESTRO",$dctoOrigen,$ipDestino,strftime('%d/%m/%Y', strtotime($fechaOrigen)));          
       if((int)$existeCon>0){
+        //echo "<tr><td colspan='6'>".$dctoOrigen."</td></tr>";
       }else{
         $date1 = new DateTime($fechaOrigen);
         $date2 = new DateTime($fechaHastaFormato);

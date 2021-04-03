@@ -1,3 +1,34 @@
+function vistaPreviaArchivoSol(url,nombre){
+  $("#vista_previa_frame").attr("src",url);
+  $("#titulo_vista_previa").text('VISTA PREVIA "'+nombre+'"');
+}
+
+$(document).on('change', '.archivo', function() {
+  var filename = $(this).val().split('\\').pop();
+  var idname = $(this).attr('id');
+  mostrarArchivoCambios(filename,idname);
+});
+function mostrarArchivoCambios(filename,idname){
+  $("#label_txt_"+idname).html(filename);
+  if(filename.length>28){
+    $("#label_txt_"+idname).html(filename.substr(0,28)+"...");
+  }  
+   $("#label_"+idname).attr("title",filename);
+   if(filename==""||filename==null){
+    $("#label_"+idname).html('<i class="material-icons">publish</i> Subir Archivo');
+    if($("#label_"+idname).hasClass("btn-primary")){
+      $("#label_"+idname).removeClass('btn-primary');
+      $("#label_"+idname).addClass('btn-info');
+    }  
+   }else{
+    $("#label_"+idname).html('<i class="material-icons">done</i> Correcto');
+    if(!($("#label_"+idname).hasClass("btn-primary"))){
+      $("#label_"+idname).addClass('btn-primary');
+      $("#label_"+idname).removeClass('btn-info');
+    } 
+   }
+}
+
 //funciones despues de cargar pantalla
 window.onload = detectarCarga;
   function detectarCarga(){

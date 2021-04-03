@@ -63,7 +63,7 @@ echo "#####_#####";
 				}
 			  }
 			}else{
-			   echo "<option value='-9999'>SIN PROMOCIONES</option>";		
+			   echo "<option value='-9999'> - </option>";		
 			}
 			
 			//echo $sql1;

@@ -136,7 +136,7 @@ while($reg1=mysqli_fetch_array($rs1))
 		(select e.nombre_empaque from empaques e where e.cod_empaque=m.cod_empaque), 
 		(select f.nombre_forma_far from formas_farmaceuticas f where f.cod_forma_far=m.cod_forma_far), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		(select t.nombre_tipoventa from tipos_venta t where t.cod_tipoventa=m.cod_tipoventa), m.cantidad_presentacion, m.principio_activo 
+		(select t.nombre_tipoventa from tipos_venta t where t.cod_tipoventa=m.cod_tipoventa), m.cantidad_presentacion, m.principio_activo,m.codigo_barras 
 		from material_apoyo m
 		where m.estado='1' order by m.descripcion_material limit 100";
 	
@@ -158,7 +158,7 @@ while($reg1=mysqli_fetch_array($rs1))
 		</div>";*/
 	
 	echo "<center><table class='table table-sm' id='tabla_productos'>";
-	echo "<tr class='bg-info text-white'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Forma Farmaceutica</th><th>Linea Distribuidor</th><th>Principio Activo</th><th>Tipo Venta</th>
+	echo "<tr class='bg-info text-white'><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Codigo Barras</th><th>Forma Farmaceutica</th><th>Linea Distribuidor</th><th>Principio Activo</th><th>Tipo Venta</th>
 		<th>Accion Terapeutica</th></tr>";
 	
 	$indice_tabla=1;
@@ -173,7 +173,10 @@ while($reg1=mysqli_fetch_array($rs1))
 		$tipoVenta=$dat[6];
 		$cantPresentacion=$dat[7];
 		$principioActivo=$dat[8];
-		
+		$codBarras=$dat['codigo_barras'];
+		if($codBarras==""){
+			$codBarras=" - ";
+		}
 		$txtPrincipioActivo="";
 		$sqlAccion="select a.nombre from principios_activos a, principios_activosproductos m
 			where m.cod_principioactivo=a.codigo and 
@@ -197,7 +200,7 @@ while($reg1=mysqli_fetch_array($rs1))
 		
 		echo "<tr><td align='center'>$indice_tabla</td><td align='center'>
 		<input type='checkbox' name='codigo' value='$codigo'></td>
-		<td>$nombreProd</td><td>$formaFar</td>
+		<td>$nombreProd</td><td>$codBarras</td><td>$formaFar</td>
 		<td>$nombreLinea</td><td>$txtPrincipioActivo</td><td>$tipoVenta</td><td>$txtAccionTerapeutica</td></tr>";
 		$indice_tabla++;
 	}

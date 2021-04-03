@@ -8,6 +8,7 @@ require('funciones.php');
 
 
 $rpt_territorio=$_GET['rpt_territorio'];
+$rpt_funcionario=$_GET['rpt_funcionario'];
 $fecha_ini=$_GET['fecha_ini'];
 $fecha_fin=$_GET['fecha_fin'];
 $hora_ini=$_GET['hora_ini'];
@@ -23,8 +24,8 @@ $fecha_iniconsultahora=$fecha_iniconsulta." ".$hora_ini;
 $fecha_finconsultahora=$fecha_fin." ".$hora_fin;
 $fecha_reporte=date("d/m/Y");
 
-echo "<h1>Reporte Arqueo Diario de Caja</h1>
-	<h2>Fecha: $fecha_ini &nbsp;&nbsp;&nbsp; Fecha Reporte: $fecha_reporte</h2>";
+echo "<center><h3>Reporte Arqueo Diario de Caja</h3>
+	<h3>Fecha: $fecha_ini &nbsp;&nbsp;&nbsp; Fecha Reporte: $fecha_reporte</h3></center>";
 
 	
 
@@ -52,10 +53,10 @@ $sql="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida
+	s.hora_salida,s.cod_chofer
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	and STR_TO_DATE(CONCAT(s.fecha,' ',s.hora_salida),'%Y-%m-%d %h:%i') BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' ";
+	and STR_TO_DATE(CONCAT(s.fecha,' ',s.hora_salida),'%Y-%m-%d %h:%i') BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
 
 if($variableAdmin==1){
 	$sql.=" and s.cod_tipo_doc in (1,2,3)";
@@ -67,9 +68,10 @@ $sql.=" order by s.fecha, s.hora_salida";
 $resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='textomediano' width='70%'>
-<tr><th colspan='7'>Detalle de Ingresos</th></tr>
+<tr><th colspan='8'>Detalle de Ingresos</th></tr>
 <tr>
 <th>Fecha</th>
+<th>Personal</th>
 <th>Cliente</th>
 <th>Razon Social</th>
 <th>Observaciones</th>
@@ -92,7 +94,7 @@ while($datos=mysqli_fetch_array($resp)){
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
-	
+	$personalCliente=nombreVisitador($datos['cod_chofer']);
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
 	if($codTipoPago==1){
@@ -105,6 +107,7 @@ while($datos=mysqli_fetch_array($resp)){
 	
 	echo "<tr>
 	<td>$fechaVenta $horaVenta</td>
+	<td>$personalCliente</td>
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
 	<td>$obsVenta</td>
@@ -120,6 +123,7 @@ echo "<tr>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
+	<td>&nbsp;</td>
 	<th>Total Efectivo:</th>
 	<th align='right'>$totalEfectivoF</th>
 <tr>";
@@ -129,10 +133,12 @@ echo "<tr>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
+	<td>&nbsp;</td>
 	<th>Total Tarjeta Deb/Cred:</th>
 	<th align='right'>$totalTarjetaF</th>
 <tr>";
 echo "<tr>
+	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>

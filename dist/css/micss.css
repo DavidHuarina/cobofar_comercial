@@ -1,3 +1,9 @@
+
+.div-center{
+        margin: 0 auto !important; /* Added */
+        float: none !important; /* Added */
+        margin-bottom: 10px !important; /* Added */
+}
 .bg-principal{
     background: #16B490;
     color:#fff;

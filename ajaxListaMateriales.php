@@ -2,7 +2,7 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Producto</th><th>Linea</th><th>Ubicacion</th><th>Stock</th><th>Precio</th></tr>
+<th>Producto</th><th>Linea</th><th>Principio Activo</th><th>Stock</th><th>Precio</th></tr>
 <?php
 require("conexionmysqli.inc");
 require("funciones.php");
@@ -26,8 +26,8 @@ $respConf=mysqli_query($enlaceCon,$sqlConf);
 $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 
 	$sql="select m.codigo_material, m.descripcion_material,
-	(select concat(p.nombre_proveedor,' ',pl.abreviatura_linea_proveedor)
-	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),m.cantidad_presentacion,m.divi from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
+	(select concat(p.nombre_proveedor,' ',pl.abreviatura_linea_proveedor)	
+	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),m.cantidad_presentacion,m.divi,(SELECT GROUP_CONCAT(p.nombre) from principios_activos p where p.codigo in (SELECT cod_principioactivo from principios_activosproductos where cod_material=m.codigo_material)) from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
 	if($nombreItem!=""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
 	}
@@ -69,7 +69,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			$cantidadPresentacion=$dat[3];
 			$divi=$dat[4];
 			$nombre=addslashes($nombre);
-			
+			$principiostring=$dat[5];
 			if($tipoSalida==$tipoSalidaVencimiento){
 				$stockProducto=stockProductoVencido($globalAlmacen, $codigo);
 			}else{
@@ -89,7 +89,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			
 			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>$nombre</a></div></td>
 			<td>$linea</td>
-			<td>$ubicacionProducto</td>
+			<td>$principiostring</td>
 			<td>$stockProducto</td>
 			<td>$precioProducto</td>
 			</tr>";

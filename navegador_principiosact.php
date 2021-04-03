@@ -77,7 +77,7 @@ echo "<script language='Javascript'>
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Nombre</th><th>Abreviatura</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Nombre</th><th>Descripción</th></tr>";
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];

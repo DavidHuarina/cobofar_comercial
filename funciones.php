@@ -833,4 +833,28 @@ function porcentajeAvanceInventario($codigo){
     }
 }
 
+function obtenerDescripcionArchivoDeposito($codigo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT glosa from registro_depositos where codigo='$codigo'";
+  $valor="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $valor=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $valor;
+}
+function obtenerUrlArchivoDeposito($codigo){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT ubicacion_archivo from registro_depositos where codigo='$codigo'";
+  $valor="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $valor=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $valor;
+}
 ?>

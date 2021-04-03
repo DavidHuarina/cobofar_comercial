@@ -16,6 +16,15 @@ $sql="select concat(descripcion, ' ',presentacion) from muestras_medicas where c
 	return($nombre_muestra);
 }
 
+function nombreBanco($codigo)
+{	require("conexionmysqli.inc");
+$sql="select nombre from bancos where codigo='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre_muestra=$dat[0];
+	return($nombre_muestra);
+}
+
 function nombreGestion($codigo)
 {	require("conexionmysqli.inc");
 $sql="select g.`nombre_gestion` from `gestiones` g where g.`codigo_gestion`='$codigo'";

@@ -60,7 +60,7 @@ require("conexionmysqli.inc");
 	        }
 	        $ciudad=$_COOKIE['global_agencia'];
 			echo "<select name='tipoPrecio' class='texto".$num." ' id='tipoPrecio".$num."' style='width:55px !important;float:left;background:#85929E;color:white;height:30px;' onchange='ajaxPrecioItem(".$num.")'>";
-             echo "<option value='-9999'>SIN PROMOCIONES</option>";	
+             echo "<option value='-9999'> - </option>";	
 			echo "</select>";
 			//echo $sql1;
 			?>
