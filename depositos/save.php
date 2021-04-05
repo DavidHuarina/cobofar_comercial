@@ -13,7 +13,7 @@ $resp=mysqli_query($enlaceCon,$sql);
 $codigo=mysqli_result($resp,0,0);
 $monto_caja=0;
 $dirArchivo="";
-
+$monto_caja=$_POST["monto_calc"];
 if($_FILES['documentos_cabecera']["name"]){
       $filename = $_FILES['documentos_cabecera']["name"]; //Obtenemos el nombre original del archivos
       $source = $_FILES['documentos_cabecera']["tmp_name"]; //Obtenemos un nombre temporal del archivos    

@@ -13,7 +13,7 @@ require("configModule.php");
         url: "../ajaxCambiarComboLinea.php",
         data: parametros,   
         success:  function (resp) { 
-        	//alert(resp);
+        	
           $("#rpt_subcategoria").html(resp);
           $(".selectpicker").selectpicker("refresh");
         }
@@ -22,6 +22,20 @@ require("configModule.php");
  function monstrarLoad(){
     $("#boton_envio").attr("disabled",true);
     $("#boton_envio").val("Enviando...",true);
+ }
+ function calcularMontoDepositado(){
+    var fecha=$("#fecha_fin").val();
+    var parametros={"fecha":fecha};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxCalcularMontoArqueo.php",
+        data: parametros,   
+        success:  function (resp) { 
+          //alert(resp);
+          $("#monto_calc").val(resp);          
+        }
+    });
  }
 </script>
 <?php
@@ -38,7 +52,7 @@ echo "<tr><td align='left' class='bg-info text-white'>Descripción</td>";
 echo "<td align='left' colspan='3'>
 	<input type='text' class='form-control' name='nombre' size='40' onKeyUp='javascript:this.value=this.value.toUpperCase();' required>
 </td></tr>";
-echo "<tr><td align='left' class='bg-info text-white'>A Fecha</td>";
+echo "<tr><td align='left' class='bg-info text-white'>Fecha</td>";
 echo "<td align='left'>
 	<INPUT  type='date' class='form-control' value='$fecha_rptdefault' id='fecha_fin' size='10' name='fecha_fin'>
 </td>";
@@ -64,6 +78,12 @@ echo "</tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Número Cuenta</td>";
 echo "<td align='left' colspan='3'>
 	<input type='text' class='form-control' name='numero_cuenta' size='40'>
+</td></tr>";
+echo "<tr><td align='left' class='bg-info text-white'>Monto a Depositar</td>";
+echo "<td align='left' colspan='2'>
+  <input type='number' readonly class='form-control' name='monto_calc' id='monto_calc' step='any' required>
+</td><td align='right'>
+ <a href='#' title='CALCULAR MONTO A DEPOSITAR' onclick='calcularMontoDepositado(); return false;' class='btn btn-fab btn-sm btn-primary'><i class='material-icons'>refresh</i></a>
 </td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Monto Depositado</td>";
 echo "<td align='left' colspan='3'>

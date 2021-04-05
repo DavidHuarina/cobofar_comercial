@@ -6,8 +6,8 @@ require("configModule.php");
 
 $codigo=$_POST['codigo'];
 $nombre=$_POST['nombre'];
-
-$dirArchivo=obtenerUrlArchivoDeposito($codigo);
+$monto_caja=$_POST["monto_calc"];
+$ =obtenerUrlArchivoDeposito($codigo);
 
 if(!($_FILES['documentos_cabecera']["name"]== null || $_FILES['documentos_cabecera']["name"]=="")){
       $filename = $_FILES['documentos_cabecera']["name"]; //Obtenemos el nombre original del archivos
@@ -37,7 +37,7 @@ if(!($_FILES['documentos_cabecera']["name"]== null || $_FILES['documentos_cabece
       } 
 }
 
-$sql_upd=mysqli_query($enlaceCon,"update $table set glosa='$nombre',fecha='$fecha_fin',cod_banco='$rpt_banco',nro_cuenta='$numero_cuenta',monto_registrado='$monto',ubicacion_archivo='$dirArchivo' where codigo='$codigo'");
+$sql_upd=mysqli_query($enlaceCon,"update $table set glosa='$nombre',fecha='$fecha_fin',cod_banco='$rpt_banco',nro_cuenta='$numero_cuenta',monto_registrado='$monto',ubicacion_archivo='$dirArchivo',monto_caja='$monto_caja' where codigo='$codigo'");
 if($sql_upd==1){
 	echo "<script language='Javascript'>
 			alert('Los datos fueron modificados correctamente.');
