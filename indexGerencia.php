@@ -194,11 +194,11 @@ include("datosUsuario.php");
 					<li><span>Reportes Logs</span>
 						<ul>
 							<li><a href="reportes_logs/rptOpLogPrecios.php" target="contenedorPrincipal">Log de Precios</a></li>
-							<li><a href="reportes_logs/rptOpLogDescuentos.php" target="contenedorPrincipal">Log de Descuentos</a></li>
-							<li><a href="reportes_logs/rptOpLogDescuentosFinal.php" target="contenedorPrincipal">Log de Desc. Precio Final</a></li>
+							<!--<li><a href="reportes_logs/rptOpLogDescuentos.php" target="contenedorPrincipal">Log de Descuentos</a></li>
+							<li><a href="reportes_logs/rptOpLogDescuentosFinal.php" target="contenedorPrincipal">Log de Desc. Precio Final</a></li>-->
 						</ul>	
 					</li>				
-					<!--li><span>Utilidades</span>
+					<!--<li><span>Utilidades</span>
 						<ul>
 							<li><a href="rptOpUtilidadesDocumento.php" target="contenedorPrincipal">Utilidades x Documento</a></li>
 							<li><a href="rptOpUtilidadesxItem.php" target="contenedorPrincipal">Utilidades x Item</a></li>

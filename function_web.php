@@ -216,16 +216,16 @@ function obtenerListadoProveedoresWeb(){
   function verificarExisteTraspasoDocumentosSucursal($tabla_detalle,$tabla,$dcto,$ip,$fecha_salida){
     //TIPO A (INGRESO DESDE EL ALMACEN)
     require_once __DIR__.'/conexion_externa_farma.php';
-    $dbh = new ConexionFarma();
-    $dbh->setHost($ip);
-    $dbh->start();
-    $sqlDetalle="SELECT DCTO as EXISTE FROM $tabla WHERE DCTO1=$dcto AND TIPO='D' AND FECHA>='$fecha_salida'";
-    $stmt = $dbh->prepare($sqlDetalle);
-    $stmt->execute();
+    $dbh=ConexionFarma($ip,"Gestion");
     $existeCon=0;
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $existeCon=$row['EXISTE'];
-    } 
+    if($dbh!=false){
+       $sqlDetalle="SELECT DCTO as EXISTE FROM $tabla WHERE DCTO1=$dcto AND TIPO='D' AND FECHA>='$fecha_salida'";
+       $stmt = $dbh->prepare($sqlDetalle);
+       $stmt->execute();
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $existeCon=$row['EXISTE'];
+       } 
+    }
     $dbh=null;
     return $existeCon;
   }
@@ -260,7 +260,9 @@ function obtenerListadoProveedoresWeb(){
     return $desprod;
   }
   function verificarIpDestinoAlmacen($age1){
+    $estilosVenta=1;
     require_once __DIR__.'/conexion_externa_farma.php';
+
     $dbh = new ConexionFarma();
     $sqlDetalle="SELECT IP,DES FROM ALMACEN WHERE AGE1='$age1'";
     $stmt = $dbh->prepare($sqlDetalle);
@@ -336,3 +338,36 @@ function obtenerListadoEnvases(){
     curl_close ($ch);
     return json_decode($remote_server_output);
   }
+
+  function obtenerPrecioVentaMaxProcesoAnteriorSistema($codigoProd){
+   require_once __DIR__.'/conexion_externa_farma.php';
+   $listAlma=obtenerListadoAlmacenes();//web service
+   $precio=0;$index=0;$pv=[];
+   foreach ($listAlma->lista as $alma) {
+      $pv[$index]=0;
+      $age1=$alma->age1;
+      $ip=$alma->ip;    
+      //CONEXION TEST
+      $dbh = ConexionFarma($ip,"Gestion");
+      if($dbh!=false){
+         $sql="SELECT TOP 1 P.CPROD,P.DES,S.TIPO,S.FECHAVEN VENCIMIENTO,S.LOTE,S.REGISTRO,S.PRECIOVENT,S.PRECIOCOMP,S.PRECIOCOSTO, S.PRECIOUNIT PRECIO,O.DES PROVEEDOR, P.DIV, P.SICO, P.CANENVASE, O.DESCTO,S.INGRESO- S.SALIDA AS SALDO 
+      FROM VSALDOS S
+      JOIN APRODUCTOS P ON P.CPROD=S.CPROD AND  P.CPROD='$codigoProd'
+      JOIN PROVEEDORES O ON P.IDPROVEEDOR=O.IDPROVEEDOR
+      WHERE AGE1='$age1' AND S.INGRESO<>S.SALIDA
+      ORDER BY P.CPROD,S.FECHAVEN;";
+         $stmt = $dbh->prepare($sql);
+         $stmt->execute();
+         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $pre=(float)$row['PRECIO'];
+            $desc=(float)$row['DESCTO'];            
+            $pv[$index]=$pre-number_format($pre*($desc/100),2,'.',''); //PROCESO ANTERIOR
+         }    
+      }
+      $index++;
+  } 
+  if(count($pv)>0){
+    $precio=max($pv);
+  } 
+  return $precio;
+}

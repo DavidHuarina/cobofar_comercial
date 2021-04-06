@@ -1,6 +1,7 @@
 <?php
 require_once '../conexionmysqli.inc';
 require_once '../function_web.php';
+$estilosVenta=1;
 $listProd=obtenerListadoProductosWeb("A");//web service
 $contador=0;
 $user=1017;//USUARIO PARA EL LOG ADMIN
@@ -15,7 +16,7 @@ foreach ($listProd->lista as $prod) {
 	$principio_activo=1;
 	$cod_tipoventa=1; //RECETA MEDICA
 	$codigo_barras=$prod->cod_bar;
-    $precioInsertar=16;//$prod->precio_venta;
+  $precioInsertar=obtenerPrecioVentaMaxProcesoAnteriorSistema($prod->cprod);//$prod->precio_venta;
 	if($contador==0){
 		/*$sql="DELETE FROM material_apoyo";
 		$sqlDelete=mysqli_query($enlaceCon,$sql);*/

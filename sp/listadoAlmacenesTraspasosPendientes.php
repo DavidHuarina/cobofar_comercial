@@ -2,6 +2,7 @@
 ini_set('memory_limit','1G');
 set_time_limit(0);
 require_once __DIR__.'/../conexion_externa_farma.php';
+$estilosVenta=1;
 require '../conexionmysqli.inc';
 require_once '../function_web.php';
 ?>

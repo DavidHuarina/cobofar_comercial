@@ -52,6 +52,7 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
   <thead>
 <tr><th width="5%">N.</th><th><small>Proveedor</small></th><th><small>Línea</small></th>
 <th><small>Producto</small></th>
+<th><small>Modificación</small></th>
 <th><small>Precio Anterior</small></th>
 <th><small>Precio Modificado</small></th>
 <?php if($rpt_formato==2){
@@ -73,9 +74,17 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   $nombreLinea=$datosSuc[3];
   $nombreProveedor=$datosSuc[4];
   $detalle="";
-  ?><tr><th><?=$index?></th><th><?=$nombreProveedor?></th><th><?=$nombreLinea?></th><?php
-   $codigoSubGrupo=$datosSuc[0];
-   ?><td><?=$datosSuc[1];?></td><td>0</td><td>0</td>
+  $pre=obtenerUltimoPrecioModificado($datosSuc[0]);
+  $precioAnterior=number_format($pre[0],2,'.','');
+  $precioNuevo=number_format($pre[1],2,'.','');
+  ?><tr>
+    <th><?=$index?></th>
+    <th><?=$nombreProveedor?></th>
+    <th><?=$nombreLinea?></th>
+    <td><?=$datosSuc[1];?></td>
+    <td><?=$pre[2]?></td>
+    <td><?=$precioAnterior?></td>
+    <td><?=$precioNuevo?></td>
    <?php if($rpt_formato==2){
     ?><td><?=$detalle?></td><?php
      } ?>

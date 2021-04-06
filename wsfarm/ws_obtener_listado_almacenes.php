@@ -58,7 +58,7 @@ function obtenerDatosAlmacenes($tipo,$age1){
   $dbh = new ConexionFarma();
   $sqlTipo="";
   if($tipo!=""){
-    $sqlTipo="where a.tipo='".$tipo."' ";
+    $sqlTipo="where a.tipo='".$tipo."' OR CODIGO IN (122,130,7,126,134) ";
   }
   $sqlEspecifico="";
   if($age1!=""){

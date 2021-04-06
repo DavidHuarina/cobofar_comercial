@@ -857,4 +857,21 @@ function obtenerUrlArchivoDeposito($codigo){
   mysqli_close($enlaceCon);
   return $valor;
 }
+
+function obtenerUltimoPrecioModificado($codigo){
+  $estilosVenta=1;
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT valor_anterior,valor_modificado,modificacion FROM log_cambios where detalle='PRECIOS' and codigo_material='$codigo' order by fecha desc limit 1;";
+  $valor_ant=0;
+  $valor_nuevo=0;
+  $tipo="";				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $valor_ant=$detalle[0];   		
+       $valor_nuevo=$detalle[1];   		
+       $tipo=$detalle[2];   		
+  }  
+  mysqli_close($enlaceCon);
+  return array($valor_ant,$valor_nuevo,$tipo);
+}
 ?>

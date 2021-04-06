@@ -2,7 +2,7 @@
 ini_set('memory_limit','1G');
 set_time_limit(0);
 require_once __DIR__.'/../conexion_externa_farma.php';
-$estilosVenta=1;
+//$estilosVenta=1;
 require '../conexionmysqli.inc';
 require_once '../function_web.php';
 ?>
@@ -15,7 +15,7 @@ require_once '../function_web.php';
 <body>
 
 <?php
-
+set_time_limit(0);
 
 //DATOS PARA LISTAR DOCUMENTOS
 $fechaDesde="01/03/2021";
@@ -43,11 +43,13 @@ foreach ($listAlma->lista as $alma) {
   $cod_existe=verificarAlmacenCiudadExistente($age1);
   //QUERY SUCURSAL ORIGEN (ALMACEN)
   $sql="SELECT am.DCTO,am.TIPO,am.GLO,am.FECHA,am.IDPROVEEDOR,am.IDPER2,am.DAGE1,am.PASO   FROM VMAESTRO am where am.STA!='B' AND am.TIPO='K' AND FECHA BETWEEN '$fechaDesde' AND '$fechaHasta' AND DAGE1 IN (SELECT AGE1 FROM ALMACEN WHERE TIPO='X')";
+  //echo $sql;
   $ip=$alma->ip;
-  $dbh = new ConexionFarma(); 
-  $dbh->setHost($ip);
-  $verificarConexion=$dbh->start();
-if($verificarConexion==true){
+  /*$dbh = new ConexionFarma(); 
+  $dbh->setHost($ip);*/
+  
+  $dbh=ConexionFarma($ip,"Gestion");
+if($dbh!=false){
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -65,7 +67,7 @@ if($verificarConexion==true){
       $codCiudadDestino=$cod_existe;  
      $existeCon=verificarExisteTraspasoDocumentosSucursal("VDETALLE","VMAESTRO",$dctoOrigen,$ipDestino,strftime('%d/%m/%Y', strtotime($fechaOrigen)));          
       if((int)$existeCon>0){
-        //echo "<tr><td colspan='6'>".$dctoOrigen."</td></tr>";
+        /*echo "<tr><td><small><small>".$alma->des."</small></small></td><td>".$ip."</td><td>".$codSucursalDestino."</td><td>".$codSucursalDestino."</td><td>".$ipDestino."</td><td>".$existeCon."</td><td>".$dctoOrigen."</td></tr>";*/
       }else{
         $date1 = new DateTime($fechaOrigen);
         $date2 = new DateTime($fechaHastaFormato);
@@ -75,6 +77,8 @@ if($verificarConexion==true){
         if((int)$dias_restantes>=2){
           $background="#F1C40F";
         }
+        /*echo "<tr style='background:red;color:#fff;'><td colspan='6'><small><small>".$alma->des."<br>".$ip."</small></small></td></tr>";*/
+
         ?><tr style="background:<?=$background?>"><td><?=$tipoOrigen?></td><td><?=$dctoOrigen?></td><td><?=strftime('%d/%m/%Y', strtotime($fechaOrigen))?></td><td><?=$sucDestino?></td></td><td><?=obtenerNombrePersonalAbreviado($codPaso,$ip)?></td><td><?=$alma->des?></tr><?php
       }
     }  //fin de WHILE <?=obtenerNombrePersonalAbreviado($codPersonal,$ip)
