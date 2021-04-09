@@ -86,6 +86,7 @@ function obtenerDatosAlmacenes($tipo,$age1){
      $datos[$ff]['age']=$row['AGE'];
      $datos[$ff]['tipo']=$row['TIPO'];
      $datos[$ff]['ip']=$row['IP'];
+     $datos[$ff]['corto']=$row['CORTO'];
      $ff++;
   }
 

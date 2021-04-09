@@ -16,14 +16,14 @@ require_once '../funciones.php';
 <body>
 <?php
 //DATOS PARA LISTAR DOCUMENTOS
-$fechaDesde="01/01/2020";
-$fechaHasta="31/12/2020";
+$fechaDesde="01/03/2021";
+$fechaHasta="31/03/2021";
 $dbh2 = new ConexionFarmaSucursal(); 
 $dbh = new ConexionFarmaSucursal(); 
 //$fechaHasta=date("d/m/Y");
 ?><br><br><h4>ACTUALIZACION DE VENTAS</h4><br><br>
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("Aë");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
+$listAlma=obtenerListadoAlmacenesEspecifico("AL");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
 $contador=0;
 $sql = "select IFNULL(MAX(cod_salida_almacenes)+1,1) from salida_almacenes order by cod_salida_almacenes desc";
 $resp = mysqli_query($enlaceCon,$sql);
@@ -71,15 +71,18 @@ if($verificarConexion==true){
           $fechaV=explode(" ",$rowDet['FECVEN']);
           $fechaVen=$fechaV[0];
           $cantidadMaterial=(float)$rowDet["CAN"]+(float)$rowDet["CAN1"];
+          $valorMonto=$rowDet["PREUNIT"]*$cantidadMaterial;
 
-          $desc1=number_format($rowDet["PREUNIT"]*($rowDet["DESCTO1"]/100),2,'.','');          
-          $precioUnit1=$rowDet["PREUNIT"]-$desc1;
+          $desc1=number_format($valorMonto*($rowDet["DESCTO1"]/100),2,'.','');          
+          $precioUnit1=$valorMonto-$desc1;
 
           $desc2=number_format($precioUnit1*($rowDet["DESCTO2"]/100),2,'.','');
           $precioUnit2=$precioUnit1-$desc2;
 
           $desc3=number_format($precioUnit2*($rowDet["DESCTO3"]/100),2,'.','');
           $precioUnit3=number_format($precioUnit2-$desc3,2,'.','');
+
+          $precioUnit3=number_format($precioUnit3/$cantidadMaterial,2,'.','');
           $sqlInsertDetalleAc.="($codigo,$codMaterial,$cantidadMaterial,0,'$fechaVen','$precioUnit3',0,'$precioUnit3'),";         
           
         }

@@ -60,7 +60,7 @@ $listAlma=obtenerListadoAlmacenes();//web service
 $contador=0;$contadorError=0;
 foreach ($listAlma->lista as $alma) {
     $contador++;
-    $corto="";
+    $corto=$alma->corto;
 	$age1=$alma->age1;
 	$nombre=$alma->des;
 	$direccion=$alma->direc;
@@ -87,8 +87,8 @@ foreach ($listAlma->lista as $alma) {
     ?>
     <tr class="<?=$estiloFondo?>">
         <td><?=$contador?></td>
-        <td><?=$corto?></td>
         <td><?=utf8_decode($age1)?></td>
+        <td><?=$corto?></td>
         <td><?=$nombre?></td>
         <td><?=$ip?></td>
         <td><div id="ping<?=$contador?>" style="font-size: 14px;"></div></td>
