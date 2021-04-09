@@ -87,3 +87,4 @@ function obtenerDatosProductos($estado,$des){
 
  return array($ff,$datos);
 }
+

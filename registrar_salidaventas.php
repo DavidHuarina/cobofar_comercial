@@ -798,6 +798,23 @@ function validar(f, ventaDebajoCosto,pedido){
 		return(false);
 	}
 }
+var tipoVentaGlobal=1;
+function cambiarTipoVenta2(){
+	if(tipoVentaGlobal==1){
+      $("#tipo_venta2").val(2);
+      $("#boton_tipoventa2").html("<i class='material-icons'>corporate_fare</i>");
+      $("#boton_tipoventa2").attr("title","TIPO DE VENTA INSTITUCIONAL");
+      $("#boton_tipoventa2").attr("class","btn btn-danger btn-sm btn-fab");
+      tipoVentaGlobal=2;
+	}else{
+      $("#tipo_venta2").val(1);
+      tipoVentaGlobal=1;
+      $("#boton_tipoventa2").html("<i class='material-icons'>point_of_sale</i>");
+      $("#boton_tipoventa2").attr("title","TIPO DE VENTA CORRIENTE");
+      $("#boton_tipoventa2").attr("class","btn btn-info btn-sm btn-fab");
+	}
+  
+}
 </script>
 <?php
 if(!isset($fecha)||$fecha==""){   
@@ -957,6 +974,10 @@ if($tipoDocDefault==2){
 	$razonSocialDefault="";
 	$nitDefault="";
 }
+
+$tipoVentas2=1;
+//$iconVentas2="corporate_fare";
+$iconVentas2="point_of_sale";
 ?>
 
 	
@@ -1002,11 +1023,15 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 </td>
 <td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" title="Registrar Nuevo Cliente" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="guardarPedido(0)"
-	class="btn btn-default btn-sm" title="Guardar Venta Perdida"><i class="material-icons">save</i> Venta Perdida </a></td>
+	class="btn btn-default btn-sm" title="Guardar Venta Perdida"><i class="material-icons">save</i> Venta Perdida </a>
+<a href="#" onclick="cambiarTipoVenta2()"
+	class="btn btn-info btn-sm btn-fab" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i><!--corporate_fare--></a>
+</td>
 </tr>
 
 </table>
 <br>
+<input type="hidden" id="tipo_venta2" name="tipo_venta2" value="<?=$tipoVentas2?>">
 <input type="hidden" id="ventas_codigo"><!--para validar la funcion mas desde ventas-->
 <div class="codigo-barras">
                <input class="btn btn-info" style="margin-top: 0px;" type="button" value="Adicionar Item (+)" onclick="mas(this)" accesskey="a"/><input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">

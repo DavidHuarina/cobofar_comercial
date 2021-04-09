@@ -149,6 +149,31 @@ function obtenerListadoProveedoresWeb(){
     curl_close ($ch);
     return json_decode($remote_server_output);
   }
+  function obtenerListadoAlmacenesAlgunos($ages1){
+    
+    $direccion=obtenerValorConfiguracion(8);//direccion del servicio web farmacias
+    $sIde = "farma";
+    $sKey = "89i6u32v7xda12jf96jgi30lh";
+    //PARAMETROS PARA LA OBTENCION DEL SERVICIO
+    //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoAlmacenes","tipo"=>obtenerValorConfiguracion(9),"age1"=>$age1);
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoAlmacenes","ages1"=>$ages1);
+
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_listado_almacenes.php"); 
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+  }
   function obtenerListadoPersonal($sta){
     
     $direccion=obtenerValorConfiguracion(8);//direccion del servicio web farmacias
@@ -339,7 +364,9 @@ function obtenerListadoEnvases(){
     return json_decode($remote_server_output);
   }
 
-  function obtenerPrecioVentaMaxProcesoAnteriorSistema($codigoProd){
+ function obtenerPrecioVentaMaxProcesoAnteriorSistema($codigoProd){
+   set_time_limit(0);
+   error_reporting(0);
    require_once __DIR__.'/conexion_externa_farma.php';
    $listAlma=obtenerListadoAlmacenes();//web service
    $precio=0;$index=0;$pv=[];
@@ -369,5 +396,61 @@ function obtenerListadoEnvases(){
   if(count($pv)>0){
     $precio=max($pv);
   } 
+  $dbh = null;
   return $precio;
+}
+
+function obtenerValoresVentasProducto($cod_prod,$ip,$fechaInicio,$fechaFinal){
+  set_time_limit(0);
+  require_once __DIR__.'/conexion_externa_farma.php';
+  $dbh = ConexionFarma($ip,"Gestion");
+  $cant=0;
+  $monto=0;
+  $saldo=0;
+  if($dbh!=false){
+    $sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,SUM((CAN+CAN1)*((PREUNIT-((PREUNIT*DESCTO1)/100))-(((PREUNIT-((PREUNIT*DESCTO1)/100))*DESCTO2)/100))-((((PREUNIT-((PREUNIT*DESCTO1)/100))-(((PREUNIT-((PREUNIT*DESCTO1)/100))*DESCTO2)/100))*DESCTO3)/100)) AS MONTO_V
+FROM VFICHAD d LEFT JOIN APRODUCTOS P ON P.CPROD=d.CPROD
+JOIN PROVEESLINEA L ON L.IDSLINEA=P.IDSLINEA
+WHERE d.STA in ('V','M') AND L.IDPROVEEDOR='$cod_prov' 
+AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio 00:00:00' AND '$fechaFinal 23:59:59'
+GROUP BY d.CPROD,P.DES;";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+       $cant=(int)$row['CANTIDAD']; 
+       $monto=(float)$row['MONTO_V'];           
+    }
+  }
+  $dbh=null;
+  return array($cant,$monto,$saldo);
+}
+
+function obtenerValoresSaldosProducto($cod_prod,$ip,$fechaFinal){
+  set_time_limit(0);
+  require_once __DIR__.'/conexion_externa_farma.php';
+  $dbh = ConexionFarma($ip,"Gestion");
+  $saldoCajas=0;
+  $saldoUnidad=0;
+  $fechaVen="";
+  $lote="";
+  if($dbh!=false){
+    $sql="SELECT SUM(D.DCAN-D.HCAN) as CANT_CAJAS,SUM(D.DCAN1-D.HCAN1) as CANT_UNIDAD FROM VDETALLE D, APRODUCTOS P INNER JOIN PROVEEDORES E ON (P.IDPROVEEDOR = E.IDPROVEEDOR) LEFT JOIN PROVEESLINEA S ON (P.IDSLINEA = S.IDSLINEA) WHERE  D.CPROD = P.CPROD AND D.FECHA <= '$fechaFinal' AND D.CPROD = '$cod_prod'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $saldoCajas=$row['CANT_CAJAS']; 
+      $saldoUnidad=$row['CANT_UNIDAD'];          
+    }
+
+    $sql="SELECT TOP 1 FECHAVEN,LOTE FROM VSALDOS WHERE CPROD='$cod_prod' ORDER BY FECHAVEN DESC;";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $fechaVen=$row['FECHAVEN'];   
+      $lote=$row['LOTE'];        
+    }
+
+  }
+  $dbh=null;
+  return array($saldoCajas,$saldoUnidad,$fechaVen,$lote);
 }

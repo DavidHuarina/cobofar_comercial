@@ -19,6 +19,21 @@ require "configModule.php";
 								<a href="<?=$urlRepoCodBarras?>" target="_blank" class="btn btn-success"> Productos sin Codigo Barras</a>
 							</div>
 				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlProductosVencer?>" target="_blank" class="btn btn-primary"> Productos Vencer</a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlVentasVsSaldos?>" target="_blank" class="btn btn-warning"> Ventas Vs Saldos</a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlInventario?>" target="_blank" class="btn btn-info"> Inventario Productos</a>
+							</div>
+				  		</div>
 					</div>
 
 				  		

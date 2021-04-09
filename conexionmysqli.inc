@@ -8,9 +8,14 @@ if(!function_exists('register_globals')){
 	include('register_globals.php');
 	register_globals();
 	if(!isset($estilosVenta)){
-	    include("librerias.php");// se debe cambiar a la parte posterior
-        include("librerias2.php");
-        include("librerias3.php");
+        //verificar niveles en url para insertar librerias
+        $niv_url=substr_count($_SERVER["REQUEST_URI"], '/'); 
+        switch ($niv_url) {
+          case 2:include("librerias.php");break;
+          case 3:include("librerias2.php");break;
+          case 4:include("librerias3.php");break;
+        }
+
         if(!isset($indexGerencia)){
             ?>
           <div class="cargar">
@@ -39,7 +44,6 @@ if (mysqli_connect_errno())
 	echo "Error en la conexión: " . mysqli_connect_error();
 }
 mysqli_set_charset($enlaceCon,"utf8");
-
 
 if (!function_exists('mysqli_result')) {
     function mysqli_result($result, $number, $field=0) {

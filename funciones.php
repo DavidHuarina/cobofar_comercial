@@ -1,6 +1,7 @@
 <?php
 $estilosVenta=1;
 function obtenerValorConfiguracion($id){
+	$estilosVenta=1;
 	require("conexionmysqli.inc");
 	$sql = "SELECT valor_configuracion from configuraciones c where id_configuracion=$id";
 	$resp=mysqli_query($enlaceCon,$sql);
