@@ -26,7 +26,7 @@ $fecha_hasta=$fech[2]."-".$fech[1]."-".$fech[0];
 <center>
 <br>
 <div class="col-sm-10 div-center">
-  <form method="POST" action="inventario.php">
+  <form method="POST" action="inventarioExcel.php">
     <table class="table table-condensed table-bordered ">
     <tr class="">
         <td>PROVEEDOR:</td>
