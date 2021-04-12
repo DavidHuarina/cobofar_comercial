@@ -1,0 +1,23 @@
+
+<?php
+
+$codMaterial = $_GET["codmat"];
+$indice = $_GET["indice"];
+$codTipoPrecio=$_GET["codTipoPrecio"];
+
+//
+require("../../conexionmysqli.inc");
+$cadRespuesta="";
+$consulta="select precio from precios where codigo_material=$codMaterial and cod_precio=$codTipoPrecio";
+
+$rs=mysqli_query($enlaceCon,$consulta);
+$registro=mysqli_fetch_array($rs);
+$cadRespuesta=$registro[0];
+if($cadRespuesta=="")
+{   $cadRespuesta=0;
+}
+echo "<input type='text' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' readonly >";
+//echo "$cadRespuesta -> ".rand(0, 10);
+//
+
+?>
