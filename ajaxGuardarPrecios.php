@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=1;
 require('conexionmysqli.inc');
 $item=$_GET['item'];
 $precio1=$_GET['precio1'];

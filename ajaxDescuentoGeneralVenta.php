@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=1;
 require("funciones.php");
 require("conexionmysqli.inc");
 

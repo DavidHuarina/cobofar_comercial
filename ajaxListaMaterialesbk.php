@@ -4,6 +4,7 @@
 <tr>
 <th>Producto</th><th>Stock</th></tr>
 <?php
+$estilosVenta=1;
 require("conexion.inc");
 $codTipo=$_GET['codTipo'];
 $nombreItem=$_GET['nombreItem'];

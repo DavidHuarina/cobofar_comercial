@@ -4,6 +4,7 @@
 <tr>
 <th>Linea</th><th>Producto</th><th>Stock</th></tr>
 <?php
+$estilosVenta=1;
 require("conexionmysqli.inc");
 require("funciones.php");
 $codTipo=$_GET['codTipo'];

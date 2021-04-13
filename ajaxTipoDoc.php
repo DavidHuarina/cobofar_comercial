@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=1;
 require("conexionmysqli.inc");
 $codTipoSalida=$_GET['codTipoSalida'];
 

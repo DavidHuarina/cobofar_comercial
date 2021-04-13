@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=1;
 require("conexionmysqli.inc");
 $codVehiculo=$_GET['codVehiculo'];
 if($codVehiculo!=0){

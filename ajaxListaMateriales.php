@@ -4,6 +4,7 @@
 <tr>
 <th>Producto</th><th>Linea</th><th>Principio Activo</th><th>Stock</th><th>Precio</th></tr>
 <?php
+$estilosVenta=1;
 require("conexionmysqli.inc");
 require("funciones.php");
 

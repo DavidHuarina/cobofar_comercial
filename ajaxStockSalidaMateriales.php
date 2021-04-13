@@ -6,6 +6,7 @@ $codAlmacen = $_GET["codalm"];
 $indice = $_GET["indice"];
 
 //
+$estilosVenta=1;
 require("conexionmysqli.inc");
 
 $stockProducto=stockProducto($codAlmacen, $codMaterial);

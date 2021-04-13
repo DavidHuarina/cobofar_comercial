@@ -4,7 +4,7 @@
 <link rel="STYLESHEET" type="text/css" href="stilos.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <?php 
-
+$estilosVenta=1;
 require("conexionmysqli.inc");
 	$num=$_GET['codigo'];
 	$cod_precio=0;

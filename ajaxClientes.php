@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=1;
 require("conexionmysqli.inc");
 $nitCliente=$_GET['nitCliente'];
 

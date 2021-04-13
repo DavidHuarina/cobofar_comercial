@@ -1,5 +1,6 @@
 
 <?php
+$estilosVenta=1;
 require("funciones.php");
 require("estilos_almacenesAjax.php");
 
