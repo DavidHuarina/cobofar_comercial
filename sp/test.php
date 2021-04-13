@@ -17,4 +17,4 @@ require_once __DIR__.'/../conexion_externa_farma.php';
   }
 
 header('Content-type: application/json');   
-print_r($listProvarray($ff,$datos));
+print_r($datos);
