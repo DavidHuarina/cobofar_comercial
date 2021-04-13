@@ -229,7 +229,7 @@ function validar(f)
 		return(false);
 	}
 	if(almacenDestino==0){
-		alert("El Almacen Destino no puede estar vacio.");
+		alert("La Sucursal Destino no puede estar vacio.");
 		return(false);
 	}
 	if(cantidadItems>0){		
@@ -283,10 +283,10 @@ else
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1'>
 	<input type="hidden" name="no_venta" value="1">
-<h1>Registrar Salida de Almacen</h1>
+<h1>Registrar Salida de Sucursal</h1>
 
 <table class='texto' align='center' width='90%'>
-<tr><th>Tipo de Salida</th><th>Tipo de Documento</th><th>Nro. Salida</th><th>Fecha</th><th>Almacen Destino</th></tr>
+<tr><th>Tipo de Salida</th><th>Tipo de Documento</th><th>Nro. Salida</th><th>Fecha</th><th>Sucursal Destino</th></tr>
 <tr>
 <td align='center'>
 	<select name='tipoSalida' id='tipoSalida' class='selectpicker form-control' data-style='btn btn-primary' onChange='ajaxTipoDoc(form1)'>
