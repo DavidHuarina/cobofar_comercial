@@ -31,7 +31,17 @@ require "configModule.php";
 				  		</div>
 				  		<div class="col-sm-4">
 							<div class="form-group">
+								<a href="<?=$urlVentasVsSaldosMes?>" target="_blank" class="btn btn-warning"> Ventas Vs Saldos Mes</a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">
 								<a href="<?=$urlInventario?>" target="_blank" class="btn btn-info"> Inventario Productos</a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlInventario2?>" target="_blank" class="btn btn-primary"> Saldos Productos</a>
 							</div>
 				  		</div>
 					</div>

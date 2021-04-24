@@ -106,30 +106,7 @@ if($sql_inserta==1){
 			}		
 			$precioItem=$costo+($costo*($porcentajeMargen/100));
 			*/
-			$precioItem=$_POST["preciocliente$i"];
-			
-			if($banderaPrecioUpd==1){
-				//SACAMOS EL ULTIMO PRECIO REGISTRADO
-				$sqlPrecioActual="select precio from precios where codigo_material='$cod_material' and cod_precio=1";
-				$respPrecioActual=mysqli_query($enlaceCon,$sqlPrecioActual);
-				$numFilasPrecios=mysqli_num_rows($respPrecioActual);
-				$precioActual=0;
-				if($numFilasPrecios>0){
-					$precioActual=mysqli_result($respPrecioActual,0,0);
-				}
-				
-				//echo "precio +margen: ".$precioItem." precio actual: ".$precioActual;
-				//SI NO EXISTE EL PRECIO LO INSERTA CASO CONTRARIO VERIFICA QUE EL PRECIO DEL INGRESO SEA MAYOR AL ACTUAL PARA HACER EL UPDATE
-				if($numFilasPrecios==0){
-					$sqlPrecios="insert into precios (codigo_material, cod_precio, precio) values('$cod_material','1','$precioItem')";
-					$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
-				}else{
-					if($precioItem>$precioActual){
-						$sqlPrecios="update precios set precio='$precioItem' where codigo_material='$cod_material' and cod_precio=1";
-						$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
-					}
-				}				
-			}
+
 			
 			$aa=recalculaCostos($cod_material, $global_almacen);
 			

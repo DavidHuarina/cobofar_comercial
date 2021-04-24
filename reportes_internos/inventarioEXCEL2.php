@@ -27,7 +27,6 @@ $fechaFinal=$fechaF[2]."/".$fechaF[1]."/".$fechaF[0];
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Cantidad<br>Pres</th>
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Saldo<br>Cajas</th>
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Saldo<br>Unidad</th>
-        <th style='background: #EFDCA2 !important;font-weight: bold;'>Saldo<br>Insertar</th>
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Lote</th>
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Fecha<br>Vencimiento</th>
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Fecha<br>Documento</th>
@@ -41,20 +40,28 @@ foreach ($listAlma->lista as $alma) {
       $ip=$alma->ip;
 
      $dbh = ConexionFarma($ip,"Gestion");
-     $sql="SELECT D.CPROD,P.DES,P.CANENVASE,SUM(D.DCAN-D.HCAN) as CANT_CAJAS,SUM(D.DCAN1-D.HCAN1) as CANT_UNIDAD,(SELECT TOP 1 FECHAVEN FROM VSALDOS WHERE CPROD=D.CPROD ORDER BY FECHAVEN DESC) AS FECHAVEN,(SELECT TOP 1 LOTE FROM VSALDOS WHERE CPROD=D.CPROD ORDER BY FECHAVEN DESC) AS LOTE,D.FECHA AS FECHA_INGRESO FROM VDETALLE D, APRODUCTOS P WHERE  D.CPROD = P.CPROD AND D.FECHA <= '$fechaFinal' GROUP BY D.CPROD,P.DES,P.CANENVASE,D.FECHA;";
+     $sql="SELECT S.CPROD,P.DES,S.TIPO,MAX(S.FECHAVEN) AS FECHAVEN,(SELECT TOP 1 SA.LOTE FROM VSALDOS SA WHERE SA.CPROD=S.CPROD ORDER BY SA.FECHAVEN DESC) AS LOTE,P.CANENVASE,sum(S.INGRESO- S.SALIDA) AS SALDO,(SELECT TOP 1 D.FECHA FROM VDETALLE D WHERE D.CPROD=S.CPROD ORDER BY D.FECHA DESC) AS FECHAD
+      FROM VSALDOS S
+      JOIN APRODUCTOS P ON P.CPROD=S.CPROD
+      GROUP BY S.CPROD,P.DES,S.TIPO,P.CANENVASE;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $cod_prod=$row['CPROD'];
         $des_prod=$row['DES'];
         $canenv_prod=$row['CANENVASE'];      
-        $saldo_caja=$row['CANT_CAJAS'];  
-        $saldo_uni=$row['CANT_UNIDAD'];  
+        $tipo=$row['TIPO'];  
         $fecha_ven=$row['FECHAVEN'];  
         $lote_prod=$row['LOTE']; 
-        $fecha_ingreso=$row['FECHA_INGRESO']; 
-        $saldo_insertar=($saldo_caja*$canenv_prod)+$saldo_uni;
-        //if($monto_ven>0){
+        $fecha_ingreso=$row['FECHAD']; 
+        if($tipo=="C"){
+          $saldo_caja=$row['SALDO'];
+          $saldo_uni=0;
+        }else{
+          $saldo_uni=$row['SALDO'];
+          $saldo_caja=0;
+        }
+        if(($saldo_uni+$saldo_uni)>0){
         ?><tr>
           <td class='font-weight-bold'><?=$nombre?></td>
           <td><?=$cod_prod?></td>
@@ -62,12 +69,11 @@ foreach ($listAlma->lista as $alma) {
           <td><?=$canenv_prod?></td>
           <td><?=$saldo_caja?></td>
           <td><?=$saldo_uni?></td>
-          <td><?=$saldo_insertar?></td>
           <td><?=$lote_prod?></td>
           <td><?=$fecha_ven?></td>
           <td><?=$fecha_ingreso?></td>
         </tr><?php
-      //}     
+      }     
      }
 }
 

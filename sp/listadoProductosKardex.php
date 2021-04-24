@@ -33,10 +33,54 @@ $dbh = new ConexionFarmaSucursal();
 
 
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("AS");//web service
+$listAlma=obtenerListadoAlmacenesEspecifico("A:");//web service
 $contador=0;
 $arrayProductos=[];
 foreach ($listAlma->lista as $alma) {
+
+  $age1=$alma->age1;
+      $nombre=$alma->des;
+      $ip=$alma->ip;
+
+     $dbh = ConexionFarma($ip,"Gestion");
+     
+      $sql="SELECT P.CPROD,P.DES,P.CANENVASE,
+      (SELECT SUM(s.INGRESO-s.SALIDA) FROM VSALDOS s WHERE s.CPROD=P.CPROD) as VENTAS,
+      (SELECT SUM(D.DCAN-D.HCAN) FROM VDETALLE D WHERE D.CPROD=P.CPROD) as CANT_CAJAS,
+      (SELECT SUM(D.DCAN1-D.HCAN1) FROM VDETALLE D WHERE D.CPROD=P.CPROD) as CANT_UNIDAD
+      FROM PRODUCTOS P GROUP BY P.CPROD,P.DES,P.CANENVASE";
+
+
+
+     $sql="SELECT D.CPROD,P.DES,P.CANENVASE,SUM(D.DCAN-D.HCAN) as CANT_CAJAS,SUM(D.DCAN1-D.HCAN1) as CANT_UNIDAD,(SELECT TOP 1 FECHAVEN FROM VSALDOS WHERE CPROD=D.CPROD ORDER BY FECHAVEN DESC) AS FECHAVEN,(SELECT TOP 1 LOTE FROM VSALDOS WHERE CPROD=D.CPROD ORDER BY FECHAVEN DESC) AS LOTE FROM VDETALLE D, APRODUCTOS P WHERE  D.CPROD = P.CPROD AND D.FECHA <= '$fechaFinal' GROUP BY D.CPROD,P.DES,P.CANENVASE;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $cod_prod=$row['CPROD'];
+        $des_prod=$row['DES'];
+        $canenv_prod=$row['CANENVASE'];      
+        $saldo_caja=$row['CANT_CAJAS'];  
+        $saldo_uni=$row['CANT_UNIDAD'];  
+        $fecha_ven=$row['FECHAVEN'];  
+        $lote_prod=$row['LOTE'];  
+        $saldo_insertar=($saldo_caja*$canenv_prod)+$saldo_uni;
+        //if($monto_ven>0){
+        ?><tr>
+          <td class='font-weight-bold'><?=$nombre?></td>
+          <td><?=$cod_prod?></td>
+          <td><?=$des_prod?></td>
+          <td><?=$canenv_prod?></td>
+          <td><?=$saldo_caja?></td>
+          <td><?=$saldo_uni?></td>
+          <td><?=$saldo_insertar?></td>
+          <td><?=$lote_prod?></td>
+          <td><?=$fecha_ven?></td>
+        </tr><?php
+      //}     
+     }
+
+
+
   $salidas=0;
   //QUERY PRODUCTOS
   $sql="SELECT s.CPROD FROM APRODUCTOS s WHERE s.STA='A' ORDER BY s.CPROD"; // 

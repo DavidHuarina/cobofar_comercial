@@ -37,7 +37,7 @@ public function setBase($base){
 class ConexionFarmaSucursal extends PDO {    
 
     private $tipo_de_base = 'sqlsrv';
-    private $host = '10.10.16.12';  
+    private $host = '10.10.103.12';  
     private $nombre_de_base = 'Gestion';
     private $usuario = 'sistema';
     private $contrasena = 'sistema';

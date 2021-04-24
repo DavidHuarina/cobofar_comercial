@@ -103,6 +103,7 @@ function obtenerDatosAlmacenesEspecificos($ages1){
   $stringAges=implode(",",$data);
   $dbh = new ConexionFarma();
   $sql="SELECT a.* FROM almacen a WHERE AGE1 IN ($stringAges)";
+  //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $ff=0;

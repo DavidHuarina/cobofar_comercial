@@ -3,11 +3,7 @@ function vistaPreviaArchivoSol(url,nombre){
   $("#titulo_vista_previa").text('VISTA PREVIA "'+nombre+'"');
 }
 
-$(document).on('change', '.archivo', function() {
-  var filename = $(this).val().split('\\').pop();
-  var idname = $(this).attr('id');
-  mostrarArchivoCambios(filename,idname);
-});
+
 function mostrarArchivoCambios(filename,idname){
   $("#label_txt_"+idname).html(filename);
   if(filename.length>28){
@@ -35,7 +31,11 @@ window.onload = detectarCarga;
     $(".cargar").fadeOut("slow");
   }
 var tablaPrincipalGeneral=null;
-
+$(document).on('change', '.archivo', function() {
+  var filename = $(this).val().split('\\').pop();
+  var idname = $(this).attr('id');
+  mostrarArchivoCambios(filename,idname);
+});
 $(document).ready(function() {
   tablaPrincipalGeneral=$('#tablaPrincipalGeneral').DataTable({
             "language": {
