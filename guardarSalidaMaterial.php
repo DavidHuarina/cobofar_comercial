@@ -9,6 +9,7 @@ require("funciones_inventarios.php");
 $usuarioVendedor=$_COOKIE['global_usuario'];
 $globalSucursal=$_COOKIE['global_agencia'];
 
+
 $tipoSalida=$_POST['tipoSalida'];
 $tipoDoc=$_POST['tipoDoc'];
 if(!isset($_POST['no_venta'])){
@@ -132,7 +133,7 @@ $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almace
 		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
 		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2')";
-	//	echo $sql_inserta;
+		//echo $sql_inserta;
 $sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
 if($sql_inserta==1){
@@ -155,15 +156,19 @@ if($sql_inserta==1){
 		}else{
 		  $stock=$_POST["stock$i"];	
 		}		
+		//echo "MATERIAL: ".$codMaterial.", STOCK: ".$stock;
 		if($codMaterial!=0&&$stock>0){
+			$vencidosAlmacen=verificarAlmacenDestinoVencidos($almacenDestino);
+			//echo $vencidosAlmacen;
+
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
 			$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];
 			$montoMaterial=$_POST["montoMaterial$i"];
 			
-			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterial;
+			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterial;			
+			$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaVencidos,$i,$vencidosAlmacen);
 			
-			$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaVencidos,$i);
 			if($respuesta!=1){
 				echo "<script>
 					alert('Existio un error en el detalle. Contacte con el administrador del sistema.');

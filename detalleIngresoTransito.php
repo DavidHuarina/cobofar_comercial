@@ -1,6 +1,7 @@
 <?php
 	require("conexionmysqli.inc");
 	require('estilos.inc');
+	require('funciones.php');
 	
 	$global_almacen=$_COOKIE['global_almacen'];
 	$codigo_salida=$_GET['codigo_salida'];
@@ -29,13 +30,16 @@
 	echo "<table class='texto'>";
 	echo "<tr><th>Material</th><th>Cantidad</th></tr>";
 	echo "<form method='post' action=''>";
-	$sql_detalle="select s.cod_material, sum(s.cantidad_unitaria) from salida_detalle_almacenes s 
+	$sql_detalle="select s.cod_material, sum(s.cantidad_unitaria),sum(s.cantidad_envase) from salida_detalle_almacenes s 
 	where s.cod_salida_almacen='$codigo_salida' group by s.cod_material";
 	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$cantidad_unitaria=$dat_detalle[1];
-		$cantidad_unitaria_formato=number_format($dat_detalle[1],0,'.',',');
+		$cantidad_envase=$dat_detalle[2];
+		$cantidad_presentacion=obtenerCantidadPresentacionProducto($cod_material);
+		$cantidadRecibido=($cantidad_presentacion*$cantidad_envase)+$cantidad_unitaria;
+		$cantidad_unitaria_formato=number_format($cantidadRecibido,0,'.',',');
 		$sql_nombre_material="select descripcion_material from material_apoyo where codigo_material='$cod_material'";
 
 		$resp_nombre_material=mysqli_query($enlaceCon,$sql_nombre_material);

@@ -216,8 +216,8 @@ echo "<h1>Ingreso de Materiales</h1>";
 
 echo "<table border='1' cellspacing='0' class='textomini'><tr><th>Leyenda:</th><th>Ingresos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>Ingresos con movimiento</th><td bgcolor='#ffff99' width='10%'></td><th>Ingresos sin movimiento</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 
-//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'>
-echo "<div class=''><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>";
+//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+echo "<div class=''>";
 if($anulacionCodigo==1){
 	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{
@@ -282,8 +282,8 @@ while ($dat = mysqli_fetch_array($resp)) {
 echo "</table></center><br>";
 echo "</div>";
 
-//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'>
-echo "<div class=''><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>";
+//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+echo "<div class=''>";
 if($anulacionCodigo==1){
 	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{

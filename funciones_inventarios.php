@@ -1,7 +1,7 @@
 <?php
 require("conexionmysqli.inc");
 
-function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaVencidos, $orden){
+function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaVencidos, $orden,$vencidos=0){
 	 require("conexionmysqli.inc");
 	$fechaActual=date("Y-m-d");
 	//echo $cod_salida." ".$cod_almacen." ".$cod_material." ".$cantidad;
@@ -14,13 +14,17 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$cod_almacen' and i.ingreso_anulado=0 
 		and id.cod_material='$cod_material' and id.cantidad_restante>0";
 	if($banderaVencidos==1){
-		$sqlExistencias.=" and id.fecha_vencimiento<'$fechaActual' ";
+		if($vencidos>0){ //FECHAS PARA VENCIDOS
+			//$sqlExistencias.=" and id.fecha_vencimiento>'$fechaActual' ";
+		}else{
+			$sqlExistencias.=" and id.fecha_vencimiento<'$fechaActual' ";
+		}		
 	}
 	$sqlExistencias.=" order by id.lote, id.fecha_vencimiento asc";
 	
 	//AQUI SE DEBE CORREGIR EL DATO DE CANTIDAD RESTANTE >0 OJO
 	
-	//echo $sqlExistencias."<br>";
+	echo $sqlExistencias."<br>";
 	$respExistencias=mysqli_query($enlaceCon,$sqlExistencias);
 	while($datExistencias=mysqli_fetch_array($respExistencias)){
 		if($cantidadPivote>0){

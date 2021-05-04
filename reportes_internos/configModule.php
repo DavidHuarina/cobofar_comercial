@@ -5,3 +5,4 @@ $urlProductosVencer="listadoProductosVencerGenerico.php";
 $urlInventario="rptOpInventario.php";
 $urlInventario2="rptOpInventario2.php";
 $urlVentasVsSaldosMes="rptOpVentasSaldosMes.php";
+$urlVentasVsSaldosDia="rptOpVentasSaldosDia.php";

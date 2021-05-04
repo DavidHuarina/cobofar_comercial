@@ -1,7 +1,7 @@
 <?php
 require("conexionmysqli.inc");
 require("estilos.inc");
-
+require("funciones.php");
 $fecha=date("Y-m-d");
 $hora=date("H:i");
 
@@ -34,8 +34,8 @@ echo "</table><br>";
 
 echo "<table class='texto'>";
 
-$sql_detalle_salida="select cod_salida_almacen, cod_material, sum(cantidad_unitaria), costo_almacen,lote,fecha_vencimiento
-from salida_detalle_almacenes where cod_salida_almacen='$codigo_registro' and cantidad_unitaria>0 
+$sql_detalle_salida="select cod_salida_almacen, cod_material, sum(cantidad_unitaria), costo_almacen,lote,fecha_vencimiento,sum(cantidad_envase)
+from salida_detalle_almacenes where cod_salida_almacen='$codigo_registro' and (cantidad_unitaria>0 or cantidad_envase>0) 
 group by cod_salida_almacen, cod_material";
 $resp_detalle_salida=mysqli_query($enlaceCon,$sql_detalle_salida);
 $cantidad_materiales=mysqli_num_rows($resp_detalle_salida);
@@ -52,7 +52,12 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	$costo_almacen=$dat_detalle_salida[3];
 	$lote=$dat_detalle_salida[4];
 	$fecha_ven=$dat_detalle_salida[5];
-	$cantidad_unitaria_formato=number_format($cantidad_unitaria,0,'.','');
+
+	$cantidad_envase=$dat_detalle_salida[6];
+	$cantidad_presentacion=obtenerCantidadPresentacionProducto($cod_material);
+	$cantidadRecibido=($cantidad_presentacion*$cantidad_envase)+$cantidad_unitaria;
+
+	$cantidad_unitaria_formato=number_format($cantidadRecibido,0,'.','');
     $costo_almacen_formato=number_format($costo_almacen,2,'.',',');
 
 	echo "<tr><td align='center'>$indice_detalle</td>";

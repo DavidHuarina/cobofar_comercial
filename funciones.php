@@ -132,6 +132,18 @@ function ubicacionProducto($almacen, $item){
 	return($ubicacion);
 	
 }
+function obtenerCantidadPresentacionProducto($codigo){
+  $estilosVenta=1;
+  require("conexionmysqli.inc");
+  $sql_detalle="SELECT cantidad_presentacion FROM material_apoyo where codigo_material='$codigo'";
+  $valor=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $valor=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return $valor;
+}
 
 function stockProducto($almacen, $item){
 	//
@@ -875,4 +887,21 @@ function obtenerUltimoPrecioModificado($codigo){
   mysqli_close($enlaceCon);
   return array($valor_ant,$valor_nuevo,$tipo);
 }
+
+function verificarAlmacenDestinoVencidos($codigo){
+     $codigosAdmin=obtenerValorConfiguracion(19);
+     $estilosVenta=1;
+     require("conexionmysqli.inc");
+     $sql="select cod_almacen from almacenes where cod_almacen in ($codigosAdmin)";
+     $valor=0;$existe=0;
+     $resp=mysqli_query($enlaceCon,$sql);
+     while($row=mysqli_fetch_array($resp)){
+        $valor=$row['cod_almacen'];
+        if($valor==$codigo){
+          $existe=1;
+        }
+     }
+     return($existe);
+  } 
+
 ?>
