@@ -33,7 +33,7 @@ $fechaFinal=$fechaF[2]."/".$fechaF[1]."/".$fechaF[0];
     </tr>
    </thead>  
 <?php
-$listAlma=obtenerListadoAlmacenes();//=obtenerListadoMarkets(utf8_decode($idCiudad));
+$listAlma=obtenerListadoAlmacenesEspecifico("Aà");//obtenerListadoAlmacenes();//=obtenerListadoMarkets(utf8_decode($idCiudad));
 foreach ($listAlma->lista as $alma) {
       $age1=$alma->age1;
       $nombre=$alma->des;
