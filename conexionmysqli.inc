@@ -1,6 +1,6 @@
 <?php
 set_time_limit(0);
-//error_reporting(0);
+error_reporting(0);
 //header('Content-Type: text/html; charset=UTF-8'); 
 date_default_timezone_set('America/La_Paz');
 
@@ -44,7 +44,7 @@ if (mysqli_connect_errno())
 	echo "Error en la conexión: " . mysqli_connect_error();
 }
 mysqli_set_charset($enlaceCon,"utf8");
-
+include "notificaciones.php";
 if (!function_exists('mysqli_result')) {
     function mysqli_result($result, $number, $field=0) {
         mysqli_data_seek($result, $number);

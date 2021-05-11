@@ -37,25 +37,26 @@ $dbh = new ConexionFarmaSucursal();
 
 
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("A:");//web service
+$listAlma=obtenerListadoAlmacenesEspecifico("AF");//web service
 $contador=0;
 $arrayProductos=[];
 foreach ($listAlma->lista as $alma) {
 
-      $age1=utf8_decode($alma->age1);
+      $age1="AF";
       $nombre=$alma->des;
       $ip=$alma->ip;
+      //echo $ip;
 
      $dbh = ConexionFarma($ip,"Gestion");
      
       $sql="SELECT P.CPROD,P.DES,
       (SELECT SUM(s.INGRESO-s.SALIDA) FROM VSALDOS s WHERE s.CPROD=P.CPROD AND AGE1='$age1') as VENTAS,
-      (SELECT SUM(D.DCAN-D.HCAN) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('A','D') AND AGE1='$age1') as INGRESOS,
-      (SELECT SUM(D.DCAN-D.HCAN) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('K','F') AND AGE1='$age1') as SALIDAS,
-      (SELECT SUM(D.DCAN1-D.HCAN1) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('A','D') AND AGE1='$age1') as INGRESOS_UNITARIO,
-      (SELECT SUM(D.DCAN1-D.HCAN1) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('K','F') AND AGE1='$age1') as SALIDAS_UNITARIO
+      (SELECT SUM(D.DCAN-D.HCAN) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('A','D','S') AND AGE1='$age1') as INGRESOS,
+      (SELECT SUM(D.DCAN-D.HCAN) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('K','F','O') AND AGE1='$age1') as SALIDAS,
+      (SELECT SUM(D.DCAN1-D.HCAN1) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('A','D','S') AND AGE1='$age1') as INGRESOS_UNITARIO,
+      (SELECT SUM(D.DCAN1-D.HCAN1) FROM VDETALLE D WHERE D.CPROD=P.CPROD and D.TIPO in ('K','F','O') AND AGE1='$age1') as SALIDAS_UNITARIO
       FROM APRODUCTOS P GROUP BY P.CPROD,P.DES";
-
+     //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -79,7 +80,7 @@ foreach ($listAlma->lista as $alma) {
             $saldo_unitario=0;
         }
 
-        if($saldo>0||$saldo_unitario>0){          
+        if(!($saldo==0&&$saldo_unitario==0)){          
         ?><tr>
           <td class='font-weight-bold'><?=$nombre?></td>
           <td><?=$cod_prod?></td>

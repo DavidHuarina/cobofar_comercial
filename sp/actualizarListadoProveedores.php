@@ -35,7 +35,7 @@ foreach ($listProv->lista as $prov) {
 			$codLinea=$linea->idslinea;
 	        $nombreLinea=$linea->des;
 	        $procedenciaLinea=1;
-	        $margenLinea=0;
+	        $margenLinea=35;
             $sql="INSERT INTO proveedores_lineas (cod_linea_proveedor,nombre_linea_proveedor,abreviatura_linea_proveedor,cod_proveedor,estado,cod_procedencia,margen_precio)
               VALUES ('$codLinea','$nombreLinea','$nombreLinea','$codigo',1,'$procedenciaLinea','$margenLinea')";
            echo $sql."<br>";

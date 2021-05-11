@@ -1,0 +1,44 @@
+<?php
+if(!function_exists('notificaciones_ingresos')){
+  function notificaciones_ingresos(){
+    return "Correcto";
+  }
+   // INICIO NOTIFICACION
+$global_almacen=$_COOKIE["global_almacen"];
+$sqlNoti="SELECT count(*)as cantidad
+  FROM salida_almacenes s, tipos_salida ts, almacenes a 
+  where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
+$respNoti=mysqli_query($enlaceCon,$sqlNoti);
+$ingresoPendiente=0;
+while($datNoti=mysqli_fetch_array($respNoti)){
+     $ingresoPendiente=$datNoti[0];
+     $plural="S";
+     if($ingresoPendiente==1){
+      $plural="";
+     }    
+}
+$narchivo=explode("/",$_SERVER["REQUEST_URI"]);
+$archivoname=$narchivo[count($narchivo)-1];
+$soloname=explode(".",$archivoname)[0];
+if($ingresoPendiente>0&&!($soloname=="navegador_ingresotransito"||$soloname=="registrar_ingresotransito")){
+  ?>
+<script>$(document).ready(function() {
+  Swal.fire({
+      title: '<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?>',
+      html:'Debe ingresar los <b>documentos pendientes</b>, ' +
+    '<a href="navegador_ingresotransito.php">Aqui</a> ' +
+    '<b>Ingresos en Transito</b>',
+      imageUrl: 'imagenes/pendiente.png',
+      imageWidth: 200,
+      imageHeight: 200,
+      imageAlt: 'Custom image',
+      width: 600,
+      padding: '3em',
+      background: '#fff url(/imagenes/trees.png)',
+      backdrop: ' rgba(0,0,123,0.8) center top no-repeat'
+   });
+    });</script>
+  <?php
+}
+//FIN NOTIFICACION
+}

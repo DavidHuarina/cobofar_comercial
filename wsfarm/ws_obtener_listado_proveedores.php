@@ -66,7 +66,7 @@ function obtenerDatosProveedor($codigo){
      $datos[$ff]['des']=$row['DES'];
      $datos[$ff]['ruc']=$row['RUC'];
      $datos[$ff]['orden']=$row['ORDEN'];
-     $datos[$ff]['dir']=$row['DIR'];
+     $datos[$ff]['dir']=preg_replace("/[^a-zA-Z0-9]+/", "", $row['DIR']);
      $datos[$ff]['tel']=$row['TEL'];
      $datos[$ff]['email']=$row['EMAIL'];
      $datos[$ff]['responsa']=$row['RESPONSA'];
