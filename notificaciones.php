@@ -28,13 +28,13 @@ if($ingresoPendiente>0&&!($soloname=="navegador_ingresotransito"||$soloname=="re
       html:'Debe ingresar los <b>documentos pendientes</b>, ' +
     '<a href="navegador_ingresotransito.php">Aqui</a> ' +
     '<b>Ingresos en Transito</b>',
-      imageUrl: 'imagenes/pendiente.png',
+      imageUrl: '<?=$dirNoti?>imagenes/pendiente.png',
       imageWidth: 200,
       imageHeight: 200,
       imageAlt: 'Custom image',
       width: 600,
       padding: '3em',
-      background: '#fff url(/imagenes/trees.png)',
+      background: '#fff url(/<?=$dirNoti?>imagenes/trees.png)',
       backdrop: ' rgba(0,0,123,0.8) center top no-repeat'
    });
     });</script>

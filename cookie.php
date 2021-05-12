@@ -53,9 +53,10 @@ if ($num_filas != 0) {
 	
 
 } else {
-    echo "<link href='stilos.css' rel='stylesheet' type='text/css'>
+     echo "<link href='stilos.css' rel='stylesheet' type='text/css'>
         <form action='problemas_ingreso.php' method='post' name='formulario'>
         <h1>Sus datos de acceso no son correctos.</h1>
+        <a href='index.html' class='boton'>Volver</a>
         </form>";
 }
 ?>

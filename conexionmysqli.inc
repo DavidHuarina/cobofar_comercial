@@ -3,7 +3,7 @@ set_time_limit(0);
 error_reporting(0);
 //header('Content-Type: text/html; charset=UTF-8'); 
 date_default_timezone_set('America/La_Paz');
-
+$dirNoti="";
 if(!function_exists('register_globals')){
 	include('register_globals.php');
 	register_globals();
@@ -11,9 +11,9 @@ if(!function_exists('register_globals')){
         //verificar niveles en url para insertar librerias
         $niv_url=substr_count($_SERVER["REQUEST_URI"], '/'); 
         switch ($niv_url) {
-          case 2:include("librerias.php");break;
-          case 3:include("librerias2.php");break;
-          case 4:include("librerias3.php");break;
+          case 2:include("librerias.php");$dirNoti="";break;
+          case 3:include("librerias2.php");$dirNoti="../";break;
+          case 4:include("librerias3.php");$dirNoti="../../";break;
         }
 
         if(!isset($indexGerencia)){
