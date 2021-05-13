@@ -48,10 +48,6 @@ include("datosUsuario.php");
 		 <ul>
 			<li><span>Datos Generales</span>
 				<ul>
-					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Distribuidores</a></li>
-					<li><a href="grupos/list.php" target="contenedorPrincipal">Clasificadores</a></li>
-					<li><a href="navegador_material.php" target="contenedorPrincipal">Productos</a></li>
-					
 					<li><span>Descuentos</span>
 					<ul>
 						<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
@@ -72,26 +68,8 @@ include("datosUsuario.php");
 					<!--li><a href="navegador_funcionarios1.php" target="contenedorPrincipal">Funcionarios</a></li-->					
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>
 					<!--li><a href="navegador_vehiculos.php" target="contenedorPrincipal">Vehiculos</a></li-->
-					<li><span>Gestion de Almacenes</span>
-					<ul>
-						<li><a href="navegador_almacenes.php" target="contenedorPrincipal">Almacenes</a></li>
-						<li><a href="navegador_sucursales.php" target="contenedorPrincipal">Sucursales</a></li>
-						<li><a href="navegador_tiposingreso.php" target="contenedorPrincipal">Tipos de Ingreso</a></li>
-						<li><a href="navegador_tipossalida.php" target="contenedorPrincipal">Tipos de Salida</a></li>
-						</ul>	
-					</li>
 
-					<li><span>Adicionales Producto</span>
-					<ul>
-						<li><a href="navegador_empaques.php" target="contenedorPrincipal">Empaques</a></li>
-						<li><a href="navegador_formasfar.php" target="contenedorPrincipal">Formas Farmaceuticas</a></li>
-						<li><a href="navegador_accionester.php" target="contenedorPrincipal">Acciones Terapeuticas</a></li>
-						<li><a href="navegador_principiosact.php" target="contenedorPrincipal">Principios Activos</a></li>
-						<!--li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>
-						<li><a href="navegador_precios.php?orden=2" target="contenedorPrincipal">Precios (Por Linea Proveedor)</a></li>		
-						<li><a href="navegadorUbicaciones.php" target="contenedorPrincipal">Ubicaciones</a></li-->						
-					</ul>
-				</li>
+
 					<li><a href="navegador_dosificaciones.php" target="contenedorPrincipal">Dosificaciones de Facturas</a></li>
 					
 				</ul>	
@@ -137,32 +115,11 @@ include("datosUsuario.php");
 					<li><a href="navegadorDolar.php" target="contenedorPrincipal">Cambiar Cotizacion de Dolar</a></li>
 				</ul>	
 			</li-->
-			<li><a href="registrar_ingresomateriales.php" target="contenedorPrincipal">Registrar Ingreso **</a></li>
 			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar **</a></li>			
 			<li><a href="listadoProductosStock.php" target="_blank">Listado de Productos **</a></li>
 
 			<li><span>Reportes</span>
 				<ul>
-					<li><span>Movimiento de Almacen</span>
-						<ul>
-							<li><a href="rpt_op_inv_kardex.php" target="contenedorPrincipal">Kardex de Movimiento</a></li>
-							<li><a href="rpt_op_inv_existencias.php" target="contenedorPrincipal">Existencias</a></li>
-							<li><a href="rpt_op_inv_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>
-							<li><a href="rpt_op_inv_salidas.php" target="contenedorPrincipal">Salidas</a></li>
-							<li><a href="rptPrecios.php" target="contenedorPrincipal">Precios</a></li>
-							<li><a href="rptOpProductosVencer.php" target="contenedorPrincipal">Productos proximos a Vencer</a></li>
-							<li><a href="rptIngresoFueraPeriodo.php?variableAdmin=1" target="contenedorPrincipal" >Verificación Tiempos Traspasos</a></li>
-							<!--li><a href="rptOCPagar.php" target="contenedorPrincipal">OC por Pagar</a></li-->
-						</ul>
-					</li>	
-					<!--li><span>Costos</span>
-						<ul>
-							<li><a href="rptOpKardexCostos.php" target="contenedorPrincipal">Kardex de Movimiento Precio Promedio</a></li>
-							<li><a href="rptOpKardexCostosPEPS.php" target="contenedorPrincipal">Kardex de Movimiento PEPS</a></li>
-							<li><a href="rptOpKardexCostosUEPS.php" target="contenedorPrincipal">Kardex de Movimiento UEPS</a></li>							
-							<li><a href="rptOpExistenciasCostos.php" target="contenedorPrincipal">Existencias</a></li>							
-						</ul>
-					</li-->
 					<li><span>Ventas</span>
 						<ul>
 							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
@@ -198,18 +155,7 @@ include("datosUsuario.php");
 							<li><a href="reportes_logs/rptOpLogDescuentosFinal.php" target="contenedorPrincipal">Log de Desc. Precio Final</a></li>-->
 						</ul>	
 					</li>				
-					<!--<li><span>Utilidades</span>
-						<ul>
-							<li><a href="rptOpUtilidadesDocumento.php" target="contenedorPrincipal">Utilidades x Documento</a></li>
-							<li><a href="rptOpUtilidadesxItem.php" target="contenedorPrincipal">Utilidades x Item</a></li>
-						</ul>	
-					</li>
-					<li><span>Cobranzas</span>
-						<ul>
-							<li><a href="rptOpCobranzas.php" target="contenedorPrincipal">Cobranzas</a></li>
-							<li><a href="rptOpCuentasCobrar.php" target="contenedorPrincipal">Cuentas por Cobrar</a></li>
-						</ul>	
-					</li-->
+
 				</ul>
 			</li>
 		</ul>

@@ -70,7 +70,6 @@ include("datosUsuario.php");
 					<li><a href="depositos/list.php" target="contenedorPrincipal">Registrar Depósitos</a></li>				
 				</ul>	
 			</li>
-			<li><a href="registrar_ingresomateriales.php" target="contenedorPrincipal">Registrar Ingreso **</a></li>
 			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar **</a></li>			
 			<li><a href="listadoProductosStock.php" target="_blank">Listado de Productos **</a></li>
 
