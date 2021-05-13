@@ -46,13 +46,7 @@ include("datosUsuario.php");
 	<nav id="menu">
 		<div id="panel-menu">
 		 <ul>
-			<li><span>Datos Generales</span>
-				<ul>
-					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>			
-					<li><a href="navegador_dosificaciones.php" target="contenedorPrincipal">Dosificaciones de Facturas</a></li>
-					
-				</ul>	
-			</li>
+
 			<li><span>Ingresos</span>
 				<ul>
 					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Productos</a></li>
@@ -73,41 +67,6 @@ include("datosUsuario.php");
 			<li><a href="registrar_ingresomateriales.php" target="contenedorPrincipal">Registrar Ingreso **</a></li>
 			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar **</a></li>			
 			<li><a href="listadoProductosStock.php" target="_blank">Listado de Productos **</a></li>
-
-			<li><span>Reportes</span>
-				<ul>	
-
-					<li><span>Ventas</span>
-						<ul>
-							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
-							<li><a href="rptOpVentasCategoria.php" target="contenedorPrincipal">Ventas x Clasificador</a></li>
-							<li><a href="rptOpVentasLineasProveedor.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>
-							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>
-							<li><a href="rptOpVentasxItem.php" target="contenedorPrincipal">Ventas x Item</a></li>
-							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
-							<li><a href="rptOpVentasxPersona.php" target="contenedorPrincipal">Ventas x Vendedor</a></li>
-							<!--li><a href="rptOpKardexCliente.php" target="contenedorPrincipal">Kardex x Cliente</a></li-->
-						</ul>	
-					</li>
-					<li><span>Ventas Perdidas</span>
-						<ul>
-							<li><a href="rptOpVentasSucursalPerdido.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
-							<li><a href="rptOpVentasLineasProveedorPerdido.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>
-							<li><a href="rptOpVentasxItemPerdido.php" target="contenedorPrincipal">Ventas x Item</a></li>							
-						</ul>	
-					</li>
-					<li><span>Reportes Contables</span>
-						<ul>
-							<li><a href="rptOpLibroVentas.php" target="contenedorPrincipal">Libro de Ventas</a></li>
-							<li><a href="" target="contenedorPrincipal">Libro de Compras</a></li>
-							<!--li><a href="rptOpKardexCliente.php" target="contenedorPrincipal">Kardex x Cliente</a></li-->
-						</ul>	
-					</li>
-					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
-					<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>	
-			
-				</ul>
-			</li>
 		</ul>
 	 </div>				
 	</nav>

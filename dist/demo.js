@@ -10,7 +10,7 @@ new Mmenu(
                     iconbar: {
                         use: '(min-width: 450px)',
                         top: [
-                            '<a href="#/"><span class="fa fa-search"></span></a>',
+                            '<a href="#/"><span class="fa fa-angle-right"></span></a>',
                             
                         ],
                     },
@@ -30,17 +30,14 @@ new Mmenu(
                         {
                             type: 'tabs',
                             content: [
-                                '<a href="#panel-menu"><i class="fa fa-bars"></i> <span>Menu</span></a>'
+                                '<a href="#panel-menu"><span>OPCIONES</span></a>','breadcrumbs', 'close'
                                 
                             ],
                         },
                         {
-                            content: ['prev', 'breadcrumbs', 'close'],
-                        },
-                        {
                             position: 'bottom',
                             content: [
-                                '<a href="http://mmenu.frebsite.nl/wordpress-plugin" target="_blank">Farmacias Bolivia</a>',
+                                '<a href="http://farmaciasbolivia.com.bo" target="_blank">Farmacias Bolivia</a>',
                             ],
                         },
                     ],

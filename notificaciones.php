@@ -3,7 +3,16 @@ if(!function_exists('notificaciones_ingresos')){
   function notificaciones_ingresos(){
     return "Correcto";
   }
-   // INICIO NOTIFICACION
+
+$sqlConf="SELECT valor_configuracion FROM configuraciones where id_configuracion=28";
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$notificar=0;
+while($datConf=mysqli_fetch_array($respConf)){
+     $notificar=$datConf[0];   
+}
+
+  if($notificar==1){
+       // INICIO NOTIFICACION
 $global_almacen=$_COOKIE["global_almacen"];
 $sqlNoti="SELECT count(*)as cantidad
   FROM salida_almacenes s, tipos_salida ts, almacenes a 
@@ -41,4 +50,5 @@ if($ingresoPendiente>0&&!($soloname=="navegador_ingresotransito"||$soloname=="re
   <?php
 }
 //FIN NOTIFICACION
+  }//FIN DE NOTIFICAR
 }

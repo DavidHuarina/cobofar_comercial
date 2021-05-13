@@ -33,7 +33,7 @@ $fechaFinal=$fechaF[2]."/".$fechaF[1]."/".$fechaF[0];
     </tr>
    </thead>  
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("Aà");//obtenerListadoAlmacenes();//=obtenerListadoMarkets(utf8_decode($idCiudad));
+$listAlma=obtenerListadoMarkets(utf8_decode($idCiudad));//obtenerListadoAlmacenesEspecifico("Aà");//obtenerListadoAlmacenes();//=obtenerListadoMarkets(utf8_decode($idCiudad));
 foreach ($listAlma->lista as $alma) {
       $age1=$alma->age1;
       $nombre=$alma->des;
@@ -61,7 +61,7 @@ foreach ($listAlma->lista as $alma) {
           $saldo_uni=$row['SALDO'];
           $saldo_caja=0;
         }
-        if(($saldo_uni+$saldo_uni)>0){
+        if(($saldo_uni+$saldo_caja)>0){
         ?><tr>
           <td class='font-weight-bold'><?=$nombre?></td>
           <td><?=$cod_prod?></td>

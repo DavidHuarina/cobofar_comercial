@@ -1023,7 +1023,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 </td>
 <td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" title="Registrar Nuevo Cliente" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="guardarPedido(0)"
-	class="btn btn-default btn-sm" title="Guardar Venta Perdida"><i class="material-icons">save</i> Venta Perdida </a>
+	class="btn btn-default btn-sm" title="Guardar Venta Perdida"><i class="material-icons">save</i> V. Perdida </a>
 <a href="#" onclick="cambiarTipoVenta2()"
 	class="btn btn-info btn-sm btn-fab" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i><!--corporate_fare--></a>
 </td>

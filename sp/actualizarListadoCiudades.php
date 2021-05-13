@@ -25,6 +25,7 @@ foreach ($listAlma->lista as $alma) {
 	$age=$alma->age;
 	$tipo=1;// TIPO DE CIUDAD
     $estado=1;
+    $codAlma=$alma->codalma;
     if($alma->tipo=="E"){
     	$estado=2;
     }
@@ -34,13 +35,13 @@ foreach ($listAlma->lista as $alma) {
 	if($cod_existe>0){
 		$contador++;
 		//update
-		$sql="UPDATE ciudades SET descripcion='$nombre',tipo='$tipo',direccion='$direccion',codigo_anterior='$age1',cod_estadoreferencial=$estado where cod_ciudad='$cod_existe'";
+		$sql="UPDATE ciudades SET descripcion='$nombre',tipo='$tipo',direccion='$direccion',codigo_anterior='$age1',cod_estadoreferencial=$estado,codalma='$codAlma' where cod_ciudad='$cod_existe'";
         $sqlinserta=mysqli_query($enlaceCon,$sql);
         //echo $age1."  ".$cod_existe."<br>";
 	}else{		
         //insert
-		$sql="INSERT INTO ciudades (descripcion,tipo,direccion,codigo_anterior,cod_estadoreferencial)
-        VALUES ('$nombre','$tipo','$direccion','$age1','$estado')";
+		$sql="INSERT INTO ciudades (descripcion,tipo,direccion,codigo_anterior,cod_estadoreferencial,codalma)
+        VALUES ('$nombre','$tipo','$direccion','$age1','$estado','$codalma')";
         $sqlinserta=mysqli_query($enlaceCon,$sql);
 	}
 
