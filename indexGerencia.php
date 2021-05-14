@@ -48,8 +48,9 @@ include("datosUsuario.php");
 		 <ul>
 			<li><span>Datos Generales</span>
 				<ul>
+					<li><a href="grupos/list.php" target="contenedorPrincipal">Clasificadores</a></li>
 					<li><span>Descuentos</span>
-					<ul>
+					<ul>						
 						<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Gestión de Descuentos</a></li>
 					   <?php if($global_usuario==2019){
                          ?>

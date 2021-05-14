@@ -145,25 +145,47 @@ function obtenerCantidadPresentacionProducto($codigo){
   return $valor;
 }
 
-function stockProducto($almacen, $item){
-	//
-	require("conexionmysqli.inc");
+function stockProducto($almacen, $item){	
 	$fechaActual=date("Y-m-d");
+	$stock2=stockProductoFechas($almacen, $item,$fechaActual);
+	return($stock2);
+}
 
-	$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
+function stockProductoFechas($almacen, $item,$fechaActual){
+	$estilosVenta=1;
+	require("conexionmysqli.inc");
+    $sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
 			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$fechaActual' and i.cod_almacen='$almacen'
 			and id.cod_material='$item' and i.ingreso_anulado=0";
-			$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
-			$dat_ingresos=mysqli_fetch_array($resp_ingresos);
-			$cant_ingresos=$dat_ingresos[0];
-			$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
+	$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+	$dat_ingresos=mysqli_fetch_array($resp_ingresos);
+	$cant_ingresos=$dat_ingresos[0];
+	$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
 			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha<='$fechaActual' and s.cod_almacen='$almacen'
 			and sd.cod_material='$item' and s.salida_anulada=0";
-			$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
-			$dat_salidas=mysqli_fetch_array($resp_salidas);
-			$cant_salidas=$dat_salidas[0];
-			$stock2=$cant_ingresos-$cant_salidas;
-	return($stock2);
+	$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
+	$dat_salidas=mysqli_fetch_array($resp_salidas);
+	$cant_salidas=$dat_salidas[0];
+	$stock2=$cant_ingresos-$cant_salidas;
+
+	$sql_ingresos="select sum(id.cantidad_envase) from ingreso_almacenes i, ingreso_detalle_almacenes id
+			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$fechaActual' and i.cod_almacen='$almacen'
+			and id.cod_material='$item' and i.ingreso_anulado=0";
+	$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+	$dat_ingresos=mysqli_fetch_array($resp_ingresos);
+	$cant_ingresos2=$dat_ingresos[0];
+	$sql_salidas="select sum(sd.cantidad_envase) from salida_almacenes s, salida_detalle_almacenes sd
+			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha<='$fechaActual' and s.cod_almacen='$almacen'
+			and sd.cod_material='$item' and s.salida_anulada=0";
+	$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
+	$dat_salidas=mysqli_fetch_array($resp_salidas);
+	$cant_salidas2=$dat_salidas[0];
+	$stock2Caja=$cant_ingresos2-$cant_salidas2;
+
+    $cantPres=obtenerCantidadPresentacionProducto($item);
+    
+
+	return $stock2+($stock2Caja/$cantPres);
 }
 
 function precioProductoAlmacen($ciudad, $item){
@@ -179,7 +201,7 @@ function precioProductoAlmacen($ciudad, $item){
 }
 
 function stockProductoVencido($almacen, $item){
-	//
+	$estilosVenta=1;
 	require("conexionmysqli.inc");
 	$fechaActual=date("Y-m-d");
 
@@ -188,7 +210,17 @@ function stockProductoVencido($almacen, $item){
 	$dat_ingresos=mysqli_fetch_array($resp_ingresos);
 	$cant_ingresos=$dat_ingresos[0];
 	$stock2=$cant_ingresos;
-	return($stock2);
+
+	$sql_ingresos="select sum(id.cantidad_restante_envase) from ingreso_almacenes i, ingreso_detalle_almacenes id where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$almacen' and i.ingreso_anulado=0 and id.fecha_vencimiento<'$fechaActual' and id.cod_material='$item'";
+
+	$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+	$dat_ingresos=mysqli_fetch_array($resp_ingresos);
+	$cant_ingresosCaja=$dat_ingresos[0];
+	$stock2Caja=$cant_ingresosCaja;
+
+    $cantPres=obtenerCantidadPresentacionProducto($item);
+    
+	return $stock2+($stock2Caja/$cantPres);
 }
 
 function stockMaterialesEdit($almacen, $item, $cantidad){
