@@ -37,7 +37,7 @@ new Mmenu(
                         {
                             position: 'bottom',
                             content: [
-                                '<a href="http://farmaciasbolivia.com.bo" target="_blank">Farmacias Bolivia</a>',
+                                '<a href="http://farmaciasbolivia.com.bo" target="_blank">Farmacias Bolivia - Comercial</a>',
                             ],
                         },
                     ],
