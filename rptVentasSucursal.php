@@ -19,6 +19,8 @@ $codTipoPago=$_GET['codTipoPago'];
 $fecha_iniconsulta=$fecha_ini;
 $fecha_finconsulta=$fecha_fin;
 
+$diaPrimerMes=explode("-",$fecha_iniconsulta)[2];
+$diaUltimoMes=explode("-",$fecha_finconsulta)[2];
 
 $rpt_territorio=$_GET['codTipoTerritorio'];
 
@@ -83,11 +85,11 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   	$dateInicio = date("Y-m", $tiempoInicio2)."-01";
   	$dateFin = date("Y-m-t", $tiempoInicio2);
   	//para listar desde el dia escogido en el primer y ultimo mes
-  	if($cantidadMes==0){
-  		$dateInicio=date('Y-m-d', strtotime($fecha_iniconsulta));
+  	if($cantidadMes2==0){
+  		$dateInicio=date('Y-m', strtotime($fecha_iniconsulta))."-".$diaPrimerMes;
   	}
   	if($cantidadMes2==$cantidadMes){
-  		$dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
+      $dateFin=date('Y-m', strtotime($fecha_finconsulta))."-".$diaUltimoMes;
   	}
     
     if(obtenerValorConfiguracion(32)==1){

@@ -38,7 +38,7 @@ $fechaFinal=$fechaF[2]."/".$fechaF[1]."/".$fechaF[0];
 </tr>
    </thead>
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("Aà");//obtenerListadoAlmacenes();
+$listAlma=obtenerListadoAlmacenes();//obtenerListadoAlmacenesEspecifico("Aà");//obtenerListadoAlmacenes();
 foreach ($listAlma->lista as $alma) {
       $age1=$alma->age1;
       $nombre=$alma->des;
