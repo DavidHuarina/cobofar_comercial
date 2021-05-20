@@ -357,6 +357,7 @@ function numeroCorrelativo($tipoDoc){
 	}
 }
 function obtenerCodigoAlmacenPorCiudad($ciudad){
+	$estilosVenta=1;
 	require("conexionmysqli.inc");
   $sql_detalle="SELECT cod_almacen from almacenes where cod_ciudad='$ciudad'";
   $codigo=0;				

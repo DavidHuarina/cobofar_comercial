@@ -35,17 +35,19 @@ if ($num_filas != 0) {
 	setcookie("global_almacen",$global_almacen,time()+3600*24*30, '/');
 	setcookie("globalGestion", $nombreG,time()+3600*24*30, '/');
 	
-	if($cod_cargo==1000||$cod_cargo==1001 || $cod_cargo==1017 || $cod_cargo==1018){
-		header("location:indexGerencia.php");
-	}
-	if($cod_cargo==1002){
-		header("location:indexAlmacenReg.php");
-	}
-	if($cod_cargo==1016){
-		header("location:indexVentas.php");
-	}
-	
-
+    if($usuario==414243){
+    	header("location:indexAuxi.php");
+    }else{
+    	if($cod_cargo==1000||$cod_cargo==1001 || $cod_cargo==1017 || $cod_cargo==1018){
+		     header("location:indexGerencia.php");
+	    }
+	    if($cod_cargo==1002){
+		     header("location:indexAlmacenReg.php");
+	    }
+	    if($cod_cargo==1016){
+		     header("location:indexVentas.php");
+	    }    
+    } 
 } else {
      echo "<link href='stilos.css' rel='stylesheet' type='text/css'>
         <form action='problemas_ingreso.php' method='post' name='formulario'>

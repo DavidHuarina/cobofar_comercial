@@ -11,13 +11,10 @@ header("Pragma: no-cache");
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 
 require_once __DIR__.'/../conexion_externa_farma.php';
-require_once '../function_web.php';
+//require_once '../function_web.php';
 
-$idProveedor=implode(",",$_POST["proveedor"]);
-$fechaI=explode("-",$_POST["desde"]);
-$fechaF=explode("-",$_POST["hasta"]);
-$fechaInicio=$fechaI[2]."/".$fechaI[1]."/".$fechaI[0];
-$fechaFinal=$fechaF[2]."/".$fechaF[1]."/".$fechaF[0];
+$fechaInicio="01/03/2021";
+$fechaFinal="14/05/2021";
 
 ?>
 <center><h3><b>PRODUCTOS VENTAS Y SALDO</b></h3></center>
@@ -35,28 +32,17 @@ $fechaFinal=$fechaF[2]."/".$fechaF[1]."/".$fechaF[0];
     </tr>
    </thead>
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("AG");//;obtenerListadoAlmacenes();
-foreach ($listAlma->lista as $alma) {
-      $age1=$alma->age1;
-      $nombre=$alma->des;
-      $ip=$alma->ip;
+      $age1="AS";
+      $nombre="ORTEGA";
+      $ip="10.10.20.12";
       $dbh = ConexionFarma($ip,"Gestion");
-      /*$sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,SUM((CAN+CAN1)*((PREUNIT-((PREUNIT*DESCTO1)/100))-(((PREUNIT-((PREUNIT*DESCTO1)/100))*DESCTO2)/100))-((((PREUNIT-((PREUNIT*DESCTO1)/100))-(((PREUNIT-((PREUNIT*DESCTO1)/100))*DESCTO2)/100))*DESCTO3)/100)) AS MONTO_V
-FROM VFICHAD d LEFT JOIN APRODUCTOS P ON P.CPROD=d.CPROD
-WHERE d.STA in ('V','M')
-AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio 00:00:00' AND '$fechaFinal 23:59:59'
-GROUP BY d.CPROD,P.DES;";*/
-/*$sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,SUM((CAN+CAN1)*(PREUNIT-((PREUNIT*DESCTO1)/100)-((PREUNIT*DESCTO2)/100)-((PREUNIT*DESCTO3)/100))) AS MONTO_V
-FROM VFICHAD d LEFT JOIN APRODUCTOS P ON P.CPROD=d.CPROD
-WHERE d.STA in ('V','M')
-AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal'
-GROUP BY d.CPROD,P.DES;";*/
-//FALTA APLICAR DESCUENTOS
+
 $sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,sum(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))-(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))*DESCTO3)/100))) AS MONTO_V
 FROM VFICHAD d LEFT JOIN APRODUCTOS P ON P.CPROD=d.CPROD
 WHERE d.STA in ('V','M')
 AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal'
 GROUP BY d.CPROD,P.DES;";
+//echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -71,8 +57,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           <td><?=$cant_ven?></td>
           <td><?=number_format($monto_ven,2,'.',',')?></td>
         </tr><?php
-      }
 }
-
 ?>
   </table>

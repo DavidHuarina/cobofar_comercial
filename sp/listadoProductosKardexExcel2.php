@@ -1,30 +1,59 @@
 <?php
+function conexionSqlServer($ip,$database){
+  $serverName = $ip;
+  $uid = "sistema";     
+  $pwd = "sistema";
+  if($ip!="10.10.1.11"){
+     $enlaceCon=mysqli_connect("127.0.0.1","root","","farmaciasalmacen");
+     $sql = "SELECT ip FROM sucursales_minusculas where ip='$ipCon'";
+     $resp = mysqli_query($enlaceCon,$sql);
+     $ipSuc=mysqli_result($resp,0,0);
+     $pwd="B0L1V14.@1202";
+     if($serverName==$ipSuc){
+          $pwd="B0l1v14.@1202";
+     }
+  }  
+
+  $databaseName = $database;  
+  $connectionInfo = array("UID" => $uid, "PWD" => $pwd, "Database"=>$databaseName);  
+  $conn = sqlsrv_connect( $serverName, $connectionInfo);  
+  if( $conn ){  
+    return $conn;
+  }else{  
+     return false;
+  }  
+  //sqlsrv_close( $conn);  
+}
+
 ini_set('memory_limit','1G');
 set_time_limit(0);
 require_once __DIR__.'/../conexion_externa_farma.php';
 require '../conexionmysqli.inc';
 require_once '../function_web.php';
 require_once '../funciones.php';
+
+$ipAlma=$_GET["ip"];
+$ag=$_GET["age"];
+
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
     <title></title>
     <meta charset="utf-8">
 </head>
 <body>
-
 <?php
 //DATOS PARA LISTAR DOCUMENTOS
 $fechaDesde="01/01/2020";
 $fechaHasta="31/12/2020";
-
-$dbh = new ConexionFarmaSucursal(); 
+$indexx=1;
+$dbh = conexionSqlServer($ipAlma,"Gestion"); 
 ?><br><br><h4>REPORTE DE KARDEX</h4><br><br>
 
 <table class="table table-bordered table-condensed">
   <tr class='bg-success text-white'>
+      <td>N.</td>
       <td>SUCURSAL</td>
       <td>CODIGO</td>
       <td>DESCRIPCION</td>
@@ -34,15 +63,13 @@ $dbh = new ConexionFarmaSucursal();
       <td>DIFERENCIA CAJA</td>
       <td>DIFERENCIA SUELTA</td>
   </tr>
-
-
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("AF");//web service
+$listAlma=obtenerListadoAlmacenesEspecifico($age);//web service
 $contador=0;
 $arrayProductos=[];
 foreach ($listAlma->lista as $alma) {
 
-      $age1="AF";
+      $age1=$alma->age1;
       $nombre=$alma->des;
       $ip=$alma->ip;
       //echo $ip;
@@ -79,9 +106,11 @@ foreach ($listAlma->lista as $alma) {
         if($kardex_unitario==0){
             $saldo_unitario=0;
         }
-
-        if(!($saldo==0&&$saldo_unitario==0)){          
+        
+        //if(!($saldo==0&&$saldo_unitario==0)){          
+        if(($kardex+$kardex_unitario)!=$ventas){          
         ?><tr>
+          <td><?=$indexx?></td>
           <td class='font-weight-bold'><?=$nombre?></td>
           <td><?=$cod_prod?></td>
           <td><?=$des_prod?></td>
@@ -91,6 +120,7 @@ foreach ($listAlma->lista as $alma) {
           <td><?=$saldo?></td>
           <td><?=$saldo_unitario?></td>
         </tr><?php
+        $indexx++;
        }     
      }
 }

@@ -10,6 +10,7 @@ require('function_formatofecha.php');
 require('conexionmysqli.inc');
 require('funcion_nombres.php');
 require('funciones.php');
+require('function_weboficial.php');
 $fecha_ini=$_GET['fecha_ini'];
 $fecha_fin=$_GET['fecha_fin'];
 $codTipoPago=$_GET['codTipoPago'];
@@ -88,8 +89,12 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
   	if($cantidadMes2==$cantidadMes){
   		$dateFin=date('Y-m-d', strtotime($fecha_finconsulta));
   	}
-
-  	$montoVenta=obtenerMontoVentasGeneradas($dateInicio,$dateFin,$codigoSuc,$codTipoPago);
+    
+    if(obtenerValorConfiguracion(32)==1){
+      $montoVenta=obtenerMontoVentasGeneradasAnterior(formatearFecha2($dateInicio),formatearFecha2($dateFin),obtenerCodigoAlmacenPorCiudad($codigoSuc));
+    }else{
+      $montoVenta=obtenerMontoVentasGeneradas($dateInicio,$dateFin,$codigoSuc,$codTipoPago);
+    }  	
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
   		?><td><?=number_format($montoVenta,2,'.',',')?></td><?php

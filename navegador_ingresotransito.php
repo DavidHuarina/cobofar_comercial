@@ -71,7 +71,7 @@ echo "<script language='Javascript'>
            $chk = "&nbsp;";
            $obs_salida=$obs_salida."<br><b class='text-danger'>(".$dat[8].")</b>";
         }
-		echo "<tr style='background:$color_fondo'><td>$chk</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen $ciudad_almacen_origen</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td><a target='_BLANK' href='detalleIngresoTransito.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
+		echo "<tr style='background:$color_fondo'><td>$chk</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_almacen_origen [$ciudad_almacen_origen]</td><td align='center'>$nro_correlativo</td><td>&nbsp;$obs_salida</td><td><a target='_BLANK' href='detalleIngresoTransito.php?codigo_salida=$codigo&almacen_origen=$cod_almacen_origen'>";
 		
 		echo "<img src='imagenes/detalle.png' title='Ver Detalles' width='40'></a></td></tr>";
 	}

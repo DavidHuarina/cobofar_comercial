@@ -51,7 +51,8 @@ while($tiempoInicio <= $tiempoFin){
 </tr>
    </thead>
 <?php
-$listAlma=obtenerListadoMarkets(utf8_decode($idCiudad));
+//$listAlma=obtenerListadoMarkets(utf8_decode($idCiudad));
+$listAlma=obtenerListadoAlmacenesEspecifico("A>");
 foreach ($listAlma->lista as $alma) {
       $age1=$alma->age1;
       $nombre=$alma->des;
