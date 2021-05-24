@@ -1,5 +1,7 @@
 <?php
-
+if(isset($_GET["dv"])){
+  $estilosVenta=1;	
+}
 require("../../conexionmysqli.inc");
 
 $nomCli = $_GET["nomcli"];
@@ -24,17 +26,30 @@ $mail = str_replace("'", "''", $mail);
 $area = $area;
 $fact = str_replace("'", "''", $fact);
 
+$sql = "select IFNULL(MAX(cod_cliente)+1,1) from clientes order by cod_cliente desc";
+$resp = mysqli_query($enlaceCon,$sql);
+$codigoCliente=mysqli_result($resp,0,0);
+
 $consulta="
 INSERT INTO clientes (cod_cliente, nombre_cliente,paterno, nit_cliente, dir_cliente, telf1_cliente, email_cliente, cod_area_empresa, nombre_factura, cod_tipo_precio,cod_tipo_edad,ci_cliente,cod_genero)
-VALUES ( (SELECT ifnull(max(c.cod_cliente),0)+1 FROM clientes c) , '$nomCli','$apCli', '$nit', '$dir', '$tel1', '$mail', $area, '$fact', '$tipoPrecio','$edad','$ci','$genero')
+VALUES ('$codigoCliente', '$nomCli','$apCli', '$nit', '$dir', '$tel1', '$mail', $area, '$fact', '$tipoPrecio','$edad','$ci','$genero')
 ";
-//echo $consulta;
-$resp=mysqli_query($enlaceCon,$consulta);
-if($resp) {
+if(isset($_GET["dv"])){
+  $resp=mysqli_query($enlaceCon,$consulta);
+  if($resp) {
+    echo "#####".$codigoCliente;
+  } else {
+    echo "#####0";
+  }
+}else{
+  //echo $consulta;
+  $resp=mysqli_query($enlaceCon,$consulta);
+  if($resp) {
     echo "<script type='text/javascript' language='javascript'>alert('Se ha adicionado un nuevo cliente.');listadoClientes();</script>";
-} else {
+  } else {
     //echo "$consulta";
     echo "<script type='text/javascript' language='javascript'>alert('Error al crear cliente');</script>";
+  }
 }
 
 ?>

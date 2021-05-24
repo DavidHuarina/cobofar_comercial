@@ -43,7 +43,14 @@ echo "<tr><th>Llave de Dosificacion</th>
 echo "<tr><th>Fecha Limite Emision</th>
 	<td><input type='date' name='fecha_limite_emision' id='fecha_limite_emision' required></td>
 	</tr>";
-
+echo "<tr><th>Tipo</th>";
+echo "<td>
+        <select name='tipo_dosificacion' id='tipo_dosificacion' required>
+			<option value='1'>FACTURA SISTEMA</option>
+			<option value='2'>FACTURA MANUAL</option>";
+	echo "</select>
+</td>";
+echo "</tr>";
 echo "</table></center>";
 
 echo "<div class='divBotones'>

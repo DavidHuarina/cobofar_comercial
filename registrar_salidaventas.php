@@ -815,6 +815,62 @@ function cambiarTipoVenta2(){
 	}
   
 }
+
+function registrarNuevoCliente(){
+	$("#nit").val($("#nitCliente").val());
+	$("#nomcli").val($("#razonSocial").val());
+	$("#modalNuevoCliente").modal("show");
+}
+function adicionarCliente() {
+    var nomcli = $("#nomcli").val();
+    var apcli = $("#apcli").val();
+    var ci = $("#ci").val();
+    var nit = $("#nit").val();
+    var dir = $("#dir").val();
+    var tel1 = $("#tel1").val();
+    var mail = $("#mail").val();
+    var area = $("#area").val();
+    var fact = $("#fact").val();
+    var edad = $("#edad").val();
+    var genero = $("#genero").val();
+
+  if(nomcli==""||ci==""){
+    Swal.fire("Informativo!", "Debe llenar los campos obligatorios", "warning");
+  }else{
+    var parametros={"nomcli":nomcli,"nit":nit,"ci":ci,"dir":dir,"tel1":tel1,"mail":mail,"area":area,"fact":fact,"edad":edad,"apcli":apcli,"genero":genero,"dv":1};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/clientes/prgClienteAdicionar.php",
+        data: parametros,
+        success:  function (resp) { 
+           var r=resp.split("#####");
+           if(parseInt(r[1])>0){
+           	  refrescarComboCliente(r[1]);                         
+           }else{
+           	  $("#modalNuevoCliente").modal("hide"); 
+           	  Swal.fire("Error!", "Error al crear cliente", "error");
+           }            
+                            	   
+        }
+    });	
+  }
+}
+function refrescarComboCliente(cliente){
+	var parametros={"cliente":cliente};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "listaClientesActual.php",
+        data: parametros,
+        success:  function (resp) {
+        	Swal.fire("Correcto!", "Se guardó el cliente con éxito", "success");   
+           $("#cliente").html(resp);  
+           $("#cliente").selectpicker("refresh");          
+           $("#modalNuevoCliente").modal("hide");                  	   
+        }
+    });	
+}
 </script>
 <?php
 if(!isset($fecha)||$fecha==""){   
@@ -830,7 +886,7 @@ while($filaUSD=mysqli_fetch_array($respUsd)){
 $usuarioVentas=$_COOKIE['global_usuario'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];
-
+$cuidadDefecto=$globalAgencia;
 //SACAMOS LA CONFIGURACION PARA EL DOCUMENTO POR DEFECTO
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=1";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
@@ -862,6 +918,46 @@ $porcentajeDescuentoReal=0;
 $porcentajeDescuentoRealNombre="Descuento";
 
 include("datosUsuario.php");
+
+
+
+$cadComboCiudad = "";
+$consulta="SELECT c.cod_ciudad, c.descripcion FROM ciudades AS c WHERE 1 = 1 ORDER BY c.descripcion ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codCiudad = $reg["cod_ciudad"];
+    $nomCiudad = $reg["descripcion"];
+    $cadComboCiudad=$cadComboCiudad."<option value='$codCiudad'>$nomCiudad</option>";
+   }
+
+   $cadComboEdad = "";
+$consultaEdad="SELECT c.codigo,c.nombre, c.abreviatura FROM tipos_edades AS c WHERE c.estado = 1 ORDER BY 1";
+$rs=mysqli_query($enlaceCon,$consultaEdad);
+while($reg=mysqli_fetch_array($rs))
+   {$codigoEdad = $reg["codigo"];
+    $nomEdad = $reg["abreviatura"];
+    $desEdad = $reg["nombre"];
+    $cadComboEdad=$cadComboEdad."<option value='$codigoEdad'>$nomEdad ($desEdad)</option>";
+   }
+
+$cadTipoPrecio="";
+$consulta1="select t.`codigo`, t.`nombre` from `tipos_precio` t";
+$rs1=mysqli_query($enlaceCon,$consulta1);
+while($reg1=mysqli_fetch_array($rs1))
+   {$codTipo = $reg1["codigo"];
+    $nomTipo = $reg1["nombre"];
+    $cadTipoPrecio=$cadTipoPrecio."<option value='$codTipo'>$nomTipo</option>";
+   }
+
+$cadComboGenero="";
+$consult="select t.`cod_genero`, t.`descripcion` from `generos` t where cod_estadoreferencial=1";
+$rs1=mysqli_query($enlaceCon,$consult);
+while($reg1=mysqli_fetch_array($rs1))
+   {$codTipo = $reg1["cod_genero"];
+    $nomTipo = $reg1["descripcion"];
+    $cadComboGenero=$cadComboGenero."<option value='$codTipo'>$nomTipo</option>";
+   }
+
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
 	<input type="hidden" id="pedido_realizado" value="0">
@@ -1022,10 +1118,10 @@ while($dat2=mysqli_fetch_array($resp2)){
 	<!--<input type="hidden" name="tipoPrecio" value="1">-->
 
 </td>
-<td><a target="_blank" href="programas/clientes/inicioClientes.php?registrar=0" title="Registrar Nuevo Cliente" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="guardarPedido(0)"
-	class="btn btn-default btn-sm" title="Guardar Venta Perdida"><i class="material-icons">save</i> V. Perdida </a>
+<td><a href="#" title="Registrar Nuevo Cliente" onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="guardarPedido(0)"
+	class="btn btn-danger btn-sm btn-fab float-right" title="Guardar Venta Perdida"><i class="material-icons">search_off</i></a>
 <a href="#" onclick="cambiarTipoVenta2()"
-	class="btn btn-info btn-sm btn-fab" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i><!--corporate_fare--></a>
+	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i><!--corporate_fare--></a>
 </td>
 </tr>
 
@@ -1387,7 +1483,115 @@ if($banderaErrorFacturacion==0){
   </div>
 <!--    end small modal -->
 
-<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalNuevoCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+                <div class="card-header card-header-warning card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">add</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Nuevo Cliente</h4>
+                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombre (*)</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="nomcli" required value="<?php echo "$nomCliente"; ?>"/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">Apellidos</label>
+                  <div class="col-sm-5">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="apcli" value="<?php echo "$apCliente"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">CI (*)</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="ci" value="<?php echo "$ciCliente"; ?>"required/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">NIT</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="nit" value="<?php echo "$nitCliente"; ?>" required/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">Teléfono</label>
+                  <div class="col-sm-2">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="tel1" value="<?php echo "$telefono1"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Dirección</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="dir" value="<?php echo "$dirCliente"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Email</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <input class="form-control" type="email" id="mail" value="<?php echo "$email"; ?>" required/>
+                    </div>
+                  </div>
+                  <label class="col-sm-1 col-form-label">Factura</label>
+                  <div class="col-sm-2">
+                    <div class="form-group">
+                      <input class="form-control" type="text" id="fact" value="<?php echo "$nomFactura"; ?>" required/>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Género</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="genero"id="genero" data-style="btn btn-primary" data-live-search="true" required>
+                           <?php echo "$cadComboGenero"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Edad</label>
+                  <div class="col-sm-7">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="edad"id="edad" data-style="btn btn-warning" data-live-search="true" required>
+                          <?php echo "$cadComboEdad"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" name="area" id="area" value="<?=$cuidadDefecto?>">           
+
+                </div>
+                <div  class="card-footer">
+                   <div class="">
+                      <input class="btn btn-success" type="button" value="Guardar" onclick="javascript:adicionarCliente();" />
+                       <input class="btn btn-danger" type="button" value="Cancelar" data-dismiss="modal" aria-hidden="true" />
+                   </div>
+                 </div> 
+    </div>
+  </div>
+<!--    end small modal -->
+
+
+<!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
  <script type="text/javascript">mueveReloj()</script>
 </body>

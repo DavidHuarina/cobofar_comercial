@@ -31,8 +31,33 @@ $archivoname=$narchivo[count($narchivo)-1];
 $soloname=explode(".",$archivoname)[0];
 if($ingresoPendiente>0&&!($soloname=="navegador_ingresotransito"||$soloname=="registrar_ingresotransito")){
   ?>
-<script>$(document).ready(function() {
-  Swal.fire({
+<script>
+function notificacion_navegador(titulo,texto,imagen) {
+if (Notification) {
+    if (Notification.permission !== "granted") {
+    Notification.requestPermission()
+    }    
+    var title = titulo
+    var extra = {
+       icon: imagen,
+       body: texto
+    }
+    var noti = new Notification( title, extra)
+    noti.onclick = function(event) {
+        event.preventDefault();
+        window.open('navegador_ingresotransito.php', '_blank');
+    }
+    noti.onclose = {
+    // Al cerrar
+    }
+    setTimeout( function() { noti.close() }, 5000)
+   }
+}
+
+  $(document).ready(function() {
+    notificacion_navegador('FARMACIAS BOLIVIA','<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?> ','<?=$dirNoti?>imagenes/logoMinka.png');
+
+  /*Swal.fire({
       title: '<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?>',
       html:'Debe ingresar los <b>documentos pendientes</b>, ' +
     '<a href="navegador_ingresotransito.php">Aqui</a> ' +
@@ -45,7 +70,7 @@ if($ingresoPendiente>0&&!($soloname=="navegador_ingresotransito"||$soloname=="re
       padding: '3em',
       background: '#fff url(/<?=$dirNoti?>imagenes/trees.png)',
       backdrop: ' rgba(0,0,123,0.8) center top no-repeat'
-   });
+   });*/
     });</script>
   <?php
 }

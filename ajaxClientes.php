@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $nitCliente=$_GET['nitCliente'];
 
 $sql="select f.cod_cliente from clientes f 

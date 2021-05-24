@@ -304,6 +304,7 @@ function obtenerProductoCantidadLinea($codigo,$cb){
 }
 
 function numeroCorrelativo($tipoDoc){
+	$estilosVenta=1;
 	require("conexionmysqli.inc");
 	$banderaErrorFacturacion=0;
 	//SACAMOS LA CONFIGURACION PARA CONOCER SI LA FACTURACION ESTA ACTIVADA
@@ -317,13 +318,44 @@ function numeroCorrelativo($tipoDoc){
 	if($facturacionActivada==1 && $tipoDoc==1){
 		//VALIDAMOS QUE LA DOSIFICACION ESTE ACTIVA
 		$sqlValidar="select count(*) from dosificaciones d 
-		where d.cod_sucursal='$globalAgencia' and d.cod_estado=1 and d.fecha_limite_emision>='$fechaActual'";
+		where d.cod_sucursal='$globalAgencia' and d.cod_estado=1 and d.fecha_limite_emision>='$fechaActual' and d.tipo_dosificacion=1";
 		$respValidar=mysqli_query($enlaceCon,$sqlValidar);
 		$numFilasValidar=mysqli_result($respValidar,0,0);
 		
 		if($numFilasValidar==1){
 			$sqlCodDosi="select cod_dosificacion from dosificaciones d 
-			where d.cod_sucursal='$globalAgencia' and d.cod_estado=1";
+			where d.cod_sucursal='$globalAgencia' and d.cod_estado=1 and d.tipo_dosificacion=1";
+			$respCodDosi=mysqli_query($enlaceCon,$sqlCodDosi);
+			$codigoDosificacion=mysqli_result($respCodDosi,0,0);
+		
+			if($tipoDoc==1){//validamos la factura para que trabaje con la dosificacion
+				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
+				and cod_dosificacion='$codigoDosificacion'";	
+			}else{
+				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc'";
+			}
+			//echo $sql;
+			$resp=mysqli_query($enlaceCon,$sql);
+			$codigo=mysqli_result($resp,0,0);
+			
+			$vectorCodigo = array($codigo,$banderaErrorFacturacion,$codigoDosificacion);
+			return $vectorCodigo;
+		}else{
+			$banderaErrorFacturacion=1;
+			$vectorCodigo = array("DOSIFICACION INCORRECTA O VENCIDA",$banderaErrorFacturacion,0);
+			return $vectorCodigo;
+		}
+	}
+	if($facturacionActivada==1 && $tipoDoc==4){
+		//VALIDAMOS QUE LA DOSIFICACION ESTE ACTIVA
+		$sqlValidar="select count(*) from dosificaciones d 
+		where d.cod_sucursal='$globalAgencia' and d.cod_estado=1 and d.fecha_limite_emision>='$fechaActual' and d.tipo_dosificacion=2";
+		$respValidar=mysqli_query($enlaceCon,$sqlValidar);
+		$numFilasValidar=mysqli_result($respValidar,0,0);
+		
+		if($numFilasValidar==1){
+			$sqlCodDosi="select cod_dosificacion from dosificaciones d 
+			where d.cod_sucursal='$globalAgencia' and d.cod_estado=1 and d.tipo_dosificacion=2";
 			$respCodDosi=mysqli_query($enlaceCon,$sqlCodDosi);
 			$codigoDosificacion=mysqli_result($respCodDosi,0,0);
 		

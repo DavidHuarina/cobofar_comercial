@@ -67,15 +67,15 @@ echo "<script language='Javascript'>
 
 	echo "<form method='post' action=''>";
 	
-	$sql="select d.cod_dosificacion, c.descripcion, e.nombre_estado, d.nro_autorizacion, d.llave_dosificacion, d.fecha_limite_emision, d.cod_estado
+	$sql="select d.cod_dosificacion, c.descripcion, e.nombre_estado, d.nro_autorizacion, d.llave_dosificacion, d.fecha_limite_emision, d.cod_estado,d.tipo_dosificacion
 		from dosificaciones d, estados_dosificacion e, ciudades c
 		where d.cod_estado=e.cod_estado and c.cod_ciudad=d.cod_sucursal and d.cod_estado in (1,2,3)";
 	
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Registro de Dosificaciones</h1>";
 
-	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Ciudad</th><th>Nro.Autorizacion</th><th>Llave</th><th>Fecha Limite Emision</th><th>Estado</th></tr>";
+	echo "<center><table class='table table-bordered'>";
+	echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Sucursal</th><th>Nro.Autorizacion</th><th>Llave</th><th>Fecha Limite Emision</th><th>Estado</th><th>Tipo</th></tr>";
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
@@ -85,7 +85,14 @@ echo "<script language='Javascript'>
 		$llaveDosificacion=$dat[4];
 		$fechaLimiteEmision=$dat[5];
 		$codEstado=$dat[6];
-		
+		$tipoDosificacion=$dat[7];
+		if($tipoDosificacion==1){
+			$estiloTipo='';
+            $nombreDosificacion="FACTURA";
+		}else{
+            $nombreDosificacion="MANUAL";
+            $estiloTipo='text-primary';
+		}        
 		if($codEstado==2){
 			$chk="<input type='checkbox' name='codigo' value='$codigo'>";
 		}else{
@@ -94,7 +101,7 @@ echo "<script language='Javascript'>
 		
 		echo "<tr><td>$chk</td><td>$nombreCiudad</td>
 		<td>$nroAutorizacion</td><td>$llaveDosificacion</td><td>$fechaLimiteEmision</td>
-		<td>$nombreEstado</td></tr>";
+		<td>$nombreEstado</td><td><b class='$estiloTipo'>$nombreDosificacion</b></td></tr>";
 	}
 	echo "</table></center><br>";
 	
