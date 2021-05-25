@@ -2,7 +2,7 @@
 $estilosVenta=1;
 header('Content-Type: text/html; charset=UTF-8'); 
 require('fpdf.php');
-require('conexionmysqli.inc');
+require('conexionmysqli2.inc');
 require('funciones.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 

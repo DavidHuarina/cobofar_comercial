@@ -966,13 +966,13 @@ while($reg1=mysqli_fetch_array($rs1))
 <tr align='center' class="text-white header" style="color:#fff;background:#30CA99; font-size: 16px;">
 	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
 </tr>
-<tr align='center' class="text-white header">
-	<th style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
-	<th colspan="7" style="color:#fff;background:#30CA99; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
-	<th style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
+<tr align='left' class="text-white header">
+	<th colspan="2" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
+	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
+	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
 </tr>
 <tr class="bg-info text-white" align='center' style="color:#fff;background:#16B490 !important; font-size: 16px;">
-<th>Tipo de Documento</th>
+<th>Tipo de Doc.</th>
 <th>Nro.Factura</th>
 <th>Fecha</th>
 <th class='d-none'>Precio</th>
@@ -980,7 +980,7 @@ while($reg1=mysqli_fetch_array($rs1))
 <th>NIT</th>
 <th>Nombre/RazonSocial</th>
 <th>Observaciones</th>
-<th>Datos Cliente</th>
+<th>Cliente</th>
 <th>-</th>
 </tr>
 <tr>

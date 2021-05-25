@@ -13,8 +13,8 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 require_once __DIR__.'/../conexion_externa_farma.php';
 //require_once '../function_web.php';
 
-$fechaInicio="01/03/2021";
-$fechaFinal="14/05/2021";
+$fechaInicio="15/05/2021";
+$fechaFinal="15/05/2021";
 
 ?>
 <center><h3><b>PRODUCTOS VENTAS Y SALDO</b></h3></center>
@@ -26,9 +26,9 @@ $fechaFinal="14/05/2021";
     </tr>
    </thead>
 <?php
-       $age1="AS";
-      $nombre="ORTEGA";
-      $ip="10.10.20.12";
+       $age1="AG";
+      $nombre="MIRAFLORES";
+      $ip="10.10.12.12";
       $dbh = ConexionFarma($ip,"Gestion");
 
 $sql="SELECT SUM(MFACTURA) AS MONTO_V

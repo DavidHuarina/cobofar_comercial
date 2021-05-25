@@ -1,10 +1,12 @@
 <?php
 $estilosVenta=1;
 require('fpdf.php');
-require('conexionmysqli.inc');
+require('conexionmysqli2.inc');
 require('funciones.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 
+
+
 
 $codigoVenta=$_GET["codVenta"];
 
@@ -240,7 +242,6 @@ if($txtGlosaDescuento!=""){
 
 
 $tamanoLargo=200+($nroItems*3)-3;
-
 
 $pdf->Output();
 ?>

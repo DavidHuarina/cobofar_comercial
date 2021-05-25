@@ -137,7 +137,13 @@ $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almace
 $sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
 if($sql_inserta==1){
-	
+	//INSERTAMOS RECETA FACTURA
+	if(isset($_POST['cod_medico'])){
+       $cod_medico=$_POST['cod_medico'];
+       $sql_medico="INSERT INTO recetas_salidas (cod_salida_almacen,cod_medico) VALUES('$codigo','$cod_medico')";
+       $sql_medico=mysqli_query($enlaceCon,$sql_medico);
+    }
+
 	if($facturacionActivada==1){
 		//insertamos la factura
 		$sqlInsertFactura="insert into facturas_venta (cod_dosificacion, cod_sucursal, nro_factura, cod_estado, razon_social, nit, fecha, importe, 

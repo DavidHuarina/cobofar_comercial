@@ -49,9 +49,15 @@ foreach ($listAlma->lista as $alma) {
 echo "Realizado!";
 /*
 INSERTAR ALMACENES 
-$sql="INSERT INTO almacenes (cod_ciudad,nombre_almacen,responsable_almacen)
+$sql="INSERT INTO almacenes (cod_ciudad,nombre_almacen,responsable_almacen,cod_tipoalmacen)
 SELECT cod_ciudad,descripcion,0 FROM ciudades where cod_ciudad not in (SELECT c.cod_ciudad FROM ciudades c WHERE c.cod_ciudad in (SELECT cod_ciudad FROM almacenes where cod_ciudad=c.cod_ciudad));";
         $sqlinserta=mysqli_query($enlaceCon,$sql);
+
+
+        //ACTUALIZAR SUMINISTROS
+        DELETE FROM almacenes where cod_tipoalmacen=2;
+INSERT INTO almacenes (cod_ciudad,nombre_almacen,responsable_almacen,abreviatura,cod_tipoalmacen)
+SELECT cod_ciudad,nombre_almacen,responsable_almacen,abreviatura,2 as cod_tipoalmacen FROM almacenes;
 */
 ?></body>
 </html>

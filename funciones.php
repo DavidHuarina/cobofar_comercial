@@ -277,6 +277,17 @@ function verificarAlmacenCiudadExistente($age1){
   return $codigo;
 }
 
+function verificarPersonalUsuario($codigo){
+	require("conexionmysqli.inc");
+  $sql_detalle="SELECT codigo_funcionario from funcionarios where codigo_funcionario='$codigo'";
+  $codigo=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+      $codigo=$detalle[0];		
+  }  
+  return $codigo;
+}
+
 function verificarProductoExistente($codigo){
 	require("conexionmysqli.inc");
   $sql_detalle="SELECT count(*) from material_apoyo where codigo_material='$codigo'";
@@ -391,7 +402,9 @@ function numeroCorrelativo($tipoDoc){
 function obtenerCodigoAlmacenPorCiudad($ciudad){
 	$estilosVenta=1;
 	require("conexionmysqli.inc");
-  $sql_detalle="SELECT cod_almacen from almacenes where cod_ciudad='$ciudad'";
+	//$global_tipo_almacen=$_COOKIE["global_tipo_almacen"];
+	$global_tipo_almacen=1;
+  $sql_detalle="SELECT cod_almacen from almacenes where cod_ciudad='$ciudad' and cod_tipoalmacen='$global_tipo_almacen'";
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
   while($detalle=mysqli_fetch_array($resp)){	

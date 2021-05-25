@@ -23,7 +23,7 @@ if($global_usuario==1062 or $global_usuario==1120)
 else
 {	$responsable_global_almacen=$global_usuario;
 }
-$sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$global_agencia' and responsable_almacen='$responsable_global_almacen'";
+$sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_almacen='$global_almacen' and responsable_almacen='$responsable_global_almacen'";
 $resp_almacen=mysqli_query($enlaceCon,$sql_almacen);
 $dat_almacen=mysqli_fetch_array($resp_almacen);
 $global_almacen=$dat_almacen[0];

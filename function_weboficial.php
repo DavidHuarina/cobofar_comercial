@@ -399,7 +399,7 @@ function obtenerINCDECProveedorAnterior($ip,$cod_prov){
 
 function obtenerMontoVentasGeneradasAnterior($dateInicio,$dateFin,$codigoSuc){
   set_time_limit(0);
-  $ipAlma=obtenerIPAnterioirSucursal("10.10.1.11",obtenerAGE1AnterioirSucursal($codigoSuc));
+  $ipAlma=obtenerIPAnterioirSucursal("10.10.1.11",utf8_decode(obtenerAGE1AnterioirSucursal($codigoSuc)));
   $codigoUserScan=$_COOKIE['global_usuario'];
   $dbh = conexionSqlServer($ipAlma,"Gestion"); 
   $ingresos=[];

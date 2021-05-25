@@ -57,7 +57,12 @@ function ajaxTipoDoc(f){
 	ajax.open("GET", "ajaxTipoDoc.php?codTipoSalida="+codTipoSalida,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText;
+			contenedor.innerHTML = ajax.responseText;			
+            if(codTipoSalida==1013){
+              //$("#almacen").addClass("d-none");
+            }else{
+               //$("#almacen").removeClass("d-none");
+            }
 			$(".selectpicker").selectpicker("refresh");
 		}
 	}
@@ -228,7 +233,7 @@ function validar(f)
 		alert("El tipo de Documento no puede estar vacio.");
 		return(false);
 	}
-	if(almacenDestino==0){
+	if(almacenDestino==0&&tipoSalida!=1013){
 		alert("La Sucursal Destino no puede estar vacio.");
 		return(false);
 	}
@@ -292,7 +297,11 @@ else
 	<select name='tipoSalida' id='tipoSalida' class='selectpicker form-control' data-style='btn btn-primary' onChange='ajaxTipoDoc(form1)'>
 		<option value="0">--------</option>
 <?php
-	$sqlTipo="select cod_tiposalida, nombre_tiposalida from tipos_salida where cod_tiposalida<>1001 order by 2";
+$querySuministro="";
+if($global_tipo_almacen!=2){
+  $querySuministro=" and cod_tiposalida!=1013 ";
+}
+	$sqlTipo="select cod_tiposalida, nombre_tiposalida from tipos_salida where cod_tiposalida<>1001 $querySuministro order by 2";
 	$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 	while($datTipo=mysqli_fetch_array($respTipo)){
 		$codigo=$datTipo[0];
@@ -322,7 +331,7 @@ else
 <td align='center'>
 	<select name='almacen' id='almacen'  class='selectpicker form-control' data-style='btn btn-primary'>
 <?php
-	$sql3="select cod_almacen, nombre_almacen from almacenes where cod_almacen<>'$global_almacen' order by nombre_almacen";
+	$sql3="select cod_almacen, nombre_almacen from almacenes where cod_almacen<>'$global_almacen' and cod_tipoalmacen='$global_tipo_almacen' order by nombre_almacen";
 	$resp3=mysqli_query($enlaceCon,$sql3);
 	while($dat3=mysqli_fetch_array($resp3)){
 		$cod_almacen=$dat3[0];

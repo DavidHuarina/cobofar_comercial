@@ -15,18 +15,19 @@ foreach ($listPer->lista as $per) {
 	$tel=$per->tel;
 	$email=$per->email;
     $age1=$per->age1;
+    $ci=$per->ci;
     $ciudad=verificarAlmacenCiudadExistente($age1);
 	$estado=1;
     $codigo_cargo=1016;
-	if($contador==0){
-		$sql="DELETE FROM funcionarios";
-		$sqlDelete=mysqli_query($enlaceCon,$sql);
-	}
-
-	$sql="INSERT INTO funcionarios (codigo_funcionario,cod_cargo,paterno,materno,nombres,fecha_nac,direccion,telefono,email,cod_ciudad,estado)
-        VALUES ('$codigo','$codigo_cargo','$paterno','$materno','$nombre','$fechnac','$dir','$tel','$email','$ciudad','$estado')";
-    $sqlinserta=mysqli_query($enlaceCon,$sql);
-
+    $cod_existe=verificarPersonalUsuario($codigo);
+	if($cod_existe>0){
+        $sql="UPDATE funcionarios SET direccion='$dir',ci='$ci' where codigo_funcionario='$codigo'";
+        $sqlinserta=mysqli_query($enlaceCon,$sql);
+     }else{      
+         $sql="INSERT INTO funcionarios (codigo_funcionario,cod_cargo,paterno,materno,nombres,fecha_nac,direccion,telefono,email,cod_ciudad,estado,ci)
+        VALUES ('$codigo','$codigo_cargo','$paterno','$materno','$nombre','$fechnac','$dir','$tel','$email','$ciudad','$estado','$ci')";
+         $sqlinserta=mysqli_query($enlaceCon,$sql);
+      }
    $contador++;
 }
 echo "Realizado!";

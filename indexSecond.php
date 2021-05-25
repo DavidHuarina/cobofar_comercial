@@ -37,6 +37,7 @@ include("datosUsuario.php");
 		<img src="imagenes/farmacias_bolivia_loop.gif" height="60px"></img><!--TuFarma - <?=$nombreEmpresa;?>-->
 		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
 			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]
+			<a title="Cambiar Tipo de Agencia" style="color:#5A8A85; " href='cambiarAlmacenTipoSesion.php' target="contenedorPrincipal">[ <?=$nombreTipoAlmacen;?> ]</a>
 			<button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton boton-rojo"><i class="fa fa-close"></i></button>			
 		</div>
 		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 9px; font-weight: bold; color: #fff;">

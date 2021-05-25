@@ -73,6 +73,7 @@ function obtenerDatosPersonalDatos($estado){
      $datos[$ff]['email']=$row['EMAIL'];
      $datos[$ff]['age1']=$row['AGE1'];
      $datos[$ff]['sta']=$row['STA'];
+     $datos[$ff]['ci']=$row['CI'];
      $ff++;
   }
 

@@ -13,7 +13,7 @@ $sql="select descripcion from ciudades where cod_ciudad=$global_agencia";
 $resp=mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
 $agencia=$dat[0];
-$sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$global_agencia' and responsable_almacen='$global_usuario'";
+$sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_almacen='$global_almacen' and responsable_almacen='$global_usuario'";
 $resp_almacen=mysqli_query($enlaceCon,$sql_almacen);
 $dat_almacen=mysqli_fetch_array($resp_almacen);
 $global_almacen=$dat_almacen[0];

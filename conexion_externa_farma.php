@@ -51,10 +51,10 @@ public function setBase($base){
 class ConexionFarmaSucursal extends PDO {    
 
     private $tipo_de_base = 'sqlsrv';
-    private $host = '10.10.6.12';  
+    private $host = '10.10.109.12';  
     private $nombre_de_base = 'Gestion';
     private $usuario = 'sistema';
-    private $contrasena = 'sistema';    
+    private $contrasena = 'B0l1v14.@1202';    
 public function __construct() {
       //Sobreescribo el método constructor de la clase PDO.
       try{
