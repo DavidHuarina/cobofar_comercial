@@ -23,9 +23,15 @@
     background-color: #ffffff !important;
   }
 </style>
-     <link rel="stylesheet" href="dist/css/demo.css" />
+     <link rel="stylesheet" href="dist/css/demo.css" />     
      <link rel="stylesheet" href="dist/mmenu.css" />
-     <link rel="stylesheet" href="dist/demo.css" />	
+     <?php 
+   if($_COOKIE["global_tipo_almacen"]==1){
+     ?><link rel="stylesheet" href="dist/demo.css" /><?php
+   }else{
+   	?><link rel="stylesheet" href="dist/demo2.css" /><?php
+   }
+     ?>
 </head>
 <body>
 <?php

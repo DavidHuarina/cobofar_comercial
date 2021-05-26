@@ -8,7 +8,8 @@ $nroAutorizacion=$_POST['nro_autorizacion'];
 $llaveDosificacion=$_POST['llave_dosificacion'];
 $fechaLimiteEmision=$_POST['fecha_limite_emision'];
 $tipo_dosificacion=$_POST["tipo_dosificacion"];
-
+$llaveDosificacion=str_replace("\\","\\\\",$llaveDosificacion);
+$llaveDosificacion=str_replace("'","\'",$llaveDosificacion);
 $fechaActual=date("Y-m-d");
 
 $sql_inserta="insert into dosificaciones(fecha_dosificacion, cod_sucursal, nro_autorizacion, llave_dosificacion, 
@@ -18,7 +19,7 @@ $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
 if($resp_inserta){
 		echo "<script language='Javascript'>
-			alert('Los datos fueron insertados correctamente.');
+			Swal.fire('Correcto!','Los datos fueron insertados correctamente.','success');
 			location.href='navegador_dosificaciones.php';
 			</script>";
 }else{

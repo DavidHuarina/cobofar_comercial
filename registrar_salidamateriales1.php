@@ -57,11 +57,15 @@ function ajaxTipoDoc(f){
 	ajax.open("GET", "ajaxTipoDoc.php?codTipoSalida="+codTipoSalida,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText;			
+			contenedor.innerHTML = ajax.responseText;		
             if(codTipoSalida==1013){
-              //$("#almacen").addClass("d-none");
+            	if(!$("#div_almacen").hasClass("d-none")){
+            		$("#div_almacen").addClass("d-none");
+            	}              
             }else{
-               //$("#almacen").removeClass("d-none");
+            	if($("#div_almacen").hasClass("d-none")){
+            		$("#div_almacen").removeClass("d-none");
+            	}               
             }
 			$(".selectpicker").selectpicker("refresh");
 		}
@@ -328,7 +332,7 @@ if($global_tipo_almacen!=2){
 	<img id='imagenFecha' src='imagenes/fecha.bmp'>
 </td>
 
-<td align='center'>
+<td align='center' id="div_almacen">
 	<select name='almacen' id='almacen'  class='selectpicker form-control' data-style='btn btn-primary'>
 <?php
 	$sql3="select cod_almacen, nombre_almacen from almacenes where cod_almacen<>'$global_almacen' and cod_tipoalmacen='$global_tipo_almacen' order by nombre_almacen";

@@ -745,7 +745,7 @@ function validar(f, ventaDebajoCosto,pedido){
 				}
 				if($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()==""){
 					errores++;
-					alert("Debe registrar el monto de efectivo recibido");
+					alert("Debe registrar el monto de monto recibido");
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
@@ -781,6 +781,14 @@ function validar(f, ventaDebajoCosto,pedido){
 		  	  guardarPedido(1);
               //guardarPedidoDesdeFacturacion(1);
               return false;
+		  }else{
+		  	if($("#nro_tarjeta").val()!=""){
+                if(!($("#monto_tarjeta").val()>0)){
+                   alert("Debe Ingresar el monto de la Tarjeta");
+					$("#pedido_realizado").val(0);
+				   return(false);
+                }
+		  	}		  	
 		  }
 		}else{
 		  alert("Debe registrar el Cliente.");
@@ -954,6 +962,12 @@ function actualizarListaInstitucion(){
 
 function asignarMedicoVenta(codigo){
    $("#cod_medico").val(codigo);
+   if(codigo>0){
+  	 $("#boton_receta").attr("style","background:green");
+   }else{
+   	 $("#boton_receta").attr("style","background:#652BE9");
+   }
+
    $("#modalRecetaVenta").modal("hide");
 }
 function refrescarComboCliente(cliente){
@@ -970,6 +984,22 @@ function refrescarComboCliente(cliente){
            $("#modalNuevoCliente").modal("hide");                  	   
         }
     });	
+}
+
+function mostrarRegistroConTarjeta(){
+	$("#titulo_tarjeta").html("");
+	if($("#nro_tarjeta").val()>0){
+      $("#titulo_tarjeta").html("(REGISTRADO)");
+	}
+	$("#modalPagoTarjeta").modal("show");	
+}
+function verificarPagoTargeta(){
+  var nro_tarjeta=$("#nro_tarjeta").val();
+  if(nro_tarjeta!=""){
+  	$("#boton_tarjeta").attr("style","background:green");
+  }else{
+  	$("#boton_tarjeta").attr("style","background:#96079D");
+  }
 }
 </script>
 <?php
@@ -1018,6 +1048,15 @@ $porcentajeDescuentoReal=0;
 $porcentajeDescuentoRealNombre="Descuento";
 
 include("datosUsuario.php");
+
+$cadComboBancos = "";
+$consulta="SELECT c.codigo, c.nombre FROM bancos AS c WHERE estado = 1 ORDER BY c.nombre ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codBanco = $reg["codigo"];
+    $nomBanco = $reg["nombre"];
+    $cadComboBancos=$cadComboBancos."<option value='$codBanco'>$nomBanco</option>";
+   }
 
 
 
@@ -1242,7 +1281,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 <a href="#" onclick="cambiarTipoVenta2()"
 	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
 	<a href="#" onclick="guardarRecetaVenta()"
-	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA"><i class="material-icons">medical_services</i></a>
+	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" id="boton_receta"><i class="material-icons">medical_services</i></a>
 </td>
 </tr>
 
@@ -1379,7 +1418,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
@@ -1394,7 +1433,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		</tr>
 
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Venta</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' id='porcentajeDescuentoRealNombre' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?></td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:27px;font-size:22px;width:100%;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" readonly step='any' required></td>
@@ -1410,7 +1449,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#189B22;">$ USD</b></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3"></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Venta</td><td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3"></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='any' required></td>
@@ -1422,7 +1461,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:27px;font-size:22px;width:100%;color:#fff;"> </td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:25px;font-size:18px;width:100%;"></td>
@@ -1452,12 +1491,12 @@ if($banderaErrorFacturacion==0){
                <td style='display:none;font-size:12px;color:#0691CD;' colspan='2'><p>&nbsp;</p></td>
              </tr>
             <tr>
-               <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>
+               <td style='font-size:12px;color:#0691CD; font-weight:bold;'>MONTO RECIBIDO Bs.</td>
                <td style='font-size:12px;color:#189B22; font-weight:bold; display:none;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:white !important;'  class='form-control' step='any' required></td>
-               <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
+               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:#A5F9EA !important;'  class='form-control' step='any' value='0' required></td>
+               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
              </tr>
             </table>
 
@@ -1475,6 +1514,66 @@ if($banderaErrorFacturacion==0){
 <input type='hidden' name='materialActivo' id='materialActivo' value="0">
 <input type='hidden' id="cantidad_material" name='cantidad_material' value="0">}
 <input type='hidden' name='codigoDescuentoGeneral' id="codigoDescuentoGeneral" value="<?=$codigoDescuentoGeneral?>">
+
+
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #96079D;color:#fff;">
+                    <i class="material-icons">credit_card</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Pago con Tarjeta <small id="titulo_tarjeta"></small></h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+	<div class="col-sm-12">
+		         <div class="row">
+                  <label class="col-sm-3 col-form-label">Banco</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                      	
+                          <?php echo "$cadComboBancos"; ?>
+                          <option value="0">Otro</option>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Numero <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #D7B3D8;" id="nro_tarjeta" name="nro_tarjeta" value="" onkeydown="verificarPagoTargeta()" onkeyup="verificarPagoTargeta()" onkeypress="verificarPagoTargeta()" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" value=""/>
+                    </div>
+                  </div>
+                </div>                
+                <br><br>
+       </div>
+</div>                      
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
+
+
+
+
 </form>
 
 

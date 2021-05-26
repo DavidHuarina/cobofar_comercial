@@ -68,6 +68,40 @@ function funOk(codReg,funOkConfirm)
     });
 }
 
+function funVerifi(codReg){   
+var parametros={"codigo":codReg};
+ $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/frmConfirmarCodigoSalida2.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#datos_anular").html(resp);
+            $("#codigo_salida").val(codReg);
+            $("#modalAnularFactura").modal("show");           
+      }
+ }); 
+}
+function confirmarCodigo(){   
+  var cad1=$("input#idtxtcodigo").val();
+  var cad2=$("input#idtxtclave").val(); 
+  var parametros={"codigo":cad1,"clave":cad2};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/validacionCodigoConfirmar.php",
+        data: parametros,
+        success:  function (resp) { 
+            resp=xtrim(resp);
+            if(resp=="" || resp=="OK") {
+                location.href='anular_venta.php?codigo_registro='+$("#codigo_salida").val();
+            }else{
+               Swal.fire("Error!","El codigo que ingreso es incorrecto","error");
+               $("#modalAnularFactura").modal("hide");    
+            }
+      }
+ }); 
+}
 function ajaxBuscarVentas(f){
 	var fechaIniBusqueda, fechaFinBusqueda, nroCorrelativoBusqueda, verBusqueda, global_almacen, clienteBusqueda;
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
@@ -153,9 +187,7 @@ function anular_salida(f)
         {   alert('Debe seleccionar un registro para anularlo.');
         }
         else
-        {   funOk(j_cod_registro,function() {
-                        location.href='anular_venta.php?codigo_registro='+j_cod_registro;
-            });
+        {   funVerifi(j_cod_registro);
         }
     }
 }
@@ -376,8 +408,9 @@ echo "<table class='texto' cellspacing='0' width='90%'>
 //
 echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
-        <input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+        
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";		
+//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>        
 if($anulacionCodigo==1){
 	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
 }else{
@@ -486,8 +519,9 @@ echo "</div>";
 
 echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
-        <input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
-		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";	
+        
+		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";
+        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>	
 if($anulacionCodigo==1){
 	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
 }else{
@@ -575,5 +609,32 @@ echo "</form>";
         <div id="pnldlgArespSvr"></div>
         <div id="pnldlggeneral"></div>
         <div id="pnldlgenespera"></div>
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAnularFactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+                <div class="card-header card-header-danger card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">delete</i>
+                  </div>
+                  <h4 class="card-title text-danger font-weight-bold">Anulación de Facturas</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <input type="hidden" name="codigo_salida" id="codigo_salida" value="0">
+                <div class="card-body" id="datos_anular">
+                   
+                </div>
+                <div class="card-footer">
+                   <button class="btn btn-default" onclick="confirmarCodigo()">ANULAR</button>
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
     </body>
 </html>

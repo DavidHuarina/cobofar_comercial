@@ -73,7 +73,11 @@ echo "<script language='Javascript'>
 	
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Registro de Dosificaciones</h1>";
-
+    echo "<div class=''>
+	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
+	<input type='button' value='Activar' name='activar' class='boton' onclick='activar_nav(this.form)'>
+	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
+	</div>";
 	echo "<center><table class='table table-bordered'>";
 	echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Sucursal</th><th>Nro.Autorizacion</th><th>Llave</th><th>Fecha Limite Emision</th><th>Estado</th><th>Tipo</th></tr>";
 	while($dat=mysqli_fetch_array($resp))
@@ -103,12 +107,11 @@ echo "<script language='Javascript'>
 		<td>$nroAutorizacion</td><td>$llaveDosificacion</td><td>$fechaLimiteEmision</td>
 		<td>$nombreEstado</td><td><b class='$estiloTipo'>$nombreDosificacion</b></td></tr>";
 	}
-	echo "</table></center><br>";
-	
-	echo "<div class='divBotones'>
+	echo "</table></center>";
+	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Activar' name='activar' class='boton' onclick='activar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
-	</div>";
+	</div><br>";
 	echo "</form>";
 ?>

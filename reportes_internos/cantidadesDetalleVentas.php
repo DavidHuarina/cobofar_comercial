@@ -15,7 +15,12 @@ require_once __DIR__.'/../conexion_externa_farma.php';
 
 $fechaInicio="01/03/2021";
 $fechaFinal="14/05/2021";
-
+if(isset($_GET["fi"])){
+  $fechaInicio=$_GET["fi"];
+}
+if(isset($_GET["ff"])){
+  $fechaFinal=$_GET["ff"];
+}
 ?>
 <center><h3><b>PRODUCTOS VENTAS Y SALDO</b></h3></center>
 <table class="table table-condensed table-bordered ">
@@ -35,6 +40,17 @@ $fechaFinal="14/05/2021";
       $age1="AS";
       $nombre="ORTEGA";
       $ip="10.10.20.12";
+
+if(isset($_GET["age1"])){
+  $age1=$_GET["age1"];
+}
+if(isset($_GET["nombre"])){
+  $nombre=$_GET["nombre"];
+}
+if(isset($_GET["ip"])){
+  $ip=$_GET["ip"];
+}
+
       $dbh = ConexionFarma($ip,"Gestion");
 
 $sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,d.DCTO,

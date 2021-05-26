@@ -24,7 +24,7 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 	
 	//AQUI SE DEBE CORREGIR EL DATO DE CANTIDAD RESTANTE >0 OJO
 	
-	echo $sqlExistencias."<br>";
+	//echo $sqlExistencias."<br>";
 	$respExistencias=mysqli_query($enlaceCon,$sqlExistencias);
 	while($datExistencias=mysqli_fetch_array($respExistencias)){
 		if($cantidadPivote>0){

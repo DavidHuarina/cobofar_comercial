@@ -23,7 +23,7 @@ $dbh = new ConexionFarmaSucursal();
 //$fechaHasta=date("d/m/Y");
 ?><br><br><h4>ACTUALIZACION DE VENTAS</h4><br><br>
 <?php
-$listAlma=obtenerListadoAlmacenesEspecifico("Aí");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
+$listAlma=obtenerListadoAlmacenesEspecifico("A-");//web service obtenerListadoAlmacenesEspecifico($age1Destino)   
 $contador=0;
 $sql = "select IFNULL(MAX(cod_salida_almacenes)+1,1) from salida_almacenes order by cod_salida_almacenes desc";
 $resp = mysqli_query($enlaceCon,$sql);
@@ -60,7 +60,7 @@ if($verificarConexion==true){
 
         $sqlInsertCabecera.="('$codigo','$cod_almacen',1001,1,'$fechaOrigen','$horaOrigen',0,0,'$dctoOrigen',1,'$documOrigen',0,146,'$montoFactura',0,'$montoFactura','$gloOrigen','$nit','$codPaso',0,'$montoPago',0,1),";
       
-        /*$sqlDetalle="SELECT CPROD,CAN,CAN1,FECVEN,PREUNIT,DESCTO1,DESCTO2,DESCTO3 FROM VFICHAD WHERE DCTO='$dctoOrigen'";   
+        $sqlDetalle="SELECT CPROD,CAN,CAN1,FECVEN,PREUNIT,DESCTO1,DESCTO2,DESCTO3 FROM VFICHAD WHERE DCTO='$dctoOrigen'";   
         
         //$dbh2->setHost($ip);
         //$dbh2->start();     
@@ -85,7 +85,7 @@ if($verificarConexion==true){
           $precioUnit3=number_format($precioUnit3/$cantidadMaterial,2,'.','');
           $sqlInsertDetalleAc.="($codigo,$codMaterial,$cantidadMaterial,0,'$fechaVen','$precioUnit3',0,'$precioUnit3'),";         
           
-        }*/
+        }
         //$dbh2=null;
         $codigo++;
       //echo $sql;

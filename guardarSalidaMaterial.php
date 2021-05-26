@@ -144,6 +144,16 @@ if($sql_inserta==1){
        $sql_medico=mysqli_query($enlaceCon,$sql_medico);
     }
 
+    //TARJETA INSERTAR
+    if(isset($_POST['nro_tarjeta'])&&$_POST['nro_tarjeta']!=""){
+       $nro_tarjeta=$_POST['nro_tarjeta'];
+       $monto_tarjeta=$_POST['monto_tarjeta'];
+       $banco_tarjeta=$_POST['banco_tarjeta'];
+       $sql_tarjeta="INSERT INTO tarjetas_salidas (nro_tarjeta,monto,cod_banco,cod_salida_almacen,estado) VALUES('$nro_tarjeta','$monto_tarjeta','$banco_tarjeta','$codigo',1)";
+       $sql_tarjeta=mysqli_query($enlaceCon,$sql_tarjeta);
+    }
+
+
 	if($facturacionActivada==1){
 		//insertamos la factura
 		$sqlInsertFactura="insert into facturas_venta (cod_dosificacion, cod_sucursal, nro_factura, cod_estado, razon_social, nit, fecha, importe, 

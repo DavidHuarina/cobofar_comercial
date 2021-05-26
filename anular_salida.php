@@ -30,7 +30,7 @@ while($dat_detalle=mysqli_fetch_array($resp_detalle))
 }
 echo "<script language='Javascript'>
 		alert('El registro fue anulado.');
-		location.href='navegador_salidamuestras.php';
+		location.href='navegador_salidamateriales.php';
 		</script>";
 
 ?>
