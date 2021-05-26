@@ -20,8 +20,8 @@ if($variableAdmin!=1){
 
 //desde esta parte viene el reporte en si
 $fecha_iniconsulta=$fecha_ini;
-$fecha_iniconsultahora=$fecha_iniconsulta." ".$hora_ini;
-$fecha_finconsultahora=$fecha_fin." ".$hora_fin;
+$fecha_iniconsultahora=$fecha_iniconsulta." ".$hora_ini.":00";
+$fecha_finconsultahora=$fecha_fin." ".$hora_fin.":59";
 $fecha_reporte=date("d/m/Y");
 
 echo "<center><h3>Reporte Arqueo Diario de Caja</h3>
@@ -56,7 +56,7 @@ $sql="select s.`fecha`,
 	s.hora_salida,s.cod_chofer
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	and STR_TO_DATE(CONCAT(s.fecha,' ',s.hora_salida),'%Y-%m-%d %h:%i') BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
+	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
 
 if($variableAdmin==1){
 	$sql.=" and s.cod_tipo_doc in (1,2,3)";

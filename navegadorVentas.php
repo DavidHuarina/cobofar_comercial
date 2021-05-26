@@ -362,12 +362,41 @@ function enviar_datosdespacho(f)
 function llamar_preparado(f, estado_preparado, codigo_salida)
 {   window.open('navegador_detallesalidamateriales.php?codigo_salida='+codigo_salida,'popup','');
 }
+
+function mostrarRegistroConTarjeta(codigo){
+    $("#titulo_tarjeta").html("");
+    $("#codigo_salida_tarjeta").val(codigo);
+    $("#modalPagoTarjeta").modal("show");   
+}
+function guardarTarjetaVenta(){
+    var codigo=$("#codigo_salida_tarjeta").val();
+    var banco_tarjeta=$("#banco_tarjeta").val();
+    var nro_tarjeta=$("#nro_tarjeta").val();
+    var monto_tarjeta=$("#monto_tarjeta").val();
+
+ if(nro_tarjeta!=""&&monto_tarjeta>0){
+    var parametros={"codigo":codigo,"banco_tarjeta":banco_tarjeta,"nro_tarjeta":nro_tarjeta,"monto_tarjeta":monto_tarjeta};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveTarjetaVenta.php",
+        data: parametros,
+        success:  function (resp) {  
+           window.location.reload();                      
+        }
+    });
+ }else{
+    Swal.fire("Informativo!","Debe ingresar el nro de tarjeta y el monto","warning");
+ }
+}
+
         </script>
     </head>
     <body>
 <?php
 
 require("conexionmysqli.inc");
+require('funciones.php');
 require('function_formatofecha.php');
 
 if(!isset($_GET["txtnroingreso"])){
@@ -388,6 +417,19 @@ if(!isset($_GET["fecha2"])){
 
 
 require("estilos_almacenes.inc");
+
+$cadComboBancos = "";
+$consulta="SELECT c.codigo, c.nombre FROM bancos AS c WHERE estado = 1 ORDER BY c.nombre ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codBanco = $reg["codigo"];
+    $nomBanco = $reg["nombre"];
+    $cadComboBancos=$cadComboBancos."<option value='$codBanco'>$nomBanco</option>";
+   }
+
+
+
+
 
 //SACAMOS LA CONFIGURACION PARA LA ANULACION
 $anulacionCodigo=1;
@@ -421,7 +463,7 @@ echo "</div>";
 echo "<div id='divCuerpo'>";
 echo "<center><table class='table table-sm'>";
 echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Tarjeta</th><th>&nbsp;</th></tr>";
 	
 echo "<input type='hidden' name='global_almacen' value='$global_almacen' id='global_almacen'>";
 
@@ -502,11 +544,20 @@ while ($dat = mysqli_fetch_array($resp)) {
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Detalle'></a></td>";
 	*/
+    $codTarjeta=verificarTarjetaVenta($codigo);
+    if($codTarjeta>0){
+        echo "<td class='text-success'><b>SI</b></td>";
+    }else{
+        echo "<td class='text-muted'><b>NO</b></td>";
+    }    
 	if($codTipoDoc==1){
-		echo "<td  bgcolor='$color_fondo'><a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
-		echo "<td  bgcolor='$color_fondo'><a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a></td>";
-	}
-	else{
+        $htmlTarjeta="";
+        if($salida_anulada!=1&&$codTarjeta==0){
+            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>";
+        }
+		echo "<td  bgcolor='$color_fondo'>$htmlTarjeta<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>";
+		echo "<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a></td>";
+	}else{
 		echo "<td  bgcolor='$color_fondo'><a href='formatoNotaRemisionOficial.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 	}
 	
@@ -635,6 +686,65 @@ echo "</form>";
     </div>
   </div>
 <!--    end small modal -->
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #96079D;color:#fff;">
+                    <i class="material-icons">credit_card</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Pago con Tarjeta <small id="titulo_tarjeta"></small></h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="codigo_salida_tarjeta">
+<div class="row">
+    <div class="col-sm-12">
+                 <div class="row">
+                  <label class="col-sm-3 col-form-label">Banco</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                       
+                          <?php echo "$cadComboBancos"; ?>
+                          <option value="0">Otro</option>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Numero <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #D7B3D8;" id="nro_tarjeta" name="nro_tarjeta" value="" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" value=""/>
+                    </div>
+                  </div>
+                </div>                
+                <br><br>
+       </div>
+</div>                
+
+                </div>
+                <div class="card-footer">
+                    <a href="#" onclick="guardarTarjetaVenta();return false;" class="btn btn-default btn-sm">GUARDAR</a>
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
 
     </body>
 </html>

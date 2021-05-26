@@ -981,5 +981,15 @@ function verificarAlmacenDestinoVencidos($codigo){
      }
      return($existe);
   } 
-
+function verificarTarjetaVenta($codigo){
+     $estilosVenta=1;
+     require("conexionmysqli2.inc");
+     $sql="SELECT codigo from tarjetas_salidas where cod_salida_almacen='$codigo';";
+     $valor=0;
+     $resp=mysqli_query($enlaceCon,$sql);
+     while($row=mysqli_fetch_array($resp)){
+        $valor=$row['codigo'];
+     }
+     return($valor);
+}
 ?>

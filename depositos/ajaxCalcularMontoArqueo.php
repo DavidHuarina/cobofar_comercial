@@ -9,7 +9,7 @@ $rpt_funcionario=$_COOKIE["global_usuario"];
 $sql="select s.`monto_final`, s.cod_tipopago
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	and STR_TO_DATE(CONCAT(s.fecha,' ',s.hora_salida),'%Y-%m-%d %h:%i') BETWEEN '$fecha 00:00:00' and '$fecha 23:59:59' and s.`cod_chofer`='$rpt_funcionario' ";
+	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha 00:00:00' and '$fecha 23:59:59' and s.`cod_chofer`='$rpt_funcionario' ";
 
 $resp=mysqli_query($enlaceCon,$sql);
 
