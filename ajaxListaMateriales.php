@@ -18,7 +18,7 @@ $globalAlmacen=$_COOKIE['global_almacen'];
 $codCiudad=$_COOKIE['global_agencia'];
 $itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $tipoSalida=$_GET['tipoSalida'];
-
+$codigoMat=$_GET['codigoMat'];
 $fechaActual=date("Y-m-d");
 
 //SACAMOS LA CONFIGURACION PARA LA SALIDA POR VENCIMIENTO
@@ -29,9 +29,14 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 	$sql="select m.codigo_material, m.descripcion_material,
 	(select concat(p.nombre_proveedor,' ',pl.abreviatura_linea_proveedor)	
 	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),m.cantidad_presentacion,m.divi,(SELECT GROUP_CONCAT(p.nombre) from principios_activos p where p.codigo in (SELECT cod_principioactivo from principios_activosproductos where cod_material=m.codigo_material)) from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
+
+
+  if((int)$codigoMat>0){
+        $sql=$sql." and m.codigo_material in (".$codigoMat.")";
+  }else{
 	if($nombreItem!=""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
-	}
+	}	
 
     if((int)$codTipo>0){
         $sql=$sql." and m.cod_linea_proveedor=".$codTipo."";
@@ -47,7 +52,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 
     if((int)$codPrincipio>0){
         $sql=$sql." and m.codigo_material in (SELECT cod_material FROM principios_activosproductos where cod_principioactivo=".$codPrincipio.")";
-    }
+    }    
 
 
 	if($tipoSalidaVencimiento==$tipoSalida){
@@ -55,6 +60,8 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$globalAlmacen' and i.ingreso_anulado=0 
 		and id.fecha_vencimiento<'$fechaActual') ";
 	}
+  }
+
 	$sql=$sql." order by 2";
 	
 	//echo $sql;
@@ -94,6 +101,10 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			<td>$stockProducto</td>
 			<td>$precioProducto</td>
 			</tr>";
+		}
+
+		if($numFilas==1){
+			echo "<script>setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")</script>";
 		}
 	}else{
 		echo "<tr><td colspan='5'>Sin Resultados en la busqueda.</td></tr>";

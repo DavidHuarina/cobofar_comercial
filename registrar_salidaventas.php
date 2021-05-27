@@ -77,7 +77,7 @@ function listaMateriales(f){
 	var codPrincipio=f.itemPrincipioMaterial.value;
 	var nombreItem=f.itemNombreMaterial.value;
 	var tipoSalida=(f.tipoSalida.value);
-	
+	var codigoMat=(f.itemCodigoMaterial.value);
 	contenedor = document.getElementById('divListaMateriales');
 
 	var arrayItemsUtilizados=new Array();	
@@ -91,11 +91,13 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText
-		}
+			$("#divListaMateriales").html(ajax.responseText);
+			//contenedor.innerHTML = ajax.responseText;
+			document.getElementById('itemCodigoMaterial').focus();	
+		}		
 	}
 	ajax.send(null)
 }
@@ -431,7 +433,9 @@ function buscarMaterial(f, numMaterial){
 	
 	document.getElementById('divListaMateriales').innerHTML='';
 	document.getElementById('itemNombreMaterial').value='';	
-	document.getElementById('itemNombreMaterial').focus();	
+	//document.getElementById('itemNombreMaterial').focus();
+	document.getElementById('itemCodigoMaterial').value='';	
+	document.getElementById('itemCodigoMaterial').focus();		
 	
 }
 function encontrarMaterial(numMaterial){
@@ -487,6 +491,7 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById('divi'+numRegistro).value=divi;
 	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
+	document.getElementById("cantidad_unitaria"+numRegistro).select();
     $("#modalProductosSimilares").modal("hide");
 	actStock(numRegistro);	
 }
@@ -508,6 +513,7 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById('divboton').style.visibility='hidden';
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
+	document.getElementById("cantidad_unitaria"+numRegistro).select();
 
 	actStock(numRegistro);	
 }
@@ -637,7 +643,7 @@ function menos(numero) {
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){
-		document.getElementById('itemNombreMaterial').focus();
+		document.getElementById('itemCodigoMaterial').focus();	
 		listaMateriales(f);
 		return false;
 	}
@@ -745,7 +751,10 @@ function validar(f, ventaDebajoCosto,pedido){
 				}
 				if($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()==""){
 					errores++;
-					alert("Debe registrar el monto de monto recibido");
+					document.getElementById("efectivoRecibidoUnido").focus();
+					document.getElementById("efectivoRecibidoUnido").select();
+					alert("Debe registrar el monto recibido");
+
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
@@ -758,7 +767,9 @@ function validar(f, ventaDebajoCosto,pedido){
 				}
 				if(stock<cantidad&&pedidoFormu==0){
 					errores++;
-					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);
+					document.getElementById("cantidad_unitaria"+i).focus();
+					document.getElementById("cantidad_unitaria"+i).select();
+					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);					
 					$("#pedido_realizado").val(0);
 					return(false);
 				}		
@@ -771,7 +782,9 @@ function validar(f, ventaDebajoCosto,pedido){
 
 				if(divi==0&&cantidadPres>0&&(cantidad%cantidadPres)!=0){
 					errores++;
-					alert("El item de la fila "+i+" no es divisible!, la cantidad unitaria debe ser multiple a la cantidad de presentación");
+					document.getElementById("cantidad_unitaria"+i).focus();
+					document.getElementById("cantidad_unitaria"+i).select();
+					alert("El item de la fila "+i+" no es divisible!, la cantidad unitaria debe ser multiple a la cantidad de presentación");					
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
@@ -1119,7 +1132,7 @@ while($reg=mysqli_fetch_array($rs))
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
 	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" id="cod_medico" name="cod_medico" value="0">
-	<input type="hidden" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
+	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
 <tr align='center' class="text-white header" style="color:#fff;background:#30CA99; font-size: 16px;">
 	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
@@ -1371,7 +1384,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<tr><th>Principio Act.</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
 	     <tr>		
 			<td><select class="textogranderojo" name='itemPrincipioMaterial' style="width:300px">
 			<?php
@@ -1389,9 +1402,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</select>
 			</td>
 			<td>
-				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
+				<div class="row">
+					<div class="col-sm-3"><input type='number' placeholder='--' name='itemCodigoMaterial' id='itemCodigoMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>
+					<div class="col-sm-9"><input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>				   
+				</div>
+				
 			</td>
-			<td>
+			<td align="center">
 				<input type='button' class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
 			</td>
  			</tr>
