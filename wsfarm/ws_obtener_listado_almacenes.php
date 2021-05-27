@@ -22,7 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $ages1=$datos['ages1'];
             $datosResp=obtenerDatosAlmacenesEspecificos($ages1);
           }else{
-            $datosResp=obtenerDatosAlmacenes($tipo,$age1);
+            if(isset($datos['cocha'])){
+              $datosResp=obtenerDatosAlmacenesCocha($tipo,$age1);
+            }else{
+              $datosResp=obtenerDatosAlmacenes($tipo,$age1);
+            }            
           }
 
                           
@@ -87,6 +91,41 @@ function obtenerDatosAlmacenes($tipo,$age1){
      $datos[$ff]['tipo']=$row['TIPO'];
      $datos[$ff]['ip']=$row['IP'];
      $datos[$ff]['corto']=$row['CORTO'];
+     $datos[$ff]['codalma']=$row['CODALMA'];
+     $ff++;
+  }
+
+ return array($ff,$datos);
+}
+
+function obtenerDatosAlmacenesCocha($tipo,$age1){
+  require_once __DIR__.'/../conexion_externa_farma_cocha.php';
+  $dbh = new ConexionFarma();
+  $sqlTipo="";
+  if($tipo!=""){
+    $sqlTipo="where a.tipo='".$tipo."' or a.tipo='I' ";
+  }
+  $sqlEspecifico="";
+  if($age1!=""){
+    if($sqlTipo!=""){
+      $sqlEspecifico="and a.age1='".$age1."' ";
+    }else{
+      $sqlEspecifico="where a.age1='".$age1."' ";
+    }
+  }
+  $sql="SELECT a.* FROM almacen a $sqlTipo $sqlEspecifico";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $ff=0;
+  $datos=[];
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $datos[$ff]['des']=$row['DES'];
+     $datos[$ff]['direc']=$row['DIREC'];
+     $datos[$ff]['age1']=$row['AGE1'];
+     $datos[$ff]['age']=$row['AGE'];
+     $datos[$ff]['tipo']=$row['TIPO'];
+     $datos[$ff]['ip']=$row['IP'];
+     $datos[$ff]['corto']=$row['TELEFONO'];
      $datos[$ff]['codalma']=$row['CODALMA'];
      $ff++;
   }

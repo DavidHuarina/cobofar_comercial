@@ -13,11 +13,11 @@ require_once '../function_web.php';
 
 
 <?php
-$listAlma=obtenerListadoAlmacenes();//web service
+$listAlma=obtenerListadoAlmacenesCocha();//obtenerListadoAlmacenes();//web service
 echo "<br><br>Iniciando....<br><br><br><br>";
 $contador=0;
 foreach ($listAlma->lista as $alma) {
-
+   
 	$age1=$alma->age1;
 	//echo $age1."<br>";
 	$nombre=$alma->des;
@@ -29,6 +29,7 @@ foreach ($listAlma->lista as $alma) {
     if($alma->tipo=="E"){
     	$estado=2;
     }
+    echo "<br>".$nombre."<br>";
     
     $cod_existe=verificarAlmacenCiudadExistente($age1);
     $age1=str_replace("\\", "\\\\", $age1); //CODIGO PARA QUE INSERTE CARACTER DE \ BACKSLASH
@@ -50,7 +51,7 @@ echo "Realizado!";
 /*
 INSERTAR ALMACENES 
 $sql="INSERT INTO almacenes (cod_ciudad,nombre_almacen,responsable_almacen,cod_tipoalmacen)
-SELECT cod_ciudad,descripcion,0 FROM ciudades where cod_ciudad not in (SELECT c.cod_ciudad FROM ciudades c WHERE c.cod_ciudad in (SELECT cod_ciudad FROM almacenes where cod_ciudad=c.cod_ciudad));";
+SELECT cod_ciudad,descripcion,0,1 FROM ciudades where cod_ciudad not in (SELECT c.cod_ciudad FROM ciudades c WHERE c.cod_ciudad in (SELECT cod_ciudad FROM almacenes where cod_ciudad=c.cod_ciudad and cod_tipoalmacen=1));";
         $sqlinserta=mysqli_query($enlaceCon,$sql);
 
 
