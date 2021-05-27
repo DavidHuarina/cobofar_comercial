@@ -78,6 +78,12 @@ include("datosUsuario.php");
 					<li><a href="registrar_salidaventas_manual.php" target="_blank">Registrar Factura Manual</a></li>				
 				</ul>	
 			</li>
+			<li><span>Marcados de Personal</span>
+				<ul>
+					<li><a href="registrar_marcado.php" target="contenedorPrincipal">Registro de Marcados</a></li>
+					<li><a href="rptOpMarcados.php" target="contenedorPrincipal">Reporte de Marcados</a></li>
+				</ul>	
+			</li>
 			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar **</a></li>			
 			<li><a href="listadoProductosStock.php" target="_blank">Listado de Productos **</a></li>
 

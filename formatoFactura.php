@@ -1,6 +1,34 @@
 <?php
+require('pdf_js.php');
+class PDF_AutoPrint extends PDF_JavaScript
+{
+function AutoPrint($dialog=false)
+{
+    //Open the print dialog or start printing immediately on the standard printer
+    $param=($dialog ? 'true' : 'false');
+    $script="print($param);";
+    $this->IncludeJS($script);
+}
+
+function AutoPrintToPrinter($server, $printer, $dialog=false)
+{
+    //Print on a shared printer (requires at least Acrobat 6)
+    $script = "var pp = getPrintParams();";
+    if($dialog)
+        $script .= "pp.interactive = pp.constants.interactionLevel.full;";
+    else
+        $script .= "pp.interactive = pp.constants.interactionLevel.automatic;";
+    $script .= "pp.printerName = '\\\\\\\\.$server.\\\\.$printer.';";
+    $script .= "print(pp);";
+    $this->IncludeJS($script);
+}
+}
+
+
+
+
 $estilosVenta=1;
-require('fpdf.php');
+//require('fpdf.php');
 require('conexionmysqli2.inc');
 require('funciones.php');
 require('NumeroALetras.php');
@@ -17,7 +45,7 @@ $nroItems=mysqli_result($respNro,0,0);
 
 $tamanoLargo=230+($nroItems*5)-5;
 
-$pdf=new FPDF('P','mm',array(76,$tamanoLargo));
+$pdf=new PDF_AutoPrint('P','mm',array(76,$tamanoLargo));
 
 //header("Content-Type: text/html; charset=iso-8859-1 ");
 
@@ -238,10 +266,7 @@ if($txtGlosaDescuento!=""){
 }
 
 
-
-
-
 $tamanoLargo=200+($nroItems*3)-3;
-
+$pdf->AutoPrint(false);
 $pdf->Output();
 ?>

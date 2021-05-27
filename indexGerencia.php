@@ -107,6 +107,12 @@ include("datosUsuario.php");
 					<li><a href="depositos/list.php" target="contenedorPrincipal">Registrar Depósitos</a></li>				
 				</ul>	
 			</li>
+			<li><span>Marcados de Personal</span>
+				<ul>
+					<li><a href="registrar_marcado.php" target="contenedorPrincipal">Registro de Marcados</a></li>
+					<li><a href="rptOpMarcados.php" target="contenedorPrincipal">Reporte de Marcados</a></li>
+				</ul>	
+			</li>
 			<!--li><span>Marcados de Personal</span>
 				<ul>
 					<li><a href="registrar_marcado.php" target="contenedorPrincipal">Registro de Marcados</a></li>
