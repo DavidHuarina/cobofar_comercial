@@ -66,7 +66,7 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Productos</a></li>
 					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
-					<!--<li><a href="navegador_ingresotransitoalmacen.php" target="contenedorPrincipal">Ingresos por Traspaso Central</a></li>-->
+					<li><a href="navegador_ingresotransitoalmacen.php" target="contenedorPrincipal">Ingresos por Traspaso Central</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>
@@ -92,9 +92,9 @@ include("datosUsuario.php");
 
 					<li><span>Ventas</span>
 						<ul>
-							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
+							<!--<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
 							<li><a href="rptOpVentasCategoria.php" target="contenedorPrincipal">Ventas x Clasificador</a></li>
-							<li><a href="rptOpVentasLineasProveedor.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>
+							<li><a href="rptOpVentasLineasProveedor.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>-->
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>
 							<li><a href="rptOpVentasxItem.php" target="contenedorPrincipal">Ventas x Item</a></li>
 							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
@@ -109,15 +109,15 @@ include("datosUsuario.php");
 							<li><a href="rptOpVentasxItemPerdido.php" target="contenedorPrincipal">Ventas x Item</a></li>							
 						</ul>	
 					</li>
-					<li><span>Reportes Contables</span>
+					<!--<li><span>Reportes Contables</span>
 						<ul>
 							<li><a href="rptOpLibroVentas.php" target="contenedorPrincipal">Libro de Ventas</a></li>
 							<li><a href="" target="contenedorPrincipal">Libro de Compras</a></li>
 							<!--li><a href="rptOpKardexCliente.php" target="contenedorPrincipal">Kardex x Cliente</a></li-->
-						</ul>	
-					</li>
+						<!--</ul>	
+					</li>-->
 					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
-					<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>	
+					<!--<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>-->	
 			
 				</ul>
 			</li>

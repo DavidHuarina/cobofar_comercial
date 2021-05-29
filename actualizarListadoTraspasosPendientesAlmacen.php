@@ -1,44 +1,31 @@
 <?php
 ini_set('memory_limit','1G');
 set_time_limit(0);
-require_once __DIR__.'/../conexion_externa_farma.php';
+require_once __DIR__.'/conexion_externa_farma.php';
 $estilosVenta=1;
-require '../conexionmysqli.inc';
-require_once '../function_web.php';
-?>
-<!DOCTYPE html>
-<html>
-
-<head>
-	<title></title>
-	<meta charset="utf-8">
-</head>
-<body>
-
-<?php
-
-
+require 'conexionmysqli2.inc';
+require_once 'function_web.php';
+$ciudad=$_COOKIE["global_agencia"];
+$sql_detalle="SELECT codigo_anterior from ciudades where cod_ciudad='$ciudad'";
+$codigo="";        
+$resp=mysqli_query($enlaceCon,$sql_detalle);
+while($detalle=mysqli_fetch_array($resp)){  
+   $codigo=$detalle[0];     
+}
 //DATOS PARA LISTAR DOCUMENTOS
 $fechaDesde="25/05/2021";
 $fechaHasta=date("d/m/Y");
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";
-$codCiudadOrigen=verificarAlmacenCiudadExistente("ALMACE"); //PONER EL $AGE1 DEL ALMACEN ORIGEN
-$age1Destino="A=";
-//$age1Destino="A=";
+$age1Destino=$codigo;
 $codCiudadDestino=verificarAlmacenCiudadExistente($age1Destino);
 $codAlmacenDestino=obtenerCodigoAlmacenPorCiudad($codCiudadDestino);
-
-
-?><br><br>Iniciando....<br><br><br><br><?php
 $listAlma=obtenerListadoAlmacenesEspecifico($age1Destino);//web service
 $contador=0;
 foreach ($listAlma->lista as $alma) {
   $contador++;
-  ?>EN SUC.: <?=$alma->des?> (<?=$alma->ip?>)<br><?php
   $age1=$alma->age1;
   $cod_existe=verificarAlmacenCiudadExistente($age1);
-  //QUERY SUCURSAL ORIGEN (ALMACEN)
   $sql="SELECT am.DCTO,am.TIPO,am.GLO,am.FECHA,am.IDPROVEEDOR,am.IDPER2  FROM AMAESTRO am where am.STA!='B' AND am.TIPO='K' AND FECHA BETWEEN '$fechaDesde' AND '$fechaHasta' AND am.DAGE1='$age1'";
   $dbh = new ConexionFarma(); 
   if($ipOrigen!="10.10.1.11"){// verificar si es almacen para no cambiar la ip por defecto
@@ -65,23 +52,11 @@ foreach ($listAlma->lista as $alma) {
       $codProveedor=$row['IDPROVEEDOR'];
       $codPersonal=$row['IDPER2']; //revisar si guarda la columna con valores 0
       $codCiudadDestino=$cod_existe;
-      $codigoUnico=obtenerCodigoTraspasoDocumentos($tabla_detalleOrigen,$tipoOrigen,$dctoOrigen,$ipOrigen);   
-     ?>DOCUMENTO: <?=$dctoOrigen?><?php         
-
+      $codigoUnico=obtenerCodigoTraspasoDocumentos($tabla_detalleOrigen,$tipoOrigen,$dctoOrigen,$ipOrigen);           
      $existeCon=verificarExisteTraspasoDocumentos("VDETALLE","VMAESTRO",$dctoOrigen,$codigoUnico,$ip);
       if((int)$existeCon>0){
-        ?>SE INGRESO EL DOC <?php
-        //insertar datos documento
-         /*$sql="INSERT INTO traspasos_pendientes (cod_documento,cod_documento_entrada,tipo_documento,descripcion,fecha_entrada,fecha_salida,cod_ciudad_origen,cod_ciudad_destino,codigo_unico_generado) VALUES($dctoOrigen,$tipoOrigen,'$gloOrigen','$fechaOrigen')";*/
       }else{
-       ?>NO EXISTE <?php
-
        //HABILITAMOS LA BANDERA DE VENCIDOS PARA ACTUALIZAR EL PRECIO
-$banderaPrecioUpd=0;
-$sqlConf="select valor_configuracion from configuraciones where id_configuracion=7";
-$respConf=mysqli_query($enlaceCon,$sqlConf);
-$banderaPrecioUpd=mysqli_result($respConf,0,0);
-
 
 $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_pendientes_almacenes order by cod_ingreso_almacen desc";
 $resp = mysqli_query($enlaceCon,$sql);
@@ -109,7 +84,7 @@ $fecha_real=date("Y-m-d");
                $sql="DELETE FROM ingreso_pendientes_detalle_almacenes WHERE cod_ingreso_almacen=$codigo";
                $sqlDelete=mysqli_query($enlaceCon,$sql);
                 
-               $sqlDetalle="SELECT CPROD,PREVEN,PREUNIT,HCAN,FECVEN,HCAN1,DCAN,DCAN1,LOTEFAB FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
+               $sqlDetalle="SELECT CPROD,PREVEN,PREUNIT,HCAN,FECVEN,HCAN1,DCAN,DCAN1,LOTEFAB,DIV FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
              //  echo $sqlDetalle."<br>";
         $dbh = new ConexionFarma(); 
         $stmtDetalle = $dbh->prepare($sqlDetalle);
@@ -117,20 +92,19 @@ $fecha_real=date("Y-m-d");
         while ($rowDet = $stmtDetalle->fetch(PDO::FETCH_ASSOC)) {
           $codMaterial=$rowDet["CPROD"];
           $precioMaterial=(float)$rowDet["PREUNIT"]-(float)$rowDet["PREUNIT"]*0.18;//APLICAR EL PORCENTAJE 18% DE DESCUENTO
-          $cantidadMaterial=$rowDet["DCAN"];
+          /*$cantidadMaterial=$rowDet["DCAN"];
           if($cantidadMaterial==0){
             $cantidadMaterial=$rowDet["DCAN1"];
-          }
-          if($cantidadMaterial==0){
-            $cantidadMaterial=$rowDet["HCAN"];
-          }
+          }*/
+          $cantidadPresentacion=$rowDet["DIV"];
+          $cantidadMaterial=$rowDet["HCAN"]*$cantidadPresentacion;
           if($cantidadMaterial==0){
             $cantidadMaterial=$rowDet["HCAN1"];
           }
           $fechaVenMaterial=$rowDet["FECVEN"];
           $loteFabMaterial=$rowDet["LOTEFAB"];
           $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial','$fechaVenMaterial','$loteFabMaterial')";
-          echo $consultaDetalle."<br>";
+          //echo $consultaDetalle."<br>";
           $sql_insertaDetalle = mysqli_query($enlaceCon,$consultaDetalle);
         }
       }
@@ -151,12 +125,7 @@ $fecha_real=date("Y-m-d");
    //BORRAR DETALLES
    $sql="DELETE FROM ingreso_pendientes_detalle_almacenes WHERE cod_ingreso_almacen IN (SELECT cod_ingreso_almacen FROM ingreso_pendientes_almacenes where cod_almacen=$codAlmacenDestino and nota_entrega NOT IN ($stringDCTO) and estado_ingreso=0)";
    $sqlDelete=mysqli_query($enlaceCon,$sql); 
-}
- 
+} 
 $dbh = null;
-echo "Realizado! Total Almacenes".$contador;
 
-
-?></body>
-</html>
-
+?><script type="text/javascript">window.location.href='navegador_ingresotransitoalmacen.php'</script><?php

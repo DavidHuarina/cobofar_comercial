@@ -437,8 +437,13 @@ function obtenerListadoEnvases(){
          $stmt->execute();
          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $pre=(float)$row['PRECIO'];
-            $desc=(float)$row['DESCTO'];            
-            $pv[$index]=$pre-number_format($pre*($desc/100),2,'.',''); //PROCESO ANTERIOR
+            $sico=$row['SICO'];
+            $desc=(float)$row['DESCTO'];
+            $pre=$pre-number_format($pre*($desc/100),2,'.',''); //PROCESO ANTERIOR
+            if($sico=="S"){
+                $pre=$pre-number_format($pre*(7/100),2,'.','');
+            }            
+            $pv[$index]=$pre;
          }    
       }
       $index++;

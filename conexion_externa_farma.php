@@ -28,10 +28,10 @@ public function setBase($base){
   
   //PARA CONTRASEÑA CON MINUSCULAS
   $ipCon=$this->host;
-  $enlaceCon=mysqli_connect("127.0.0.1","root","","farmaciasalmacen");
+  /*$enlaceCon=mysqli_connect("127.0.0.1","root","","farmaciasalmacen");
   $sql = "SELECT ip FROM sucursales_minusculas where ip='$ipCon'";
   $resp = mysqli_query($enlaceCon,$sql);
-  $ipSuc=mysqli_result($resp,0,0);
+  $ipSuc=mysqli_result($resp,0,0);*/
 
 
   $this->contrasena="B0l1v14.@1202";
@@ -51,7 +51,7 @@ public function setBase($base){
 class ConexionFarmaSucursal extends PDO {    
 
     private $tipo_de_base = 'sqlsrv';
-    private $host = '10.10.91.12';  
+    private $host = '10.10.8.12';  
     private $nombre_de_base = 'Gestion';
     private $usuario = 'sistema';
     private $contrasena = 'B0l1v14.@1202';    

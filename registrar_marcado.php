@@ -1,9 +1,4 @@
-<script>
-function cargaInicio(f){
-	f.clave_marcado.focus();
-}
-</script>
-<body onload="cargaInicio(form1);">
+<body>
 <?php
 require("conexionmysqli.inc");
 require("estilos.inc");
@@ -47,5 +42,9 @@ echo "</form>";
 ?>
 
 </div>
-
+<script type="text/javascript">
+$( document ).ready(function() {
+	document.getElementById("clave_marcado").focus();
+});
+</script>
 </body>

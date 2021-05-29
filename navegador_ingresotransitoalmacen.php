@@ -33,6 +33,16 @@ echo "<script language='Javascript'>
 			}
 		}
 		</script>";
+?>
+<script type="text/javascript">
+	function actualizar_nav(f)
+		{
+			location.href='actualizarListadoTraspasosPendientesAlmacen.php';
+		}
+
+</script>
+
+<?php
 	echo "<form method='post' action=''>";
 	$sql="SELECT s.cod_ingreso_almacen, s.cod_almacen, s.fecha, ts.nombre_tipoingreso, a.nombre_almacen, s.observaciones, s.nro_correlativo,s.estado_ingreso, s.nota_entrega
 	FROM ingreso_pendientes_almacenes s, tipos_ingreso ts, almacenes a 
@@ -44,7 +54,7 @@ echo "<script language='Javascript'>
 	echo "<h1>Ingreso por Traspaso Central</h1>";
 
 	echo "<center><table class='texto'>";
-	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='editar_nav(this.form)'></td></tr></table></center>";
+	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='editar_nav(this.form)'><input type='button' value='Actualizar Pendientes' name='adicionar' class='btn btn-info' onclick='actualizar_nav(this.form)'></td></tr></table></center>";
 
 
 	echo "<center><table class='table table-sm'>";
@@ -75,7 +85,7 @@ echo "<script language='Javascript'>
 	echo "</table></center><br>";
 	
 	echo "<center><table border='0' class='texto'>";
-	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='editar_nav(this.form)'></td></tr></table></center>";
+	echo "<tr><td><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='editar_nav(this.form)'><input type='button' value='Actualizar Pendientes' name='adicionar' class='btn btn-info' onclick='actualizar_nav(this.form)'></td></tr></table></center>";
 	
 	echo "</form>";
 ?>
