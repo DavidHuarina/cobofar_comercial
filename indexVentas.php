@@ -117,7 +117,7 @@ include("datosUsuario.php");
 						<!--</ul>	
 					</li>-->
 					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
-					<!--<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>-->	
+					<<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>	
 			
 				</ul>
 			</li>

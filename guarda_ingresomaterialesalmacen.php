@@ -75,9 +75,11 @@ if($sql_inserta==1){
 			$fechaVencimiento=$_POST["fechaVenc$i"];
 
 			$fechaVencimiento=UltimoDiaMes($fechaVencimiento);
-
 			$precioUnitario=$precioBruto;//$precioBruto/$cantidad;
 			
+			//CONVERTIMOS A LA CANTIDAD DE PRESENTACION PARA MANEJAR TODO EN UNITARIOS
+			$cantidadPresentacion=obtenerCantidadPresentacionProducto($cod_material);
+			$cantidad=$cantidad*$cantidadPresentacion;
 
 			$costo=$precioUnitario;
 						
@@ -89,8 +91,8 @@ if($sql_inserta==1){
                actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user);
 			}
 			$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
-			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto, cod_ubicacionestante, cod_ubicacionfila) 
-			values($codigo,'$cod_material',$cantidad,$cantidad,'$lote','$fechaVencimiento',$precioUnitario,$precioUnitario,$costo,$costo,$costo,$costo,$ubicacionEstante,$ubicacionFila)";
+			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto, cod_ubicacionestante, cod_ubicacionfila, cantidad_envase, cantidad_restante_envase, porcentaje_descuento) 
+			values($codigo,'$cod_material',$cantidad,$cantidad,'$lote','$fechaVencimiento',$precioUnitario,$precioUnitario,$costo,$costo,$costo,$costo,$ubicacionEstante,$ubicacionFila,'0','0','0')";
 			//echo "bbb:$consulta";
 			$sql_inserta2 = mysqli_query($enlaceCon,$consulta);
 			
@@ -108,7 +110,7 @@ if($sql_inserta==1){
 			*/
 
 			
-			$aa=recalculaCostos($cod_material, $global_almacen);
+			//$aa=recalculaCostos($cod_material, $global_almacen);
 			
 		}
 		

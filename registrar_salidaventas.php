@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Busqueda</title>
+        <title>Venta</title>
         <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>

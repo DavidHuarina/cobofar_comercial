@@ -29,7 +29,7 @@
 	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material";
 	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 	echo "<br><table border=0 class='texto' align='center'>";
-	echo "<tr><th>&nbsp;</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Fecha Vencimiento</th><th>Ubicacion</th><th>Precio Compra(Bs.)</th><th>Total(Bs.)</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Fecha Vencimiento</th><th>Ubicacion</th><th>Precio Compra(Bs.)</th><th>Total(Bs.)</th></tr>";
 	$indice=1;
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
@@ -47,7 +47,11 @@
 		$resp_nombre_material=mysqli_query($enlaceCon,$sql_nombre_material);
 		$dat_nombre_material=mysqli_fetch_array($resp_nombre_material);
 		$nombre_material=$dat_nombre_material[0];
-		echo "<tr><td align='center'>$indice</td><td>$nombre_material</td><td align='center'>$cantidad_unitaria</td>
+		echo "<tr>
+		<td align='center'>$indice</td>
+		<td>$cod_material</td>
+		<td>$nombre_material</td>
+		<td align='center'>$cantidad_unitaria</td>
 		<td align='center'>$loteProducto</td>
 		<td align='center'>$fechaVenc</td>
 		<td align='center'>$estante - $fila</td>
