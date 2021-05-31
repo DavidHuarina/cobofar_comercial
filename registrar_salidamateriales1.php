@@ -48,7 +48,8 @@ function listaMateriales(f){
 	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText
+			$("#divListaMateriales").html(ajax.responseText);
+               //			contenedor.innerHTML = ajax.responseText
 		}
 	}
 	ajax.send(null)
@@ -135,7 +136,8 @@ function buscarMaterial(f, numMaterial){
 	
 	document.getElementById('divListaMateriales').innerHTML='';
 	document.getElementById('itemNombreMaterial').value='';	
-	document.getElementById('itemNombreMaterial').focus();
+	document.getElementById('itemCodigoMaterial').value='';	
+	document.getElementById('itemCodigoMaterial').focus();
 }
 function Hidden(){
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
@@ -155,7 +157,9 @@ function setMateriales(f, cod, nombreMat){
 	document.getElementById('divProfileDetail').style.visibility='hidden';
 	document.getElementById('divboton').style.visibility='hidden';
 	
+	document.getElementById("cantidad_unitaria"+numRegistro).value="1";
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
+	document.getElementById("cantidad_unitaria"+numRegistro).select();
 
 	actStock(numRegistro);
 }
@@ -221,7 +225,7 @@ function menos(numero) {
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){
-		document.getElementById('itemNombreMaterial').focus();
+		document.getElementById('itemCodigoMaterial').focus();	
 		listaMateriales(f);
 		return false;
 	}
@@ -369,7 +373,7 @@ if($global_tipo_almacen!=2){
 	<table align="center" class="texto" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
 	<tr>
 		<td align="center" colspan="9">
-			<b>Detalle de la Transaccion   </b><input class="boton" type="button" value="Agregar (+)" onclick="mas(this)" />
+			<b>Detalle de la Transaccion   </b><input class="boton" type="button" value="Agregar (+)" onclick="mas(this)" accesskey="a" />
 		</td>
 	</tr>
 	<tr align="center">
@@ -513,7 +517,7 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 			<td>
 				<div class="row">
 					<div class="col-sm-3"><input type='number' placeholder='--' name='itemCodigoMaterial' id='itemCodigoMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>
-					<div class="col-sm-9"><input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>				   
+					<div class="col-sm-9"><input type='text' placeholder='Descripción' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>				   
 				</div>
 				
 			</td>

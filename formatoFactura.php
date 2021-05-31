@@ -29,7 +29,7 @@ include('phpqrcode/qrlib.php');
 	}
 </style>
 <?php
-
+$cod_ciudad=$_COOKIE["global_agencia"];
 $codigoVenta=$_GET["codVenta"];
 
 //consulta cuantos items tiene el detalle
@@ -42,44 +42,44 @@ $tamanoLargo=230+($nroItems*5)-5;
 ?><div style="width:320;height:<?=$tamanoLargo?>; font-family:Arial;">
 <?php	
 
-$sqlConf="select id, valor from configuracion_facturas where id=1";
+$sqlConf="select id, valor from configuracion_facturas where id=1 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nombreTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=10";
+$sqlConf="select id, valor from configuracion_facturas where id=10 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nombreTxt2=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=2";
+$sqlConf="select id, valor from configuracion_facturas where id=2 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $sucursalTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=3";
+$sqlConf="select id, valor from configuracion_facturas where id=3 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $direccionTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=4";
+$sqlConf="select id, valor from configuracion_facturas where id=4 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $telefonoTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=5";
+$sqlConf="select id, valor from configuracion_facturas where id=5 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $ciudadTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=6";
+$sqlConf="select id, valor from configuracion_facturas where id=6 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $txt1=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=7";
+$sqlConf="select id, valor from configuracion_facturas where id=7 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $txt2=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=8";
+$sqlConf="select id, valor from configuracion_facturas where id=8 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $txt3=mysqli_result($respConf,0,1);
 
 
-$sqlConf="select id, valor from configuracion_facturas where id=9";
+$sqlConf="select id, valor from configuracion_facturas where id=9 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nitTxt=mysqli_result($respConf,0,1);
 
