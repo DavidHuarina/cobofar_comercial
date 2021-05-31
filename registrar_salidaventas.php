@@ -503,7 +503,7 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
       $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
 	}	
 	document.getElementById('materiales'+numRegistro).value=cod;
-	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
+	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat+" ("+cod+")";
 	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
 	document.getElementById('divi'+numRegistro).value=divi;
 	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;

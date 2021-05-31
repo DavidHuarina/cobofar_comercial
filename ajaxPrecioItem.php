@@ -11,7 +11,7 @@ $cantidad_unitaria=$_GET["cantidad_unitaria"];
 require("conexionmysqli.inc");
 $cadRespuesta="";
 $consulta="
-    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1 and cod_ciudad=$globalAgencia and cod_ciudad>0";
+    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1 and cod_ciudad=-1";
     //echo $consulta;
 $rs=mysqli_query($enlaceCon,$consulta);
 $registro=mysqli_fetch_array($rs);

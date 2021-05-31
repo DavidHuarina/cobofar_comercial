@@ -472,7 +472,7 @@ function obtenerNombreDia($dia){
   return $abrev;
 }
 function obtenerNombreCiudad($ciudad){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT descripcion from ciudades where cod_ciudad='$ciudad'";
   $nombre="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);

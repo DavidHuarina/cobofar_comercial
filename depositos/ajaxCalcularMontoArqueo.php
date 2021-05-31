@@ -1,16 +1,22 @@
 <?php
 $estilosVenta=1;
-require("../conexionmysqli.inc");
+require("../conexionmysqli2.inc");
 require("../funciones.php");
 
 $fecha = $_GET["fecha"];
+$fechai = $_GET["fechai"];
+
+$hora = $_GET["hora"];
+$horai = $_GET["horai"];
+
+
 $rpt_territorio=$_COOKIE["global_agencia"];
 $rpt_funcionario=$_COOKIE["global_usuario"];
 $sql="select s.`monto_final`, s.cod_tipopago
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha 00:00:00' and '$fecha 23:59:59' and s.`cod_chofer`='$rpt_funcionario' ";
-
+	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai $horai' and '$fecha $hora' and s.`cod_chofer`='$rpt_funcionario' ";
+//echo $sql;
 $resp=mysqli_query($enlaceCon,$sql);
 
 $totalEfectivo=0;

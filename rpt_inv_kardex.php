@@ -178,7 +178,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			<td align='left'>$nombre_ingreso</td><td>&nbsp;</td><td align='left'>$nombre_responsable</td></tr>";
 		}
 		//hacemos la consulta para salidas
-		$sql_salidas="select s.nro_correlativo, sd.cantidad_unitaria, ts.nombre_tiposalida, s.observaciones, s.territorio_destino, s.cod_salida_almacenes,sd.cantidad_envase,s.created_by
+		$sql_salidas="select s.nro_correlativo, sd.cantidad_unitaria, ts.nombre_tiposalida, s.observaciones, s.territorio_destino, s.cod_salida_almacenes,sd.cantidad_envase,s.created_by,s.cod_tipo_doc
 		from salida_almacenes s, salida_detalle_almacenes sd, tipos_salida ts
 		where s.cod_tiposalida=ts.cod_tiposalida and s.cod_salida_almacenes=sd.cod_salida_almacen and s.cod_almacen='$rpt_almacen' and
 		s.salida_anulada=0 and sd.cod_material='$rpt_item' and s.fecha='$fecha_consulta'";
@@ -189,7 +189,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			$nombre_salida=$dat_salidas[2];
 			$obs_salida=$dat_salidas[3];
 			$cod_salida=$dat_salidas[5];
-
+            $tipoDocumento=$dat_salidas["cod_tipo_doc"];
 			$territorio_destino=$dat_salidas[4];
             $sqlResponsable="select CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 0, 1),'.') from funcionarios where codigo_funcionario='".$dat_salidas['created_by']."'";
 	        $respResponsable=mysqli_query($enlaceCon,$sqlResponsable);
@@ -205,6 +205,22 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 				$nombre_territorio_destino=$dat_nombre_territorio_destino[0];
 			$cantidad_kardex=$cantidad_kardex-$cantidad_salida;
 			$suma_salidas=$suma_salidas+$cantidad_salida;
+
+			if($tipoDocumento==1){
+              $nro_salida="F-".$nro_salida;
+			}else{
+				if($tipoDocumento==4){
+                  $nro_salida="M-".$nro_salida;
+			    }else{
+			       if($tipoDocumento==3){
+                     $nro_salida="T-".$nro_salida;
+			       }else{
+			    	
+			       }	
+			    }
+			}
+
+			
 			echo "<tr><td>Salida</td><td align='center'>$nro_salida</td><td align='center'>$fecha_consulta_format</td>
 			   <td>&nbsp;$obs_salida</td>
 			   <td align='right'>0</td>

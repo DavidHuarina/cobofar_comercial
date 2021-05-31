@@ -103,8 +103,7 @@ include("datosUsuario.php");
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos</a></li>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>					
 					<li><a href="navegadorPedidos.php" target="contenedorPrincipal">Ventas Perdidas</a></li>	
-					<li><a href="registrar_salidaventas_manual.php" target="_blank">Registrar Factura Manual</a></li>
-					<li><a href="depositos/list.php" target="contenedorPrincipal">Registrar Depósitos</a></li>				
+					<li><a href="registrar_salidaventas_manual.php" target="_blank">Registrar Factura Manual</a></li>									
 				</ul>	
 			</li>
 			<li><span>Marcados de Personal</span>
@@ -113,6 +112,7 @@ include("datosUsuario.php");
 					<li><a href="rptOpMarcados.php" target="contenedorPrincipal">Reporte de Marcados</a></li>
 				</ul>	
 			</li>
+			<li><a href="depositos/list.php" target="contenedorPrincipal">Registrar Depósitos</a></li>
 			<!--li><span>Marcados de Personal</span>
 				<ul>
 					<li><a href="registrar_marcado.php" target="contenedorPrincipal">Registro de Marcados</a></li>

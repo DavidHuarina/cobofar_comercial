@@ -440,7 +440,7 @@ function obtenerListadoEnvases(){
             $sico=$row['SICO'];
             $desc=(float)$row['DESCTO'];
             $pre=$pre-number_format($pre*($desc/100),2,'.',''); //PROCESO ANTERIOR
-            if($sico=="S"){
+            if($sico=="N"){
                 $pre=$pre-number_format($pre*(7/100),2,'.','');
             }            
             $pv[$index]=$pre;

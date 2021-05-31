@@ -281,16 +281,18 @@ echo "<tr><th>Saldo Inicial Caja Chica + Ingresos Efectivo - Gastos   ---->  </t
 <th align='right'>$saldoCajaChica2F</th>
 </tr>";*/
 echo "<tr><th>Total Ventas Anuladas  </th>
-<th align='right'>$saldoCajaChicaF</th>
+<th align='right'>$saldoCajaChica3F</th>
 </tr>";
 echo "<tr><th>Total Ventas Registradas  </th>
-<th align='right'>$saldoCajaChica3F</th>
+<th align='right'>$saldoCajaChicaF</th>
 </tr>";
 echo "</table></center><br>";
 
 
 $html = ob_get_clean();
-descargarPDFArqueoCaja("ARQUEO_",$html);
+
+$nombreFuncionario=nombreVisitador($rpt_funcionario);
+descargarPDFArqueoCaja("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html);
 ?>
 
 

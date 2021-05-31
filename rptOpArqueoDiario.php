@@ -16,6 +16,24 @@ function envia_formulario(f, variableAdmin)
 	window.open('rptArqueoDiarioPDF.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&hora_ini='+hora_ini+'&hora_fin='+hora_fin+'&variableAdmin='+variableAdmin+'&rpt_funcionario='+rpt_funcionario,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
+
+function envia_formulario2(f, variableAdmin)
+{	var fecha_ini;
+	var fecha_fin;
+	var hora_ini;
+	var hora_fin;
+	var rpt_territorio;
+	rpt_territorio=f.rpt_territorio.value;
+	var rpt_funcionario;
+	rpt_funcionario=f.rpt_funcionario.value;
+
+	fecha_ini=f.exafinicial.value;
+	fecha_fin=f.exaffinal.value;
+	hora_ini=f.exahorainicial.value;
+	hora_fin=f.exahorafinal.value;
+	window.open('rptArqueoDiarioPDFSm.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&hora_ini='+hora_ini+'&hora_fin='+hora_fin+'&variableAdmin='+variableAdmin+'&rpt_funcionario='+rpt_funcionario,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+	return(true);
+}
 </script>
 <?php
 
@@ -77,7 +95,7 @@ echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 	echo "</tr>";
 	
 	echo"\n </table><br>";
-	echo "<center><input type='button' name='reporte' value='Ver Reporte' onClick='envia_formulario(this.form,$variableAdmin)' class='boton'>
+	echo "<center><input type='button' name='reporte' value='Ver Reporte' onClick='envia_formulario(this.form,$variableAdmin)' class='btn btn-info'><input type='button' name='reporte2' value='Imprimir' onClick='envia_formulario2(this.form,$variableAdmin)' class='btn btn-default'>
 	</center><br>";
 	echo"</form>";
 	echo "</div>";
