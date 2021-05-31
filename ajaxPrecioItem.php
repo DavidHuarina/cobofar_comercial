@@ -58,7 +58,7 @@ $indiceConversion=0;
 $descuentoPrecioMonto=0;
 if($descuentoPrecio>0){
 	$indiceConversion=($descuentoPrecio/100);
-	/*if(obtenerValorConfiguracion(13)==1){
+	if(obtenerValorConfiguracion(13)==1){
       $descuentoPrecioMonto=round($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
 	}else if(obtenerValorConfiguracion(13)==2){
       $descuentoPrecioMonto=redondearMitades($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
@@ -67,15 +67,15 @@ if($descuentoPrecio>0){
 	}else{
 	  //$descuentoPrecioMonto=$cadRespuesta*($indiceConversion)*$cantidad_unitaria;		
 		$descuentoPrecioMonto=(($descuentoPrecio*100)*$cadRespuesta)*$cantidad_unitaria;		
-	}*/
-	$descuentoPrecioMonto=(($descuentoPrecio*100)*$cadRespuesta)*$cantidad_unitaria;		
+	}
+	//$descuentoPrecioMonto=(($descuentoPrecio*100)*$cadRespuesta)*$cantidad_unitaria;		
 	
 	//$cadRespuesta=$cadRespuesta-($cadRespuesta*($indiceConversion));
 }
 
 //$cadRespuesta=redondear2($cadRespuesta);
 //redondeamos al entero
-$cadRespuesta=round($cadRespuesta);
+//$cadRespuesta=round($cadRespuesta);
 
 $sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$global_agencia'";
 $resp_almacen=mysqli_query($enlaceCon,$sql_almacen);
