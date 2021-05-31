@@ -78,12 +78,12 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo "<option value='2'>Materiales</option>";
 	
 	echo "</tr>";
-	echo "<tr><th align='left'>Material</th><td><select name='rpt_item' class='selectpicker form-control'>";
+	echo "<tr><th align='left'>Material</th><td><select name='rpt_item' class='selectpicker form-control' data-live-search='true' data-size='6'>";
 	
-	$sql_item="select codigo_material, descripcion_material from material_apoyo where codigo_material<>0 and codigo_barras>0 order by descripcion_material";
+	$sql_item="select codigo_material, descripcion_material from material_apoyo where codigo_material<>0 order by descripcion_material";
 	
 	$resp=mysqli_query($enlaceCon,$sql_item);
-	echo "<option value=''></option>";
+	//echo "<option value=''></option>";
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_item=$dat[0];
 		if($tipo_item==1)

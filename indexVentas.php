@@ -121,15 +121,8 @@ include("datosUsuario.php");
 							<li><a href="rptOpVentasxItemPerdido.php" target="contenedorPrincipal">Ventas x Item</a></li>							
 						</ul>	
 					</li>
-					<!--<li><span>Reportes Contables</span>
-						<ul>
-							<li><a href="rptOpLibroVentas.php" target="contenedorPrincipal">Libro de Ventas</a></li>
-							<li><a href="" target="contenedorPrincipal">Libro de Compras</a></li>
-							<!--li><a href="rptOpKardexCliente.php" target="contenedorPrincipal">Kardex x Cliente</a></li-->
-						<!--</ul>	
-					</li>-->
 					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
-					<<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>	
+					<li><a href="control_inventario/list.php" target="contenedorPrincipal">Control de Inventario</a></li>	
 			
 				</ul>
 			</li>
