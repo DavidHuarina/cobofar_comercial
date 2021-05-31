@@ -30,7 +30,7 @@ echo "<center><h3>Reporte Arqueo Diario de Caja</h3>
 
 	
 
-echo "<center><table class='textomediano'>";
+/*echo "<center><table class='textomediano'>";
 echo "<tr><th colspan='2'>Saldo Inicial Caja Chica</th></tr>
 <tr><th>Fecha</th><th>Monto Apertura de Caja Chica [Bs]</th></tr>";
 $consulta = "select DATE_FORMAT(c.fecha_cajachica, '%d/%m/%Y'), c.monto, c.fecha_cajachica from cajachica_inicio c where 
@@ -45,7 +45,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	<td align='right'>$montoCajaChicaF</td>
 	</tr>";
 }
-echo "</table></center><br>";
+echo "</table></center><br>";*/
 
 
 	
@@ -153,7 +153,7 @@ echo "</table></br>";
 
 
 
-echo "<br><center><table class='textomediano'>";
+/*echo "<br><center><table class='textomediano'>";
 echo "<tr><th colspan='4'>Detalle de Gastos</th></tr>";
 echo "<tr><th>Fecha</th><th>Tipo</th>
 	<th>Descripcion</th><th>Monto [Bs]</th></tr>";
@@ -189,7 +189,7 @@ echo "<tr>
 <th>Total Gastos</th>
 <th align='right'>$totalGastos</th>
 </tr>";
-echo "</table></center><br>";
+echo "</table></center><br>";*/
 
 $saldoCajaChica=$montoCajaChica+$totalVenta-$totalGastos;
 $saldoCajaChicaF=number_format($saldoCajaChica,2,".",",");
