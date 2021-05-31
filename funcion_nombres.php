@@ -1,6 +1,6 @@
 <?php
 function saca_nombre_muestra($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 	$sql="select descripcion from muestras_medicas where codigo='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$dat=mysqli_fetch_array($resp);
@@ -8,7 +8,7 @@ function saca_nombre_muestra($codigo)
 	return($nombre_muestra);
 }
 function nombreProducto($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select concat(descripcion, ' ',presentacion) from muestras_medicas where codigo='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$dat=mysqli_fetch_array($resp);
@@ -17,7 +17,7 @@ $sql="select concat(descripcion, ' ',presentacion) from muestras_medicas where c
 }
 
 function nombreBanco($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select nombre from bancos where codigo='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$dat=mysqli_fetch_array($resp);
@@ -26,7 +26,7 @@ $sql="select nombre from bancos where codigo='$codigo'";
 }
 
 function nombreGestion($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select g.`nombre_gestion` from `gestiones` g where g.`codigo_gestion`='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -34,7 +34,7 @@ $sql="select g.`nombre_gestion` from `gestiones` g where g.`codigo_gestion`='$co
 }
 
 function nombreLinea($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select nombre_linea from lineas where codigo_linea='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -42,7 +42,7 @@ $sql="select nombre_linea from lineas where codigo_linea='$codigo'";
 }
 
 function nombreVisitador($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select concat(paterno,' ',nombres) from funcionarios where codigo_funcionario='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -50,7 +50,7 @@ $sql="select concat(paterno,' ',nombres) from funcionarios where codigo_funciona
 }
 
 function nombreTerritorio($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select descripcion from ciudades where cod_ciudad='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -58,7 +58,7 @@ $sql="select descripcion from ciudades where cod_ciudad='$codigo'";
 }
 
 function nombreMedico($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select concat(ap_pat_med,' ', nom_med) from Clientes where cod_med='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -66,7 +66,7 @@ $sql="select concat(ap_pat_med,' ', nom_med) from Clientes where cod_med='$codig
 }
 
 function nombreDia($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select dia_contacto from orden_dias where id='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -75,7 +75,7 @@ $sql="select dia_contacto from orden_dias where id='$codigo'";
 
 
 function nombreRutero($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select nombre_rutero from rutero_maestro_cab where cod_rutero='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -83,7 +83,7 @@ $sql="select nombre_rutero from rutero_maestro_cab where cod_rutero='$codigo'";
 }
 
 function nombreZona($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select zona from zonas where cod_zona='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -91,7 +91,7 @@ $sql="select zona from zonas where cod_zona='$codigo'";
 }
 
 function nombreCategoria($codigo, $link)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select nombre_categoria from categorias_producto where cod_categoria='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql, $link);
 	$nombre=mysqli_result($resp,0,0);
@@ -99,7 +99,7 @@ $sql="select nombre_categoria from categorias_producto where cod_categoria='$cod
 }
 
 function nombreCliente($codigo)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 $sql="select nombre_cliente from clientes where cod_cliente='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -107,7 +107,7 @@ $sql="select nombre_cliente from clientes where cod_cliente='$codigo'";
 }
 
 function nombreProveedor($codigo){	
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="select nombre_proveedor from proveedores where cod_proveedor='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysqli_result($resp,0,0);
@@ -116,7 +116,7 @@ function nombreProveedor($codigo){
 
 
 function obtenerNombreMaestro($tabla, $codigo){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="select nombre from $tabla where codigo='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre="";
@@ -126,7 +126,7 @@ function obtenerNombreMaestro($tabla, $codigo){
 	return($nombre);
 }
 function obtenerNombreSucursalAgrupado($sucursales){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="select GROUP_CONCAT(descripcion) AS descripcion from ciudades where cod_ciudad in ($sucursales)";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre="";
@@ -137,7 +137,7 @@ function obtenerNombreSucursalAgrupado($sucursales){
 }
 
 function obtenerNombreProductoSimple($codigo){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="select descripcion_material from material_apoyo where codigo_material=$codigo";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre="";
@@ -147,7 +147,7 @@ function obtenerNombreProductoSimple($codigo){
 	return($nombre);
 }
 function obtenerNombreProductoCompleto($codigo){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="SELECT m.descripcion_material,(select p.nombre_proveedor from proveedores_lineas l join proveedores p on p.cod_proveedor=l.cod_proveedor where l.cod_linea_proveedor=m.cod_linea_proveedor) as nombre_proveedor,(select l.nombre_linea_proveedor from proveedores_lineas l where l.cod_linea_proveedor=m.cod_linea_proveedor) as linea_proveedor
 from material_apoyo m 
 where m.codigo_material=$codigo";

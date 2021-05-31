@@ -25,9 +25,7 @@ $fecha_finconsultahora=$fecha_fin." ".$hora_fin.":59";
 $fecha_reporte=date("d/m/Y");
 
 echo "<center><h3>Reporte Arqueo Diario de Caja</h3>
-	<h3>Fecha: $fecha_ini &nbsp;&nbsp;&nbsp; Fecha Reporte: $fecha_reporte</h3></center>";
-
-	
+	<h3>Fecha Arqueo: ".strftime('%d/%m/%Y',strtotime($fecha_ini))." &nbsp;&nbsp;&nbsp; Fecha Reporte: $fecha_reporte</h3></center>";	
 
 echo "<center><table class='textomediano'>";
 echo "<tr><th colspan='2'>Saldo Inicial Caja Chica</th></tr>
@@ -55,7 +53,7 @@ $sql="select s.`fecha`,
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
 	s.hora_salida,s.cod_chofer
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
-	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
 
 if($variableAdmin==1){

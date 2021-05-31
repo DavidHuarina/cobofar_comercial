@@ -13,7 +13,7 @@ function envia_formulario(f, variableAdmin)
 	fecha_fin=f.exaffinal.value;
 	hora_ini=f.exahorainicial.value;
 	hora_fin=f.exahorafinal.value;
-	window.open('rptArqueoDiario.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&hora_ini='+hora_ini+'&hora_fin='+hora_fin+'&variableAdmin='+variableAdmin+'&rpt_funcionario='+rpt_funcionario,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+	window.open('rptArqueoDiarioPDF.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&hora_ini='+hora_ini+'&hora_fin='+hora_fin+'&variableAdmin='+variableAdmin+'&rpt_funcionario='+rpt_funcionario,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
 </script>
@@ -28,17 +28,19 @@ if($variableAdmin!=1){
 }
 
 $fecha_rptinidefault=date("Y")."-".date("m")."-01";
-$hora_rptinidefault=date("H:i");
+//$hora_rptinidefault=date("H:i");
+$hora_rptinidefault="06:00";
+$hora_rptfindefault="23:00";
 $fecha_rptdefault=date("Y-m-d");
 $globalCiudad=$_COOKIE['global_agencia'];
 $globalUser=$_COOKIE['global_usuario'];
 echo "<h1>Reporte Arqueo Diario de Caja</h1><br>";
-echo"<form method='post' action='rptArqueoDiario.php'>";
+echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker form-control'>";
-	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
+	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$globalCiudad' order by descripcion";
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
@@ -65,12 +67,12 @@ echo"<form method='post' action='rptArqueoDiario.php'>";
 	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Fecha Inicio:</th>";
 			echo" <TD bgcolor='#ffffff'>
-				<INPUT  type='date' class='texto' value='$fecha_rptinidefault' id='exafinicial' size='10' name='exafinicial'><INPUT  type='time' class='texto' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>";
+				<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial'><INPUT  type='time' class='texto' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>";
     		echo"  </TD>";
 	echo "</tr>";
 	echo "<tr><th align='left'>Fecha Fin:</th>";
 			echo" <TD bgcolor='#ffffff'>
-				<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal'><INPUT  type='time' class='texto' value='$hora_rptinidefault' id='exahorafinal' size='10' name='exahorafinal'>";
+				<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal'><INPUT  type='time' class='texto' value='$hora_rptfindefault' id='exahorafinal' size='10' name='exahorafinal'>";
     		echo"  </TD>";
 	echo "</tr>";
 	
