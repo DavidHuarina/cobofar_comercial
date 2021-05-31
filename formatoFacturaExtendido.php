@@ -182,6 +182,7 @@ QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
 
 $pdf->Image($fileName , 23 ,$y+$yyy+38, 30, 30,'PNG');
 
+$txt3=iconv('utf-8', 'windows-1252', $txt3); 
 $pdf->SetXY(5,$y+$yyy+68);		$pdf->MultiCell(60,3,$txt3,0,"C");
 
 //$pdf->Output();

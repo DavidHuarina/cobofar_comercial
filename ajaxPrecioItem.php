@@ -75,7 +75,7 @@ if($descuentoPrecio>0){
 
 //$cadRespuesta=redondear2($cadRespuesta);
 //redondeamos al entero
-//$cadRespuesta=round($cadRespuesta);
+$cadRespuesta=number_format($cadRespuesta,2,'.','');
 
 $sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$global_agencia'";
 $resp_almacen=mysqli_query($enlaceCon,$sql_almacen);
