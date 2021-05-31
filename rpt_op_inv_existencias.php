@@ -60,6 +60,7 @@ else
 {	require("estilos_almacenes.inc");
 }
 $fecha_rptdefault=date("d/m/Y");
+$rpt_territorio=$_COOKIE["global_agencia"];
 echo "<h1>Reporte Existencias Sucursales</h1>";
 
 echo"<form method='post' action=''>";
@@ -70,7 +71,7 @@ echo"<form method='post' action=''>";
 	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	
 	$resp=mysqli_query($enlaceCon,$sql);
-	echo "<option value='0'>Todos</option>";
+	//echo "<option value='0'>Todos</option>";
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
@@ -78,7 +79,7 @@ echo"<form method='post' action=''>";
 		{	echo "<option value='$codigo_ciudad' selected>$nombre_ciudad</option>";
 		}
 		else
-		{	echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
+		{	//echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
 		}
 	}
 	echo "</select></td></tr>";
