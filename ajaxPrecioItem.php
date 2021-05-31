@@ -58,15 +58,17 @@ $indiceConversion=0;
 $descuentoPrecioMonto=0;
 if($descuentoPrecio>0){
 	$indiceConversion=($descuentoPrecio/100);
-	if(obtenerValorConfiguracion(13)==1){
+	/*if(obtenerValorConfiguracion(13)==1){
       $descuentoPrecioMonto=round($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
 	}else if(obtenerValorConfiguracion(13)==2){
       $descuentoPrecioMonto=redondearMitades($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
 	}else if(obtenerValorConfiguracion(13)==3){
 	  $descuentoPrecioMonto=redondearCentavos($cadRespuesta*($indiceConversion)*$cantidad_unitaria);
 	}else{
-	  $descuentoPrecioMonto=$cadRespuesta*($indiceConversion)*$cantidad_unitaria;		
-	}
+	  //$descuentoPrecioMonto=$cadRespuesta*($indiceConversion)*$cantidad_unitaria;		
+		$descuentoPrecioMonto=(($descuentoPrecio*100)*$cadRespuesta)*$cantidad_unitaria;		
+	}*/
+	$descuentoPrecioMonto=(($descuentoPrecio*100)*$cadRespuesta)*$cantidad_unitaria;		
 	
 	//$cadRespuesta=$cadRespuesta-($cadRespuesta*($indiceConversion));
 }
@@ -90,7 +92,7 @@ while($datCosto=mysqli_fetch_array($respCosto)){
 	$costoMaterialii=redondear2($costoMaterialii);
 }
 
-echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='0.01'>";
+echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='any'>";
 echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecioNombre</span>";
 echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>#####".$descuentoPrecioMonto."#####";
 			

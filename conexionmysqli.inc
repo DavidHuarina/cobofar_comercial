@@ -37,8 +37,8 @@ if(!function_exists('register_globals')){
 
 }
 
-//$enlaceCon=mysqli_connect("10.10.1.76","davidh","123456","farmacias2");
-$enlaceCon=mysqli_connect("p:127.0.0.1","root","4868422Marco","ventascobofar");
+$enlaceCon=mysqli_connect("127.0.0.1","root","","farmaciasalmacen");
+//$enlaceCon=mysqli_connect("p:127.0.0.1","root","4868422Marco","ventascobofar");
 if (mysqli_connect_errno())
 {
 	echo "Error en la conexión: " . mysqli_connect_error();
