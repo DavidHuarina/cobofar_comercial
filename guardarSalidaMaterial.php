@@ -145,7 +145,7 @@ if($sql_inserta==1){
     }
 
     //TARJETA INSERTAR
-    if(isset($_POST['nro_tarjeta'])&&$_POST['nro_tarjeta']!=""){
+    if(isset($_POST['nro_tarjeta'])&&$_POST['nro_tarjeta']!=""&&$tipoVenta==2){
        $nro_tarjeta=$_POST['nro_tarjeta'];
        $monto_tarjeta=$_POST['monto_tarjeta'];
        $banco_tarjeta=$_POST['banco_tarjeta'];

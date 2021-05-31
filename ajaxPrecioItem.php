@@ -92,7 +92,7 @@ while($datCosto=mysqli_fetch_array($respCosto)){
 	$costoMaterialii=redondear2($costoMaterialii);
 }
 
-echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='any'>";
+echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='any' readonly>";
 echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecioNombre</span>";
 echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>#####".$descuentoPrecioMonto."#####";
 			

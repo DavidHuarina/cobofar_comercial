@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Busqueda</title>
+        <title>Venta</title>
         <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
@@ -77,7 +77,7 @@ function listaMateriales(f){
 	var codPrincipio=f.itemPrincipioMaterial.value;
 	var nombreItem=f.itemNombreMaterial.value;
 	var tipoSalida=(f.tipoSalida.value);
-	
+	var codigoMat=(f.itemCodigoMaterial.value);
 	contenedor = document.getElementById('divListaMateriales');
 
 	var arrayItemsUtilizados=new Array();	
@@ -91,11 +91,13 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText
-		}
+			$("#divListaMateriales").html(ajax.responseText);
+			//contenedor.innerHTML = ajax.responseText;
+			document.getElementById('itemCodigoMaterial').focus();	
+		}		
 	}
 	ajax.send(null)
 }
@@ -115,11 +117,11 @@ function ajaxTipoDoc(f){
 }
 
 
-function ajaxNroDoc(){
+function ajaxNroDoc(f){
 	var contenedor;
 	contenedor=document.getElementById("divNroDoc");
 	ajax=nuevoAjax();
-	var codTipoDoc=$("#tipoDoc").val();
+	var codTipoDoc=(f.tipoDoc.value);
 	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
@@ -431,7 +433,9 @@ function buscarMaterial(f, numMaterial){
 	
 	document.getElementById('divListaMateriales').innerHTML='';
 	document.getElementById('itemNombreMaterial').value='';	
-	document.getElementById('itemNombreMaterial').focus();	
+	//document.getElementById('itemNombreMaterial').focus();
+	document.getElementById('itemCodigoMaterial').value='';	
+	document.getElementById('itemCodigoMaterial').focus();		
 	
 }
 function encontrarMaterial(numMaterial){
@@ -487,6 +491,7 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById('divi'+numRegistro).value=divi;
 	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
+	document.getElementById("cantidad_unitaria"+numRegistro).select();
     $("#modalProductosSimilares").modal("hide");
 	actStock(numRegistro);	
 }
@@ -508,6 +513,7 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById('divboton').style.visibility='hidden';
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
+	document.getElementById("cantidad_unitaria"+numRegistro).select();
 
 	actStock(numRegistro);	
 }
@@ -637,7 +643,7 @@ function menos(numero) {
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){
-		document.getElementById('itemNombreMaterial').focus();
+		document.getElementById('itemCodigoMaterial').focus();	
 		listaMateriales(f);
 		return false;
 	}
@@ -745,7 +751,10 @@ function validar(f, ventaDebajoCosto,pedido){
 				}
 				if($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()==""){
 					errores++;
-					alert("Debe registrar el monto de efectivo recibido");
+					document.getElementById("efectivoRecibidoUnido").focus();
+					document.getElementById("efectivoRecibidoUnido").select();
+					alert("Debe registrar el monto recibido");
+
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
@@ -758,7 +767,9 @@ function validar(f, ventaDebajoCosto,pedido){
 				}
 				if(stock<cantidad&&pedidoFormu==0){
 					errores++;
-					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);
+					document.getElementById("cantidad_unitaria"+i).focus();
+					document.getElementById("cantidad_unitaria"+i).select();
+					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);					
 					$("#pedido_realizado").val(0);
 					return(false);
 				}		
@@ -771,7 +782,9 @@ function validar(f, ventaDebajoCosto,pedido){
 
 				if(divi==0&&cantidadPres>0&&(cantidad%cantidadPres)!=0){
 					errores++;
-					alert("El item de la fila "+i+" no es divisible!, la cantidad unitaria debe ser multiple a la cantidad de presentación");
+					document.getElementById("cantidad_unitaria"+i).focus();
+					document.getElementById("cantidad_unitaria"+i).select();
+					alert("El item de la fila "+i+" no es divisible!, la cantidad unitaria debe ser multiple a la cantidad de presentación");					
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
@@ -781,6 +794,20 @@ function validar(f, ventaDebajoCosto,pedido){
 		  	  guardarPedido(1);
               //guardarPedidoDesdeFacturacion(1);
               return false;
+		  }else{
+		  	if($("#tipoVenta").val()==2){
+		  	  if($("#nro_tarjeta").val()!=""){
+                if(!($("#monto_tarjeta").val()>0)){
+                   alert("Debe Ingresar el monto de la Tarjeta");
+					$("#pedido_realizado").val(0);
+				   return(false);
+                }
+		  	  }else{
+		  	  	alert("Debe Registrar los datos de la tarjeta");
+					$("#pedido_realizado").val(0);
+				   return(false);
+		  	  }// fin nro de tarjeta		  	
+		  	}
 		  }
 		}else{
 		  alert("Debe registrar el Cliente.");
@@ -804,17 +831,18 @@ function cambiarTipoVenta2(){
       $("#tipo_venta2").val(2);
       $("#boton_tipoventa2").html("<i class='material-icons'>corporate_fare</i>");
       $("#boton_tipoventa2").attr("title","TIPO DE VENTA INSTITUCIONAL");
-      $("#boton_tipoventa2").attr("class","btn btn-danger btn-sm btn-fab");
+      $("#boton_tipoventa2").attr("class","btn btn-danger btn-sm btn-fab float-right");
       tipoVentaGlobal=2;
 	}else{
       $("#tipo_venta2").val(1);
       tipoVentaGlobal=1;
       $("#boton_tipoventa2").html("<i class='material-icons'>point_of_sale</i>");
       $("#boton_tipoventa2").attr("title","TIPO DE VENTA CORRIENTE");
-      $("#boton_tipoventa2").attr("class","btn btn-info btn-sm btn-fab");
+      $("#boton_tipoventa2").attr("class","btn btn-info btn-sm btn-fab float-right");
 	}
   
 }
+
 
 function registrarNuevoCliente(){
 	$("#nit").val($("#nitCliente").val());
@@ -856,6 +884,111 @@ function adicionarCliente() {
     });	
   }
 }
+function guardarRecetaVenta(){
+	$("#nom_doctor").val("");
+	$("#ape_doctor").val("");
+	$("#dir_doctor").val("");
+	$("#mat_doctor").val("");
+	$("#n_ins_doctor").val("");
+	$("#nomcli").val($("#razonSocial").val());
+	actualizarTablaMedicos("apellidos");
+	$("#modalRecetaVenta").modal("show");
+}
+
+function nuevaInstitucion(){
+  var institucion=$("#ins_doctor").val();
+  if(institucion==-2){
+  	if($("#div_ins_doctor").hasClass("d-none")){
+  		$("#div_ins_doctor").removeClass("d-none")
+  	}
+  }else{
+  	if(!$("#div_ins_doctor").hasClass("d-none")){
+  		$("#div_ins_doctor").addClass("d-none")
+  	}
+  }
+}
+
+function guardarMedicoReceta(){
+	var nom_doctor=$("#nom_doctor").val();
+	var ape_doctor=$("#ape_doctor").val();
+	var dir_doctor=$("#dir_doctor").val();
+	var mat_doctor=$("#mat_doctor").val();
+	var n_ins_doctor=$("#n_ins_doctor").val();
+	var ins_doctor=$("#ins_doctor").val();
+	var esp_doctor=$("#esp_doctor").val();
+	var esp_doctor2=$("#esp_doctor2").val();
+	if(nom_doctor==""||ape_doctor==""){
+       //alerta
+	}else{
+		if(ins_doctor==-2&&n_ins_doctor==""){
+          //alerta
+		}else{
+			guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_ins_doctor,ins_doctor,esp_doctor,esp_doctor2);
+		}
+	}
+}
+
+function guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_ins_doctor,ins_doctor,esp_doctor,esp_doctor2){
+	var parametros={nom_doctor:nom_doctor,ape_doctor:ape_doctor,dir_doctor:dir_doctor,mat_doctor:mat_doctor,n_ins_doctor:n_ins_doctor,ins_doctor:ins_doctor,esp_doctor:esp_doctor,esp_doctor2:esp_doctor2};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxNuevoMedico.php",
+        data: parametros,
+        success:  function (resp) {
+        	$("#nom_doctor").val("");
+	        $("#ape_doctor").val("");
+	        $("#dir_doctor").val("");
+	        $("#mat_doctor").val("");
+	        $("#n_ins_doctor").val("");
+        	if(parseInt(resp)==1){
+               Swal.fire("Correcto!", "Se guardó el médico con éxito", "success");   
+               actualizarTablaMedicos("apellidos");                 	   
+        	}else{
+               Swal.fire("Error!", "Contactar con el administrador", "error");   
+        	}            
+        }
+    });	
+}
+
+function actualizarTablaMedicos(orden){
+	var codigo=$("#cod_medico").val();
+   var parametros={order_by:orden,cod_medico:codigo};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaMedicos.php",
+        data: parametros,
+        success:  function (resp) {
+        	actualizarListaInstitucion();
+        	$("#datos_medicos").html(resp);                 	   
+        }
+    });	
+}
+function actualizarListaInstitucion(){
+   var parametros={cod:""};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaInstitucion.php",
+        data: parametros,
+        success:  function (resp) {
+        	$("#ins_doctor").html(resp);   
+        	$("#ins_doctor").selecpicker("refresh");                 	   
+        }
+    });	
+}
+
+function asignarMedicoVenta(codigo){
+   $("#cod_medico").val(codigo);
+   if(codigo>0){
+  	 $("#boton_receta").attr("style","background:green");
+   }else{
+   	 $("#boton_receta").attr("style","background:#652BE9");
+   }
+
+   $("#modalRecetaVenta").modal("hide");
+}
 function refrescarComboCliente(cliente){
 	var parametros={"cliente":cliente};
 	$.ajax({
@@ -870,6 +1003,22 @@ function refrescarComboCliente(cliente){
            $("#modalNuevoCliente").modal("hide");                  	   
         }
     });	
+}
+
+function mostrarRegistroConTarjeta(){
+	$("#titulo_tarjeta").html("");
+	if($("#nro_tarjeta").val()>0){
+      $("#titulo_tarjeta").html("(REGISTRADO)");
+	}
+	$("#modalPagoTarjeta").modal("show");	
+}
+function verificarPagoTargeta(){
+  var nro_tarjeta=$("#nro_tarjeta").val();
+  if(nro_tarjeta!=""){
+  	$("#boton_tarjeta").attr("style","background:green");
+  }else{
+  	$("#boton_tarjeta").attr("style","background:#96079D");
+  }
 }
 </script>
 <?php
@@ -919,6 +1068,15 @@ $porcentajeDescuentoRealNombre="Descuento";
 
 include("datosUsuario.php");
 
+$cadComboBancos = "";
+$consulta="SELECT c.codigo, c.nombre FROM bancos AS c WHERE estado = 1 ORDER BY c.nombre ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codBanco = $reg["codigo"];
+    $nomBanco = $reg["nombre"];
+    $cadComboBancos=$cadComboBancos."<option value='$codBanco'>$nomBanco</option>";
+   }
+
 
 
 $cadComboCiudad = "";
@@ -958,18 +1116,37 @@ while($reg1=mysqli_fetch_array($rs1))
     $cadComboGenero=$cadComboGenero."<option value='$codTipo'>$nomTipo</option>";
    }
 
+
+$cadComboInstitucion = "";
+$consulta="SELECT c.codigo, c.nombre FROM instituciones c WHERE estado = 1 ORDER BY c.codigo ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codInstitucion = $reg["codigo"];
+    $nomInstitucion = $reg["nombre"];
+    $cadComboInstitucion=$cadComboInstitucion."<option value='$codInstitucion'>$nomInstitucion</option>";
+   }
+$cadComboEspecialidades = "";
+$consulta="SELECT c.codigo, c.nombre FROM especialidades c WHERE estado = 1 ORDER BY c.codigo ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codEsp = $reg["codigo"];
+    $nomEsp = $reg["nombre"];
+    $cadComboEspecialidades=$cadComboEspecialidades."<option value='$codEsp'>$nomEsp</option>";
+   }
+
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
 	<input type="hidden" id="pedido_realizado" value="0">
-	<input type="hidden" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
+	<input type="hidden" id="cod_medico" name="cod_medico" value="0">
+	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
-<tr align='center' class="text-white header" style="color:#fff;background:#30CA99; font-size: 16px;">
+<tr align='center' class="text-white header" style="color:#fff;background:#581845; font-size: 16px;">
 	<th colspan="9"><img src="imagenes/farmacias_bolivia1.gif" height="30px"></img></th>
 </tr>
 <tr align='left' class="text-white header">
-	<th colspan="2" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
-	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
-	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
+	<th colspan="2" style="color:#fff;background:#581845; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
+	<th colspan="4" style="color:#fff;background:#581845; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS MANUAL</b></label></th>
+	<th colspan="4" style="color:#fff;background:#581845; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
 </tr>
 <tr class="bg-info text-white" align='center' style="color:#fff;background:#16B490 !important; font-size: 16px;">
 <th>Tipo de Doc.</th>
@@ -1115,12 +1292,14 @@ while($dat2=mysqli_fetch_array($resp2)){
 ?>
 	</select>
 	<!--<input type="hidden" name="tipoPrecio" value="1">-->
-
 </td>
-<td><a href="#" title="Registrar Nuevo Cliente" onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a><a href="#" onclick="guardarPedido(0)"
-	class="btn btn-danger btn-sm btn-fab float-right" title="Guardar Venta Perdida"><i class="material-icons">search_off</i></a>
+<td><a href="#" title="Registrar Nuevo Cliente" onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a>
+	<a href="#" onclick="guardarPedido(0)"
+	class="btn btn-danger btn-sm btn-fab float-right" style="background:#900C3F;color:#fff;" title="GUARDAR VENTA PERDIDA"><i class="material-icons">search_off</i></a>
 <a href="#" onclick="cambiarTipoVenta2()"
-	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i><!--corporate_fare--></a>
+	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
+	<a href="#" onclick="guardarRecetaVenta()"
+	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" id="boton_receta"><i class="material-icons">medical_services</i></a>
 </td>
 </tr>
 
@@ -1210,7 +1389,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<tr><th>Principio Act.</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
 	     <tr>		
 			<td><select class="textogranderojo" name='itemPrincipioMaterial' style="width:300px">
 			<?php
@@ -1228,9 +1407,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</select>
 			</td>
 			<td>
-				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
+				<div class="row">
+					<div class="col-sm-3"><input type='number' placeholder='--' name='itemCodigoMaterial' id='itemCodigoMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>
+					<div class="col-sm-9"><input type='text' placeholder='Descripción' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>				   
+				</div>
+				
 			</td>
-			<td>
+			<td align="center">
 				<input type='button' class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
 			</td>
  			</tr>
@@ -1257,7 +1440,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
@@ -1272,7 +1455,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		</tr>
 
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Venta</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' id='porcentajeDescuentoRealNombre' style="font-weight:bold;color:red;font-size:12px;"><?=$porcentajeDescuentoRealNombre?></td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:27px;font-size:22px;width:100%;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" readonly step='any' required></td>
@@ -1288,7 +1471,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#189B22;">$ USD</b></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3"></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Venta</td><td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3"></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='any' required></td>
@@ -1300,7 +1483,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:27px;font-size:22px;width:100%;color:#fff;"> </td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:25px;font-size:18px;width:100%;"></td>
@@ -1330,12 +1513,12 @@ if($banderaErrorFacturacion==0){
                <td style='display:none;font-size:12px;color:#0691CD;' colspan='2'><p>&nbsp;</p></td>
              </tr>
             <tr>
-               <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>
+               <td style='font-size:12px;color:#0691CD; font-weight:bold;'>MONTO RECIBIDO Bs.</td>
                <td style='font-size:12px;color:#189B22; font-weight:bold; display:none;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:white !important;'  class='form-control' step='any' required></td>
-               <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
+               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:#A5F9EA !important;'  class='form-control' step='any' value='0' required></td>
+               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
              </tr>
             </table>
 
@@ -1353,6 +1536,66 @@ if($banderaErrorFacturacion==0){
 <input type='hidden' name='materialActivo' id='materialActivo' value="0">
 <input type='hidden' id="cantidad_material" name='cantidad_material' value="0">}
 <input type='hidden' name='codigoDescuentoGeneral' id="codigoDescuentoGeneral" value="<?=$codigoDescuentoGeneral?>">
+
+
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #96079D;color:#fff;">
+                    <i class="material-icons">credit_card</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Pago con Tarjeta <small id="titulo_tarjeta"></small></h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+	<div class="col-sm-12">
+		         <div class="row">
+                  <label class="col-sm-3 col-form-label">Banco</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                      	
+                          <?php echo "$cadComboBancos"; ?>
+                          <option value="0">Otro</option>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Numero <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #D7B3D8;" id="nro_tarjeta" name="nro_tarjeta" value="" onkeydown="verificarPagoTargeta()" onkeyup="verificarPagoTargeta()" onkeypress="verificarPagoTargeta()" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" value=""/>
+                    </div>
+                  </div>
+                </div>                
+                <br><br>
+       </div>
+</div>                      
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
+
+
+
+
 </form>
 
 
@@ -1361,11 +1604,12 @@ if($banderaErrorFacturacion==0){
 <div class="modal fade modal-primary" id="modalObservacionPedido" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content card">
-               <div class="card-header card-header-primary card-header-text">
-                  <div class="card-text">
-                    <h4>Registrar Como Venta Perdida</h4>      
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background:#900C3F;color:#fff;">
+                    <i class="material-icons">search_off</i>
                   </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                  <h4 class="card-title text-dark font-weight-bold">Registrar Como Venta Perdida</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
                     <i class="material-icons">close</i>
                   </button>
                 </div>
@@ -1587,11 +1831,119 @@ if($banderaErrorFacturacion==0){
                  </div> 
     </div>
   </div>
+</div>  
 <!--    end small modal -->
-
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalRecetaVenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #652BE9;color:#fff;">
+                    <i class="material-icons">medical_services</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Datos del Médico</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+	<div class="col-sm-6">
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombre (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value=""/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Apellidos (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Dirección</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Matricula</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row d-none" id="div_ins_doctor">
+                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Institución</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" onchange="nuevaInstitucion();" required>
+                           <?php echo "$cadComboInstitucion"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Especialidad</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" required>
+                           <?php echo "$cadComboEspecialidades"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">2da Esp.</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" required>
+                      	<option value="0">Ninguna</option>
+                          <?php echo "$cadComboEspecialidades"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="float-left">
+                        <button class="btn btn-default" onclick="guardarMedicoReceta();">Guardar Nuevo</button>
+                </div>                 
+                <br><br>
+       </div>
+	   <div class="col-sm-6">       
+                   <table class="table table-bordered table-condensed">
+                   	  <thead>
+                   	  	<tr class="" style="background: #652BE9;color:#fff;"><th width="60%">Nombre</th><th>Matricula</th><th>-</th></tr>
+                   	  </thead>
+                   	  <tbody id="datos_medicos">                   	  	
+                   	  </tbody>
+                   </table>                      
+       </div>
+</div>                      
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
- <script type="text/javascript">mueveReloj();</script>
+ <script type="text/javascript">mueveReloj();nuevaInstitucion();</script>
 </body>
 </html>

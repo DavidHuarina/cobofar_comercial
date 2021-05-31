@@ -795,13 +795,19 @@ function validar(f, ventaDebajoCosto,pedido){
               //guardarPedidoDesdeFacturacion(1);
               return false;
 		  }else{
-		  	if($("#nro_tarjeta").val()!=""){
+		  	if($("#tipoVenta").val()==2){
+		  	  if($("#nro_tarjeta").val()!=""){
                 if(!($("#monto_tarjeta").val()>0)){
                    alert("Debe Ingresar el monto de la Tarjeta");
 					$("#pedido_realizado").val(0);
 				   return(false);
                 }
-		  	}		  	
+		  	  }else{
+		  	  	alert("Debe Registrar los datos de la tarjeta");
+					$("#pedido_realizado").val(0);
+				   return(false);
+		  	  }// fin nro de tarjeta		  	
+		  	}
 		  }
 		}else{
 		  alert("Debe registrar el Cliente.");

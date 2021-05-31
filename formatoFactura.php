@@ -208,7 +208,7 @@ $fileName="qrs/".$fechahora.$nroDocVenta.".png";
     
 QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
 
-//$txt3=iconv('utf-8', 'windows-1252', $txt3); 
+$txt3=iconv('utf-8', 'windows-1252', $txt3); 
 ?>
 <img src="<?=$fileName?>">
 <div style="width:80%"><label class="arial-12"><?=$txt3?></label><br></div>

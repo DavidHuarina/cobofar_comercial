@@ -5,6 +5,7 @@ error_reporting(0);
 //header("Content-Disposition: attachment; filename=archivo.xls");
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
+require('funciones.php');
 require('conexion.inc');
 
 $rptOrdenar=$_GET["rpt_ordenar"];
@@ -13,7 +14,7 @@ $rpt_fecha=cambia_formatofecha($rpt_fecha);
 $fecha_reporte=date("d/m/Y");
 $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 
-
+$fechaInicioOperaciones=obtenerInicioActividadesSucursal($rpt_territorio);
 	$sql_nombre_territorio="select descripcion from ciudades where cod_ciudad='$rpt_territorio'";
 	$resp_nombre_territorio=mysql_query($sql_nombre_territorio);
 	$datos_nombre_territorio=mysql_fetch_array($resp_nombre_territorio);
@@ -41,14 +42,14 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 			<thead>
 			<tr><th>&nbsp;</th><th>Codigo</th><th>Material</th>
-			<th>CantidadPresentacion</th><th>Cajas</th><th>Unidades</th></tr>
-			</thead>";
+			<th>CantidadPresentacion</th><th>Unidades</th></tr>
+			</thead>"; //<th>Cajas</th>
 		}else{
 			echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 			<thead>
 			<tr><th>&nbsp;</th><th>Codigo</th><th>Linea Proveedor</th><th>Material</th>
-			<th>CantidadPresentacion</th><th>Cajas</th><th>Unidades</th></tr>
-			</thead>";
+			<th>CantidadPresentacion</th><th>Unidades</th></tr>
+			</thead>"; //<th>Cajas</th>
 		}
 
 		
@@ -68,13 +69,13 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 
 			
 			$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
-			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$rpt_fecha' and i.cod_almacen='$rpt_almacen'
+			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$rpt_fecha' and i.fecha>='$fechaInicioOperaciones' and i.cod_almacen='$rpt_almacen'
 			and id.cod_material='$codigo_item' and i.ingreso_anulado=0";
 			$resp_ingresos=mysql_query($sql_ingresos);
 			$dat_ingresos=mysql_fetch_array($resp_ingresos);
 			$cant_ingresos=$dat_ingresos[0];
 			$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
-			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha<='$rpt_fecha' and s.cod_almacen='$rpt_almacen'
+			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha<='$rpt_fecha' and s.fecha>='$fechaInicioOperaciones' and s.cod_almacen='$rpt_almacen'
 			and sd.cod_material='$codigo_item' and s.salida_anulada=0";
 			$resp_salidas=mysql_query($sql_salidas);
 			$dat_salidas=mysql_fetch_array($resp_salidas);
@@ -94,13 +95,17 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			{	$cadena_mostrar.="<td align='center'>0</td></tr>";
 			}
 			else{	
-				if($stock2>=$cantidadPresentacion){
+				/*if($stock2>=$cantidadPresentacion){
 					$stockCajas=intval($stock2/$cantidadPresentacion);
+					$stockUnidades=0;
 				}else{
 					$stockCajas=0;
-				}
-				$stockUnidades=$stock2%$cantidadPresentacion;
-				$cadena_mostrar.="<td align='center'>$stockCajas</td><td align='center'>$stockUnidades</td></tr>";
+					
+				}*/
+				$stockUnidades=$stock2;
+				//$stockUnidades=$stock2%$cantidadPresentacion;
+				$cadena_mostrar.="<td align='center'>$stockUnidades</td></tr>"; //<td align='center'>$stockCajas</td>
+
 			}
 			
 			
