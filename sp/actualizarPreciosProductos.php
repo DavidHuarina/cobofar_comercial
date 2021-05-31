@@ -3,7 +3,8 @@ require_once '../conexionmysqli.inc';
 require_once '../function_web.php';
 $user=1017;//14238 //7073
 //$sqlProd="SELECT codigo_material FROM material_apoyo WHERE codigo_material>99329";           
-$sqlProd="SELECT codigo_material FROM material_apoyo WHERE codigo_material=20014"; 
+//$sqlProd="SELECT codigo_material FROM material_apoyo WHERE codigo_material=20014"; 
+$sqlProd="SELECT codigo_material FROM material_apoyo where codigo_material>=98374 and codigo_material<99330;"; 
 $respProd=mysqli_query($enlaceCon,$sqlProd);
 echo "Inicio!";
 while($detProd=mysqli_fetch_array($respProd)){ 

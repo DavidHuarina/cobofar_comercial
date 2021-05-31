@@ -27,7 +27,7 @@ $sql="select nombre from bancos where codigo='$codigo'";
 
 function nombreBancoCuenta($codigo)
 {	require("conexionmysqli2.inc");
-$sql="select nombre from cuentas_bancarias where codigo='$codigo'";
+$sql="select descripcion from cuentas_bancarias where codigo='$codigo'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$dat=mysqli_fetch_array($resp);
 	$nombre_muestra=$dat[0];
