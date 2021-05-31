@@ -281,14 +281,14 @@ function enviar_nav(f){
 	<?php
 	$cod_ciudad=$_COOKIE['global_agencia'];
 	echo "<form method='post' action=''>";
-	$sql="SELECT codigo,cod_funcionario,monto_registrado,monto_caja,fecha,glosa,nro_cuenta,cod_banco,ubicacion_archivo FROM registro_depositos where cod_estadoreferencial=1";
+	$sql="SELECT codigo,cod_funcionario,monto_registrado,monto_caja,fecha,glosa,nro_cuenta,cod_banco,ubicacion_archivo,cod_cuenta FROM registro_depositos where cod_estadoreferencial=1";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural</h1>";
 	
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='registrar_nav()'>
-	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>	
+	
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	
@@ -313,7 +313,7 @@ function enviar_nav(f){
 		}else{
 			$fecha=strftime('%d/%m/%Y',strtotime($dat["fecha"]));
 		}
-		$banco=nombreBanco($dat["cod_banco"]);
+		$banco=nombreBancoCuenta($dat["cod_cuenta"]);
         $responsable=nombreVisitador($dat["cod_funcionario"]);
 
         $monto=$dat['monto_registrado'];
@@ -335,7 +335,7 @@ function enviar_nav(f){
 	
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='registrar_nav()'>
-	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>
+
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
 	</div>";
 	

@@ -8,6 +8,7 @@ require('../funcion_nombres.php');
 <script>
 	function cambiarSubLinea(){
   var categoria=$("#rpt_banco").val();
+  //var cuenta=$("#rpt_cuenta").val();
   var parametros={"categoria":categoria};
      $.ajax({
         type: "GET",
@@ -64,13 +65,13 @@ echo "<td align='left' colspan='3'>
 </td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Fecha</td>";
 echo "<td align='left'>
-	<INPUT  type='date' class='form-control col-sm-10' value='$fecha_rptdefault' id='fecha_ini' size='10' name='fecha_ini'><INPUT  type='time' class='form-control col-sm-2' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>
+	<INPUT  type='date' class='form-control col-sm-10' value='$fecha_rptdefault' id='fecha_ini' size='10' name='fecha_ini'><INPUT  type='time' class='form-control col-sm-10' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>
 </td>";
 echo "<td align='left'>
-  <INPUT  type='date' class='form-control col-sm-10' value='$fecha_rptdefault' id='fecha_fin' size='10' name='fecha_fin'><INPUT  type='time' class='form-control col-sm-2' value='$hora_rptfindefault' id='exahorafinal' size='10' name='exahorafinal'>
+  <INPUT  type='date' class='form-control col-sm-10' value='$fecha_rptdefault' id='fecha_fin' size='10' name='fecha_fin'><INPUT  type='time' class='form-control col-sm-10' value='$hora_rptfindefault' id='exahorafinal' size='10' name='exahorafinal'>
 </td>";
 echo "</tr>";
-echo "<tr><td align='left' class='bg-info text-white'>Banco</td>";
+/*echo "<tr><td align='left' class='bg-info text-white'>Banco</td>";
 echo "<td align='left'>
 	<select name='rpt_banco'  id='rpt_banco' class='selectpicker form-control' data-style='btn btn-primary' data-live-search='true'>";
 	$sql="select codigo, nombre from bancos where estado=1 order by 2";
@@ -86,12 +87,26 @@ echo "<td align='left'>
 	}
 	echo "</select>
 </td>";
+echo "</tr>";*/
+echo "<tr><td align='left' class='bg-info text-white'>Cuenta</td>";
+echo "<td align='left'>
+<input type='hidden' value='1' name='rpt_banco'  id='rpt_banco'>
+  <select name='rpt_cuenta'  id='rpt_cuenta' class='selectpicker form-control' data-style='btn btn-primary' data-live-search='true'>";
+  $sql="select codigo, descripcion,moneda from cuentas_bancarias where estado=1 order by 2";
+  $resp=mysqli_query($enlaceCon,$sql);
+  while($dat=mysqli_fetch_array($resp))
+  { $codigo_cat=$dat[0];
+    $nombre_cat=$dat[1]." (".$dat[1].")";
+    if($codigo_cat==1){  //BANCO MERCANTIL POR DEFECTO SELECCIONADO
+           echo "<option value='$codigo_cat' selected>$nombre_cat</option>";
+    }else{
+           echo "<option value='$codigo_cat'>$nombre_cat</option>";
+    }   
+  }
+  echo "</select><input type='hidden' class='form-control' name='numero_cuenta' size='40'>
+</td>";
 echo "</tr>";
 
-echo "<tr><td align='left' class='bg-info text-white'>Número Cuenta</td>";
-echo "<td align='left' colspan='3'>
-	<input type='text' class='form-control' name='numero_cuenta' size='40'>
-</td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Monto a Depositar</td>";
 echo "<td align='left' colspan='2'>
   <input type='number' readonly class='form-control' name='monto_calc' id='monto_calc' step='any' required>
@@ -100,7 +115,7 @@ echo "<td align='left' colspan='2'>
 </td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Monto Depositado</td>";
 echo "<td align='left' colspan='3'>
-	<input type='number' class='form-control' name='monto' step='any'>
+	<input type='number' class='form-control' name='monto' step='any' required>
 </td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Adjuntar Archivo</td>";
 echo "<td align='left' colspan='3'>

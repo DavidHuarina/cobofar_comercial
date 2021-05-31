@@ -7,6 +7,7 @@ require("../funciones.php");
 $fecha_registro=date("Y-m-d H:i:s");
 $cod_ciudad=$_COOKIE['global_agencia'];
 $codAlmacen=$_COOKIE['global_almacen'];
+$codAlmacen=$_COOKIE['global_almacen'];
 $cod_funcionario=$_COOKIE['global_usuario'];
 $sql="SELECT IFNULL(max(codigo)+1,1) FROM $table";
 $resp=mysqli_query($enlaceCon,$sql);
@@ -40,8 +41,8 @@ if($_FILES['documentos_cabecera']["name"]){
       } 
 }
 
-$sql="insert into $table (codigo,glosa, fecha,fecha_registro,cod_banco,cod_funcionario, nro_cuenta,monto_caja,monto_registrado,ubicacion_archivo,cod_estadoreferencial) 
-values($codigo,'$nombre','$fecha_fin','$fecha_registro','$rpt_banco','$cod_funcionario','$numero_cuenta','$monto_caja','$monto','$dirArchivo','1')";
+$sql="insert into $table (codigo,glosa, fecha,fecha_registro,cod_banco,cod_funcionario, nro_cuenta,monto_caja,monto_registrado,ubicacion_archivo,cod_estadoreferencial,cod_cuenta,fechaf,hora,horaf) 
+values($codigo,'$nombre','$fecha_ini','$fecha_registro','$rpt_banco','$cod_funcionario','$numero_cuenta','$monto_caja','$monto','$dirArchivo','1','$rpt_cuenta','$fecha_fin','$exahorainicial','$exahorafinal')";
 $sql_inserta=mysqli_query($enlaceCon,$sql);
 if($sql_inserta==1){
 	echo "<script language='Javascript'>
