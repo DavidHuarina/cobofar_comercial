@@ -19,13 +19,13 @@ include('phpqrcode/qrlib.php');
 ?>
 <style type="text/css">
 	.arial-12{
-        font-size: 12px;
+        font-size: 14px;
 	}
 	.arial-7{
-        font-size: 10px;
+        font-size: 12px;
 	}
 	.arial-8{
-        font-size: 11px;
+        font-size: 13px;
 	}
 </style>
 <?php
@@ -39,7 +39,7 @@ $nroItems=mysqli_result($respNro,0,0);
 
 $tamanoLargo=230+($nroItems*5)-5;
 
-?><div style="width:320;height:<?=$tamanoLargo?>; font-family:Arial;">
+?><div style="width:320;margin:0;padding-left:30px !important;padding-right:30px !important;height:<?=$tamanoLargo?>; font-family:Arial;">
 <?php	
 
 $sqlConf="select id, valor from configuracion_facturas where id=1 and cod_ciudad='$cod_ciudad'";
@@ -123,19 +123,19 @@ $incremento=3;
 <label class="arial-12">FACTURA</label><br>
 <label class="arial-12"><?=$ciudadTxt?></label><br>
 <label class="arial-12"><?="Telefono ".$telefonoTxt?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br>
+<label class="arial-12"><?="-------------------------------------------------------"?></label><br>
 <label class="arial-12"><?="NIT: $nitTxt"?></label><br>
 <label class="arial-12"><?="$nombreTipoDoc Nro. $nroDocVenta"?></label><br>
 <label class="arial-12"><?="Autorizacion Nro. $nroAutorizacion"?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br>
+<label class="arial-12"><?="--------------------------------------------------------"?></label><br>
 <label class="arial-12"><?=utf8_decode($txt1)?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br><br>
+<label class="arial-12"><?="--------------------------------------------------------"?></label><br><br>
 <label class="arial-12"><?="FECHA: $fechaFactura $horaFactura"?></label><br>
 <label class="arial-12"><?="Sr(es): ".utf8_decode($razonSocialCliente).""?></label><br>
 <label class="arial-12"><?="NIT/CI:	$nitCliente"?></label><br><br>
-<label class="arial-12"><?="============================================="?></label><br>
+<label class="arial-12"><?="======================================"?></label><br>
 <table width="100%"><tr align="center" class="arial-12"><td><?="CANT."?></td><td><?="P.U."?></td><td><?="IMPORTE"?></td></tr></table>
-<label class="arial-12"><?="============================================="?></label><br>
+<label class="arial-12"><?="======================================"?></label><br>
 <?php
 $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
 		sum(s.`descuento_unitario`), sum(s.`monto_unitario`) from `salida_detalle_almacenes` s, `material_apoyo` m where 
@@ -174,7 +174,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 }
 $montoFinal=$montoTotal-$descuentoVenta;
  ?>
-<label class="arial-12"><?="============================================="?></label><br>
+<label class="arial-12"><?="======================================"?></label><br>
 <table width="100%">
 	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Venta:  $montoTotal"?></td></tr>
 	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Descuento:  $descuentoVenta"?></td></tr>
@@ -194,10 +194,10 @@ if($montoDecimal==""){
 $txtMonto=NumeroALetras::convertir($montoEntero);
 ?>
 <label class="arial-12"><?="Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos"?></label><br><br>
-<label class="arial-12"><?="============================================="?></label><br>
+<label class="arial-12"><?="======================================"?></label><br>
 <label class="arial-12"><?="CODIGO DE CONTROL: $codigoControl"?></label><br>
 <label class="arial-12"><?="FECHA LIMITE DE EMISION: $fechaLimiteEmision"?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br>
+<label class="arial-12"><?="--------------------------------------------------------"?></label><br>
 <div style="width:75%"><label class="arial-12"><?=$txt2?></label><br></div>
 <?php
 $cadenaQR=$nitTxt."|".$nroDocVenta."|".$nroAutorizacion."|".$fechaVenta."|".$montoTotal."|".$montoTotal."|".$codigoControl."|".$nitCliente."|0|0|0|0";

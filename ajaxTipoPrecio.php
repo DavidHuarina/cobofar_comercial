@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $codCliente=$_GET['codCliente'];
 
 $sql="select t.codigo, t.nombre from `tipos_precio` t 

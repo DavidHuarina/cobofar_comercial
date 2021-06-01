@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $categoria=$_GET["categoria"];
 $sql="SELECT codigo,nombre from subgrupos where estado=1 and cod_grupo=$categoria order by 2";
 $resp=mysqli_query($enlaceCon,$sql);

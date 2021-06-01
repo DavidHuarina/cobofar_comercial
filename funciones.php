@@ -2,7 +2,7 @@
 $estilosVenta=1;
 function obtenerValorConfiguracion($id){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql = "SELECT valor_configuracion from configuraciones c where id_configuracion=$id";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$codigo=0;
@@ -14,7 +14,7 @@ function obtenerValorConfiguracion($id){
 
 function obtenerInicioActividadesSucursal($id){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql = "SELECT fecha_inicio from configuraciones_inicio_sucursales c where cod_ciudad=$id";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$codigo="1983-01-01";
@@ -84,7 +84,7 @@ function UltimoDiaMes($cadena_fecha)
 }
 
 function obtenerCodigo($sql)
-{	require("conexionmysqli.inc");
+{	require("conexionmysqli2.inc");
 	$resp=mysqli_query($enlaceCon,$sql);
 	$nro_filas_sql = mysqli_num_rows($resp);
 	if($nro_filas_sql==0){
@@ -100,7 +100,7 @@ function obtenerCodigo($sql)
 
 
 function margenLinea($item){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$fechaActual=date("Y-m-d");
 
 	$sql="select p.margen_precio from material_apoyo m, proveedores_lineas p where 
@@ -114,7 +114,7 @@ function margenLinea($item){
 
 
 function precioProducto($item){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$fechaActual=date("Y-m-d");
 
 	$sql="SELECT p.`precio` from precios p where p.`codigo_material`='$item' and p.`cod_precio`='1'";
@@ -128,7 +128,7 @@ function precioProducto($item){
 
 function ubicacionProducto($almacen, $item){
 	//
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$fechaActual=date("Y-m-d");
 
 	$sql_ingresos="select 
@@ -146,7 +146,7 @@ function ubicacionProducto($almacen, $item){
 }
 function obtenerCantidadPresentacionProducto($codigo){
   $estilosVenta=1;
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT cantidad_presentacion FROM material_apoyo where codigo_material='$codigo'";
   $valor=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -169,7 +169,7 @@ function stockProductoFechas($almacen, $item,$fechaActual){
 	$estilosVenta=1;
 	$codSucursal=obtenerSucursalporAlmacen($almacen);
 	$fechaInicioSucursal=obtenerInicioActividadesSucursal($codSucursal);
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 
     $sql_ingresos="select IFNULL(sum(id.cantidad_unitaria),0) from ingreso_almacenes i, ingreso_detalle_almacenes id
 			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha BETWEEN '$fechaInicioSucursal' and '$fechaActual' and i.cod_almacen='$almacen'
@@ -206,7 +206,7 @@ function stockProductoFechas($almacen, $item,$fechaActual){
 }
 
 function precioProductoAlmacen($ciudad, $item){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sqlPrecio="SELECT p.`precio` from `precios` p where p.`cod_precio`=1 and p.`cod_ciudad`=$ciudad and p.`codigo_material`=$item";
 	$resp_precio=mysqli_query($enlaceCon,$sqlPrecio);
 	$precio=0;
@@ -219,7 +219,7 @@ function precioProductoAlmacen($ciudad, $item){
 
 function stockProductoVencido($almacen, $item){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$fechaActual=date("Y-m-d");
 
 	$sql_ingresos="select sum(id.cantidad_restante) from ingreso_almacenes i, ingreso_detalle_almacenes id where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$almacen' and i.ingreso_anulado=0 and id.fecha_vencimiento<'$fechaActual' and id.cod_material='$item'";
@@ -242,7 +242,7 @@ function stockProductoVencido($almacen, $item){
 
 function stockMaterialesEdit($almacen, $item, $cantidad){
 	//
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$cadRespuesta="";
 	$consulta="
 	    SELECT SUM(id.cantidad_restante) as total
@@ -282,7 +282,7 @@ function restauraCantidades($codigo_registro){
 	return(1);
 }
 function verificarAlmacenCiudadExistente($age1){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT cod_ciudad,codigo_anterior from ciudades";
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -295,7 +295,7 @@ function verificarAlmacenCiudadExistente($age1){
 }
 
 function verificarPersonalUsuario($codigo){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT codigo_funcionario from funcionarios where codigo_funcionario='$codigo'";
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -306,7 +306,7 @@ function verificarPersonalUsuario($codigo){
 }
 
 function verificarProductoExistente($codigo){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT count(*) from material_apoyo where codigo_material='$codigo'";
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -321,7 +321,7 @@ function obtenerProductoCantidadLinea($codigo,$cb){
   if($cb==0){
   	$queryCb=" and (codigo_barras='' or codigo_barras is null)";
   }	
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT count(*) from material_apoyo where cod_linea_proveedor='$codigo' $queryCb";
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -333,7 +333,7 @@ function obtenerProductoCantidadLinea($codigo,$cb){
 
 function numeroCorrelativo($tipoDoc){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$banderaErrorFacturacion=0;
 	//SACAMOS LA CONFIGURACION PARA CONOCER SI LA FACTURACION ESTA ACTIVADA
 	$sqlConf="select valor_configuracion from configuraciones where id_configuracion=3";
@@ -418,7 +418,7 @@ function numeroCorrelativo($tipoDoc){
 }
 function obtenerCodigoAlmacenPorCiudad($ciudad){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	//$global_tipo_almacen=$_COOKIE["global_tipo_almacen"];
 	$global_tipo_almacen=1;
   $sql_detalle="SELECT cod_almacen from almacenes where cod_ciudad='$ciudad' and cod_tipoalmacen='$global_tipo_almacen'";
@@ -431,7 +431,7 @@ function obtenerCodigoAlmacenPorCiudad($ciudad){
 }
 
 function obtenerTotalDias(){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT count(*) cantidad from dias where estado=1";
   $cantidad=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -441,7 +441,7 @@ function obtenerTotalDias(){
   return $cantidad;
 }
 function obtenerTotalCiudades(){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT count(*) cantidad from ciudades where cod_estadoreferencial=1";
   $cantidad=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -451,7 +451,7 @@ function obtenerTotalCiudades(){
   return $cantidad;
 }
 function obtenerNombreDiaCompleto($dia){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT nombre from dias where codigo='$dia'";
   $abrev="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -462,7 +462,7 @@ function obtenerNombreDiaCompleto($dia){
 }
 
 function obtenerNombreDia($dia){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT abreviatura2 from dias where codigo='$dia'";
   $abrev="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -483,7 +483,7 @@ function obtenerNombreCiudad($ciudad){
 }
 
 function obtenerNombreCiudadPorAlmacen($almacen){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT c.descripcion from ciudades c join almacenes a on a.cod_ciudad=c.cod_ciudad where a.cod_almacen='$almacen'";
   $nombre="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -494,7 +494,7 @@ function obtenerNombreCiudadPorAlmacen($almacen){
 }
 
 function obtenerSucursalporAlmacen($almacen){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT a.cod_ciudad from almacenes a where a.cod_almacen='$almacen'";
   $codigo="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -506,7 +506,7 @@ function obtenerSucursalporAlmacen($almacen){
 
 function obtenerNombreDesDiasRegistrados($codigo){
   $cantidad=obtenerTotalDias();
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT cod_dia from tipos_precio_dias where cod_tipoprecio='$codigo'";
   $i=0;
   $diasArray=[];				
@@ -525,7 +525,7 @@ function obtenerNombreDesDiasRegistrados($codigo){
 }
 function obtenerNombreDesCiudadesRegistrados($codigo){
   $cantidad=obtenerTotalCiudades();
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT cod_ciudad from tipos_precio_ciudad where cod_tipoprecio='$codigo'";
   $i=0;
   $ciudadArray=[];				
@@ -545,7 +545,7 @@ function obtenerNombreDesCiudadesRegistrados($codigo){
 
 function obtenerNombreDesCiudadesRegistradosGeneral($codigo){
   $cantidad=obtenerTotalCiudades();
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT cod_ciudad from tipos_preciogeneral_ciudad where cod_tipoprecio='$codigo'";
   $i=0;
   $ciudadArray=[];				
@@ -564,7 +564,7 @@ function obtenerNombreDesCiudadesRegistradosGeneral($codigo){
 }
 
 function obtenerDescripcionMotivo($codigo,$ninguna){
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT descripcion from observaciones_clase where codigo='$codigo'";
   $nombre="";
   if($ninguna==1){
@@ -578,7 +578,7 @@ function obtenerDescripcionMotivo($codigo,$ninguna){
 }
 function obtenerNombreProveedorDeLinea($codigo){
   $estilosVenta=1;
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT p.nombre_proveedor from proveedores p join proveedores_lineas l where l.cod_linea_proveedor='$codigo'";
   $proveedor="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -590,7 +590,7 @@ function obtenerNombreProveedorDeLinea($codigo){
 }
 function obtenerNombreProveedor($codigo){
   $estilosVenta=1;
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT nombre_proveedor from proveedores where cod_proveedor='$codigo'";
   $proveedor="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -602,7 +602,7 @@ function obtenerNombreProveedor($codigo){
 }
 function obtenerNombreProveedorLinea($codigo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor='$codigo'";
   $linea="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -614,7 +614,7 @@ function obtenerNombreProveedorLinea($codigo){
 }
 function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="select sum(s.monto_final) as monto
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
@@ -632,7 +632,7 @@ function obtenerMontoVentasGeneradas($desde,$hasta,$sucursal,$tipoPago){
 
 function obtenerMontoVentasPerdido($desde,$hasta,$sucursal){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="select sum(s.monto_final) as monto
 	from `pedido_almacenes` s where s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
@@ -649,7 +649,7 @@ function obtenerMontoVentasPerdido($desde,$hasta,$sucursal){
 
 function obtenerAlmacenesStringDeSubGrupo($ciudades){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="SELECT GROUP_CONCAT(cod_almacen) from almacenes where cod_ciudad in ($ciudades) GROUP BY cod_ciudad;";
     $resp=mysqli_query($enlaceCon,$sql);
     $datos=[];$index=0;				
@@ -662,7 +662,7 @@ function obtenerAlmacenesStringDeSubGrupo($ciudades){
 
 function obtenerMaterialesStringDeSubGrupo($subGrupo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="SELECT GROUP_CONCAT(cod_material) from subgrupos_material where cod_subgrupo in ($subGrupo) GROUP BY cod_subgrupo;";
     $resp=mysqli_query($enlaceCon,$sql);
     $datos=[];$index=0;				
@@ -674,7 +674,7 @@ function obtenerMaterialesStringDeSubGrupo($subGrupo){
 }
 function obtenerMaterialesStringDeLinea($subGrupo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="SELECT GROUP_CONCAT(codigo_material) from material_apoyo where cod_linea_proveedor in ($subGrupo) GROUP BY cod_linea_proveedor;";
     $resp=mysqli_query($enlaceCon,$sql);
     $datos=[];$index=0;				
@@ -687,7 +687,7 @@ function obtenerMaterialesStringDeLinea($subGrupo){
 
 function obtenerAlmacenesDeCiudadString($subGrupo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="SELECT GROUP_CONCAT(cod_almacen) from almacenes where cod_ciudad in ($subGrupo) GROUP BY cod_ciudad;";
     $resp=mysqli_query($enlaceCon,$sql);
     $datos=[];$index=0;				
@@ -700,7 +700,7 @@ function obtenerAlmacenesDeCiudadString($subGrupo){
 
 function obtenerMontoVentasGeneradasCategoria($desde,$hasta,$sucursal,$tipoPago,$subGrupo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="select SUM((SELECT sum(sd.monto_unitario*sd.cantidad_unitaria) FROM salida_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in (SELECT cod_material from subgrupos_material where cod_subgrupo in ($subGrupo)))) as monto
 	from salida_almacenes s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
@@ -717,7 +717,7 @@ function obtenerMontoVentasGeneradasCategoria($desde,$hasta,$sucursal,$tipoPago,
 }
 function obtenerMontoVentasGeneradasCategoriaMaterial($desde,$hasta,$sucursal,$tipoPago,$materiales){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="SELECT sum(sd.monto_unitario*sd.cantidad_unitaria) FROM salida_detalle_almacenes sd 
 	join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen
 	where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($materiales) and 
@@ -734,7 +734,7 @@ function obtenerMontoVentasGeneradasCategoriaMaterial($desde,$hasta,$sucursal,$t
 }
 function obtenerPrecioProductoSucursal($codigo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sql="SELECT MAX(precio) from precios where codigo_material='$codigo' and cod_precio=1 and cod_ciudad is not null";
     $resp=mysqli_query($enlaceCon,$sql);
     $monto=0;				
@@ -746,7 +746,7 @@ function obtenerPrecioProductoSucursal($codigo){
 }
 
 function obtenerCodigoCiudadPorAlmacen($almacen){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT cod_ciudad from almacenes where cod_almacen='$almacen'";
   $codigo=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -757,7 +757,7 @@ function obtenerCodigoCiudadPorAlmacen($almacen){
 }
 
 function actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user){
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT MAX(precio) from precios where cod_precio=1 and codigo_material='$cod_material'";
   $precio=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -770,7 +770,7 @@ function actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user){
   }
 }
 function insertarPrecioTodasSucursales($cod_material,$user,$precioUnitario){
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_delete="DELETE FROM precios where cod_precio=1 and codigo_material='$cod_material'";	
   $resp=mysqli_query($enlaceCon,$sql_delete);
   $sql_ciudades="SELECT cod_ciudad FROM ciudades where cod_estadoreferencial=1";	
@@ -782,7 +782,7 @@ function insertarPrecioTodasSucursales($cod_material,$user,$precioUnitario){
   } 
 }
 function obtenerTotalLineas(){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT count(*) cantidad from proveedores_lineas where estado=1";
   $cantidad=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -792,7 +792,7 @@ function obtenerTotalLineas(){
   return $cantidad;
 }
 function obtenerTotalProd(){
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT count(*) cantidad from material_apoyo where estado=1";
   $cantidad=0;				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -803,7 +803,7 @@ function obtenerTotalProd(){
 }
 function obtenerNombreDesLineasRegistrados($codigo){
   $cantidad=obtenerTotalLineas();
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT cod_linea_proveedor from tipos_precio_lineas where cod_tipoprecio='$codigo'";
   $i=0;
   $lineaArray=[];				
@@ -823,7 +823,7 @@ function obtenerNombreDesLineasRegistrados($codigo){
 
 function obtenerNombreProductoLinea($codigo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT descripcion_material from material_apoyo where codigo_material='$codigo'";
   $linea="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -836,7 +836,7 @@ function obtenerNombreProductoLinea($codigo){
 
 function obtenerNombreDesProdRegistrados($codigo){
   $cantidad=obtenerTotalProd();
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT cod_material from tipos_precio_productos where cod_tipoprecio='$codigo'";
   $i=0;
   $lineaArray=[];				
@@ -865,7 +865,7 @@ function redondearCentavos($n) {
 
 function obtenerMontoVentasGeneradasLineaProducto($desde,$hasta,$almacenes,$tipoPago,$subGrupo,$formato){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
       $sql="select s.cod_salida_almacenes
 	from salida_almacenes s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in ($almacenes)
@@ -889,7 +889,7 @@ function obtenerMontoVentasGeneradasLineaProducto($desde,$hasta,$almacenes,$tipo
 }
 function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal,$subGrupo,$formato){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	if($formato=="2"){//REPORTE DETALLADO
       $sql="select (SELECT sum(sd.monto_unitario * sd.cantidad_unitaria) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo)) as monto
 	from pedido_almacenes s where s.salida_anulada=0 and
@@ -913,7 +913,7 @@ function obtenerMontoVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
 }
 function obtenerStockVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal,$subGrupo,$formato){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	if($formato=="2"){//REPORTE DETALLADO
       $sql="select (SELECT sum(sd.stock) FROM pedido_detalle_almacenes sd where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($subGrupo)) as monto
 	from pedido_almacenes s where s.salida_anulada=0 and
@@ -938,7 +938,7 @@ function obtenerStockVentasGeneradasLineaProductoPerdido($desde,$hasta,$sucursal
 
 function porcentajeAvanceInventario($codigo){
    $estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
 	$sqlConf="SELECT count(*) from inventarios_sucursal_detalle where cod_inventariosucursal='$codigo' and revisado=1";
     $respConf=mysqli_query($enlaceCon,$sqlConf);
     $revisados=mysqli_result($respConf,0,0);
@@ -956,7 +956,7 @@ function porcentajeAvanceInventario($codigo){
 
 function obtenerDescripcionArchivoDeposito($codigo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT glosa from registro_depositos where codigo='$codigo'";
   $valor="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -968,7 +968,7 @@ function obtenerDescripcionArchivoDeposito($codigo){
 }
 function obtenerUrlArchivoDeposito($codigo){
 	$estilosVenta=1;
-	require("conexionmysqli.inc");
+	require("conexionmysqli2.inc");
   $sql_detalle="SELECT ubicacion_archivo from registro_depositos where codigo='$codigo'";
   $valor="";				
   $resp=mysqli_query($enlaceCon,$sql_detalle);
@@ -981,7 +981,7 @@ function obtenerUrlArchivoDeposito($codigo){
 
 function obtenerUltimoPrecioModificado($codigo){
   $estilosVenta=1;
-  require("conexionmysqli.inc");
+  require("conexionmysqli2.inc");
   $sql_detalle="SELECT valor_anterior,valor_modificado,modificacion FROM log_cambios where detalle='PRECIOS' and codigo_material='$codigo' order by fecha desc limit 1;";
   $valor_ant=0;
   $valor_nuevo=0;
@@ -999,7 +999,7 @@ function obtenerUltimoPrecioModificado($codigo){
 function verificarAlmacenDestinoVencidos($codigo){
      $codigosAdmin=obtenerValorConfiguracion(19);
      $estilosVenta=1;
-     require("conexionmysqli.inc");
+     require("conexionmysqli2.inc");
      $sql="select cod_almacen from almacenes where cod_almacen in ($codigosAdmin)";
      $valor=0;$existe=0;
      $resp=mysqli_query($enlaceCon,$sql);

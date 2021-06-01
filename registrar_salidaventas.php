@@ -12,7 +12,7 @@
         <script type="text/javascript" src="dist/bootstrap/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="dist/bootstrap/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
+        <!--<script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>-->
         <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
         <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
         <link rel="stylesheet" type="text/css" href="dist/demo.css"/>
@@ -79,7 +79,7 @@ function listaMateriales(f){
 	var tipoSalida=(f.tipoSalida.value);
 	var codigoMat=(f.itemCodigoMaterial.value);
 	contenedor = document.getElementById('divListaMateriales');
-
+    
 	var arrayItemsUtilizados=new Array();	
 	var i=0;
 	for(var j=1; j<=num; j++){
@@ -93,10 +93,16 @@ function listaMateriales(f){
 	ajax=nuevoAjax();
 	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
 	ajax.onreadystatechange=function() {
-		if (ajax.readyState==4) {
-			$("#divListaMateriales").html(ajax.responseText);
-			//contenedor.innerHTML = ajax.responseText;
-			document.getElementById('itemCodigoMaterial').focus();	
+		if (ajax.readyState==4) {			
+			contenedor.innerHTML = ajax.responseText;
+			var oRows = document.getElementById('listaMaterialesTabla').getElementsByTagName('tr');
+            var nFilas = oRows.length;					
+			if(parseInt(nFilas)==2){
+				document.getElementsByClassName('enlace_ref')[0].click();
+				//$(".enlace_ref").click();
+			}
+			//
+			document.getElementById('itemCodigoMaterial').focus();				
 		}		
 	}
 	ajax.send(null)
@@ -136,11 +142,16 @@ function actStock(indice){
 	contenedor=document.getElementById("idstock"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
     var codalm=document.getElementById("global_almacen").value;
+    console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
 	ajax=nuevoAjax();
 	ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText;
+			//console.log(ajax.responseText);
+			//alert(ajax.responseText);
+			$("#idstock"+indice).html(ajax.responseText);
+			//contenedor.innerHTML = ajax.responseText;
+			
 			ajaxCargarSelectDescuentos(indice);
 		}
 	}
@@ -450,7 +461,8 @@ function encontrarMaterial(numMaterial){
            // alert(resp);           
         	$("#modalProductosCercanos").modal("show");
         	//RefreshTable('tablaPrincipalGeneral', 'ajax_encontrar_productos.php');
-        	$("#tabla_datos").html(resp); 
+        	$("#tabla_datos").html(resp);
+        	//document.getElementById("tabla_datos").innerHTML=resp; 
         	//tablaPrincipalGeneral.ajax.reload();        	   
         }
     });	
@@ -493,7 +505,7 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
     $("#modalProductosSimilares").modal("hide");
-	actStock(numRegistro);	
+    actStock(numRegistro);
 }
 
 function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
@@ -501,11 +513,12 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	$("#cantidad_presentacionboton"+numRegistro).css("color","#EC341B");
 	if(divi==1){
       $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
-	}	
+	}		
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat+" ("+cod+")";
 	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
 	document.getElementById('divi'+numRegistro).value=divi;
+	
 	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -514,8 +527,7 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
-
-	actStock(numRegistro);	
+    actStock(numRegistro);
 }
 function verificarReceta(cod,numRegistro){
 	ajax=nuevoAjax();
@@ -585,12 +597,14 @@ function mas(obj) {
 	if(num>=1000){
 		alert("No puede registrar mas de 15 items en una nota.");
 	}else{
+		var fila_actual=0;
 		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
 		var banderaItems0=0;
 		for(var j=1; j<=num; j++){
 			if(document.getElementById('materiales'+j)!=null){
 				if(document.getElementById('materiales'+j).value==0){
 					banderaItems0=1;
+					fila_actual=j;
 				}
 			}
 		}
@@ -622,6 +636,9 @@ function mas(obj) {
 				}
 			}		
 			ajax.send(null);
+		}else{
+			buscarMaterial(obj.form,fila_actual);
+			
 		}
 
 	}
@@ -642,10 +659,11 @@ function menos(numero) {
 
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
-	if (tecla==13){
-		document.getElementById('itemCodigoMaterial').focus();	
-		listaMateriales(f);
-		return false;
+	if (tecla==13){	
+	    $("#enviar_busqueda").click();
+	    $("#enviar_busqueda").click();//Para mejorar la funcion	
+	    return false;    	   	    	
+		//listaMateriales(f);			
 	}
 }
 
@@ -665,7 +683,7 @@ $(document).ready(function() {
       var mensaje="";
       if(parseFloat($("#efectivoRecibido").val())<parseFloat($("#totalFinal").val())){
         mensaje+="<p></p>";
-        alert("El monto en efectivo NO debe ser menor al monto total");
+        alert("El monto recibido NO debe ser menor al monto total");
         return false;
       }else{
       	document.getElementById("btsubmit").value = "Enviando...";
@@ -1138,6 +1156,7 @@ while($reg=mysqli_fetch_array($rs))
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
 	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" id="cod_medico" name="cod_medico" value="0">
+	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
 	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
 <tr align='center' class="text-white header" style="color:#fff;background:#30CA99; font-size: 16px;">
@@ -1409,13 +1428,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</td>
 			<td>
 				<div class="row">
-					<div class="col-sm-3"><input type='number' placeholder='--' name='itemCodigoMaterial' id='itemCodigoMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>
+					<div class="col-sm-3"><input type='number' placeholder='--' name='itemCodigoMaterial' id='itemCodigoMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);" onkeyup="return pressEnter(event, this.form);"></div>
 					<div class="col-sm-9"><input type='text' placeholder='Descripción' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>				   
 				</div>
 				
 			</td>
 			<td align="center">
-				<input type='button' class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
+				<input type='button' id="enviar_busqueda" class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
 			</td>
  			</tr>
 			
@@ -1580,7 +1599,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
                   <div class="col-sm-9">
                     <div class="form-group">
-                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" value=""/>
+                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" step="any" value=""/>
                     </div>
                   </div>
                 </div>                

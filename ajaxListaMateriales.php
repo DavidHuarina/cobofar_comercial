@@ -1,11 +1,9 @@
-<html>
-<body>
-<table align='center' class="texto">
+<table align='center' class="texto" id="listaMaterialesTabla">
 <tr>
 <th>Producto</th><th>Linea</th><th>Principio Activo</th><th>Stock</th><th>Precio</th></tr>
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("funciones.php");
 
 $codTipo=$_GET['codTipo'];
@@ -95,7 +93,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			}
 			$precioProducto=redondear2($precioProducto);
 			
-			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>$nombre</a></div></td>
+			echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>$nombre</a></div></td>
 			<td>$linea</td>
 			<td>$principiostring</td>
 			<td>$stockProducto</td>
@@ -103,15 +101,15 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			</tr>";
 		}
 
-		if($numFilas==1){
-			echo "<script>setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")</script>";
-		}
+		
 	}else{
 		echo "<tr><td colspan='5'>Sin Resultados en la busqueda.</td></tr>";
 	}
 	
 ?>
 </table>
+<?php
+if($numFilas==1){
+			//$nombre=str_replace(,"",$nombre);
 
-</body>
-</html>
+}

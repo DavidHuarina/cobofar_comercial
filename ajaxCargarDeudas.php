@@ -5,7 +5,7 @@
 	<tr><th>Tipo Doc</th><th>Nro.</th><th>Fecha</th><th>Monto</th><th>A Cuenta</th><th>Saldo</th><th>Monto a Pagar</th><th>Nro. Doc. Pago</th></tr>
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("funciones.php");
 
 $codCliente=$_GET['codCliente'];

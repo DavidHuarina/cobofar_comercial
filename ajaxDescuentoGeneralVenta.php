@@ -1,7 +1,7 @@
 <?php
 $estilosVenta=1;
 require("funciones.php");
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 
 
 $monto_total = $_GET["monto_total"];

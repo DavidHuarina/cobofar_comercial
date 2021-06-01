@@ -8,7 +8,7 @@ $codTipoPrecio=$_GET["tipoPrecio"];
 $globalAgencia=$_COOKIE["global_agencia"];
 $cantidad_unitaria=$_GET["cantidad_unitaria"];
 //
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $cadRespuesta="";
 $consulta="
     select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1 and cod_ciudad=-1";

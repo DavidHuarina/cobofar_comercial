@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $categoria=$_GET["categoria"];
 $sql="SELECT cod_linea_proveedor,nombre_linea_proveedor from proveedores_lineas where estado=1 and cod_proveedor=$categoria order by 2";
 $resp=mysqli_query($enlaceCon,$sql);

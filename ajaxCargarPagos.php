@@ -3,7 +3,7 @@
 	<tr><th>Nro. OC</th><th>Fecha OC</th><th>Monto OC</th><th>A Cuenta</th><th>Saldo OC</th><th>Monto a Pagar</th><th>Nro. Doc. Pago</th></tr>
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $codProveedor=$_GET['codProveedor'];
 
 $sql="select o.cod_orden, o.nro_orden, o.cod_proveedor, o.fecha_orden, o.monto_orden, o.monto_cancelado,

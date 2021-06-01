@@ -12,13 +12,13 @@ require('funciones.php');
 ?>
 <style type="text/css">
 	.arial-12{
-        font-size: 12px;
+        font-size: 14px;
 	}
 	.arial-7{
-        font-size: 10px;
+        font-size: 12px;
 	}
 	.arial-8{
-        font-size: 11px;
+        font-size: 13px;
 	}
 </style>
 
@@ -152,7 +152,7 @@ $nombreFuncionario=nombreVisitador($rpt_funcionario);
 
 
 ?>
-<div style="width:320;height:<?=$tamanoLargo?>; font-family:Arial;">
+<div style="width:320;margin:0;padding-left:30px !important;padding-right:30px !important;height:<?=$tamanoLargo?>; font-family:Arial;">
 <br>
 <center><p class="arial-12">CIERRE DE CAJA</p>
 <label class="arial-12"><?=obtenerNombreCiudad($rpt_territorio)?></label><br>
@@ -177,6 +177,7 @@ $nombreFuncionario=nombreVisitador($rpt_funcionario);
 <br><br>
 
 </center>
+<br><br>
 </div>
 <script type="text/javascript">
  javascript:window.print();

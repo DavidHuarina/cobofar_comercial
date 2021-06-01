@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("funciones.php");
 $codigoItem=$_GET['codigo'];
 $globalAlmacen=$_COOKIE['global_almacen'];
