@@ -23,6 +23,27 @@
         </style>
 	
 <script type='text/javascript' language='javascript'>
+
+function guardarVentaGeneral(){
+   Swal.fire({
+        title: '¿Está Seguro?',
+        text: "Se guardaran los datos",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            $('#guardarSalidaVenta').submit();                   
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+    });
+}
+
 function mueveReloj(){
     momentoActual = new Date()
     hora = momentoActual.getHours()
@@ -813,18 +834,25 @@ function validar(f, ventaDebajoCosto,pedido){
               //guardarPedidoDesdeFacturacion(1);
               return false;
 		  }else{
+		  	var errores2=0;
 		  	if($("#tipoVenta").val()==2){
 		  	  if($("#nro_tarjeta").val()!=""){
                 if(!($("#monto_tarjeta").val()>0)){
+		  	       errores2++;
                    alert("Debe Ingresar el monto de la Tarjeta");
 					$("#pedido_realizado").val(0);
 				   return(false);
                 }
 		  	  }else{
+		  	  	errores2++;
 		  	  	alert("Debe Registrar los datos de la tarjeta");
 					$("#pedido_realizado").val(0);
 				   return(false);
 		  	  }// fin nro de tarjeta		  	
+		  	}
+		  	//CONFIRMACION
+		  	if(errores2==0){
+		  		return confirm('Quieres guardar la venta');
 		  	}
 		  }
 		}else{
@@ -1027,6 +1055,9 @@ function mostrarRegistroConTarjeta(){
 	$("#titulo_tarjeta").html("");
 	if($("#nro_tarjeta").val()>0){
       $("#titulo_tarjeta").html("(REGISTRADO)");
+	}
+	if($("#monto_tarjeta").val()==""){
+      $("#monto_tarjeta").val($("#efectivoRecibidoUnido").val());
 	}
 	$("#modalPagoTarjeta").modal("show");	
 }

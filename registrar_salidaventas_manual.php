@@ -23,6 +23,27 @@
         </style>
 
 <script type='text/javascript' language='javascript'>
+
+function guardarVentaGeneral(){
+   Swal.fire({
+        title: '¿Está Seguro?',
+        text: "Se guardaran los datos",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            $('#guardarSalidaVenta').submit();                   
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+    });
+}
+
 function mueveReloj(){
     momentoActual = new Date()
     hora = momentoActual.getHours()
@@ -79,7 +100,7 @@ function listaMateriales(f){
 	var tipoSalida=(f.tipoSalida.value);
 	var codigoMat=(f.itemCodigoMaterial.value);
 	contenedor = document.getElementById('divListaMateriales');
-
+    
 	var arrayItemsUtilizados=new Array();	
 	var i=0;
 	for(var j=1; j<=num; j++){
@@ -95,31 +116,19 @@ function listaMateriales(f){
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {			
 			contenedor.innerHTML = ajax.responseText;
-			cargarDatosStockGeneral();				
-		}		
-	}
-	ajax.send(null)
-}
-
-function cargarDatosStockGeneral(){
-	var parametros={"monto_total":1};
-	$.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: "ajaxBuscarItems.php",
-        data: parametros,
-        success:  function (resp) { 
-            var oRows = document.getElementById('listaMaterialesTabla').getElementsByTagName('tr');
+			var oRows = document.getElementById('listaMaterialesTabla').getElementsByTagName('tr');
             var nFilas = oRows.length;					
 			if(parseInt(nFilas)==2){
 				document.getElementsByClassName('enlace_ref')[0].click();
 				//$(".enlace_ref").click();
 			}
 			//
-			document.getElementById('itemCodigoMaterial').focus();	   
-        }
-    });
+			document.getElementById('itemCodigoMaterial').focus();				
+		}		
+	}
+	ajax.send(null)
 }
+
 function ajaxTipoDoc(f){
 	var contenedor;
 	contenedor=document.getElementById("divTipoDoc");
@@ -154,12 +163,16 @@ function actStock(indice){
 	contenedor=document.getElementById("idstock"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
     var codalm=document.getElementById("global_almacen").value;
+    console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
 	ajax=nuevoAjax();
 	ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			//$("#idstock"+indice).html(ajax.responseText);
-			contenedor.innerHTML = ajax.responseText;
+			//console.log(ajax.responseText);
+			//alert(ajax.responseText);
+			$("#idstock"+indice).html(ajax.responseText);
+			//contenedor.innerHTML = ajax.responseText;
+			
 			ajaxCargarSelectDescuentos(indice);
 		}
 	}
@@ -454,8 +467,8 @@ function buscarMaterial(f, numMaterial){
 	document.getElementById('itemNombreMaterial').value='';	
 	//document.getElementById('itemNombreMaterial').focus();
 	document.getElementById('itemCodigoMaterial').value='';	
-	document.getElementById('itemCodigoMaterial').focus();	
-	$('#divListaMateriales').html('');		
+	document.getElementById('itemCodigoMaterial').focus();		
+	
 }
 function encontrarMaterial(numMaterial){
 	var cod_material = $("#materiales"+numMaterial).val();
@@ -469,8 +482,8 @@ function encontrarMaterial(numMaterial){
            // alert(resp);           
         	$("#modalProductosCercanos").modal("show");
         	//RefreshTable('tablaPrincipalGeneral', 'ajax_encontrar_productos.php');
-        	document.getElementById("tabla_datos").innerHTML=resp;
-        	//$("#tabla_datos").html(resp); 
+        	$("#tabla_datos").html(resp);
+        	//document.getElementById("tabla_datos").innerHTML=resp; 
         	//tablaPrincipalGeneral.ajax.reload();        	   
         }
     });	
@@ -513,7 +526,7 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
     $("#modalProductosSimilares").modal("hide");
-	actStock(numRegistro);	
+    actStock(numRegistro);
 }
 
 function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
@@ -525,17 +538,17 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat+" ("+cod+")";
 	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
-	document.getElementById('divi'+numRegistro).value=divi;	
+	document.getElementById('divi'+numRegistro).value=divi;
+	
 	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
 	document.getElementById('divProfileDetail').style.visibility='hidden';
 	document.getElementById('divboton').style.visibility='hidden';
-	actStock(numRegistro);
+	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
-    
-		
+    actStock(numRegistro);
 }
 function verificarReceta(cod,numRegistro){
 	ajax=nuevoAjax();
@@ -605,12 +618,14 @@ function mas(obj) {
 	if(num>=1000){
 		alert("No puede registrar mas de 15 items en una nota.");
 	}else{
+		var fila_actual=0;
 		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
 		var banderaItems0=0;
 		for(var j=1; j<=num; j++){
 			if(document.getElementById('materiales'+j)!=null){
 				if(document.getElementById('materiales'+j).value==0){
 					banderaItems0=1;
+					fila_actual=j;
 				}
 			}
 		}
@@ -642,6 +657,9 @@ function mas(obj) {
 				}
 			}		
 			ajax.send(null);
+		}else{
+			buscarMaterial(obj.form,fila_actual);
+			
 		}
 
 	}
@@ -663,10 +681,10 @@ function menos(numero) {
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){	
-	    //$("#enviar_busqueda").click();		   	
-		listaMateriales(f);
-		//document.getElementById('itemCodigoMaterial').focus();
-		return false;
+	    $("#enviar_busqueda").click();
+	    $("#enviar_busqueda").click();//Para mejorar la funcion	
+	    return false;    	   	    	
+		//listaMateriales(f);			
 	}
 }
 
@@ -816,18 +834,25 @@ function validar(f, ventaDebajoCosto,pedido){
               //guardarPedidoDesdeFacturacion(1);
               return false;
 		  }else{
+		  	var errores2=0;
 		  	if($("#tipoVenta").val()==2){
 		  	  if($("#nro_tarjeta").val()!=""){
                 if(!($("#monto_tarjeta").val()>0)){
+		  	       errores2++;
                    alert("Debe Ingresar el monto de la Tarjeta");
 					$("#pedido_realizado").val(0);
 				   return(false);
                 }
 		  	  }else{
+		  	  	errores2++;
 		  	  	alert("Debe Registrar los datos de la tarjeta");
 					$("#pedido_realizado").val(0);
 				   return(false);
 		  	  }// fin nro de tarjeta		  	
+		  	}
+		  	//CONFIRMACION
+		  	if(errores2==0){
+		  		return confirm('Quieres guardar la venta');
 		  	}
 		  }
 		}else{
@@ -1030,6 +1055,9 @@ function mostrarRegistroConTarjeta(){
 	$("#titulo_tarjeta").html("");
 	if($("#nro_tarjeta").val()>0){
       $("#titulo_tarjeta").html("(REGISTRADO)");
+	}
+	if($("#monto_tarjeta").val()==""){
+      $("#monto_tarjeta").val($("#efectivoRecibidoUnido").val());
 	}
 	$("#modalPagoTarjeta").modal("show");	
 }
