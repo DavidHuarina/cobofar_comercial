@@ -6,6 +6,7 @@ $estilosVenta=1;
 require 'conexionmysqli2.inc';
 require_once 'function_web.php';
 $ciudad=$_COOKIE["global_agencia"];
+$global_almacen=$_COOKIE["global_almacen"];
 $sql_detalle="SELECT codigo_anterior from ciudades where cod_ciudad='$ciudad'";
 $codigo="";        
 $resp=mysqli_query($enlaceCon,$sql_detalle);

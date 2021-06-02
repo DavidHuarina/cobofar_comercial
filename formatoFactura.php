@@ -97,7 +97,7 @@ $fechaFactura=mysqli_result($respDatosFactura,0,5);
 
 
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
@@ -110,11 +110,73 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$descuentoVenta=$datDatosVenta[4];
 	$descuentoVenta=redondear2($descuentoVenta);
 	$horaFactura=$datDatosVenta[5];
+	$montoTotal2=$datDatosVenta['monto_total'];
+	$montoFinal2=$datDatosVenta['monto_final'];
+	$montoEfectivo2=$datDatosVenta['monto_efectivo'];
+	$montoCambio2=$datDatosVenta['monto_cambio'];
+	$montoTotal2=redondear2($montoTotal2);
+	$montoFinal2=redondear2($montoFinal2);
+
+	$montoEfectivo2=redondear2($montoEfectivo2);
+	$montoCambio2=redondear2($montoCambio2);
+
+	$descuentoCabecera=$datDatosVenta['descuento'];
 }
 
 $y=5;
 $incremento=3;
 ?>
+
+<script type="text/javascript">
+	// Conclusión
+(function() {
+  /**
+   * Ajuste decimal de un número.
+   *
+   * @param {String}  tipo  El tipo de ajuste.
+   * @param {Number}  valor El numero.
+   * @param {Integer} exp   El exponente (el logaritmo 10 del ajuste base).
+   * @returns {Number} El valor ajustado.
+   */
+  function decimalAdjust(type, value, exp) {
+    // Si el exp no está definido o es cero...
+    if (typeof exp === 'undefined' || +exp === 0) {
+      return Math[type](value);
+    }
+    value = +value;
+    exp = +exp;
+    // Si el valor no es un número o el exp no es un entero...
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+      return NaN;
+    }
+    // Shift
+    value = value.toString().split('e');
+    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+  }
+
+  // Decimal round
+  if (!Math.round10) {
+    Math.round10 = function(value, exp) {
+      return decimalAdjust('round', value, exp);
+    };
+  }
+  // Decimal floor
+  if (!Math.floor10) {
+    Math.floor10 = function(value, exp) {
+      return decimalAdjust('floor', value, exp);
+    };
+  }
+  // Decimal ceil
+  if (!Math.ceil10) {
+    Math.ceil10 = function(value, exp) {
+      return decimalAdjust('ceil', value, exp);
+    };
+  }
+})();
+</script>
 <br>
 <center><p class="arial-12"><?=$nombreTxt?></p>
 <p class="arial-12"><?=$nombreTxt2?></p>
@@ -173,7 +235,26 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$yyy=$yyy+6;
 }
 $montoFinal=$montoTotal-$descuentoVenta;
- ?>
+$montoTotal=number_format($montoTotal,2,'.','');
+$montoFinal=number_format($montoFinal,2,'.','');
+
+?><script>
+     var subtotal=Math.ceil10(<?=$montoTotal?>, -1); 
+     var subfinal=Math.ceil10(<?=$montoFinal?>, -1);    	
+</script>
+<?php
+if(isset($_GET["var_php2"])){
+   $montoFinal=$_GET["var_php2"];
+   $montoTotal=$_GET["var_php"];
+}else{
+     echo "<script language='javascript'>
+             window.location.href = window.location.href + '&var_php=' + subtotal + '&var_php2=' + subfinal;</script>";
+}
+
+//$montoTotal2 = "<script> document.writeln(subtotal); </script>";
+//$montoFinal2 = "<script> document.writeln(subfinal); </script>";
+//$montoFinal=$montoTotal2-$descuentoVenta;
+?>
 <label class="arial-12"><?="======================================"?></label><br>
 <table width="100%">
 	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Venta:  $montoTotal"?></td></tr>
@@ -193,7 +274,11 @@ if($montoDecimal==""){
 }
 $txtMonto=NumeroALetras::convertir($montoEntero);
 ?>
-<label class="arial-12"><?="Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos"?></label><br><br>
+<label class="arial-12"><?="Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos"?></label>
+<table width="100%">
+	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Recibido:  $montoEfectivo2"?></td></tr>
+	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Cambio:  $montoCambio2"?></td></tr>
+</table>
 <label class="arial-12"><?="======================================"?></label><br>
 <label class="arial-12"><?="CODIGO DE CONTROL: $codigoControl"?></label><br>
 <label class="arial-12"><?="FECHA LIMITE DE EMISION: $fechaLimiteEmision"?></label><br>

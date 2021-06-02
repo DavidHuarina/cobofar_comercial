@@ -1,6 +1,6 @@
 <?php
 set_time_limit(0);
-error_reporting(0);
+//error_reporting(0);
 
 $enlaceCon=mysqli_connect("p:127.0.0.1","root","","farmaciasalmacen");
 if (mysqli_connect_errno())

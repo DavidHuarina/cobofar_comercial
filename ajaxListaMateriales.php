@@ -84,7 +84,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			
 			$ubicacionProducto=ubicacionProducto($globalAlmacen, $codigo);
 			
-			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='$codCiudad'";
+			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='-1'";
 			$rs=mysqli_query($enlaceCon,$consulta);
 			$registro=mysqli_fetch_array($rs);
 			$precioProducto=$registro[0];

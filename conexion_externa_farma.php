@@ -35,9 +35,9 @@ public function setBase($base){
 
 
   $this->contrasena="B0l1v14.@1202";
-  if($this->host==$ipSuc){
+  /*if($this->host==$ipSuc){
     $this->contrasena="B0l1v14.@1202";
-  }
+  }*/
   //FIN DE FUNCION DE CONTRASENA
    try{
          parent::__construct($this->tipo_de_base.':server='.$this->host.';Database='.$this->nombre_de_base, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));// 

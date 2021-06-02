@@ -34,14 +34,39 @@ echo "<script language='Javascript'>
 		}
 		</script>";
 ?>
+<style type="text/css">
+	.cargar-ajax2{
+           position: fixed;
+           left:0px;
+           top:0px;
+           width: 100%;
+           height: 100%;
+           z-index: 9999;
+           background: url('imagenes/loading3.gif') 50% 50% no-repeat rgba(255, 255, 255 ,1);
+           opacity: 1;
+        }
+
+</style>
 <script type="text/javascript">
 	function actualizar_nav(f)
 		{
+			$("#div_loading").removeClass("d-none");
 			location.href='actualizarListadoTraspasosPendientesAlmacen.php';
 		}
 
 </script>
-
+<div id="div_loading" class="cargar-ajax2 d-none"> 
+  <div class="div-loading text-center" style="position:fixed;top: -50px !important;left:20px !important;">
+    <!--<img src="imagenes/cargando3.gif" width="50" height="50">-->
+     <h1 class="text-success font-weight-bold" id="texto_ajax">Obteniendo de Almacen</h1>
+     <p class="text-muted small font-weight-bold">Este proceso puede demorar unos minutos<br>Aguard&aacute; un momento por favor</p>  
+  </div>
+  <div class="div-loading text-center" style="position:fixed;top: -250px !important;right:20px !important; width:300px;">
+    <img src="imagenes/farmacias_bolivia_loop.gif" width="300" height="120">
+     <p class="text-muted small font-weight-bold">Es muy importante que espere hasta que el proceso termine</p>
+     <p class="text-success small font-weight-bold">SISTEMA - COBOFAR COMERCIAL</p>
+  </div>
+</div>
 <?php
 	echo "<form method='post' action=''>";
 	$sql="SELECT s.cod_ingreso_almacen, s.cod_almacen, s.fecha, ts.nombre_tipoingreso, a.nombre_almacen, s.observaciones, s.nro_correlativo,s.estado_ingreso, s.nota_entrega

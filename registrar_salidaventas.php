@@ -23,25 +23,27 @@
         </style>
 	
 <script type='text/javascript' language='javascript'>
-
 function guardarVentaGeneral(){
    Swal.fire({
-        title: '¿Está Seguro?',
-        text: "Se guardaran los datos",
-         type: 'warning',
+        title: '¿Esta seguro de Facturar?',
+        text: "Se procederá con el guardado del documento",
+         type: 'info',
         showCancelButton: true,
-        confirmButtonClass: 'btn btn-warning',
-        cancelButtonClass: 'btn btn-danger',
-        confirmButtonText: 'Si',
-        cancelButtonText: 'No',
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-default',
+        confirmButtonText: 'Facturar',
+        cancelButtonText: 'Cancelar',
         buttonsStyling: false
        }).then((result) => {
           if (result.value) {
-            $('#guardarSalidaVenta').submit();                   
+          	$("#confirmacion_guardado").val(1);
+            $('#guardarSalidaVenta').submit();  
+            //return(true);                 
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
     });
+    return false;
 }
 
 function mueveReloj(){
@@ -263,6 +265,56 @@ function calculaMontoMaterial(indice){
 	totales();
 }
 
+
+// Conclusión
+(function() {
+  /**
+   * Ajuste decimal de un número.
+   *
+   * @param {String}  tipo  El tipo de ajuste.
+   * @param {Number}  valor El numero.
+   * @param {Integer} exp   El exponente (el logaritmo 10 del ajuste base).
+   * @returns {Number} El valor ajustado.
+   */
+  function decimalAdjust(type, value, exp) {
+    // Si el exp no está definido o es cero...
+    if (typeof exp === 'undefined' || +exp === 0) {
+      return Math[type](value);
+    }
+    value = +value;
+    exp = +exp;
+    // Si el valor no es un número o el exp no es un entero...
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+      return NaN;
+    }
+    // Shift
+    value = value.toString().split('e');
+    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+  }
+
+  // Decimal round
+  if (!Math.round10) {
+    Math.round10 = function(value, exp) {
+      return decimalAdjust('round', value, exp);
+    };
+  }
+  // Decimal floor
+  if (!Math.floor10) {
+    Math.floor10 = function(value, exp) {
+      return decimalAdjust('floor', value, exp);
+    };
+  }
+  // Decimal ceil
+  if (!Math.ceil10) {
+    Math.ceil10 = function(value, exp) {
+      return decimalAdjust('ceil', value, exp);
+    };
+  }
+})();
+
 function totales(){	
 	var subtotal=0;
     for(var ii=1;ii<=num;ii++){
@@ -285,6 +337,7 @@ function totales(){
 
 	subtotal=Math.round(subtotal*100)/100;
 	
+	subtotal=Math.ceil10(subtotal, -1); 
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 
     document.getElementById("totalVenta").value=subtotal;
@@ -680,9 +733,10 @@ function menos(numero) {
 
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
-	if (tecla==13){	
-	    $("#enviar_busqueda").click();
-	    $("#enviar_busqueda").click();//Para mejorar la funcion	
+	if (tecla==13){
+	    //listaMateriales(f);	
+	    //$("#enviar_busqueda").click();
+	    //$("#enviar_busqueda").click();//Para mejorar la funcion	
 	    return false;    	   	    	
 		//listaMateriales(f);			
 	}
@@ -707,10 +761,17 @@ $(document).ready(function() {
         alert("El monto recibido NO debe ser menor al monto total");
         return false;
       }else{
-      	document.getElementById("btsubmit").value = "Enviando...";
-        document.getElementById("btsubmit").disabled = true;
-        document.getElementById("btsubmitPedido").value = "Enviando...";
-        document.getElementById("btsubmitPedido").disabled = true;
+      	var confirmacionRealizada=$("#confirmacion_guardado").val();
+      	console.log("Datos confirm:"+confirmacionRealizada+"")
+      	if(parseInt(confirmacionRealizada)==1){
+      		return true;
+      		/*document.getElementById("btsubmit").value = "Enviando...";
+            document.getElementById("btsubmit").disabled = true;
+            document.getElementById("btsubmitPedido").value = "Enviando...";
+            document.getElementById("btsubmitPedido").disabled = true;*/
+      	}else{
+      		return guardarVentaGeneral();
+      	}
       }     
     });
 });	
@@ -852,7 +913,7 @@ function validar(f, ventaDebajoCosto,pedido){
 		  	}
 		  	//CONFIRMACION
 		  	if(errores2==0){
-		  		return confirm('Quieres guardar la venta');
+		  		//return confirm('Quieres guardar la venta');
 		  	}
 		  }
 		}else{
@@ -871,6 +932,12 @@ function validar(f, ventaDebajoCosto,pedido){
 		return(false);
 	}
 }
+/*$(document).ready(function(){
+    $('#guardarSalidaVenta').on("submit",function(){
+        guardarSalidaVenta();
+    });
+});*/
+
 var tipoVentaGlobal=1;
 function cambiarTipoVenta2(){
 	if(tipoVentaGlobal==1){
@@ -1080,7 +1147,7 @@ $tipoCambio=1;
 while($filaUSD=mysqli_fetch_array($respUsd)){
 		$tipoCambio=$filaUSD[0];	
 }
-?><input type="hidden" id="tipo_cambio_dolar" value="<?=$tipoCambio?>"><?php
+?><input type="hidden" id="confirmacion_guardado" value="0"><input type="hidden" id="tipo_cambio_dolar" value="<?=$tipoCambio?>"><?php
 $usuarioVentas=$_COOKIE['global_usuario'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];

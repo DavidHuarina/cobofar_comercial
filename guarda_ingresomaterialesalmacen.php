@@ -79,7 +79,7 @@ if($sql_inserta==1){
 			
 			//CONVERTIMOS A LA CANTIDAD DE PRESENTACION PARA MANEJAR TODO EN UNITARIOS
 			$cantidadPresentacion=obtenerCantidadPresentacionProducto($cod_material);
-			$cantidad=$cantidad*$cantidadPresentacion;
+			$cantidad=$cantidad;//*$cantidadPresentacion;
 
 			$costo=$precioUnitario;
 						
