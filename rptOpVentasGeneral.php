@@ -4,7 +4,17 @@ function envia_formulario(f)
 	rpt_territorio=f.rpt_territorio.value;
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
-	window.open('rptVentasGeneral.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+
+	var codPersonal=new Array();
+	var j=0;
+	for(var i=0;i<=f.rpt_personal.options.length-1;i++)
+	{	if(f.rpt_personal.options[i].selected)
+		{	codPersonal[j]=f.rpt_personal.options[i].value;
+			j++;
+		}
+	}
+
+	window.open('rptVentasGeneral.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&codPersonal='+codPersonal+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
 </script>
@@ -13,12 +23,13 @@ function envia_formulario(f)
 require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 $globalCiudad=$_COOKIE["global_agencia"];
+$globalFuncionario=$_COOKIE["global_usuario"];
 $fecha_rptdefault=date("Y-m-d");
 echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Documento e Item</th></tr></table><br>";
 echo"<form method='post' action=''>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
-	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker' data-live-search='true' data-size='6'>";
+	echo "<tr><th align='left'>Sucursal</th><td><select name='rpt_territorio' class='selectpicker' data-live-search='true' data-size='6'>";
 	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
@@ -31,6 +42,21 @@ echo"<form method='post' action=''>";
 		   if(isset($_GET["admin"])){
 			  echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";	
 		   }			
+		}
+	}
+	echo "</select></td></tr>";
+
+		echo "<tr><th align='left'>Personal</th><td><select name='rpt_personal' multiple class='selectpicker' data-live-search='true' data-size='6' data-actions-box='true'>";
+	$sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres";
+	$resp=mysqli_query($enlaceCon,$sql);
+	echo "<option value=''></option>";
+	while($dat=mysqli_fetch_array($resp))
+	{	$codigo_funcionario=$dat[0];
+		$nombre_funcionario=$dat[1];
+		if($globalFuncionario==$codigo_funcionario){
+		   echo "<option value='$codigo_funcionario' selected>$nombre_funcionario</option>";	
+		}else{
+		  echo "<option value='$codigo_funcionario'>$nombre_funcionario</option>";				
 		}
 	}
 	echo "</select></td></tr>";

@@ -6,8 +6,8 @@ function envia_formulario(f, variableAdmin)
 	var hora_fin;
 	var rpt_territorio;
 	rpt_territorio=f.rpt_territorio.value;
-	var rpt_funcionario;
-	rpt_funcionario=f.rpt_funcionario.value;
+	var rpt_funcionario=$("#rpt_funcionario").val();
+	//rpt_funcionario=f.rpt_funcionario.value;
 
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
@@ -70,7 +70,7 @@ echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 		}
 	}
 	echo "</select></td></tr>";
-	echo "<tr><th align='left'>Personal</th><td><select name='rpt_funcionario' class='selectpicker form-control'>";
+	echo "<tr><th align='left'>Personal</th><td><select name='rpt_funcionario' id='rpt_funcionario' class='selectpicker form-control' data-live-search='true' data-size='6'>";
 	$sql="select codigo_funcionario, CONCAT(nombres,' ',paterno,' ',materno) from funcionarios where estado=1 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
@@ -79,7 +79,7 @@ echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 		if($cod_funcionario==$globalUser){
 			echo "<option value='$cod_funcionario' selected>$nombre_fun</option>";			
 		}else{
-			echo "<option value='$codigo_ciudad'>$nombre_fun</option>";
+			echo "<option value='$cod_funcionario'>$nombre_fun</option>";
 		}
 	}
 	echo "</select></td></tr>";

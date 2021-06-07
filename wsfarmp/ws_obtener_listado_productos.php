@@ -13,6 +13,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           case 'ObtenerListadoProductos':
             $datosResp=obtenerListadoProductos();$existeFuncion=1;  
           break;
+          case 'ObtenerStockProductos':
+            $existeFuncion=1;
+            if(!isset($datos['codigo'])){
+                 $existeFuncion=0;
+                 $datosResp[0]=0;
+            }else{
+                 $datosResp=obtenerListadoStockProductos($datos['codigo']);                 
+            }             
+          break;
         }              
         if($existeFuncion>0){                                  
            if($datosResp[0]==0){
@@ -33,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
           }else{
               $resultado=array("estado"=>3, 
-                            "mensaje"=>"Error de funcion");
+                            "mensaje"=>"Error de funcion / parametros");
           }
         }else{
             $resultado=array("estado"=>4, 
@@ -50,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 function obtenerListadoProductos(){
   require_once __DIR__.'/../conexionmysqli2.inc';
+  require_once __DIR__.'/../funciones.php';
   mysqli_set_charset($enlaceCon,"utf8");
   $consulta = "SELECT m.codigo_material,m.descripcion_material,m.cantidad_presentacion,m.cod_linea_proveedor,(SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor)nombre_linea,(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor)cod_proveedor,
 (SELECT nombre_proveedor from proveedores where cod_proveedor=(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor))nombre_proveedor FROM material_apoyo m where m.estado=1 and m.descripcion_material!='<<< RESERVADO >>>'";
@@ -60,10 +70,39 @@ function obtenerListadoProductos(){
      $datos[$ff]['codigo']=$dat['codigo_material'];
      $datos[$ff]['nombre']=$dat['descripcion_material'];
      $datos[$ff]['cod_linea']=$dat['cod_linea_proveedor'];
+     $datos[$ff]['cantidad_presentacion']=$dat['cantidad_presentacion'];
      $datos[$ff]['nombre_linea']=$dat['nombre_linea'];
      $datos[$ff]['cod_proveedor']=$dat['cod_proveedor'];
-     $datos[$ff]['nombre_proveedor']=$dat['nombre_proveedor'];
-     $ff++;    
+     $datos[$ff]['nombre_proveedor']=$dat['nombre_proveedor'];  
+     $ff++;
+  }
+  return array($ff,$datos);
+}
+
+function obtenerListadoStockProductos($idProd){
+  require_once __DIR__.'/../conexionmysqli2.inc';
+  require_once __DIR__.'/../funciones.php';
+  mysqli_set_charset($enlaceCon,"utf8");
+  $consulta = "SELECT m.codigo_material,m.descripcion_material,m.cantidad_presentacion,m.cod_linea_proveedor,(SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor)nombre_linea,(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor)cod_proveedor,
+(SELECT nombre_proveedor from proveedores where cod_proveedor=(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor))nombre_proveedor FROM material_apoyo m where m.estado=1 and m.codigo_material='$idProd'";
+  $resp = mysqli_query($enlaceCon,$consulta);
+  $ff=0;
+  $datos=[];
+  while ($dat = mysqli_fetch_array($resp)) {
+     $datos[$ff]['codigo']=$dat['codigo_material'];
+     $datos[$ff]['nombre']=$dat['descripcion_material'];
+     $arraySucursales=[];
+     $consultaAl = "SELECT cod_almacen,nombre_almacen FROM almacenes order by 2 ";
+     $respAl = mysqli_query($enlaceCon,$consultaAl);
+     $al=0;
+     while ($datAl = mysqli_fetch_array($respAl)) {
+        $arraySucursales[$al]['codigo_sucursal']=obtenerSucursalporAlmacen($datAl['cod_almacen']);
+        $arraySucursales[$al]['sucursal']=$datAl['nombre_almacen'];
+        $arraySucursales[$al]['stock']=stockProducto($datAl['cod_almacen'],$dat['codigo_material']);
+        $al++;
+     }
+     $datos[$ff]['sucursales']=$arraySucursales;  
+     $ff++;
   }
   return array($ff,$datos);
 }

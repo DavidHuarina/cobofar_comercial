@@ -582,6 +582,19 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
     actStock(numRegistro);
 }
 
+function obtenerLineaMaterial(cod,numRegistro){
+	var parametros={"codigo":cod};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxLineaProducto.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#cod_material"+numRegistro).attr("title",resp);                             	   
+        }
+    });	
+}
+
 function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	var numRegistro=f.materialActivo.value;
 	$("#cantidad_presentacionboton"+numRegistro).css("color","#EC341B");
@@ -602,6 +615,7 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
     actStock(numRegistro);
+    obtenerLineaMaterial(cod,numRegistro);
 }
 function verificarReceta(cod,numRegistro){
 	ajax=nuevoAjax();
@@ -1700,10 +1714,13 @@ if($banderaErrorFacturacion==0){
                       <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" step="any" value=""/>
                     </div>
                   </div>
-                </div>                
+                </div> 
+                <br>
+                <a href="#" data-dismiss="modal" aria-hidden="true" class="btn btn-info btn-sm">GUARDAR</a>               
                 <br><br>
        </div>
-</div>                      
+</div>                  
+
                 </div>
       </div>  
     </div>

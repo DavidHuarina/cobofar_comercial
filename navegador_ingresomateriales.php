@@ -204,7 +204,7 @@ $anulacionCodigo=mysqli_result($respConf,0,0);
 
 
 $consulta = "
-    SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,
+    SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nro_factura_proveedor, i.nro_correlativo, i.ingreso_anulado,
 	(select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as proveedor
     FROM ingreso_almacenes i, tipos_ingreso ti
     WHERE i.cod_tipoingreso=ti.cod_tipoingreso
@@ -216,12 +216,15 @@ echo "<h1>Ingreso de Materiales</h1>";
 
 echo "<table border='1' cellspacing='0' class='textomini'><tr><th>Leyenda:</th><th>Ingresos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>Ingresos con movimiento</th><td bgcolor='#ffff99' width='10%'></td><th>Ingresos sin movimiento</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 
-//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'>
 echo "<div class=''>";
 if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
+	echo "<input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+        <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
+	echo "
+    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+    <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
 }
 echo"<td><input type='button' value='Buscar' class='btn btn-primary' onclick='ShowBuscar()'></div>";
 
@@ -285,9 +288,13 @@ echo "</div>";
 //<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'><input type='button' value='Registrar Ingreso' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 echo "<div class=''>";
 if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
+	echo "
+    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+    <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{
-	echo "<input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
+	echo "
+    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+    <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
 }
 
 echo "<input type='button' value='Buscar' class='btn btn-primary' onclick='ShowBuscar()'></div>";

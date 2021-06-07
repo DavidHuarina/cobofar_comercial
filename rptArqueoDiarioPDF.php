@@ -183,7 +183,7 @@ echo "<br><table align='center' class='textomediano' width='70%'>
 <th>Monto [Bs]</th>
 </tr>";
 $totalVentaAnulada=0;
-while($datos=mysqli_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($respAnulado)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
 	$razonSocial=$datos[2];

@@ -8,10 +8,10 @@ $fechai = $_GET["fechai"];
 
 $hora = $_GET["hora"];
 $horai = $_GET["horai"];
-
+$rpt_funcionario = $_GET["personal"];
 
 $rpt_territorio=$_COOKIE["global_agencia"];
-$rpt_funcionario=$_COOKIE["global_usuario"];
+//$rpt_funcionario=$_COOKIE["global_usuario"];
 $sql="select s.`monto_final`, s.cod_tipopago
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')

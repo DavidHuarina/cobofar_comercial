@@ -3,6 +3,9 @@ require("../conexionmysqli.inc");
 require("../estilos2.inc");
 require("configModule.php");
 require('../funcion_nombres.php');
+require("../funciones.php");
+if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
+
 ?>
 
 <script>
@@ -31,7 +34,8 @@ require('../funcion_nombres.php');
     var fecha=$("#fecha_fin").val();
     var horai=$("#exahorainicial").val();
     var hora=$("#exahorafinal").val();
-    var parametros={"fecha":fecha,"fechai":fechai,"hora":hora,"horai":horai};
+    var personal=$("#rpt_personal").val();
+    var parametros={"fecha":fecha,"fechai":fechai,"hora":hora,"horai":horai,"personal":personal};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -43,9 +47,15 @@ require('../funcion_nombres.php');
         }
     });
  }
+ function cambiarDescripcion(){
+  var texto = $("#rpt_personal").find('option:selected').text();
+  $("#nombre").val("Cierre. "+texto); 
+ }
 </script>
 <meta charset="utf-8">
 <?php
+$globalCiudad=$_COOKIE["global_agencia"];
+$globalFuncionario=$_COOKIE["global_usuario"];
 $fecha_rptinidefault=date("Y")."-".date("m")."-01";
 //$hora_rptinidefault=date("H:i");
 $hora_rptinidefault="06:00";
@@ -61,8 +71,26 @@ echo "<center><table class='table table-sm' width='60%'>";
 
 echo "<tr><td align='left' class='bg-info text-white'>Descripción</td>";
 echo "<td align='left' colspan='3'>
-	<input type='text' class='form-control' name='nombre' onKeyUp='javascript:this.value=this.value.toUpperCase();' value='$datosNombreDefault' required>
+	<input type='text' class='form-control' name='nombre' id='nombre' onKeyUp='javascript:this.value=this.value.toUpperCase();' value='$datosNombreDefault' required>
 </td></tr>";
+
+if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
+   echo "<tr><th align='left' class='bg-info text-white'>Personal</th><td><select name='rpt_personal' id='rpt_personal' class='selectpicker' data-live-search='true' data-style='btn btn-info' onchange='cambiarDescripcion()'>";
+  $sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres";
+  $resp=mysqli_query($enlaceCon,$sql);
+  while($dat=mysqli_fetch_array($resp))
+  { $codigo_funcionario=$dat[0];
+    $nombre_funcionario=$dat[1];
+    if($globalFuncionario==$codigo_funcionario){
+       echo "<option value='$codigo_funcionario' selected>$nombre_funcionario</option>";  
+    }else{
+      echo "<option value='$codigo_funcionario'>$nombre_funcionario</option>";        
+    }
+  }
+  echo "</select></td></tr>";
+}
+
+
 echo "<tr><td align='left' class='bg-info text-white'>Fecha</td>";
 echo "<td align='left'>
 	<INPUT  type='date' class='form-control col-sm-10' value='$fecha_rptdefault' id='fecha_ini' size='10' name='fecha_ini'><INPUT  type='time' class='form-control col-sm-10' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>
@@ -134,4 +162,5 @@ echo "<div class=''>
 ";
 
 echo "</form>";
+}
 ?>

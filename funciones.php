@@ -1039,4 +1039,18 @@ function descargarPDFArqueoCaja($nom,$html){
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
 
+
+function obtenerCargoPersonal($codigo){
+	require("conexionmysqli2.inc");
+  $sql_detalle="SELECT cod_cargo from funcionarios where codigo_funcionario='$codigo'";
+  $codigo=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+      $codigo=$detalle[0];		
+  }  
+  return $codigo;
+}
+
+
+
 ?>

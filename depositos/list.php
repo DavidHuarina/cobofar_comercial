@@ -9,6 +9,9 @@
 	function registrar_nav()
 		{	location.href='<?=$urlRegister?>';
 		}
+	function registrar_nav2()
+		{	location.href='<?=$urlRegister?>?rf=1';
+		}	
 		function editar_nav(f)
 		{
 			var i;
@@ -281,16 +284,17 @@ function enviar_nav(f){
 	<?php
 	$cod_ciudad=$_COOKIE['global_agencia'];
 	echo "<form method='post' action=''>";
-	$sql="SELECT codigo,cod_funcionario,monto_registrado,monto_caja,fecha,glosa,nro_cuenta,cod_banco,ubicacion_archivo,cod_cuenta FROM registro_depositos where cod_estadoreferencial=1";
+	$sql="SELECT f.codigo,f.cod_funcionario,f.monto_registrado,f.monto_caja,f.fecha,f.glosa,f.nro_cuenta,f.cod_banco,f.ubicacion_archivo,f.cod_cuenta FROM registro_depositos f join funcionarios fu on fu.codigo_funcionario=f.cod_funcionario where f.cod_estadoreferencial=1 and fu.cod_ciudad='$cod_ciudad'";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural</h1>";
-	
+	if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='registrar_nav()'>
-	
+	<input type='button' value='Editar' name='editar' class='btn btn-default' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
-	</div>";
+	</div>";		
+	}
 	
 	
 	echo "<center><table class='table table-sm table-bordered'>";
@@ -333,11 +337,13 @@ function enviar_nav(f){
 	}
 	echo "</table></center><br>";
 	
+	if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='registrar_nav()'>
-
+	<input type='button' value='Editar' name='editar' class='btn btn-default' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
-	</div>";
+	</div>";		
+	}
 	
 	echo "</form>";
 ?>

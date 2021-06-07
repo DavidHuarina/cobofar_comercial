@@ -20,7 +20,6 @@ if ($num_filas != 0) {
     setcookie("global_usuario", $usuario,time()+3600*24*30, '/');
     setcookie("global_agencia", $cod_ciudad,time()+3600*24*30, '/');
     setcookie("global_tipo_almacen", 1,time()+3600*24*30, '/');
-	
 	//sacamos la gestion activa
 	$sqlGestion="select cod_gestion, nombre_gestion from gestiones where estado=1";
 	$respGestion=mysqli_query($enlaceCon,$sqlGestion);

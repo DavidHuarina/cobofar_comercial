@@ -11,11 +11,11 @@ if(!isset($_GET['rpt_ver'])){
 }else{
   $rpt_ver=$_GET['rpt_ver'];
 }
-
+$codPersonal=$_GET['codPersonal'];
 
 //desde esta parte viene el reporte en si
-$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
-$fecha_finconsulta=cambia_formatofecha($fecha_fin);
+$fecha_iniconsulta=$fecha_ini;//cambia_formatofecha($fecha_ini);
+$fecha_finconsulta=$fecha_fin;//cambia_formatofecha($fecha_fin);
 
 
 $rpt_territorio=$_GET['rpt_territorio'];
@@ -42,7 +42,7 @@ where s.`cod_salida_almacenes` = sd.`cod_salida_almacen` and
                            from `almacenes` a
                            where a.`cod_ciudad` = '$rpt_territorio'
       ) and 
-      s.`cod_chofer`=f.`codigo_funcionario` group by f.`codigo_funcionario`";		
+      s.`cod_chofer`=f.`codigo_funcionario` and f.codigo_funcionario in ($codPersonal) group by f.`codigo_funcionario`";		
 //echo $sql;
 $resp=mysqli_query($enlaceCon,$sql);
 

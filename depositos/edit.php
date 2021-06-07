@@ -1,8 +1,10 @@
 <?php
-
 require("../conexionmysqli.inc");
 require("../estilos2.inc");
 require("configModule.php");
+require("../funciones.php");
+if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
+
 
 $sql=mysqli_query($enlaceCon,"select glosa,fecha,monto_registrado,cod_banco,nro_cuenta,monto_caja from $table where codigo=$codigo_registro");
 $dat=mysqli_fetch_array($sql);
@@ -39,44 +41,16 @@ echo "<center><input name='codigo' value='$codigo_registro' type='hidden'>
 <table class='table table-sm' width='60%'>";
 echo "<tr><td align='left' class='bg-info text-white'>Descripción</td>";
 echo "<td align='left' colspan='3'>
-	<input type='text' class='form-control' name='nombre' size='40' onKeyUp='javascript:this.value=this.value.toUpperCase();' value='$nombre' required>
+	<input type='text' class='form-control' name='nombre' size='40' onKeyUp='javascript:this.value=this.value.toUpperCase();' value='$nombre' readonly>
 </td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Fecha</td>";
 echo "<td align='left'>
-	<INPUT  type='date' class='form-control' value='$fecha' id='fecha_fin' size='10' name='fecha_fin'>
+	<INPUT  type='date' class='form-control' value='$fecha' id='fecha_fin' size='10' name='fecha_fin' readonly>
 </td>";
 echo "</tr>";
-echo "<tr><td align='left' class='bg-info text-white'>Banco</td>";
-echo "<td align='left'>
-	<select name='rpt_banco'  id='rpt_banco' class='selectpicker form-control' data-style='btn btn-primary' data-live-search='true'>";
-	$sql="select codigo, nombre from bancos where estado=1 order by 2";
-	$resp=mysqli_query($enlaceCon,$sql);
-	while($dat=mysqli_fetch_array($resp))
-	{	$codigo_cat=$dat[0];
-		$nombre_cat=$dat[1];
-		if($codigo_cat==$cod_banco){  //BANCO MERCANTIL POR DEFECTO SELECCIONADO
-           echo "<option value='$codigo_cat' selected>$nombre_cat</option>";
-		}else{
-           echo "<option value='$codigo_cat'>$nombre_cat</option>";
-		}		
-	}
-	echo "</select>
-</td>";
-echo "</tr>";
-
-echo "<tr><td align='left' class='bg-info text-white'>Número Cuenta</td>";
-echo "<td align='left' colspan='3'>
-	<input type='text' class='form-control' name='numero_cuenta' value='$cuenta' size='40'>
-</td></tr>";
-echo "<tr><td align='left' class='bg-info text-white'>Monto a Depositar</td>";
-echo "<td align='left' colspan='2'>
-  <input type='number' readonly class='form-control' value='$monto_caja' name='monto_calc' id='monto_calc' step='any' required>
-</td><td align='right'>
- <a href='#' title='CALCULAR MONTO A DEPOSITAR' onclick='calcularMontoDepositado(); return false;' class='btn btn-fab btn-sm btn-primary'><i class='material-icons'>refresh</i></a>
-</td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Monto Depositado</td>";
 echo "<td align='left' colspan='3'>
-	<input type='number' class='form-control' name='monto' value='$monto_recibido' step='any'>
+	<input type='number' class='form-control' name='monto' value='$monto_recibido' step='any' readonly>
 </td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Adjuntar Archivo</td>";
 echo "<td align='left' colspan='3'>
@@ -96,4 +70,5 @@ echo "<div class='divBotones'>
 </div>";
 
 echo "</form>";
+}
 ?>
