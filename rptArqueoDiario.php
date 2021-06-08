@@ -93,13 +93,15 @@ while($datos=mysqli_fetch_array($resp)){
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
 	$personalCliente=nombreVisitador($datos['cod_chofer']);
-	$montoVentaFormat=number_format($montoVenta,2,".",",");
+	//$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
 	if($codTipoPago==1){
 		$totalEfectivo+=$montoVenta;
 	}else{
+		$montoVenta=number_format($montoVenta,1,'.','');
 		$totalTarjeta+=$montoVenta;
 	}
+	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	$totalEfectivoF=number_format($totalEfectivo,2,".",",");
 	$totalTarjetaF=number_format($totalTarjeta,2,".",",");
 	
