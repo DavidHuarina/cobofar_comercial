@@ -122,9 +122,7 @@ function editar_ingreso(f)
         }
         else
         {      //location.href='editar_ingresomateriales.php?codigo_registro='+j_cod_registro+'&grupo_ingreso=1&valor_inicial=1';
-                funOk(j_cod_registro,function(){
-                    location.href='editar_ingreso.php?codIngreso='+j_cod_registro+'';
-                });
+               location.href='editar_ingreso2.php?codIngreso='+j_cod_registro+'';
         }
     }
 }
@@ -205,7 +203,7 @@ $anulacionCodigo=mysqli_result($respConf,0,0);
 
 $consulta = "
     SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nro_factura_proveedor, i.nro_correlativo, i.ingreso_anulado,
-	(select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as proveedor
+	(select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as proveedor,i.nota_entrega
     FROM ingreso_almacenes i, tipos_ingreso ti
     WHERE i.cod_tipoingreso=ti.cod_tipoingreso
     AND i.cod_almacen='$global_almacen' and i.ingreso_anulado!=1 ";
@@ -216,21 +214,21 @@ echo "<h1>Ingreso de Materiales</h1>";
 
 echo "<table border='1' cellspacing='0' class='textomini'><tr><th>Leyenda:</th><th>Ingresos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>Ingresos con movimiento</th><td bgcolor='#ffff99' width='10%'></td><th>Ingresos sin movimiento</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 
-//<input type='button' value='Editar Ingreso' class='btn btn-primary' onclick='editar_ingreso(this.form)'>
+
 echo "<div class=''>";
 if($anulacionCodigo==1){
-	echo "<input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+	echo "<input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'><input type='button' value='Editar Ingreso' class='btn btn-default' onclick='editar_ingreso(this.form)'>
         <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{
 	echo "
-    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'><input type='button' value='Editar Ingreso' class='btn btn-default' onclick='editar_ingreso(this.form)'>
     <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
 }
 echo"<td><input type='button' value='Buscar' class='btn btn-primary' onclick='ShowBuscar()'></div>";
 
 echo "<div id='divCuerpo'>";
 echo "<br><center><table class='table table-sm'>";
-echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Ingreso</th><th>Nota de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th>
+echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Ingreso</th><th>Nro. Doc K</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
 <th>Observaciones</th><th>&nbsp;</th></tr>";
 while ($dat = mysqli_fetch_array($resp)) {
@@ -249,7 +247,10 @@ while ($dat = mysqli_fetch_array($resp)) {
     $hora_ingreso = $dat[2];
     $nombre_tipoingreso = $dat[3];
     $obs_ingreso = $dat[4];
-    $nota_entrega = $dat[5];
+    $nota_entrega = $dat['nota_entrega'];
+    if($nota_entrega==0){
+      $nota_entrega="-";
+    }
     $nro_correlativo = $dat[6];
     $anulado = $dat[7];
 	$proveedor=$dat[8];
@@ -289,11 +290,11 @@ echo "</div>";
 echo "<div class=''>";
 if($anulacionCodigo==1){
 	echo "
-    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'><input type='button' value='Editar Ingreso' class='btn btn-default' onclick='editar_ingreso(this.form)'>
     <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso(this.form)'>";	
 }else{
 	echo "
-    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
+    <input type='button' value='Registrar Ingreso x Traspaso Sucursal' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'><input type='button' value='Editar Ingreso' class='btn btn-default' onclick='editar_ingreso(this.form)'>
     <input type='button' value='Anular Ingreso' name='adicionar' class='btn btn-warning' onclick='anular_ingreso2(this.form)'>";
 }
 

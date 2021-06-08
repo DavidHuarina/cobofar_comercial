@@ -198,7 +198,7 @@ function stockProductoFechas($almacen, $item,$fechaActual){
 	$dat_salidas=mysqli_fetch_array($resp_salidas);
 	$cant_salidas2=$dat_salidas[0];
 	$stock2Caja=$cant_ingresos2-$cant_salidas2;
-
+	//echo $sql_ingresos;
     $cantPres=obtenerCantidadPresentacionProducto($item);
     
 
@@ -1037,6 +1037,27 @@ function descargarPDFArqueoCaja($nom,$html){
     $canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDFArqueo.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
+
+  function guardarPDFArqueoCaja($nom,$html,$rutaGuardado){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('legal', 'landscape');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+
+    $output = $mydompdf->output();
+    $directorio=explode("/Cierre",$rutaGuardado)[0];
+    if(!file_exists($directorio)){
+         mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+    }
+    //echo $rutaGuardado;
+    file_put_contents($rutaGuardado, $output);
   }
 
 

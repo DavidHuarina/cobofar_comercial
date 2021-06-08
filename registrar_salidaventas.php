@@ -23,6 +23,12 @@
         </style>
 	
 <script type='text/javascript' language='javascript'>
+	$(document).ready(function() {		
+        Mousetrap.bind('alt+q', function(){ if(num>0){var numeroFila=num;menos(numeroFila);} return false;});
+        Mousetrap.bind('alt+r', function(){ guardarRecetaVenta(); return false;});
+        //Mousetrap.bind('alt+t', function(){ $("#tipo_comprobante").focus(); return false; });
+    });
+
 function guardarVentaGeneral(){
    Swal.fire({
         title: '¿Esta seguro de Facturar?',
@@ -102,7 +108,7 @@ function listaMateriales(f){
 	var tipoSalida=(f.tipoSalida.value);
 	var codigoMat=(f.itemCodigoMaterial.value);
 	contenedor = document.getElementById('divListaMateriales');
-    
+    contenedor.innerHTML="<br><br><p class='text-muted'>Buscando Producto(s)...</p>";
 	var arrayItemsUtilizados=new Array();	
 	var i=0;
 	for(var j=1; j<=num; j++){
@@ -863,7 +869,7 @@ function validar(f, ventaDebajoCosto,pedido){
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
-				if($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()==""){
+				if(($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()=="")&&$("#nitCliente").val()!=""&&$("#razonSocial").val()!=""){
 					errores++;
 					document.getElementById("efectivoRecibidoUnido").focus();
 					document.getElementById("efectivoRecibidoUnido").select();

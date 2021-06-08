@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <?php
 	require_once("../conexionmysqli.inc");
 	require_once("../estilos2.inc");

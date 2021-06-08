@@ -67,7 +67,7 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 }
 
 function insertar_detalle_pedido($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaVencidos, $orden,$stock){
-	 require("conexionmysqli.inc");	
+	 require("conexionmysqli2.inc");	
 	 $fechaVencProducto=date("Y-m-d");
 	$sqlInsert="insert into pedido_detalle_almacenes (cod_salida_almacen, cod_material, cantidad_unitaria, lote, fecha_vencimiento, precio_unitario,
 			descuento_unitario, monto_unitario, cod_ingreso_almacen, orden_detalle,stock) values 

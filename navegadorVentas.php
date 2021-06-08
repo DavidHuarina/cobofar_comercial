@@ -504,6 +504,19 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$razonSocial=$dat[12];
 	$nitCli=$dat[13];
 	
+    $fechaValidacion=0;
+    if($fechaValidacion){
+        $fechaValidacion=1;
+    }
+
+    $fecha_actual = strtotime(date("Y-m-d H:i:00",time()));
+    $fecha_entrada = strtotime($fecha_salida." ".$hora_salida." + 1 days");    
+    if($fecha_actual > $fecha_entrada){
+        $fechaValidacion=1;     
+    }
+
+
+
 	$anio_salida=intval("$fecha_salida[0]$fecha_salida[1]$fecha_salida[2]$fecha_salida[3]");
     if(!isset($_COOKIE["globalGestion"])){
       $globalGestionActual= date("Y");  
@@ -552,7 +565,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     }    
 	if($codTipoDoc==1){
         $htmlTarjeta="";
-        if($salida_anulada!=1&&$codTarjeta==1){
+        if($salida_anulada!=1&&$codTarjeta==1&&$fechaValidacion==0){
             $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>";
         }
 		echo "<td  bgcolor='$color_fondo'>$htmlTarjeta<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>";

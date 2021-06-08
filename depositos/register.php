@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <?php
 require("../conexionmysqli.inc");
 require("../estilos2.inc");
@@ -66,7 +67,16 @@ $datosNombreDefault="Cierre.".$nombreFuncionario;
 echo "<form action='$urlSave' method='post' onsubmit='monstrarLoad()' enctype='multipart/form-data'>";
 
 echo "<h1>$moduleNameSingular</h1>";
-
+?>
+<center>
+<div class="alert alert-warning col-sm-8" role="alert">
+  <h4 class="alert-heading">Estimado Usuario</h4>
+  <p>Modificamos el proceso de Registro de Depósitos, ya no es necesario generar el PDF del cierre y subir el archivo, ahora este se guarda automaticamente.</p>
+  <hr>
+  <p class="mb-0">Departamento de Sistemas - COBOFAR</p>
+</div>
+</center>
+<?php
 echo "<center><table class='table table-sm' width='60%'>";
 
 echo "<tr><td align='left' class='bg-info text-white'>Descripción</td>";
@@ -153,6 +163,7 @@ echo "<td align='left' colspan='3'>
                       </span>
                       <label title='Ningún archivo' for='documentos_cabecera' id='label_documentos_cabecera' class='label-archivo btn btn-info btn-sm'><i class='material-icons'>publish</i> Subir Archivo
                       </label>
+                      <p style='color:#737272; float:right;'>Por defecto se adjuntará el Cierre</p>
 </td></tr>";
 echo "</table></center>";
 

@@ -11,6 +11,6 @@ $nombre="";
 while($dat=mysqli_fetch_array($resp)){
 	$nombre=$dat[0];
 }
-echo "<input type='text' value='$nombre' class='form-control' name='razonSocial' id='razonSocial'>";
+echo "<input type='text' value='$nombre' class='form-control' name='razonSocial' id='razonSocial' required>";
 
 ?>

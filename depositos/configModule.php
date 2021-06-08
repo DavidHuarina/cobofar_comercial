@@ -12,4 +12,6 @@ $urlDelete="delete.php";
 $urlSave="save.php";
 $urlSaveEdit="saveEdit.php";
 $urlSaveDelete="";
+
+$urlListGuardarPDF="../rptArqueoDiarioPDF.php";
 ?>

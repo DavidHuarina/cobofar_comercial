@@ -292,7 +292,18 @@ echo "</table></center><br>";
 $html = ob_get_clean();
 
 $nombreFuncionario=nombreVisitador($rpt_funcionario);
-descargarPDFArqueoCaja("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html);
+if(!isset($_GET["ruta"])){	
+	descargarPDFArqueoCaja("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html);	
+}else{
+	$rutaCompleta=$_GET["ruta"];
+	$rutaCompleta=str_replace("@","/",$rutaCompleta);
+	guardarPDFArqueoCaja("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html,$rutaCompleta);
+	echo "<script language='Javascript'>
+      alert('Los datos fueron registrados exitosamente.');
+      location.href='depositos/list.php';
+      </script>";
+}
+
 ?>
 
 

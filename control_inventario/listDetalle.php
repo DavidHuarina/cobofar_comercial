@@ -316,7 +316,6 @@ function enviar_nav(f){
         	}           
         }
     });
-
   }
   function actualizarRegistrado(fila){
     var cantidad=parseInt($("#cantidad"+fila).val());
@@ -326,28 +325,93 @@ function enviar_nav(f){
     }else{
        $("#estado_glosa"+fila).html("<i class='material-icons text-success'>check_circle</i>");
     }
+    if(!$("#boton_refresh"+fila).hasClass("d-none")){
+    	$("#boton_refresh"+fila).addClass("d-none");	 
+    }
+  }
+  function filtrarExistenciasInventario(){
+  	var filtro = $("#filtro_existencias").val();
+  	var cod_inventario = $("#cod_inventario").val();
+  	var b_admin = $("#b_admin").val();
+  	window.location.href="listDetalle.php?c="+cod_inventario+"&b="+b_admin+"&f="+filtro;
+  }
+  function actualizarSaldoFilaInventario(fila){
+     Swal.fire({
+        title: '¿Esta seguro de actualizar el Saldo?',
+        text: "Se cambiará la fecha de saldo en la fila",
+         type: 'info',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-default',
+        confirmButtonText: 'Actualizar',
+        cancelButtonText: 'Cancelar',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            actualizarSaldoFilaInventarioAjax(fila);                
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+    });
+  }
+  function actualizarSaldoFilaInventarioAjax(fila){
+      var codigo=fila;
+      var fecha=$("#fecha"+fila).val();
+      var parametros={"codigo":codigo,"fecha":fecha};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_guardar_saldo_inventario_detalle.php",
+        data: parametros,
+        beforeSend: function () {
+          iniciarCargaAjax("Actualizando Saldo...");
+        },
+        success:  function (resp) {
+        	detectarCargaAjax();
+        	$("#cantidad_registrada"+fila).val(resp);
+        	$("#cantidad_stock"+fila).html(resp)           
+        }
+     });
   }
 </script>
 	<?php
 	$cod_ciudad=$_COOKIE['global_agencia'];
 	$cod_inventario=$_GET['c'];
+	$b_admin=$_GET['b'];
 	$sqlConf="select nombre from $table where codigo=$cod_inventario";
 	//echo $sqlConf;
     $respConf=mysqli_query($enlaceCon,$sqlConf);
     $nombreTxt=mysqli_result($respConf,0,0);
-
+    $stringFiltro=" and s.cantidad>0 ";$sel0="";$sel1="selected";$sel2="";
+    if(isset($_GET["f"])){
+    	switch ($_GET["f"]) {
+    		case '0':$stringFiltro=" and s.cantidad=0 ";$sel0="selected";$sel1="";$sel2=""; break;
+    		case '1':$stringFiltro=" and s.cantidad>0 ";$sel1="selected";$sel0="";$sel2=""; break;
+    		case '2':$stringFiltro="";$sel2="selected";$sel1="";$sel0=""; break;
+    	}    	
+    }
 	echo "<form method='post' action=''>";
-	$sql="SELECT s.codigo,s.cod_material,m.descripcion_material,s.cantidad,s.cantidad_registrada,s.observacion,s.revisado from $tableDetalle s join material_apoyo m on m.codigo_material=s.cod_material where s.cod_inventariosucursal=$cod_inventario order by m.descripcion_material";
+	$sql="SELECT s.codigo,s.cod_material,m.descripcion_material,s.cantidad,s.cantidad_registrada,s.observacion,s.revisado,s.fecha_saldo from $tableDetalle s join material_apoyo m on m.codigo_material=s.cod_material where s.cod_inventariosucursal=$cod_inventario $stringFiltro order by m.descripcion_material";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural '$nombreTxt'</h1>";
-
+	?>
+      <center><label class='text-muted'>Filtrar:</label> <select class='selectpicker' data-style='btn btn-info' id='filtro_existencias' onchange="filtrarExistenciasInventario()">
+      	     <option value='0' <?=$sel0?>>SIN EXISTENCIA</option>
+      	     <option value='1' <?=$sel1?>>CON EXISTENCIAS</option>
+      	     <option value='2' <?=$sel2?>>TODOS</option>
+      </select></center>
+      <br>
+      <input type="hidden" id="cod_inventario" value="<?=$cod_inventario?>">
+      <input type="hidden" id="b_admin" value="<?=$b_admin?>">
+	<?php
 	echo "<center><table class='table table-sm table-condensed table-bordered'>";
-	echo "<tr class='bg-principal text-white'>
+	echo "<tr class='bg-info text-white'>
 	<th width='1%'>&nbsp;</th>
 	<th>Codigo</th>
-	<th width='35%'>Producto</th>
-	<th width='3%'>Cantidad Presentación</th>
+	<th width='25%'>Producto</th>
+	<th>Fecha Saldo</th>
+	<th width='3%'>Existencia</th>
 	<th width='3%'>Cantidad Registrada</th>
 	<th style='background:#999999 !important' colspan='2'>Diferencia</th>
 	<th style='background:#999999 !important'>Observacion</th>
@@ -376,9 +440,12 @@ function enviar_nav(f){
 		$cantidad=$dat[3];
 		$cantidad_registrada=$dat[4];
 		$observacion=$dat[5];
+		$fechaSaldo=explode(" ",$dat['fecha_saldo'])[0];
 		$estiloCheck="btn btn-warning";
 		$estado_glosa="<i class='material-icons text-muted'>pending</i>";
+		$botonRefresh="<button class='btn btn-danger btn-sm btn-fab $disabled' id='boton_refresh$codigo'><i class='material-icons' title='Actualizar Saldo' onclick='actualizarSaldoFilaInventario($codigo);return false;'>refresh</i></button>";
 		if($dat[6]==1){
+			$botonRefresh="";
 		    $dif=$dat[3]-$dat[4];		
 			$estiloCheck="btn btn-success";
 			$estado_glosa="<i class='material-icons text-warning'>report_problem</i>";
@@ -392,14 +459,15 @@ function enviar_nav(f){
 
 		echo "<tr id='fila$codigo' class='filas'>
 		<td>$index</td>
-		<td style='background:#FCF6DA;font-weight:bold;'>$cod_material</td>
-		<td align='left' style='text-align:left;'>$nombre</td>
-		<td align='right' style='text-align:right'>$cantidad</td>
-		<td><input type='hidden' value='$cantidad' id='cantidad$codigo'><input type='number' class='texto' value='$cantidad_registrada' onfocus='marcarFila($codigo)' style='text-align:right' id='cantidad_registrada$codigo' onchange='restarFila($codigo)' onkeypress='restarFila($codigo)' onkeydown='restarFila($codigo)' $readonly></td>
+		<td style='text-align:left; background:#EEF0E9;color:#000;'>$cod_material</td>
+		<td align='left' style='text-align:left; background:#EEF0E9;color:#000;'>$nombre</td>
+		<td align='left' style='text-align:left; background:#EEF0E9;color:#000;'><input type='date' value='$fechaSaldo' id='fecha$codigo' class='form-control' min='$fechaSaldo' style='text-align:left; background:#EEF0E9;color:#000;'></td>
+		<td align='right' style='text-align:right' id='cantidad_stock$codigo'>$cantidad</td>
+		<td><input type='hidden' value='$cantidad' id='cantidad$codigo'><input type='number' class='texto' value='$cantidad_registrada' onfocus='marcarFila($codigo)' style='text-align:right' id='cantidad_registrada$codigo' onchange='restarFila($codigo)' onkeyup='restarFila($codigo)' onkeydown='restarFila($codigo)' $readonly></td>
 		<td id='diferencia$codigo'>$dif</td>
 		<td id='estado_glosa$codigo'>$estado_glosa</td>
 		<td><input class='texto' value='$observacion' onfocus='marcarFila($codigo)' style='text-align:left' id='observacion_registrada$codigo' placeholder='Ingrese la observación...' $readonly></td>
-		<td><button class='btn btn-info btn-sm btn-fab $disabled'><i class='material-icons' title='Guardar Inventario' onclick='guardarFilaInventario($codigo);return false;'>save</i></button></td>
+		<td>$botonRefresh<button class='btn btn-info btn-sm btn-fab $disabled'><i class='material-icons' title='Guardar Inventario' onclick='guardarFilaInventario($codigo);return false;'>save</i></button></td>
 		</tr>";
 	}
 	echo "</table></center><br>";

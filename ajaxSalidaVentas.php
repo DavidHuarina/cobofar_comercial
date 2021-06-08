@@ -7,7 +7,7 @@ $fechaIniBusqueda=$_GET['fechaIniBusqueda'];
 $fechaFinBusqueda=$_GET['fechaFinBusqueda'];
 $nroCorrelativoBusqueda=$_GET['nroCorrelativoBusqueda'];
 $verBusqueda=$_GET['verBusqueda'];
-$global_almacen=$_GET['global_almacen'];
+$global_almacen=$_COOKIE['global_almacen'];
 $clienteBusqueda=$_GET['clienteBusqueda'];
 
 $fechaIniBusqueda=formateaFechaVista($fechaIniBusqueda);
@@ -44,6 +44,7 @@ $consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC";
 
 //
 $resp = mysqli_query($enlaceCon,$consulta);
+//echo $consulta;
 	
 while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];
@@ -65,6 +66,16 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$anio_salida=intval("$fecha_salida[0]$fecha_salida[1]$fecha_salida[2]$fecha_salida[3]");
 	$globalGestionActual=intval($_COOKIE["globalGestion"]);
 	
+	$fecha_actual = strtotime(date("Y-m-d H:i:00",time()));
+    $fecha_entrada = strtotime($fecha_salida." ".$hora_salida." + 1 days");    
+    if($fecha_actual > $fecha_entrada){
+        $fechaValidacion=1;     
+    }
+
+    if(!isset($estado_preparado)){
+      $estado_preparado= "";  
+    }
+
     echo "<input type='hidden' name='fecha_salida$nro_correlativo' value='$fecha_salida_mostrar'>";
 	
 	$sqlEstadoColor="select color from estados_salida where cod_estado='$estado_almacen'";
@@ -91,18 +102,24 @@ while ($dat = mysqli_fetch_array($resp)) {
     echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     
-	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
-		<img src='imagenes/icon_detail.png' width='30' border='0' title='Detalle'></a></td>";
-	*/
+    $codTarjeta=$dat['cod_tipopago'];
+    if($codTarjeta==2){
+        echo "<td class='text-success'><b>SI</b></td>";
+    }else{
+        echo "<td class='text-muted'><b>NO</b></td>";
+    }    
 	if($codTipoDoc==1){
-		echo "<td  bgcolor='$color_fondo'><a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
-		echo "<td  bgcolor='$color_fondo'><a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a></td>";
-	}
-	else{
+        $htmlTarjeta="";
+        if($salida_anulada!=1&&$codTarjeta==1&&$fechaValidacion==0){
+            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>";
+        }
+		echo "<td  bgcolor='$color_fondo'>$htmlTarjeta<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>";
+		echo "</td>";
+        /*<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a>*/
+	}else{
 		echo "<td  bgcolor='$color_fondo'><a href='formatoNotaRemisionOficial.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 	}
 	
-	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
 	
 	echo "</tr>";
 }

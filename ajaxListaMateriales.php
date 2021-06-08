@@ -93,7 +93,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			}
 			$precioProducto=redondear2($precioProducto);
 			
-			echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>$nombre</a></div></td>
+			echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>($codigo) $nombre</a></div></td>
 			<td>$linea</td>
 			<td>$principiostring</td>
 			<td>$stockProducto</td>

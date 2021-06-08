@@ -28,7 +28,7 @@ if(isset($_POST["cod_salida"])){
 }
 
 $tipo_ingreso=$_POST['tipo_ingreso'];
-$nota_entrega=0;
+$nota_entrega=$_POST['nota_entrega'];
 $nro_factura=$_POST['nro_factura'];
 $observaciones=$_POST['observaciones'];
 $proveedor=$_POST['proveedor'];

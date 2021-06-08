@@ -18,7 +18,7 @@ require_once '../function_web.php';
 set_time_limit(0);
 
 //DATOS PARA LISTAR DOCUMENTOS
-$fechaDesde="01/03/2021";
+$fechaDesde="15/05/2021";
 $fechaHasta=date("d/m/Y");
 $fechaHastaFormato=date("Y-m-d");
 $ipOrigen="10.10.1.11";
@@ -33,7 +33,7 @@ $codAlmacenDestino=obtenerCodigoAlmacenPorCiudad($codCiudadDestino);
 ?><br><br><H4>LISTADO TRASPASOS PENDIENTES ENTRE SUCURSALES</H4><br><br>
 
 <table class="table table-bordered table-condensed">
-  <tr class='bg-success'><th>TIPO</th><th>DOCUMENTO</th><th>FECHA</th><th>SUCURSAL DESTINO</th><th>RESPONSABLE</th><th>SUCURSAL ORIGEN</th></tr>
+  <tr class='bg-success'><th>TIPO</th><th>DOCUMENTO</th><th>FECHA</th><th>SUCURSAL DESTINO</th><th>RESPONSABLE</th><th>SUCURSAL ORIGEN</th><th>P.COMPRA</th></tr>
 <?php
 $listAlma=obtenerListadoAlmacenes();//web service
 $contador=0;
@@ -42,7 +42,7 @@ foreach ($listAlma->lista as $alma) {
   $age1=$alma->age1;
   $cod_existe=verificarAlmacenCiudadExistente($age1);
   //QUERY SUCURSAL ORIGEN (ALMACEN)
-  $sql="SELECT am.DCTO,am.TIPO,am.GLO,am.FECHA,am.IDPROVEEDOR,am.IDPER2,am.DAGE1,am.PASO   FROM VMAESTRO am where am.STA!='B' AND am.TIPO='K' AND FECHA BETWEEN '$fechaDesde' AND '$fechaHasta' AND DAGE1 IN (SELECT AGE1 FROM ALMACEN WHERE TIPO='X')";
+  $sql="SELECT am.DCTO,am.TIPO,am.GLO,am.FECHA,am.IDPROVEEDOR,am.IDPER2,am.DAGE1,am.PASO,(SELECT SUM(PRECOMP) FROM VDETALLE WHERE DCTO=am.DCTO AND TIPO=am.tipo)PRECIO   FROM VMAESTRO am where am.STA!='B' AND am.TIPO='K' AND FECHA BETWEEN '$fechaDesde' AND '$fechaHasta' AND DAGE1 IN (SELECT AGE1 FROM ALMACEN WHERE TIPO='X')";
   //echo $sql;
   $ip=$alma->ip;
   /*$dbh = new ConexionFarma(); 
@@ -61,11 +61,12 @@ if($dbh!=false){
       $codPersonal=$row['IDPER2']; //revisar si guarda la columna con valores 0
       $codSucursalDestino=$row['DAGE1'];
       $codPaso=$row['PASO'];
+      $precioCompra=$row['PRECIO'];
       $datos=verificarIpDestinoAlmacen($codSucursalDestino);
       $ipDestino=$datos[0];
       $sucDestino=$datos[1];
       $codCiudadDestino=$cod_existe;  
-     $existeCon=verificarExisteTraspasoDocumentosSucursal("VDETALLE","VMAESTRO",$dctoOrigen,$ipDestino,strftime('%d/%m/%Y', strtotime($fechaOrigen)));          
+      $existeCon=verificarExisteTraspasoDocumentosSucursal("VDETALLE","VMAESTRO",$dctoOrigen,$ipDestino,strftime('%d/%m/%Y', strtotime($fechaOrigen)));          
       if((int)$existeCon>0){
         /*echo "<tr><td><small><small>".$alma->des."</small></small></td><td>".$ip."</td><td>".$codSucursalDestino."</td><td>".$codSucursalDestino."</td><td>".$ipDestino."</td><td>".$existeCon."</td><td>".$dctoOrigen."</td></tr>";*/
       }else{
@@ -79,7 +80,7 @@ if($dbh!=false){
         }
         /*echo "<tr style='background:red;color:#fff;'><td colspan='6'><small><small>".$alma->des."<br>".$ip."</small></small></td></tr>";*/
 
-        ?><tr style="background:<?=$background?>"><td><?=$tipoOrigen?></td><td><?=$dctoOrigen?></td><td><?=strftime('%d/%m/%Y', strtotime($fechaOrigen))?></td><td><?=$sucDestino?></td></td><td><?=obtenerNombrePersonalAbreviado($codPaso,$ip)?></td><td><?=$alma->des?></tr><?php
+        ?><tr style="background:<?=$background?>"><td><?=$tipoOrigen?></td><td><?=$dctoOrigen?></td><td><?=strftime('%d/%m/%Y', strtotime($fechaOrigen))?></td><td><?=$sucDestino?></td></td><td><?=obtenerNombrePersonalAbreviado($codPaso,$ip)?></td><td><?=$alma->des?></td><td><?=number_format($precioCompra,2,'.','')?></td></tr><?php
       }
     }  //fin de WHILE <?=obtenerNombrePersonalAbreviado($codPersonal,$ip)
   }

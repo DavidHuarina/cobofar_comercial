@@ -14,6 +14,7 @@
 $estilosVenta=1;
 require('conexionmysqli2.inc');
 require('funciones.php');
+require('funcion_nombres.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 
 ?>
@@ -95,13 +96,14 @@ $razonSocialCliente=mysqli_result($respDatosFactura,0,4);
 $razonSocialCliente=strtoupper($razonSocialCliente);
 $fechaFactura=mysqli_result($respDatosFactura,0,5);
 
-
+$cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
 $respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
+$tipoPago=1;
 while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$fechaVenta=$datDatosVenta[0];
 	$nombreTipoDoc=$datDatosVenta[1];
@@ -121,8 +123,10 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$montoCambio2=redondear2($montoCambio2);
 
 	$descuentoCabecera=$datDatosVenta['descuento'];
+	$cod_funcionario=$datDatosVenta['cod_chofer'];
+	$tipoPago=$datDatosVenta['cod_tipopago'];
 }
-
+$nombreFuncionario=nombreVisitador($cod_funcionario);
 $y=5;
 $incremento=3;
 ?>
@@ -228,8 +232,8 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$precioUnitFactura=redondear2($precioUnitFactura);
 	
 	?>
-    <table width="100%"><tr align="center" class="arial-7"><td><?=$codInterno?></td><td colspan="2"><?=$nombreMat?></td></tr>
-    <tr align="center" class="arial-8"><td><?="$cantUnit"?></td><td><?="$precioUnitFactura"?></td><td><?="$montoUnit"?></td></tr></table>
+    <table width="100%"><tr class="arial-7"><td align="left">(<?=$codInterno?>)</td><td colspan="2" align="left"><?=$nombreMat?></td></tr>
+    <tr class="arial-8"><td align="left"><?="$cantUnit"?></td><td align="right"><?="$precioUnitFactura"?></td><td align="right"><?="$montoUnit"?></td></tr></table>
 	<?php
 	$montoTotal=$montoTotal+$montoUnit;	
 	$yyy=$yyy+6;
@@ -278,10 +282,17 @@ $txtMonto=NumeroALetras::convertir($montoEntero);
 <table width="100%">
 	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Recibido:  $montoEfectivo2"?></td></tr>
 	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Cambio:  $montoCambio2"?></td></tr>
+	<?php 
+	if($tipoPago==2){
+	?>
+	<tr align="center" class="arial-8"><td width="60%"><?="PAGO CON TARJETA"?></td><td></td></tr>
+	<?php	
+	}?>
 </table>
 <label class="arial-12"><?="======================================"?></label><br>
 <label class="arial-12"><?="CODIGO DE CONTROL: $codigoControl"?></label><br>
 <label class="arial-12"><?="FECHA LIMITE DE EMISION: $fechaLimiteEmision"?></label><br>
+<label class="arial-12"><?="Cajero(a): $nombreFuncionario"?></label><br>
 <label class="arial-12"><?="--------------------------------------------------------"?></label><br>
 <div style="width:75%"><label class="arial-12"><?=$txt2?></label><br></div>
 <?php
@@ -317,5 +328,5 @@ if($txtGlosaDescuento!=""){
 </div>
 <script type="text/javascript">
  javascript:window.print();
- setTimeout(function () { window.location.href="registrar_salidaventas.php";}, 100);
+ setTimeout(function () { window.location.href="registrar_salidaventas.php";}, 1000);
 </script>

@@ -6,7 +6,7 @@
 	$codigo_salida=$_GET['codigo_salida'];
 	$almacen_origen=$_GET['almacen_origen'];
 	
-	$sql="select s.cod_ingreso_almacen, s.fecha, ts.nombre_tipoingreso, s.observaciones, s.nro_correlativo
+	$sql="select s.cod_ingreso_almacen, s.fecha, ts.nombre_tipoingreso, s.observaciones, s.nro_correlativo,s.nota_entrega
 	FROM ingreso_pendientes_almacenes s, tipos_ingreso ts
 	where s.cod_tipoingreso=ts.cod_tipoingreso and s.cod_almacen='$global_almacen' and s.cod_ingreso_almacen='$codigo_salida'";
 	//echo $sql;
@@ -15,7 +15,7 @@
 	echo "<h1>Detalle de Ingreso por Traspaso Central</h1>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>Nro. Salida (Origen)</th><th>Fecha</th><th>Tipo de Salida (Almacen Origen)</th><th>Observaciones</th></tr>";
+	echo "<tr><th>Nro</th><th>Nro. Doc K</th><th>Fecha</th><th>Tipo de Salida (Almacen Origen)</th><th>Observaciones</th></tr>";
 	$dat=mysqli_fetch_array($resp);
 	$codigo=$dat[0];
 	$fecha_salida=$dat[1];
@@ -23,7 +23,8 @@
 	$nombre_tiposalida=$dat[2];
 	$obs_salida=$dat[3];
 	$nro_correlativo=$dat[4];
-	echo "<tr><td align='center'>$nro_correlativo</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>&nbsp;$obs_salida</td></tr>";
+	$nota_entrega=$dat['nota_entrega'];
+	echo "<tr><td align='center'>$nro_correlativo</td><td align='center'>$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>&nbsp;$obs_salida</td></tr>";
 	echo "</table><br>";
 	
 	echo "<table class='texto'>";

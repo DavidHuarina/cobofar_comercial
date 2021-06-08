@@ -71,7 +71,7 @@ echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 	}
 	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Personal</th><td><select name='rpt_funcionario' id='rpt_funcionario' class='selectpicker form-control' data-live-search='true' data-size='6'>";
-	$sql="select codigo_funcionario, CONCAT(nombres,' ',paterno,' ',materno) from funcionarios where estado=1 order by 2";
+	$sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres"; 
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
 	{	$cod_funcionario=$dat[0];

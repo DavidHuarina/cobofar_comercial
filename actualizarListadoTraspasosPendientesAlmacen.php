@@ -14,7 +14,7 @@ while($detalle=mysqli_fetch_array($resp)){
    $codigo=$detalle[0];     
 }
 //DATOS PARA LISTAR DOCUMENTOS
-$fechaDesde="25/05/2021";
+$fechaDesde="18/05/2021";
 $fechaHasta=date("d/m/Y");
 $ipOrigen="10.10.1.11";
 $tabla_detalleOrigen="ADETALLE";

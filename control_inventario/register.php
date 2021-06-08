@@ -1,5 +1,5 @@
+<meta charset="utf-8">
 <?php
-
 require("../conexionmysqli.inc");
 require("../estilos2.inc");
 require("configModule.php");
