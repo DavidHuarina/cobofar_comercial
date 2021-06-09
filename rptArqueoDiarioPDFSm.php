@@ -90,6 +90,7 @@ while($datos=mysqli_fetch_array($resp)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
+	$montoVenta=ceil_dec($montoVenta,1,".");
 	$totalVenta=$totalVenta+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
@@ -104,8 +105,7 @@ while($datos=mysqli_fetch_array($resp)){
 	}
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	$totalEfectivoF=number_format($totalEfectivo,2,".",",");
-	$totalTarjetaF=number_format($totalTarjeta,2,".",",");
-	
+	$totalTarjetaF=number_format($totalTarjeta,2,".",",");	
 	
 }
 
@@ -129,7 +129,7 @@ while($datos=mysqli_fetch_array($respAnulado)){
 	
 
 }
-
+$totalGastos=0;
 $totalVentaAnuladaFormat=number_format($totalVentaAnulada,2,".",",");
 
 

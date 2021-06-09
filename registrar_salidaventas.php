@@ -127,7 +127,9 @@ function listaMateriales(f){
 			var oRows = document.getElementById('listaMaterialesTabla').getElementsByTagName('tr');
             var nFilas = oRows.length;					
 			if(parseInt(nFilas)==2){
-				document.getElementsByClassName('enlace_ref')[0].click();
+				if(ajax.responseText!=""){
+				  document.getElementsByClassName('enlace_ref')[0].click();	
+				}				
 				//$(".enlace_ref").click();
 			}
 			//
@@ -171,10 +173,11 @@ function actStock(indice){
 	contenedor=document.getElementById("idstock"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
     var codalm=document.getElementById("global_almacen").value;
-    console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
-	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
-	ajax.onreadystatechange=function() {
+    if(codmat>0){
+      console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
+	  ajax=nuevoAjax();
+	  ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
+	  ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			//console.log(ajax.responseText);
 			//alert(ajax.responseText);
@@ -183,10 +186,30 @@ function actStock(indice){
 			
 			ajaxCargarSelectDescuentos(indice);
 		}
-	}
-	//verificarReceta(codmat,indice);
-	totales();
-	ajax.send(null);
+	  }
+	  ajax.send(null);
+	  //verificarReceta(codmat,indice);
+	  totales();	
+    }
+}
+function actStockSinBucle(indice){
+	var contenedor;
+	contenedor=document.getElementById("idstock"+indice);
+	var codmat=document.getElementById("materiales"+indice).value;
+    var codalm=document.getElementById("global_almacen").value;
+    if(codmat>0){
+      console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
+	  ajax=nuevoAjax();
+	  ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
+	  ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			//console.log(ajax.responseText);
+			//alert(ajax.responseText);
+			$("#idstock"+indice).html(ajax.responseText);
+		}
+	  }
+	  ajax.send(null);	
+    }
 }
 function ajaxCargarSelectDescuentos(indice){
 	var contenedor;
@@ -267,7 +290,9 @@ function calculaMontoMaterial(indice){
 	montoUnitario=Math.round(montoUnitario*100)/100
 		
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;
-	
+	if(!$("#stock"+indice).val()>0){
+		actStockSinBucle(indice);
+	}
 	totales();
 }
 
@@ -585,6 +610,8 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
     $("#modalProductosSimilares").modal("hide");
+    $(".boton2peque").removeAttr("accessKey");
+    document.getElementById("removeFila"+numRegistro).accessKey= "q";
     actStock(numRegistro);
 }
 
@@ -607,6 +634,8 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	if(divi==1){
       $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
 	}		
+
+	$(".boton2peque").removeAttr("accessKey");
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat+" ("+cod+")";
 	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
@@ -620,6 +649,7 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
+	document.getElementById("removeFila"+numRegistro).accessKey= "q";
     actStock(numRegistro);
     obtenerLineaMaterial(cod,numRegistro);
 }

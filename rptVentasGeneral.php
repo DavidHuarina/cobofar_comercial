@@ -128,7 +128,7 @@ while($datos=mysqli_fetch_array($resp)){
 
 		$nombreItemSin = preg_replace("/[^a-zA-Z0-9]+/", "", $nombreItem);
 		$tablaDetalle.="<tr>		
-		<td><a href='#' style='font-size:14px' onclick='mostrarStockProducto(\"$codItem\",\"$nombreItemSin\");return false;'>$nombreItem</a></td>
+		<td><a href='#' style='font-size:14px' onclick='mostrarStockProducto(\"$codItem\",\"$nombreItemSin\");return false;'>($codItem) $nombreItem</a></td>
 		<td>$cantidadFormat</td>
 		<td>$montoPtr</td>		
 		</tr>";

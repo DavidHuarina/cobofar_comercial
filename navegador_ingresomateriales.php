@@ -228,7 +228,7 @@ echo"<td><input type='button' value='Buscar' class='btn btn-primary' onclick='Sh
 
 echo "<div id='divCuerpo'>";
 echo "<br><center><table class='table table-sm'>";
-echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Ingreso</th><th>Nro. Doc K</th><th>Fecha</th><th>Tipo de Ingreso</th>
+echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Numero Ingreso</th><th>Nro. Doc K</th><th>Nro.Doc Origen</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
 <th>Observaciones</th><th>&nbsp;</th></tr>";
 while ($dat = mysqli_fetch_array($resp)) {
@@ -247,6 +247,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     $hora_ingreso = $dat[2];
     $nombre_tipoingreso = $dat[3];
     $obs_ingreso = $dat[4];
+    $nroDocOrigen = $dat[5];
     $nota_entrega = $dat['nota_entrega'];
     if($nota_entrega==0){
       $nota_entrega="-";
@@ -277,7 +278,9 @@ while ($dat = mysqli_fetch_array($resp)) {
         $chkbox = "";
     }
     //$hora_ingreso $anio_ingreso $globalGestionActual ESTO MAS MOSTRABA EN FECHA
-    echo "<tr bgcolor='$color_fondo'><td align='center'>$chkbox</td><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td>
+    echo "<tr bgcolor='$color_fondo'><td align='center'>$chkbox</td><td align='center'>$nro_correlativo</td>
+    <td align='center'>&nbsp;$nota_entrega</td>
+    <td align='center'>&nbsp;$nroDocOrigen</td>
 	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso</td><td>$nombre_tipoingreso</td>
 	<td>&nbsp;$proveedor</td>
 	<td>&nbsp;$obs_ingreso</td><td align='center'>

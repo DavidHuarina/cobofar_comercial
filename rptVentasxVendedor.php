@@ -57,8 +57,7 @@ $totalVenta=0;
 while($datos=mysqli_fetch_array($resp)){	
 	$codItem=$datos[0];
 	$nombrePersona=$datos[1];
-	$montoVenta=$datos[2];
-	
+	$montoVenta=$datos[2];	
 	$montoPtr=number_format($montoVenta,2,".",",");
 	
 	$totalVenta=$totalVenta+$montoVenta;

@@ -7,7 +7,6 @@ require('conexionmysqli2.inc');
 require('funcion_nombres.php');
 require('funciones.php');
 
-
 $rpt_territorio=$_GET['rpt_territorio'];
 $rpt_funcionario=$_GET['rpt_funcionario'];
 $fecha_ini=$_GET['fecha_ini'];
@@ -54,17 +53,28 @@ $sql="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer
+	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
-	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
+	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' and s.cod_tipopago=1 ";
+
+$sqlTarjetas="select s.`fecha`,  
+	(select c.nombre_cliente from clientes c where c.`cod_cliente`=s.cod_cliente) as cliente, 
+	s.`razon_social`, s.`observaciones`, 
+	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
+	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
+	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes,
+	(SELECT nombre from bancos where codigo=(SELECT cod_banco FROM tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes))nombre_banco,(SELECT nro_tarjeta FROM tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes)numero_tarjeta
+	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
+	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' and s.cod_tipopago!=1 ";
 
 $sqlAnulado="select s.`fecha`,  
 	(select c.nombre_cliente from clientes c where c.`cod_cliente`=s.cod_cliente) as cliente, 
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer
+	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -72,20 +82,24 @@ $sqlAnulado="select s.`fecha`,
 
 if($variableAdmin==1){
 	$sql.=" and s.cod_tipo_doc in (1,2,3,4)";
+	$sqlTarjetas.=" and s.cod_tipo_doc in (1,2,3,4)";
 	$sqlAnulado.=" and s.cod_tipo_doc in (1,2,3,4)";
 }else{
 	$sql.=" and s.cod_tipo_doc in (1,4)";
+	$sqlTarjetas.=" and s.cod_tipo_doc in (1,4)";
 	$sqlAnulado.=" and s.cod_tipo_doc in (1,4)";
 }
 $sql.=" order by s.fecha, s.hora_salida";
+$sqlTarjetas.=" order by s.fecha, s.hora_salida";
 $sqlAnulado.=" order by s.fecha, s.hora_salida";
 
 $resp=mysqli_query($enlaceCon,$sql);
+$respTarjeta=mysqli_query($enlaceCon,$sqlTarjetas);
 $respAnulado=mysqli_query($enlaceCon,$sqlAnulado);
 
 
 echo "<br><table align='center' class='textomediano' width='70%'>
-<tr><th colspan='8'>Detalle de Ventas</th></tr>
+<tr><th colspan='8'>Detalle de Ventas (EFECTIVO)</th></tr>
 <tr>
 <th>Fecha</th>
 <th>Personal</th>
@@ -99,21 +113,21 @@ echo "<br><table align='center' class='textomediano' width='70%'>
 
 $totalVenta=0;
 $totalEfectivo=0;
-$totalTarjeta=0;
-while($datos=mysqli_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){
+    $codigoSalida=$datos['cod_salida_almacenes'];	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
 	$razonSocial=$datos[2];
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
+	$montoVenta=ceil_dec($montoVenta,1,".");
 	$totalVenta=$totalVenta+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
 	$personalCliente=nombreVisitador($datos['cod_chofer']);
-	
-	
+		
 	if($codTipoPago==1){
 		$totalEfectivo+=$montoVenta;
 	}else{
@@ -147,7 +161,72 @@ echo "<tr>
 	<th>Total Efectivo:</th>
 	<th align='right'>$totalEfectivoF</th>
 </tr>";
+echo "</table></br>";
+
+//VENTAS TARJETA
+
+
+echo "<br><table align='center' class='textomediano' width='70%'>
+<tr><th colspan='10'>Detalle de Ventas (TARJETA)</th></tr>
+<tr>
+<th>Fecha</th>
+<th>Personal</th>
+<th>Cliente</th>
+<th>Razon Social</th>
+<th>Observaciones</th>
+<th>TipoPago</th>
+<th>Documento</th>
+<th>Banco</th>
+<th>Tarjeta</th>
+<th>Monto [Bs]</th>
+</tr>";
+
+$totalTarjeta=0;
+while($datos=mysqli_fetch_array($respTarjeta)){
+    $codigoSalida=$datos['cod_salida_almacenes'];	
+	$fechaVenta=$datos[0];
+	$nombreCliente=$datos[1];
+	$razonSocial=$datos[2];
+	$obsVenta=$datos[3];
+	$datosDoc=$datos[4]."-".$datos[5];
+	$montoVenta=$datos[6];
+	$montoVenta=ceil_dec($montoVenta,1,".");
+	$totalVenta=$totalVenta+$montoVenta;
+	$codTipoPago=$datos[7];
+	$nombreTipoPago=$datos[8];
+	$horaVenta=$datos[9];
+	$bancoNombre=$datos['nombre_banco'];
+	$tarjetaNumero=$datos['numero_tarjeta'];
+	$personalCliente=nombreVisitador($datos['cod_chofer']);
+		
+	if($codTipoPago==1){
+		$totalEfectivo+=$montoVenta;
+	}else{
+		$montoVenta=number_format($montoVenta,1,'.','');
+		$totalTarjeta+=$montoVenta;
+	}
+	$montoVentaFormat=number_format($montoVenta,2,".",",");
+	$totalEfectivoF=number_format($totalEfectivo,2,".",",");
+	$totalTarjetaF=number_format($totalTarjeta,2,".",",");
+	
+	echo "<tr>
+	<td>$fechaVenta $horaVenta</td>
+	<td>$personalCliente</td>
+	<td>$nombreCliente</td>
+	<td>$razonSocial</td>
+	<td>$obsVenta</td>
+	<td>$nombreTipoPago</td>
+	<td>$datosDoc</td>
+	<td>$bancoNombre</td>
+	<td align='right'>$tarjetaNumero</td>
+	<td align='right'>$montoVentaFormat</td>
+	</tr>";
+}
+
+$totalVentaFormat=number_format($totalVenta,2,".",",");
 echo "<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
@@ -157,7 +236,7 @@ echo "<tr>
 	<th>Total Tarjeta Deb/Cred:</th>
 	<th align='right'>$totalTarjetaF</th>
 </tr>";
-echo "<tr>
+/*echo "<tr>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
@@ -166,9 +245,27 @@ echo "<tr>
 	<td>&nbsp;</td>
 	<th>Total Ingresos:</th>
 	<th align='right'>$totalVentaFormat</th>
-</tr>";
+</tr>";*/
 echo "</table></br>";
 
+
+
+echo "<br><table align='center' class='textomediano' width='70%'>";
+
+$totalVentaFormat=number_format($totalVenta,2,".",",");
+echo "<tr>
+	<th>Total Efectivo:</th>
+	<th align='right'>$totalEfectivoF</th>
+</tr>";
+echo "<tr>
+	<th>Total Tarjeta Deb/Cred:</th>
+	<th align='right'>$totalTarjetaF</th>
+</tr>";
+echo "<tr>
+	<th>Total Ingresos:</th>
+	<th align='right'>$totalVentaFormat</th>
+</tr>";
+echo "</table></br>";
 
 
 //VENTAS ANULADAS

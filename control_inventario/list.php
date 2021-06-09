@@ -302,6 +302,7 @@ function enviar_nav(f){
 	<th>&nbsp;</th>
 	<th width='20%'>Nombre</th>
 	<th>Sucursal</th>
+	<th>Proveedor</th>
 	<th>Responsable</th>
 	<th>Fecha</th>
 	<th style='background:#999999 !important'><i class='material-icons' style='font-size:14px'>today</i> F. Inicio Revisión</th>
@@ -311,6 +312,7 @@ function enviar_nav(f){
 	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
+		$nombreProveedor=obtenerProveedorLineaInventario($codigo);
 		$nombre=$dat[1];
 		
 		if($dat['fecha_iniciorevision']==""){
@@ -359,6 +361,7 @@ function enviar_nav(f){
 		<td>$inputcheck</td>
 		<td>$nombre</td>
 		<td>$ciudad</td>
+		<td>$nombreProveedor</td>
 		<td><small>$responsable</small></td>
 		<td>$fecha</td>
 		<td>$desde</td>

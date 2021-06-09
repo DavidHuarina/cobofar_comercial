@@ -1072,6 +1072,33 @@ function obtenerCargoPersonal($codigo){
   return $codigo;
 }
 
+function ceil_dec($number,$precision,$separator)
+{
+    $numberpart=explode($separator,$number); 
+$numberpart[1]=substr_replace($numberpart[1],$separator,$precision,0);
+    if($numberpart[0]>=0)
+    {$numberpart[1]=ceil($numberpart[1]);}
+    else
+    {$numberpart[1]=floor($numberpart[1]);}
 
+    $ceil_number= array($numberpart[0],$numberpart[1]);
+    return implode($separator,$ceil_number);
+}
+
+function obtenerProveedorLineaInventario($codigo){
+  require("conexionmysqli2.inc");
+  $sql_detalle="SELECT DISTINCT p.nombre_proveedor 
+	FROM inventarios_sucursal_detalle d 
+	JOIN material_apoyo m on m.codigo_material=d.cod_material
+	JOIN proveedores_lineas l on l.cod_linea_proveedor=m.cod_linea_proveedor
+	JOIN proveedores p on p.cod_proveedor=l.cod_proveedor
+	where d.cod_inventariosucursal=$codigo";
+  $proveedor="";			
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $proveedor=$detalle[0];	
+  } 
+  return $proveedor; 
+}
 
 ?>
