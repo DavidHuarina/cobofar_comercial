@@ -22,13 +22,27 @@ require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 $globalFuncionario=$_COOKIE["global_usuario"];
 $fecha_rptdefault=date("Y-m-d");
+if($_COOKIE["admin_central"]==1){
+	$global_tipoalmacen=1;
+}
+
 $globalCiudad=$_COOKIE["global_agencia"];
+if(isset($_POST["rpt_territorio"])){
+	$rpt_territorio=$_POST["rpt_territorio"];
+}else{
+	$rpt_territorio=$_COOKIE["global_agencia"];
+}
 echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Vendedor</th></tr></table><br>";
 echo"<form method='post' action=''>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	echo "<tr><th align='left'>Sucursal</th><td><select name='rpt_territorio' class='selectpicker' data-live-search='true' data-size='6'>";
-	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
+	if($global_tipoalmacen==1)
+	{	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
+	}
+	else
+	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
+	}
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
 	while($dat=mysqli_fetch_array($resp))
@@ -37,14 +51,22 @@ echo"<form method='post' action=''>";
 		if($globalCiudad==$codigo_ciudad){
 		   echo "<option value='$codigo_ciudad' selected>$nombre_ciudad</option>";	
 		}else{
-		   if(isset($_GET["admin"])){
+		   //if(isset($_GET["admin"])){
 			  echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";	
-		   }			
+		   //}			
 		}
 	}
 	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Personal</th><td><select name='rpt_personal' multiple class='selectpicker' data-live-search='true' data-size='6' data-actions-box='true' data-style='btn btn-info'>";
-	$sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres";
+
+	if($global_tipoalmacen==1)
+	{	$sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios order by paterno,materno,nombres";
+	}
+	else
+	{	$sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres";
+	}
+
+	
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
 	while($dat=mysqli_fetch_array($resp))
