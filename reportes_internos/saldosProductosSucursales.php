@@ -28,7 +28,8 @@ require_once '../function_web.php';
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Div</th>
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Saldo</th>
         <th style='background: #EFDCA2 !important;font-weight: bold;'>Tipo</th> 
-        <th style='background: #EFDCA2 !important;font-weight: bold;'>Precio</th> 
+        <th style='background: #EFDCA2 !important;font-weight: bold;'>Precio</th>
+        <th style='background: #EFDCA2 !important;font-weight: bold;'>Precio Final</th> 
 </tr>
    </thead>
 <?php
@@ -198,9 +199,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
    $saldos=$row['SALDOS'];
    $tipo=$row['TIPO'];
    $div=$row['CANENVASE']; 
-   $precio=$row['PRECIO1'];
+   $descto=$row['DESCTO']; 
+   $precio1=$row['PRECIO'];
+   $precio1=$precio1-($precio1*($descto/100));
+   $precio1=number_format($precio1,2,'.','');
+   $precio=$precio1;
    if($row['SICO']=="N"){
-     $precio=$precio-($precio*(7/100));
+     $precio=$precio1-($precio1*(7/100));
    } 
        ?><tr>
           <td class='font-weight-bold'><?=$nombre?></td>
@@ -209,7 +214,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           <td><?=$div?></td>
           <td><?=$saldos?></td>
           <td><?=$tipo?></td>
-          <td><?=number_format($precio,2,'.','')?></td>
+          <td><?=$precio1?></td>
+          <td><?=number_format($precio,4,'.','')?></td>
         </tr><?php
       }
  }

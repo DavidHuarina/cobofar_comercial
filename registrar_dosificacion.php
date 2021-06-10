@@ -21,7 +21,7 @@ echo "<tr><th>Sucursal</th>";
 $sql1="select cod_ciudad, descripcion from ciudades order by 2;";
 $resp1=mysql_query($sql1);
 echo "<td>
-			<select name='cod_sucursal' id='cod_sucursal' required>
+			<select name='cod_sucursal' id='cod_sucursal' required class='selectpicker'>
 			<option value=''></option>";
 			while($dat1=mysql_fetch_array($resp1))
 			{	$codCiudad=$dat1[0];
@@ -51,6 +51,9 @@ echo "<td>
 	echo "</select>
 </td>";
 echo "</tr>";
+echo "<tr><th>Nro Inicio</th>
+	<td><input type='text' name='nro_inicio' id='nro_inicio' style='width:80px;height:20px' required value='1'></td>
+	</tr>";
 echo "</table></center>";
 
 echo "<div class='divBotones'>

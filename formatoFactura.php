@@ -10,6 +10,9 @@
      document.body.innerHTML = contenidoOriginal;
 }
 </script>
+<style type="text/css">
+	body {color:#727371 }
+</style>
 <?php
 $estilosVenta=1;
 require('conexionmysqli2.inc');
@@ -18,15 +21,16 @@ require('funcion_nombres.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 
 ?>
+<body>
 <style type="text/css">
 	.arial-12{
-        font-size: 14px;
+        font-size: 16px;  /*14*/
 	}
 	.arial-7{
-        font-size: 12px;
+        font-size: 14px;  /*14*/
 	}
 	.arial-8{
-        font-size: 13px;
+        font-size: 15px;  /*14*/
 	}
 </style>
 <?php
@@ -280,18 +284,19 @@ $txtMonto=NumeroALetras::convertir($montoEntero);
 ?>
 <label class="arial-12"><?="Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos"?></label>
 <table width="100%">
-	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Recibido:  $montoEfectivo2"?></td></tr>
-	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Cambio:  $montoCambio2"?></td></tr>
+	<tr align="center" class="arial-8"><td width="50%"></td><td><?="Total Recibido:  $montoEfectivo2"?></td></tr>
+	<tr align="center" class="arial-8"><td width="50%"></td><td><?="Total Cambio:  $montoCambio2"?></td></tr>
 	<?php 
 	if($tipoPago==2){
 	?>
-	<tr align="center" class="arial-8"><td width="60%"><?="PAGO CON TARJETA"?></td><td></td></tr>
+	<tr align="center" class="arial-8"><td width="50%"><?="PAGO CON TARJETA"?></td><td></td></tr>
 	<?php	
 	}?>
 </table>
 <label class="arial-12"><?="======================================"?></label><br>
 <label class="arial-12"><?="CODIGO DE CONTROL: $codigoControl"?></label><br>
 <label class="arial-12"><?="FECHA LIMITE DE EMISION: $fechaLimiteEmision"?></label><br>
+<label class="arial-12"><?="Proceso: $codigoVenta"?></label><br>
 <label class="arial-12"><?="Cajero(a): $nombreFuncionario"?></label><br>
 <label class="arial-12"><?="--------------------------------------------------------"?></label><br>
 <div style="width:75%"><label class="arial-12"><?=$txt2?></label><br></div>
@@ -326,6 +331,7 @@ if($txtGlosaDescuento!=""){
 ?>
 </center>
 </div>
+</body>
 <script type="text/javascript">
  javascript:window.print();
  setTimeout(function () { window.location.href="registrar_salidaventas.php";}, 1000);

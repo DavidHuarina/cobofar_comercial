@@ -199,10 +199,9 @@ function stockProductoFechas($almacen, $item,$fechaActual){
 	$cant_salidas2=$dat_salidas[0];
 	$stock2Caja=$cant_ingresos2-$cant_salidas2;
 	//echo $sql_ingresos;
-    $cantPres=obtenerCantidadPresentacionProducto($item);
-    
+    $cantPres=obtenerCantidadPresentacionProducto($item);    
 
-	return $stock2+($stock2Caja/$cantPres);
+	return $stock2+($stock2Caja*$cantPres);
 }
 
 function precioProductoAlmacen($ciudad, $item){
@@ -237,7 +236,7 @@ function stockProductoVencido($almacen, $item){
 
     $cantPres=obtenerCantidadPresentacionProducto($item);
     
-	return $stock2+($stock2Caja/$cantPres);
+	return $stock2+($stock2Caja*$cantPres);
 }
 
 function stockMaterialesEdit($almacen, $item, $cantidad){
@@ -382,12 +381,18 @@ function numeroCorrelativo($tipoDoc){
 		$numFilasValidar=mysqli_result($respValidar,0,0);
 		
 		if($numFilasValidar==1){
+			
+
 			$sqlCodDosi="select cod_dosificacion from dosificaciones d 
 			where d.cod_sucursal='$globalAgencia' and d.cod_estado=1 and d.tipo_dosificacion=2";
 			$respCodDosi=mysqli_query($enlaceCon,$sqlCodDosi);
 			$codigoDosificacion=mysqli_result($respCodDosi,0,0);
+			$sqlCodDosi="select nro_inicio from dosificaciones d 
+			where d.cod_dosificacion='$codigoDosificacion'";
+			$respCodDosi=mysqli_query($enlaceCon,$sqlCodDosi);
+			$nroInicio=mysqli_result($respCodDosi,0,0);
 		
-			if($tipoDoc==1){//validamos la factura para que trabaje con la dosificacion
+			if($tipoDoc==4){//validamos la factura para que trabaje con la dosificacion
 				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
 				and cod_dosificacion='$codigoDosificacion'";	
 			}else{
@@ -396,7 +401,9 @@ function numeroCorrelativo($tipoDoc){
 			//echo $sql;
 			$resp=mysqli_query($enlaceCon,$sql);
 			$codigo=mysqli_result($resp,0,0);
-			
+
+			//NUMERO INICIO
+			$codigo=($nroInicio-1)+$codigo;
 			$vectorCodigo = array($codigo,$banderaErrorFacturacion,$codigoDosificacion);
 			return $vectorCodigo;
 		}else{

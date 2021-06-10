@@ -36,7 +36,15 @@ if ($num_filas != 0) {
 	setcookie("global_almacen",$global_almacen,time()+3600*24*30, '/');
 	setcookie("globalGestion", $nombreG,time()+3600*24*30, '/');
 	
-    if($usuario==2||$usuario==1||$usuario==387||$usuario==392||$usuario==391||$usuario==8){
+
+	if($cod_ciudad==-1){ //PARA REPORTES DE ALMACEN
+       setcookie("admin_central",1,time()+3600*24*30, '/');
+	}else{
+	   setcookie("admin_central",0,time()+3600*24*30, '/');	
+	}
+
+
+    if($usuario==2||$usuario==1||$usuario==387||$usuario==392||$usuario==391||$usuario==8||$usuario==22){
     	header("location:indexReportes.php");
     }else{
     	if($cod_cargo==1000||$cod_cargo==1001 || $cod_cargo==1017 || $cod_cargo==1018){

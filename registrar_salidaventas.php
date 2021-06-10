@@ -2115,6 +2115,6 @@ if($banderaErrorFacturacion==0){
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
- <script type="text/javascript">mueveReloj();nuevaInstitucion();</script>
+ <script type="text/javascript">nuevaInstitucion();</script>
 </body>
 </html>

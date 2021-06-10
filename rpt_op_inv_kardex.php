@@ -28,8 +28,11 @@ echo "<script language='JavaScript'>
 		}
 		</script>";
 require("conexionmysqli.inc");
+if($_COOKIE["admin_central"]==1){
+	$global_tipoalmacen=1;
+}
 if(isset($global_tipoalmacen)&&$global_tipoalmacen==1)
-{	require("estilos_almacenes_central.inc");
+{	require("estilos_almacenes.inc");
 }
 else
 {	require("estilos_almacenes.inc");
@@ -78,7 +81,7 @@ $fecha_rptdefault=date("d/m/Y");
 echo "<h1>Reporte Kardex de Existencia Fisica</h1><br>";
 echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
-	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' id='rpt_territorio' class='selectpicker form-control' onChange='cargalistadoAlmacenes()'>";
+	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' id='rpt_territorio' class='selectpicker form-control' data-size='6' data-live-search='true' onChange='cargalistadoAlmacenes()'>";
 	if($global_tipoalmacen==1)
 	{	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	}

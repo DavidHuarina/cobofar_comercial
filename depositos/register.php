@@ -68,14 +68,14 @@ echo "<form action='$urlSave' method='post' onsubmit='monstrarLoad()' enctype='m
 
 echo "<h1>$moduleNameSingular</h1>";
 ?>
-<center>
+<!--<center>
 <div class="alert alert-warning col-sm-8" role="alert">
   <h4 class="alert-heading">Estimado Usuario</h4>
   <p>Modificamos el proceso de Registro de Depósitos, ya no es necesario generar el PDF del cierre y subir el archivo, ahora este se guarda automaticamente.</p>
   <hr>
   <p class="mb-0">Departamento de Sistemas - COBOFAR</p>
 </div>
-</center>
+</center>-->
 <?php
 echo "<center><table class='table table-sm' width='60%'>";
 
