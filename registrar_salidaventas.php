@@ -27,6 +27,12 @@
         Mousetrap.bind('alt+q', function(){ if(num>0){var numeroFila=num;menos(numeroFila);} return false;});
         Mousetrap.bind('alt+r', function(){ guardarRecetaVenta(); return false;});
         //Mousetrap.bind('alt+t', function(){ $("#tipo_comprobante").focus(); return false; });
+        $('[data-toggle="tooltip"]').tooltip({
+              animated: 'swing', //swing expand
+              placement: 'right',
+              html: true,
+              trigger : 'hover'
+          });
     });
 
 function guardarVentaGeneral(){
@@ -1461,13 +1467,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 	</select>
 	<!--<input type="hidden" name="tipoPrecio" value="1">-->
 </td>
-<td><a href="#" title="Registrar Nuevo Cliente" onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a>
+<td><a href="#" title="Registrar Nuevo Cliente" data-toggle='tooltip' onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a>
 	<a href="#" onclick="guardarPedido(0)"
-	class="btn btn-danger btn-sm btn-fab float-right" style="background:#900C3F;color:#fff;" title="GUARDAR VENTA PERDIDA"><i class="material-icons">search_off</i></a>
+	class="btn btn-danger btn-sm btn-fab float-right" style="background:#900C3F;color:#fff;" title="GUARDAR VENTA PERDIDA" data-toggle='tooltip'><i class="material-icons">search_off</i></a>
 <a href="#" onclick="cambiarTipoVenta2()"
-	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
+	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" data-toggle='tooltip' id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
 	<a href="#" onclick="guardarRecetaVenta()"
-	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" id="boton_receta"><i class="material-icons">medical_services</i></a>
+	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" data-toggle='tooltip' id="boton_receta"><i class="material-icons">medical_services</i></a>
 </td>
 </tr>
 
@@ -1673,7 +1679,7 @@ if($banderaErrorFacturacion==0){
             </div>	       
             <h2 style='font-size:11px;color:#9EA09E; display:none;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
             
-            <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
+            <table style='width:450px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
             <tr>
                <td style='display:none;font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
              </tr>
@@ -1682,11 +1688,11 @@ if($banderaErrorFacturacion==0){
              </tr>
             <tr>
                <td style='font-size:12px;color:#0691CD; font-weight:bold;'>MONTO RECIBIDO Bs.</td>
-               <td style='font-size:12px;color:#189B22; font-weight:bold; display:none;'>EFECTIVO $ USD</td>
+               <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:#A5F9EA !important;'  class='form-control' step='any' value='0' required></td>
-               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
+               <td width='50%'><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:40px;font-size:35px;width:100%;background:#C4BDBD !important;'  class='form-control' step='any' value='0' required></td>
+               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:40px;font-size:35px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#059336;'step='any' class='form-control' value='0'></td>
              </tr>
             </table>
 
@@ -1710,7 +1716,7 @@ if($banderaErrorFacturacion==0){
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-md">
     <div class="modal-content card">
                <div class="card-header card-header-primary card-header-icon">
                   <div class="card-icon" style="background: #96079D;color:#fff;">
@@ -1747,7 +1753,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
                   <div class="col-sm-9">
                     <div class="form-group">
-                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" step="any" value=""/>
+                      <input class="form-control" type="number" id="monto_tarjeta" name="monto_tarjeta" style='height:40px;font-size:35px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#057793;' step="any" value=""/>
                     </div>
                   </div>
                 </div> 
