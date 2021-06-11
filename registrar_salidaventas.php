@@ -120,7 +120,7 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio+"&codProv="+codTipo,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {			
 			contenedor.innerHTML = ajax.responseText;
@@ -1500,22 +1500,22 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 400px; top:30px; left:50px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 600px; top:30px; left:50px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
 <div id="divboton" style="position: absolute; top:20px; left:1210px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:1150px; height:350px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:1150px; height:550px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
-			<tr><th>Linea</th><th>Forma F.</th><th>Accion T.</th></tr>
+			<tr><th>Proveedor</th><th>Forma F.</th><th>Accion T.</th></tr>
 			<tr>
-			<td><select class="textogranderojo" name='itemTipoMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-warning text-dark'-->
 			<?php
-			$sqlTipo="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
-			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
+			$sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
+			where p.estado_activo=1 order by 2;";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){
@@ -1527,7 +1527,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td><select class="textogranderojo" name='itemFormaMaterial' style="width:300px">
+			<td width="40%"><select class="selectpicker" data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' name='itemFormaMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1542,7 +1542,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td><select class="textogranderojo" name='itemAccionMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker" data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' name='itemAccionMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1559,7 +1559,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</td>
 			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
 	     <tr>		
-			<td><select class="textogranderojo" name='itemPrincipioMaterial' style="width:300px">
+			<td><select class="selectpicker" data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' name='itemPrincipioMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
 			where pl.estado=1 order by 2;";
