@@ -24,6 +24,31 @@ function envia_formulario(f)
 	window.open('rptVentasSucursal.php?codTipoTerritorio='+codTipoTerritorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&codTipoPago='+codTipoPago+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,height=800');			
 	return(true);
 }
+function envia_formulario_detalle(f)
+{	var fecha_ini, fecha_fin;
+	
+	var codTipoPago=new Array();
+	var j=0;
+	for(var i=0;i<=f.rpt_tipopago.options.length-1;i++)
+	{	if(f.rpt_tipopago.options[i].selected)
+		{	codTipoPago[j]=f.rpt_tipopago.options[i].value;
+			j++;
+		}
+	}
+	var codTipoTerritorio=new Array();
+	var j=0;
+	for(var i=0;i<=f.rpt_territorio.options.length-1;i++)
+	{	if(f.rpt_territorio.options[i].selected)
+		{	codTipoTerritorio[j]=f.rpt_territorio.options[i].value;
+			j++;
+		}
+	}
+	
+	fecha_ini=f.exafinicial.value;
+	fecha_fin=f.exaffinal.value;
+	window.open('rptVentasSucursal_detalle.php?codTipoTerritorio='+codTipoTerritorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&codTipoPago='+codTipoPago+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,height=800');			
+	return(true);
+}
 </script>
 <?php
 
@@ -79,6 +104,7 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	echo"\n </table><br>";
 	require('home_almacen.php');
 	echo "<center><input type='button' name='reporte' value='Ver Reporte' onClick='envia_formulario(this.form)' class='btn btn-primary'>
+	 <input type='button' name='reporte_detalle' value='Ver Reporte Detallado' onClick='envia_formulario_detalle(this.form)' class='btn btn-info'>
 	</center><br>";
 	echo"</form>";
 	echo "</div>";

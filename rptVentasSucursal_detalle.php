@@ -41,7 +41,7 @@ $nombre_territorio=str_replace(",",", ", $nombre_territorio);
             overflow:scroll;
         }
     </style>
-<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Sucursal
+<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Sucursal X Día
 	<br> De: <?=$fecha_ini?> A: <?=$fecha_fin?>
 	<br>Fecha Reporte: <?=$fecha_reporte?></tr></table>
 	<center><div style='width:70%;text-align:center;'><b>Sucursales:</b><br><small><?=$nombre_territorio?></small></div></center>
@@ -56,10 +56,11 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
 <tr><th width="5%">N.</th><th><small>Sucursal</small></th>
 <?php
 $cantidadMes=0;
-while($tiempoInicio <= $tiempoFin){
-	$fechaActual = date("Y-m-d", $tiempoInicio);
-	?><th><small><?=strftime('%b %Y', strtotime($fechaActual))?></small></th><?php
-	$tiempoInicio += strtotime("+1 month","$fechaActual");
+//***
+$fechaActual = date("Y-m-d", $tiempoInicio);
+while($fechaActual <= $fecha_finconsulta){ 
+	?><th><small><?=$fechaActual?></small></th><?php
+  $fechaActual=date('Y-m-d',strtotime($fechaActual.'+1 day'));
 	$cantidadMes++;
 }
 ?>
@@ -79,38 +80,50 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
 	$nombreSuc=$datosSuc[1];
 	?><tr><th><?=$index?></th><th><?=$nombreSuc?></th><?php
   $tiempoInicio2 = strtotime($fecha_iniconsulta);
+  $tiempoInicio_dia = $fecha_iniconsulta;
+  $tiempoInicio_dia_fin = $fecha_finconsulta;
   $cantidadMes2=0;
-  while($tiempoInicio2 <= $tiempoFin){
+  $monto_anterior=0;
+  while($tiempoInicio_dia <= $tiempoInicio_dia_fin){
   	//obtener rangos del mes
-  	$dateInicio = date("Y-m", $tiempoInicio2)."-01";
-  	$dateFin = date("Y-m-t", $tiempoInicio2);
+    $dateInicio =  $tiempoInicio_dia;
+    $dateFin = $tiempoInicio_dia;
+  	//$dateInicio = date("Y-m", $tiempoInicio2)."-01";
+  	//$dateFin = date("Y-m-t", $tiempoInicio2); 
   	//para listar desde el dia escogido en el primer y ultimo mes
-  	if($cantidadMes2==0){
-  		$dateInicio=date('Y-m', strtotime($fecha_iniconsulta))."-".$diaPrimerMes;
-  	}
-  	if($cantidadMes2==$cantidadMes){
-      $dateFin=date('Y-m', strtotime($fecha_finconsulta))."-".$diaUltimoMes;
-  	}
-    
     if(obtenerValorConfiguracion(32)==1){
       $montoVenta=obtenerMontoVentasGeneradasAnterior(formatearFecha2($dateInicio),formatearFecha2($dateFin),obtenerCodigoAlmacenPorCiudad($codigoSuc));
     }else{
       $montoVenta=obtenerMontoVentasGeneradas($dateInicio,$dateFin,$codigoSuc,$codTipoPago);
     }  	
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
+    
+    if($monto_anterior<$montoVenta){
+      $sw_stylo='<i class="material-icons" style="color:green;">arrow_upward</i>';
+    }else{
+        $sw_stylo='<i class="material-icons" style="color:red">arrow_downward</i>';
+    }
+    if($monto_anterior==0){
+      $sw_stylo=''; 
+    }
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
-  		?><td class="text-right"><?=number_format($montoVenta,2,'.',',')?></td><?php
+  		?><td class="text-right"><?=number_format($montoVenta,2,'.',',')?><?=$sw_stylo?></td><?php
   	}else{
       ?>
-        <td class='text-muted text-right'><?=number_format($montoVenta,2,'.',',')?></td>
+        <td class='text-muted text-right'><?=number_format($montoVenta,2,'.',',')?><?=$sw_stylo?></td>
       <?php 
   		
   	}
     // para sumar mes
-  	$fechaActual = date("Y-m-d", $tiempoInicio2);  	
-  	$tiempoInicio2 += (float)strtotime("+1 month","$fechaActual");
+  	//$fechaActual = date("Y-m-d", $tiempoInicio2);  	
+  	//tiempoInicio2 += (float)strtotime("+1 month","$fechaActual");
+      $tiempoInicio_dia=date('Y-m-d',strtotime($tiempoInicio_dia.'+1 day'));
+      
+      if($montoVenta!=0){
+        $monto_anterior=$montoVenta;
+      }
   }
-
+  
       ?><th class="text-right"><?=number_format($totalesHorizontal,2,'.',',')?></th>  
   <?php
   

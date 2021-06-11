@@ -2,7 +2,7 @@
 set_time_limit(0);
 error_reporting(0);
 
-$enlaceCon=mysqli_connect("p:127.0.0.1","root","","farmaciascomercial");
+$enlaceCon=mysqli_connect("p:localhost","root","","farmaciascomercial");
 if (mysqli_connect_errno())
 {
 	echo "Error en la conexión: " . mysqli_connect_error();

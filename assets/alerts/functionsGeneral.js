@@ -276,7 +276,7 @@ function totalesTablaVertical(tabla,columna,fila){
             var subtotalF=number_format(subtotal,2); 
             console.log("subtotal: "+subtotal);
       }
-      var html='<th>'+subtotalF+'</th>';
+      var html='<th style="text-align:right;">'+subtotalF+'</th>';
       $("tfoot tr").append(html);   
   }
   $("tfoot tr").prepend("<th colspan='"+columna+"'>Totales</th>");   
