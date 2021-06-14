@@ -23,9 +23,7 @@ $diaPrimerMes=explode("-",$fecha_iniconsulta)[2];
 $diaUltimoMes=explode("-",$fecha_finconsulta)[2];
 
 $rpt_territorio=$_GET['codTipoTerritorio'];
-
 $fecha_reporte=date("d/m/Y");
-
 $nombre_territorio=obtenerNombreSucursalAgrupado($rpt_territorio);
 $nombre_territorio=str_replace(",",", ", $nombre_territorio);
 ?><style type="text/css"> 
@@ -41,7 +39,7 @@ $nombre_territorio=str_replace(",",", ", $nombre_territorio);
             overflow:scroll;
         }
     </style>
-<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Sucursal
+<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Sucursal Mes Cerrado
 	<br> De: <?=$fecha_ini?> A: <?=$fecha_fin?>
 	<br>Fecha Reporte: <?=$fecha_reporte?></tr></table>
 	<center><div style='width:70%;text-align:center;'><b>Sucursales:</b><br><small><?=$nombre_territorio?></small></div></center>

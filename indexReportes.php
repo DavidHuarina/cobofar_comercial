@@ -80,11 +80,12 @@ include("datosUsuario.php");
 							<!--li><a href="rptOpKardexCliente.php" target="contenedorPrincipal">Kardex x Cliente</a></li-->
 						</ul>	
 					</li>
+					<li><a href="rptOpArqueo_sucursales.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>	
 					<!--<li><span>Ventas Perdidas</span>
 						<ul>
 							<li><a href="rptOpVentasSucursalPerdido.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
 							<li><a href="rptOpVentasLineasProveedorPerdido.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>
-							<li><a href="rptOpVentasxItemPerdido.php" target="contenedorPrincipal">Ventas x Item</a></li>							
+							<li><a href="rptOpVentasxItemPerdido.php" target="contenedorPrincipal">Ventas x Item</a></li>	
 						</ul>	
 					</li>-->
 					<!--<li><span>Reportes Contables</span>

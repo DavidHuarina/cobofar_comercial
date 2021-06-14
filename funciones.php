@@ -1107,5 +1107,44 @@ function obtenerProveedorLineaInventario($codigo){
   } 
   return $proveedor; 
 }
+function obtenerMontoTarjeta_ventas($fecha_iniconsultahora,$rpt_territorio,$cod_personal){
+	require("conexionmysqli2.inc");
+	$sql="SELECT sum(s.`monto_final`) from `salida_almacenes` s 
+	where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
+	where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago!=1 and s.cod_chofer=$cod_personal
+	GROUP BY s.cod_chofer";
+	//echo $sql;
+	$resp=mysqli_query($enlaceCon,$sql);
+	$saldo=0;
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $saldo=$detalle[0];	
+  } 
+  return $saldo;
+}
+function obtenerMontoAnuladas_ventas($fecha_iniconsultahora,$rpt_territorio,$cod_personal){
+	require("conexionmysqli2.inc");
+	$sql="SELECT  sum(s.monto_final)
+	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
+	and s.fecha_anulacion BETWEEN '$fecha_iniconsultahora 06:00:00' and '$fecha_iniconsultahora 23:00:59' and s.cod_chofer=$cod_personal";
+	//echo $sql;
+	$resp=mysqli_query($enlaceCon,$sql);
+	$monto=0;
+  while($detalle=mysqli_fetch_array($resp)){	
+  	$monto=$detalle[0];	
+  } 
+  return $monto;
+}
+function obtenerMontodepositado($fecha,$cod_personal){
+	require("conexionmysqli2.inc");
+	$sql="SELECT sum(monto_registrado) from registro_depositos where fecha='$fecha' and cod_funcionario=$cod_personal and cod_estadoreferencial=1";
+	//echo $sql;
+	$resp=mysqli_query($enlaceCon,$sql);
+	$monto=0;
+  while($detalle=mysqli_fetch_array($resp)){	
+  	$monto=$detalle[0];	
+  } 
+  return $monto;
+}
 
 ?>
