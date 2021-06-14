@@ -79,7 +79,7 @@ require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("Y-m-d");
-echo "<h1>Reporte Ventas x Sucursal</h1><br>";
+echo "<h1>Reporte Ventas x Sucursal X meses</h1><br>";
 echo"<form method='post' action='rptOpKardexCostos.php'>";
 
 	echo"\n<table class='' align='center' cellSpacing='0' width='50%'>\n";
@@ -126,9 +126,9 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	
 	echo"\n </table><br>";
 	require('home_almacen.php');
-	echo "<center><input type='button' name='reporte' value='Ver Reporte General' onClick='envia_formulario(this.form)' class='btn btn-primary'>
-	<input type='button' name='reporte_detalle' value='Ver Reporte Detallado' onClick='envia_formulario_detalle(this.form)' class='btn btn-info'>
-	<input type='button' name='reporte_detalle' value='Ver Reporte Resumido' onClick='envia_formulario_resumido(this.form)' class='btn btn-success'>
+	echo "<center><input type='button' name='reporte' value='Ver Reporte X Meses' onClick='envia_formulario(this.form)' class='btn btn-primary'>
+	<input type='button' name='reporte_detalle' value='Ver Reporte Detallado X Día' onClick='envia_formulario_detalle(this.form)' class='btn btn-info'>
+	<input type='button' name='reporte_detalle' value='Ver Reporte General' onClick='envia_formulario_resumido(this.form)' class='btn btn-success'>
 	</center><br>";
 	echo"</form>";
 	echo "</div>";
