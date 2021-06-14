@@ -1,5 +1,6 @@
-<table align='center' class="texto" id="listaMaterialesTabla">
-<tr>
+<br>
+<table align='center' class="table table-bordered table-sm" id="listaMaterialesTabla">
+<tr class='bg-primary text-white'>
 <th>Producto</th><th>Linea</th><th>Principio Activo</th><th>Stock</th><th>Precio</th></tr>
 <?php
 $estilosVenta=1;

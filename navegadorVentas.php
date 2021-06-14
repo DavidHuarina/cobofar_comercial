@@ -37,6 +37,7 @@ function ShowBuscar(){
 	document.getElementById('divRecuadroExt').style.visibility='visible';
 	document.getElementById('divProfileData').style.visibility='visible';
 	document.getElementById('divProfileDetail').style.visibility='visible';
+    document.getElementById('nroProcesoBusqueda').focus();
 }
 
 function HiddenBuscar(){
@@ -102,11 +103,18 @@ function confirmarCodigo(){
       }
  }); 
 }
+function pressEnter(e, f){
+    tecla = (document.all) ? e.keyCode : e.which;
+    if (tecla==13){
+        ajaxBuscarVentas(f);                              
+    }
+}
 function ajaxBuscarVentas(f){
-	var fechaIniBusqueda, fechaFinBusqueda, nroCorrelativoBusqueda, verBusqueda, global_almacen, clienteBusqueda;
+	var fechaIniBusqueda, fechaFinBusqueda, nroCorrelativoBusqueda,nroProcesoBusqueda, verBusqueda, global_almacen, clienteBusqueda;
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
 	fechaFinBusqueda=document.getElementById("fechaFinBusqueda").value;
 	nroCorrelativoBusqueda=document.getElementById("nroCorrelativoBusqueda").value;
+    nroProcesoBusqueda=document.getElementById("nroProcesoBusqueda").value;
 	verBusqueda=document.getElementById("verBusqueda").value;
 	global_almacen=document.getElementById("global_almacen").value;
 	clienteBusqueda=document.getElementById("clienteBusqueda").value;
@@ -114,7 +122,7 @@ function ajaxBuscarVentas(f){
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
 
-	ajax.open("GET", "ajaxSalidaVentas.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&nroCorrelativoBusqueda="+nroCorrelativoBusqueda+"&verBusqueda="+verBusqueda+"&global_almacen="+global_almacen+"&clienteBusqueda="+clienteBusqueda,true);
+	ajax.open("GET", "ajaxSalidaVentas.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&nroCorrelativoBusqueda="+nroCorrelativoBusqueda+"&verBusqueda="+verBusqueda+"&global_almacen="+global_almacen+"&clienteBusqueda="+clienteBusqueda+"&nroProcesoBusqueda="+nroProcesoBusqueda,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -368,6 +376,39 @@ function mostrarRegistroConTarjeta(codigo){
     $("#codigo_salida_tarjeta").val(codigo);
     $("#modalPagoTarjeta").modal("show");   
 }
+
+function removerRegistroConTarjeta(codigo){
+    Swal.fire({
+        title: '¿Quitar Tarjeta?',
+        text: "Se removerá la tarjeta de la Factura",
+         type: 'info',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-default',
+        confirmButtonText: 'Remover',
+        cancelButtonText: 'Cancelar',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            quitarTarjetaVenta(codigo)               
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+    });   
+}
+function quitarTarjetaVenta(codigo){
+  var parametros={"codigo":codigo};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveRemoveTarjetaVenta.php",
+        data: parametros,
+        success:  function (resp) {  
+           window.location.reload();                      
+        }
+    });
+}
+
 function guardarTarjetaVenta(){
     var codigo=$("#codigo_salida_tarjeta").val();
     var banco_tarjeta=$("#banco_tarjeta").val();
@@ -444,7 +485,7 @@ echo "<h1>Listado de Ventas</h1>";
 echo "<table class='texto' cellspacing='0' width='90%'>
 <tr><th>Leyenda:</th>
 <th>Ventas Registradas</th><td bgcolor='#f9e79f' width='5%'></td>
-<th>Ventas Entregadas</th><td bgcolor='#1abc9c' width='5%'></td>
+<th>Ventas Depositadas</th><td bgcolor='#1abc9c' width='5%'></td>
 <th>Ventas Anuladas</th><td bgcolor='#e74c3c' width='5%'></td>
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 //
@@ -462,18 +503,22 @@ echo "</div>";
 		
 echo "<div id='divCuerpo'>";
 echo "<center><table class='table table-sm'>";
-echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Tarjeta</th><th>&nbsp;</th></tr>";
+echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>Monto</th>
+	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Proceso</th><th>Pago</th><th>&nbsp;</th></tr>";
 	
 echo "<input type='hidden' name='global_almacen' value='$global_almacen' id='global_almacen'>";
 
+$sqlUser=" and s.cod_chofer='".$_COOKIE["global_usuario"]."' ";
+if($_COOKIE["global_usuario"]==-1){
+  $sqlUser="";
+}
 $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago
+	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado
 	FROM salida_almacenes s, tipos_salida ts 
-	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 ";
+	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 $sqlUser ";
 
 if($txtnroingreso!="")
    {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
@@ -482,7 +527,7 @@ if($fecha1!="" && $fecha2!="")
    {$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
    }
 $consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 100 ";
-
+//echo $consulta;
 //
 $resp = mysqli_query($enlaceCon,$consulta);
 	
@@ -503,7 +548,8 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$codTipoDoc=$dat[11];
 	$razonSocial=$dat[12];
 	$nitCli=$dat[13];
-	
+    $depositado=$dat['depositado'];
+	$montoFactura=number_format($dat['monto_final'],1,'.',',')."0";
     $fechaValidacion=0;
     if($fechaValidacion){
         $fechaValidacion=1;
@@ -532,7 +578,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	if($numFilasEstado>0){
 		$color_fondo=mysqli_result($respEstadoColor,0,0);
 	}else{
-		$color_fondo="#ffffff";
+        $color_fondo="#ffffff";		
 	}	
 	$chk = "<input type='checkbox' name='codigo' value='$codigo'>";
 
@@ -548,10 +594,11 @@ while ($dat = mysqli_fetch_array($resp)) {
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
     echo "<td align='center'>&nbsp;$chk</td>";
-    echo "<td align='center'>$nro_correlativo</td>";
+    echo "<td align='center'><b>F-$nro_correlativo</b></td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
     echo "<td>$nombre_tiposalida</td>";
-    echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
+    echo "<td align='right'><b>$montoFactura</b></td>";
+    echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;P-$codigo</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
@@ -559,15 +606,19 @@ while ($dat = mysqli_fetch_array($resp)) {
 	*/
     $codTarjeta=$dat['cod_tipopago'];
     if($codTarjeta==2){
-        echo "<td class='text-success'><b>SI</b></td>";
+        echo "<td class='text-primary'><b>Tarjeta</b></td>";
     }else{
-        echo "<td class='text-muted'><b>NO</b></td>";
+        echo "<td class='text-success'><b>Efectivo</b></td>";
     }    
 	if($codTipoDoc==1){
         $htmlTarjeta="";
-        if($salida_anulada!=1&&$codTarjeta==1&&$fechaValidacion==0){
-            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>";
-        }
+      if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){
+        if($codTarjeta==1){            
+            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card_off</i></a>";            
+        }else{
+            $htmlTarjeta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='Quitar Tarjeta' onclick='removerRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>"; 
+        }          
+      }  
 		echo "<td  bgcolor='$color_fondo'>$htmlTarjeta<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>";
 		echo "</td>";
         /*<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a>*/
@@ -598,10 +649,10 @@ echo "</form>";
 
 ?>
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
+<div id="divProfileData" style="background-color:#FFF; width:750px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<h2 align='center' class='texto'>Buscar Ventas</h2>
 		<table align='center' class='texto'>
@@ -618,11 +669,17 @@ echo "</form>";
 				</td>
 			</tr>
 			<tr>
-				<td>Nro. de Documento</td>
+				<td>Nro. de Factura</td>
 				<td>
-				<input type='text' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='form-control'>
+				<input type='number' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='form-control'>
 				</td>
-			</tr>			
+			</tr>
+            <tr>
+                <td>Nro. de Proceso</td>
+                <td>
+                <input type='number' name='nroProcesoBusqueda' id="nroProcesoBusqueda" class='form-control' onkeypress="return pressEnter(event, this.form);" onkeyup="return pressEnter(event, this.form);">
+                </td>
+            </tr>			
 			<tr>
 				<td>Cliente:</td>
 				<td>
