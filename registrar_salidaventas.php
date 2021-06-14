@@ -755,17 +755,17 @@ function mas(obj) {
 			div_material=document.getElementById("div"+num);	
 			var cod_precio=document.getElementById("tipoPrecio").value;
 			var fecha=document.getElementById("fecha").value;				
-			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio+"&fecha="+fecha,true);
+			var ajaxFila=nuevoAjax();
+			ajaxFila.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio+"&fecha="+fecha,true);
 
-			ajax.onreadystatechange=function(){
-				if (ajax.readyState==4) {
-					div_material.innerHTML=ajax.responseText;
+			ajaxFila.onreadystatechange=function(){
+				if (ajaxFila.readyState==4) {
+					div_material.innerHTML=ajaxFila.responseText;
 					$('.selectpicker').selectpicker('refresh');
 					buscarMaterial(form1, num);
 				}
 			}		
-			ajax.send(null);
+			ajaxFila.send(null);
 		}else{
 			buscarMaterial(obj.form,fila_actual);
 			
@@ -790,7 +790,7 @@ function menos(numero) {
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){
-	    //listaMateriales(f);	
+	    listaMateriales(f);	
 	    //$("#enviar_busqueda").click();
 	    //$("#enviar_busqueda").click();//Para mejorar la funcion	
 	    return false;    	   	    	
@@ -1435,7 +1435,7 @@ $iconVentas2="point_of_sale";
 	
 	<td>
 		<div id='divRazonSocial'>
-			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social">
+			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social" style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();">
 		</div>
 	</td>
 
@@ -1487,8 +1487,8 @@ while($dat2=mysqli_fetch_array($resp2)){
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table id="data0" class='table table-sm' width='100%' style='width:100%'>
 	<tr>
-		<td align="center" colspan="8" class="text-muted">
-			<b>Detalle de la Venta    </b>
+		<td align="center" colspan="8" class="text-success">
+			<b style='font-size:20px;'>Detalle de la Venta    </b>
 		</td>
 	</tr>
     <tr align="center" class="bg-info text-white" style='background:#16B490 !important;'>
@@ -1518,7 +1518,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		<table align='center'>
 			<tr><th>Proveedor</th><th>Forma F.</th><th>Accion T.</th></tr>
 			<tr>
-			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark'-->
+			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
 			<?php
 			$sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
 			where p.estado_activo=1 order by 2;";
@@ -1533,7 +1533,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td width="40%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' name='itemFormaMaterial' style="width:300px">
+			<td width="40%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemFormaMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1548,7 +1548,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td width="30%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' name='itemAccionMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemAccionMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1565,7 +1565,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</td>
 			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
 	     <tr>		
-			<td><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' name='itemPrincipioMaterial' style="width:300px">
+			<td><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemPrincipioMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
 			where pl.estado=1 order by 2;";
@@ -1605,27 +1605,40 @@ while($dat2=mysqli_fetch_array($resp2)){
 	<table class="pie-montos">
       <tr>
         <td>
-	      <table id='' width='100%' border="0">
+	      <!--<table id='' width='100%' border="0">
 	      	<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
-		</tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
+		  </tr>
          
-		<tr>
-			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
-		</tr>
-	</table>
-      
+		  <tr>
+			<td align='right' width='60%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:33px;font-size:30px;width:80%;color:#fff;"></td>
+		  </tr>
+		  <tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3;height:33px;width:80%;font-size:30px;" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+		  </tr>
+		  <tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:33px;font-size:30px;width:80%;"></td>
+		   </tr>
+	     </table>-->
+         
+         <table id='' width='100%' border="0" style='float:right;margin-top: 30px;'>
+          <tr>
+          	<td style="font-weight:bold;font-size:12px;">MONTO FINAL Bs.</td>
+          	<td style="font-weight:bold;color:#777B77;font-size:12px;">TOTAL RECIBIDO</td>
+          	<td style="font-weight:bold;color:#777B77;font-size:12px;color:#057793;">TOTA CAMBIO Bs.</td>
+          </tr>
+          <tr>
+          	<td><input type='number' name='totalFinal' id='totalFinal' class='form-control' readonly style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#39ff14;' value='0.00'></td>
+          	<td><input type='number' class='form-control' style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#08FAEF;' name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);' value='0.00'></td>
+          	<td><input type='number' class='form-control' name='cambioEfectivo' id='cambioEfectivo' readonly style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#ff8000;' value='0.00'></td>
+          </tr>
+	     </table>
+
         </td>
         <td>
         	<table id='' width='100%' border="0">
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">-</b></td>
+			<td align='left' width='90%' style="color:#777B77;font-size:12px;"></td><td align='LEFT'><b style="font-size:30px;color:#0691CD;">D</b><label style="color:#0691CD;">escuento <b style="font-size:30px;color:#0691CD;">F</b>inal</label></td>
 		</tr>
 
 		<tr>
@@ -1691,8 +1704,8 @@ if($banderaErrorFacturacion==0){
                <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td width='50%'><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:40px;font-size:35px;width:100%;background:#C4BDBD !important;'  class='form-control' step='any' value='0' required></td>
-               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:40px;font-size:35px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#059336;'step='any' class='form-control' value='0'></td>
+               <td width='50%'><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:35px;font-size:30px;width:100%;background:#C4BDBD !important;color:#4574B9;'  class='form-control' step='any' value='0' required></td>
+               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:35px;font-size:30px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#059336;'step='any' class='form-control' value='0'></td>
              </tr>
             </table>
 

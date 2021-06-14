@@ -58,7 +58,7 @@ foreach ($listAlma->lista as $alma) {
 $sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,sum(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))-(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))*DESCTO3)/100))) AS MONTO_V
 FROM VFICHAD d LEFT JOIN APRODUCTOS P ON P.CPROD=d.CPROD
 WHERE d.STA in ('V','M')
-AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND d.CPROD IN ($stringProductos)
+AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND P.CPROD IN ($stringProductos)
 GROUP BY d.CPROD,P.DES;";
 //echo $sql;
 $stmt = $dbh->prepare($sql);
