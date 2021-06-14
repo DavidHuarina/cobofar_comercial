@@ -1,12 +1,13 @@
 <?php
 echo "<script language='JavaScript'>
 		function envia_formulario(f)
-		{	var rpt_territorio, rpt_almacen, tipo_item, rpt_ver, rpt_fecha, rpt_ordenar;
+		{	var rpt_territorio, rpt_almacen, tipo_item, rpt_ver, rpt_fecha, rpt_ordenar,rpt_categoria;
 			rpt_territorio=f.rpt_territorio.value;
 			rpt_almacen=f.rpt_almacen.value;
 			rpt_ver=f.rpt_ver.value;
 			rpt_fecha=f.rpt_fecha.value;
 			rpt_ordenar=f.rpt_ordenar.value;
+			rpt_categoria=f.rpt_categoria.value;
 			var codSubGrupo=new Array();
 	        var j=0;
 	        for(var i=0;i<=f.rpt_subcategoria.options.length-1;i++)
@@ -16,7 +17,7 @@ echo "<script language='JavaScript'>
 	        	}
 	        }
 			var j=0;
-			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&codSubGrupo='+codSubGrupo,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
+			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&codSubGrupo='+codSubGrupo+'&rpt_categoria='+rpt_categoria,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
 
 			return(true);
 		}
@@ -130,7 +131,7 @@ echo"<form method='post' action=''>";
 	echo "</tr>";
     echo "<tr><th align='left' class='' >Proveedor:</th>
 	<td><select name='rpt_categoria'  id='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubLinea()' data-live-search='true'>
-	<option value='' disabled selected>--Seleccione--</option>";
+	<option value='-100' selected>--TODO--</option>";
 	$sql="select cod_proveedor, nombre_proveedor from proveedores order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))

@@ -53,7 +53,7 @@ if ($num_filas != 0) {
 	    if($cod_cargo==1002){
 		     header("location:indexAlmacenReg.php");
 	    }
-	    if($cod_cargo==29||$cod_cargo==30||$cod_cargo==31||$cod_cargo==32||$cod_cargo==33||$cod_cargo==34){
+	    if($cod_cargo==29||$cod_cargo==30||$cod_cargo==31||$cod_cargo==32||$cod_cargo==33||$cod_cargo==34||$usuario==33||$usuario==32||$usuario==31||$usuario==388||$usuario==29){
 		     header("location:indexVentas.php");
 	    }    
     } 

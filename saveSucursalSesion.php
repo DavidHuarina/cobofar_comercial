@@ -6,8 +6,8 @@ $sql="SELECT cod_almacen FROM almacenes where cod_tipoalmacen='1' and cod_ciudad
 $resp=mysqli_query($enlaceCon,$sql);
 
 $codigo_funcionario=$_COOKIE["global_usuario"];
-$sqlFun="UPDATE funcionarios SET cod_ciudad='$cod_ciudad' where codigo_funcionario='$codigo_funcionario'";
-mysqli_query($enlaceCon,$sqlFun);
+//$sqlFun="UPDATE funcionarios SET cod_ciudad='$cod_ciudad' where codigo_funcionario='$codigo_funcionario'";
+//mysqli_query($enlaceCon,$sqlFun);
 while($dat=mysqli_fetch_array($resp)){
    $codigo=$dat[0];
 }

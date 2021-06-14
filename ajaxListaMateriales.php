@@ -37,7 +37,11 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 	}	
 
     if((int)$codTipo>0){
-        $sql=$sql." and m.cod_linea_proveedor=".$codTipo."";
+    	if(isset($_GET["codProv"])){
+          $sql=$sql." and m.cod_linea_proveedor in (SELECT cod_linea_proveedor from proveedores_lineas where cod_proveedor=".$_GET["codProv"].")";
+    	}else{
+    	  $sql=$sql." and m.cod_linea_proveedor=".$codTipo."";	
+    	}        
     }
 
     if((int)$codForma>0){
