@@ -121,7 +121,8 @@ include("datosUsuario.php");
 							<li><a href="rptOpVentasxItemPerdido.php" target="contenedorPrincipal">Ventas x Item</a></li>							
 						</ul>	
 					</li>
-					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Cierre de Caja</a></li>								
+					<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Cierre de Caja</a></li>	
+					
 				</ul>
 			</li>
 			<li><a href="depositos/list.php" target="contenedorPrincipal">Registrar Depósitos</a></li>
