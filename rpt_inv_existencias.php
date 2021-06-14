@@ -10,6 +10,7 @@ require('conexion.inc');
 
 $rptOrdenar=$_GET["rpt_ordenar"];
 $codSubGrupo=$_GET['codSubGrupo'];
+$rpt_categoria=$_GET["rpt_categoria"];
 $rpt_fecha=cambia_formatofecha($rpt_fecha);
 $fecha_reporte=date("d/m/Y");
 $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
@@ -25,14 +26,21 @@ $fechaInicioOperaciones=obtenerInicioActividadesSucursal($rpt_territorio);
 	$nombre_almacen=$datos_nombre_almacen[0];
 		echo "<table align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Existencias Almacen<br>Territorio: <strong>$nombre_territorio</strong> Nombre Almacen: <strong>$nombre_almacen</strong> <br>Existencias a Fecha: <strong>$rpt_fecha</strong><br>$txt_reporte</th></tr></table>";
 		//desde esta parte viene el reporte en si
-		
+	$stringLinea="and cod_linea_proveedor in ($codSubGrupo)";	
+	$stringLinea2="and m.cod_linea_proveedor in ($codSubGrupo)";
+     
+    if($rpt_categoria==-100){
+    	$stringLinea="";	
+	    $stringLinea2="";
+    }
+
 		if($rptOrdenar==1){
 			$sql_item="select codigo_material, descripcion_material, cantidad_presentacion from material_apoyo
-			where codigo_material<>0 and estado='1' and cod_linea_proveedor in ($codSubGrupo) order by descripcion_material";
+			where codigo_material<>0 and estado='1' $stringLinea order by descripcion_material";
 		}else{
 			$sql_item="select m.codigo_material, 
 			m.descripcion_material, cantidad_presentacion, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor)as linea  from proveedores p, proveedores_lineas pl, 
-			material_apoyo m where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor and m.estado='1' and m.cod_linea_proveedor in ($codSubGrupo) order by 4,2";
+			material_apoyo m where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor and m.estado='1' $stringLinea2 order by 4,2";
 		}
 		
 		//echo $sql_item;

@@ -1518,7 +1518,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		<table align='center'>
 			<tr><th>Proveedor</th><th>Forma F.</th><th>Accion T.</th></tr>
 			<tr>
-			<td width="30%"><select class="selectpicker" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-warning text-dark'-->
+			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark'-->
 			<?php
 			$sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
 			where p.estado_activo=1 order by 2;";
@@ -1533,7 +1533,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td width="40%"><select class="selectpicker" data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' name='itemFormaMaterial' style="width:300px">
+			<td width="40%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' name='itemFormaMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1548,7 +1548,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td width="30%"><select class="selectpicker" data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' name='itemAccionMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' name='itemAccionMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1565,7 +1565,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</td>
 			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
 	     <tr>		
-			<td><select class="selectpicker" data-live-search='true' data-size='6' data-style='btn btn-warning text-dark' name='itemPrincipioMaterial' style="width:300px">
+			<td><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg text-dark' name='itemPrincipioMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
 			where pl.estado=1 order by 2;";
