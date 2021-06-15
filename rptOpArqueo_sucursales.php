@@ -58,7 +58,7 @@ echo"<form method='post' action='rptArqueoDiarioPDF_sucursales.php'>";
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker form-control'>";
-	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$globalCiudad' order by descripcion";
+	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
