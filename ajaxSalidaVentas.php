@@ -116,12 +116,17 @@ while ($dat = mysqli_fetch_array($resp)) {
      if(!isset($estado_preparado)){
       $estado_preparado= "";  
     }
+    if($codTipoDoc==4){
+        $nro_correlativo="<i class='text-danger'>M-$nro_correlativo</i>";
+    }else{
+        $nro_correlativo="F-$nro_correlativo";
+    }
 
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
     echo "<td align='center'>&nbsp;$chk</td>";
-    echo "<td align='center'><b>F-$nro_correlativo</b></td>";
+    echo "<td align='center'><b>$nro_correlativo</b></td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
     echo "<td>$nombre_tiposalida</td>";
     echo "<td align='right'><b>$montoFactura</b></td>";
@@ -150,7 +155,7 @@ while ($dat = mysqli_fetch_array($resp)) {
         echo "</td>";
         /*<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a>*/
     }else{
-        echo "<td  bgcolor='$color_fondo'><a href='formatoNotaRemisionOficial.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
+        echo "<td  bgcolor='$color_fondo'><a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
     }
     
     /*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/

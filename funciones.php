@@ -341,7 +341,7 @@ function numeroCorrelativo($tipoDoc){
 
 	$fechaActual=date("Y-m-d");
 	$globalAgencia=$_COOKIE['global_agencia'];
-	
+	$globalAlmacen=$_COOKIE['global_almacen'];
 	if($facturacionActivada==1 && $tipoDoc==1){
 		//VALIDAMOS QUE LA DOSIFICACION ESTE ACTIVA
 		$sqlValidar="select count(*) from dosificaciones d 
@@ -396,14 +396,17 @@ function numeroCorrelativo($tipoDoc){
 				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
 				and cod_dosificacion='$codigoDosificacion'";	
 			}else{
-				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc'";
+				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' and s.cod_almacen='$globalAlmacen' ";
 			}
 			//echo $sql;
 			$resp=mysqli_query($enlaceCon,$sql);
 			$codigo=mysqli_result($resp,0,0);
 
 			//NUMERO INICIO
-			$codigo=($nroInicio-1)+$codigo;
+			if($codigo==1){
+               $codigo=($nroInicio-1)+$codigo;
+			}
+			
 			$vectorCodigo = array($codigo,$banderaErrorFacturacion,$codigoDosificacion);
 			return $vectorCodigo;
 		}else{
@@ -413,7 +416,7 @@ function numeroCorrelativo($tipoDoc){
 		}
 	}
 	if(($facturacionActivada==1 && $tipoDoc!=1) || $facturacionActivada!=1){
-		$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc'";
+		$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' and cod_almacen='$globalAlmacen'";
 		//echo $sql;
 		$resp=mysqli_query($enlaceCon,$sql);
 		while($dat=mysqli_fetch_array($resp)){

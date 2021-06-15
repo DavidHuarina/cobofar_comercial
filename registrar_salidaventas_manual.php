@@ -1,7 +1,7 @@
 <html>
     <head>
-        <title>Venta</title>
-        <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
+        <title>VENTA MANUAL</title>
+        <link  rel="icon"   href="imagenes/carrito.png" type="image/png" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
@@ -12,7 +12,7 @@
         <script type="text/javascript" src="dist/bootstrap/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="dist/bootstrap/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
+        <!--<script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>-->
         <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
         <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
         <link rel="stylesheet" type="text/css" href="dist/demo.css"/>
@@ -21,27 +21,41 @@
               zoom: 86%;
             }
         </style>
-
+	
 <script type='text/javascript' language='javascript'>
+	$(document).ready(function() {		
+        Mousetrap.bind('alt+q', function(){ if(num>0){var numeroFila=num;menos(numeroFila);} return false;});
+        Mousetrap.bind('alt+r', function(){ guardarRecetaVenta(); return false;});
+        //Mousetrap.bind('alt+t', function(){ $("#tipo_comprobante").focus(); return false; });
+        $('[data-toggle="tooltip"]').tooltip({
+              animated: 'swing', //swing expand
+              placement: 'right',
+              html: true,
+              trigger : 'hover'
+          });
+    });
 
 function guardarVentaGeneral(){
    Swal.fire({
-        title: '¿Está Seguro?',
-        text: "Se guardaran los datos",
-         type: 'warning',
+        title: '¿Esta seguro de Facturar?',
+        text: "Se procederá con el guardado del documento",
+         type: 'info',
         showCancelButton: true,
-        confirmButtonClass: 'btn btn-warning',
-        cancelButtonClass: 'btn btn-danger',
-        confirmButtonText: 'Si',
-        cancelButtonText: 'No',
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-default',
+        confirmButtonText: 'Facturar',
+        cancelButtonText: 'Cancelar',
         buttonsStyling: false
        }).then((result) => {
           if (result.value) {
-            $('#guardarSalidaVenta').submit();                   
+          	$("#confirmacion_guardado").val(1);
+            $('#guardarSalidaVenta').submit();  
+            //return(true);                 
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
     });
+    return false;
 }
 
 function mueveReloj(){
@@ -100,7 +114,7 @@ function listaMateriales(f){
 	var tipoSalida=(f.tipoSalida.value);
 	var codigoMat=(f.itemCodigoMaterial.value);
 	contenedor = document.getElementById('divListaMateriales');
-    
+    contenedor.innerHTML="<br><br><p class='text-muted'>Buscando Producto(s)...</p>";
 	var arrayItemsUtilizados=new Array();	
 	var i=0;
 	for(var j=1; j<=num; j++){
@@ -112,14 +126,16 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio+"&codProv="+codTipo,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {			
 			contenedor.innerHTML = ajax.responseText;
 			var oRows = document.getElementById('listaMaterialesTabla').getElementsByTagName('tr');
             var nFilas = oRows.length;					
 			if(parseInt(nFilas)==2){
-				document.getElementsByClassName('enlace_ref')[0].click();
+				if(ajax.responseText!=""){
+				  document.getElementsByClassName('enlace_ref')[0].click();	
+				}				
 				//$(".enlace_ref").click();
 			}
 			//
@@ -163,10 +179,11 @@ function actStock(indice){
 	contenedor=document.getElementById("idstock"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
     var codalm=document.getElementById("global_almacen").value;
-    console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
-	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
-	ajax.onreadystatechange=function() {
+    if(codmat>0){
+      console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
+	  ajax=nuevoAjax();
+	  ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
+	  ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			//console.log(ajax.responseText);
 			//alert(ajax.responseText);
@@ -175,10 +192,30 @@ function actStock(indice){
 			
 			ajaxCargarSelectDescuentos(indice);
 		}
-	}
-	//verificarReceta(codmat,indice);
-	totales();
-	ajax.send(null);
+	  }
+	  ajax.send(null);
+	  //verificarReceta(codmat,indice);
+	  totales();	
+    }
+}
+function actStockSinBucle(indice){
+	var contenedor;
+	contenedor=document.getElementById("idstock"+indice);
+	var codmat=document.getElementById("materiales"+indice).value;
+    var codalm=document.getElementById("global_almacen").value;
+    if(codmat>0){
+      console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
+	  ajax=nuevoAjax();
+	  ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
+	  ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			//console.log(ajax.responseText);
+			//alert(ajax.responseText);
+			$("#idstock"+indice).html(ajax.responseText);
+		}
+	  }
+	  ajax.send(null);	
+    }
 }
 function ajaxCargarSelectDescuentos(indice){
 	var contenedor;
@@ -259,9 +296,12 @@ function calculaMontoMaterial(indice){
 	montoUnitario=Math.round(montoUnitario*100)/100
 		
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;
-	
+	if(!$("#stock"+indice).val()>0){
+		actStockSinBucle(indice);
+	}
 	totales();
 }
+
 
 // Conclusión
 (function() {
@@ -332,8 +372,9 @@ function totales(){
 
     subtotalPrecio=Math.round(subtotalPrecio*100)/100;
 
-	subtotal=Math.round(subtotal*100)/100;
-	subtotal=Math.ceil10(subtotal, -1); 
+	subtotal=Math.round(subtotal*10)/10;
+	
+	subtotal=subtotal.toFixed(2); 
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 
     document.getElementById("totalVenta").value=subtotal;
@@ -383,8 +424,7 @@ function aplicarDescuento(f){
 	document.getElementById("descuentoVentaUSDPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
 	aplicarCambioEfectivo();
 	minimoEfectivo();
-	//totales();
-	
+	//totales();	
 }
 function aplicarDescuentoUSD(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
@@ -575,7 +615,22 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
     $("#modalProductosSimilares").modal("hide");
+    $(".boton2peque").removeAttr("accessKey");
+    document.getElementById("removeFila"+numRegistro).accessKey= "q";
     actStock(numRegistro);
+}
+
+function obtenerLineaMaterial(cod,numRegistro){
+	var parametros={"codigo":cod};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxLineaProducto.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#cod_material"+numRegistro).attr("title",resp);                             	   
+        }
+    });	
 }
 
 function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
@@ -584,6 +639,8 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	if(divi==1){
       $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
 	}		
+
+	$(".boton2peque").removeAttr("accessKey");
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat+" ("+cod+")";
 	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
@@ -597,7 +654,9 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
+	document.getElementById("removeFila"+numRegistro).accessKey= "q";
     actStock(numRegistro);
+    obtenerLineaMaterial(cod,numRegistro);
 }
 function verificarReceta(cod,numRegistro){
 	ajax=nuevoAjax();
@@ -695,17 +754,17 @@ function mas(obj) {
 			div_material=document.getElementById("div"+num);	
 			var cod_precio=document.getElementById("tipoPrecio").value;
 			var fecha=document.getElementById("fecha").value;				
-			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio+"&fecha="+fecha,true);
+			var ajaxFila=nuevoAjax();
+			ajaxFila.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio+"&fecha="+fecha,true);
 
-			ajax.onreadystatechange=function(){
-				if (ajax.readyState==4) {
-					div_material.innerHTML=ajax.responseText;
+			ajaxFila.onreadystatechange=function(){
+				if (ajaxFila.readyState==4) {
+					div_material.innerHTML=ajaxFila.responseText;
 					$('.selectpicker').selectpicker('refresh');
 					buscarMaterial(form1, num);
 				}
 			}		
-			ajax.send(null);
+			ajaxFila.send(null);
 		}else{
 			buscarMaterial(obj.form,fila_actual);
 			
@@ -729,9 +788,10 @@ function menos(numero) {
 
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
-	if (tecla==13){	
-	    $("#enviar_busqueda").click();
-	    $("#enviar_busqueda").click();//Para mejorar la funcion	
+	if (tecla==13){
+	    listaMateriales(f);	
+	    //$("#enviar_busqueda").click();
+	    //$("#enviar_busqueda").click();//Para mejorar la funcion	
 	    return false;    	   	    	
 		//listaMateriales(f);			
 	}
@@ -756,10 +816,17 @@ $(document).ready(function() {
         alert("El monto recibido NO debe ser menor al monto total");
         return false;
       }else{
-      	document.getElementById("btsubmit").value = "Enviando...";
-        document.getElementById("btsubmit").disabled = true;
-        document.getElementById("btsubmitPedido").value = "Enviando...";
-        document.getElementById("btsubmitPedido").disabled = true;
+      	var confirmacionRealizada=$("#confirmacion_guardado").val();
+      	console.log("Datos confirm:"+confirmacionRealizada+"")
+      	if(parseInt(confirmacionRealizada)==1){
+      		return true;
+      		/*document.getElementById("btsubmit").value = "Enviando...";
+            document.getElementById("btsubmit").disabled = true;
+            document.getElementById("btsubmitPedido").value = "Enviando...";
+            document.getElementById("btsubmitPedido").disabled = true;*/
+      	}else{
+      		return guardarVentaGeneral();
+      	}
       }     
     });
 });	
@@ -837,7 +904,7 @@ function validar(f, ventaDebajoCosto,pedido){
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
-				if($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()==""){
+				if(($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()=="")&&$("#nitCliente").val()!=""&&$("#razonSocial").val()!=""&&($("#efectivoRecibidoUnidoUSD").val()==0||$("#efectivoRecibidoUnidoUSD").val()=="")){
 					errores++;
 					document.getElementById("efectivoRecibidoUnido").focus();
 					document.getElementById("efectivoRecibidoUnido").select();
@@ -898,10 +965,17 @@ function validar(f, ventaDebajoCosto,pedido){
 					$("#pedido_realizado").val(0);
 				   return(false);
 		  	  }// fin nro de tarjeta		  	
+		  	}else{
+		  	  if($("#nro_tarjeta").val()!=""){
+                errores2++;
+                alert("Debe cambiar el TIPO DE PAGO a PAGO CON TARJETA");
+				$("#pedido_realizado").val(0);
+				return(false);
+		  	  }	
 		  	}
 		  	//CONFIRMACION
 		  	if(errores2==0){
-		  		return confirm('Quieres guardar la venta');
+		  		//return confirm('Quieres guardar la venta');
 		  	}
 		  }
 		}else{
@@ -920,6 +994,12 @@ function validar(f, ventaDebajoCosto,pedido){
 		return(false);
 	}
 }
+/*$(document).ready(function(){
+    $('#guardarSalidaVenta').on("submit",function(){
+        guardarSalidaVenta();
+    });
+});*/
+
 var tipoVentaGlobal=1;
 function cambiarTipoVenta2(){
 	if(tipoVentaGlobal==1){
@@ -1129,7 +1209,7 @@ $tipoCambio=1;
 while($filaUSD=mysqli_fetch_array($respUsd)){
 		$tipoCambio=$filaUSD[0];	
 }
-?><input type="hidden" id="tipo_cambio_dolar" value="<?=$tipoCambio?>"><?php
+
 $usuarioVentas=$_COOKIE['global_usuario'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];
@@ -1234,6 +1314,7 @@ while($reg=mysqli_fetch_array($rs))
 
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
+	<input type="hidden" id="confirmacion_guardado" value="0"><input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
 	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" id="cod_medico" name="cod_medico" value="0">
 	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
@@ -1247,7 +1328,7 @@ while($reg=mysqli_fetch_array($rs))
 	<th colspan="4" style="color:#fff;background:#581845; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS MANUAL</b></label></th>
 	<th colspan="4" style="color:#fff;background:#581845; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
 </tr>
-<tr class="bg-info text-white" align='center' style="color:#fff;background:#16B490 !important; font-size: 16px;">
+<tr class="bg-info text-white" align='center' style="color:#fff;background:#FF5733 !important; font-size: 16px;">
 <th>Tipo de Doc.</th>
 <th>Nro.Factura</th>
 <th>Fecha</th>
@@ -1360,7 +1441,7 @@ $iconVentas2="point_of_sale";
 	
 	<td>
 		<div id='divRazonSocial'>
-			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social">
+			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social" style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();">
 		</div>
 	</td>
 
@@ -1392,13 +1473,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 	</select>
 	<!--<input type="hidden" name="tipoPrecio" value="1">-->
 </td>
-<td><a href="#" title="Registrar Nuevo Cliente" onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a>
+<td><a href="#" title="Registrar Nuevo Cliente" data-toggle='tooltip' onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a>
 	<a href="#" onclick="guardarPedido(0)"
-	class="btn btn-danger btn-sm btn-fab float-right" style="background:#900C3F;color:#fff;" title="GUARDAR VENTA PERDIDA"><i class="material-icons">search_off</i></a>
+	class="btn btn-danger btn-sm btn-fab float-right" style="background:#900C3F;color:#fff;" title="GUARDAR VENTA PERDIDA" data-toggle='tooltip'><i class="material-icons">search_off</i></a>
 <a href="#" onclick="cambiarTipoVenta2()"
-	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
+	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" data-toggle='tooltip' id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
 	<a href="#" onclick="guardarRecetaVenta()"
-	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" id="boton_receta"><i class="material-icons">medical_services</i></a>
+	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" data-toggle='tooltip' id="boton_receta"><i class="material-icons">medical_services</i></a>
 </td>
 </tr>
 
@@ -1412,11 +1493,11 @@ while($dat2=mysqli_fetch_array($resp2)){
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table id="data0" class='table table-sm' width='100%' style='width:100%'>
 	<tr>
-		<td align="center" colspan="8" class="text-muted">
-			<b>Detalle de la Venta    </b>
+		<td align="center" colspan="8" class="text-success">
+			<b style='font-size:20px;'>Detalle de la Venta    </b>
 		</td>
 	</tr>
-    <tr align="center" class="bg-info text-white" style='background:#16B490 !important;'>
+    <tr align="center" class="bg-info text-white" style='background:#FF5733 !important;'>
 		<td width="15%" align="left">Cant. Pres / Opciones</td>
 		<td width="25%">Material</td>
 		<td width="10%" align="center">Stock</td>
@@ -1431,22 +1512,22 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 400px; top:30px; left:50px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 600px; top:30px; left:50px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
 <div id="divboton" style="position: absolute; top:20px; left:1210px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:1150px; height:350px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:1150px; height:550px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
-			<tr><th>Linea</th><th>Forma F.</th><th>Accion T.</th></tr>
+			<tr><th>Proveedor</th><th>Forma F.</th><th>Accion T.</th></tr>
 			<tr>
-			<td><select class="textogranderojo" name='itemTipoMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
 			<?php
-			$sqlTipo="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
-			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
+			$sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
+			where p.estado_activo=1 order by 2;";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){
@@ -1458,7 +1539,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td><select class="textogranderojo" name='itemFormaMaterial' style="width:300px">
+			<td width="40%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemFormaMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1473,7 +1554,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td><select class="textogranderojo" name='itemAccionMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemAccionMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1490,7 +1571,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</td>
 			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
 	     <tr>		
-			<td><select class="textogranderojo" name='itemPrincipioMaterial' style="width:300px">
+			<td><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemPrincipioMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
 			where pl.estado=1 order by 2;";
@@ -1530,27 +1611,40 @@ while($dat2=mysqli_fetch_array($resp2)){
 	<table class="pie-montos">
       <tr>
         <td>
-	      <table id='' width='100%' border="0">
+	      <!--<table id='' width='100%' border="0">
 	      	<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
-		</tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
+		  </tr>
          
-		<tr>
-			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
-		</tr>
-	</table>
-      
+		  <tr>
+			<td align='right' width='60%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:33px;font-size:30px;width:80%;color:#fff;"></td>
+		  </tr>
+		  <tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3;height:33px;width:80%;font-size:30px;" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+		  </tr>
+		  <tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:33px;font-size:30px;width:80%;"></td>
+		   </tr>
+	     </table>-->
+         
+         <table id='' width='100%' border="0" style='float:right;margin-top: 30px;'>
+          <tr>
+          	<td style="font-weight:bold;font-size:12px;">MONTO FINAL Bs.</td>
+          	<td style="font-weight:bold;color:#777B77;font-size:12px;">TOTAL RECIBIDO</td>
+          	<td style="font-weight:bold;color:#777B77;font-size:12px;color:#057793;">TOTA CAMBIO Bs.</td>
+          </tr>
+          <tr>
+          	<td><input type='number' name='totalFinal' id='totalFinal' class='form-control' readonly style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#39ff14;' value='0.00'></td>
+          	<td><input type='number' class='form-control' style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#08FAEF;' name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);' value='0.00'></td>
+          	<td><input type='number' class='form-control' name='cambioEfectivo' id='cambioEfectivo' readonly style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#ff8000;' value='0.00'></td>
+          </tr>
+	     </table>
+
         </td>
         <td>
         	<table id='' width='100%' border="0">
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">-</b></td>
+			<td align='left' width='90%' style="color:#777B77;font-size:12px;"></td><td align='LEFT'><b style="font-size:30px;color:#0691CD;">D</b><label style="color:#0691CD;">escuento <b style="font-size:30px;color:#0691CD;">F</b>inal</label></td>
 		</tr>
 
 		<tr>
@@ -1604,7 +1698,7 @@ if($banderaErrorFacturacion==0){
             </div>	       
             <h2 style='font-size:11px;color:#9EA09E; display:none;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
             
-            <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
+            <table style='width:450px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
             <tr>
                <td style='display:none;font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
              </tr>
@@ -1613,11 +1707,11 @@ if($banderaErrorFacturacion==0){
              </tr>
             <tr>
                <td style='font-size:12px;color:#0691CD; font-weight:bold;'>MONTO RECIBIDO Bs.</td>
-               <td style='font-size:12px;color:#189B22; font-weight:bold; display:none;'>EFECTIVO $ USD</td>
+               <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:#A5F9EA !important;'  class='form-control' step='any' value='0' required></td>
-               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
+               <td width='50%'><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:35px;font-size:30px;width:100%;background:#C4BDBD !important;color:#4574B9;'  class='form-control' step='any' value='0' required></td>
+               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:35px;font-size:30px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#059336;'step='any' class='form-control' value='0'></td>
              </tr>
             </table>
 
@@ -1641,7 +1735,7 @@ if($banderaErrorFacturacion==0){
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-md">
     <div class="modal-content card">
                <div class="card-header card-header-primary card-header-icon">
                   <div class="card-icon" style="background: #96079D;color:#fff;">
@@ -1678,13 +1772,16 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
                   <div class="col-sm-9">
                     <div class="form-group">
-                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" step="any" value=""/>
+                      <input class="form-control" type="number" id="monto_tarjeta" name="monto_tarjeta" style='height:40px;font-size:35px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#057793;' step="any" value=""/>
                     </div>
                   </div>
-                </div>                
+                </div> 
+                <br>
+                <a href="#" data-dismiss="modal" aria-hidden="true" class="btn btn-info btn-sm">GUARDAR</a>               
                 <br><br>
        </div>
-</div>                      
+</div>                  
+
                 </div>
       </div>  
     </div>
@@ -2043,6 +2140,6 @@ if($banderaErrorFacturacion==0){
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
- <script type="text/javascript">mueveReloj();nuevaInstitucion();</script>
+ <script type="text/javascript">nuevaInstitucion();</script>
 </body>
 </html>

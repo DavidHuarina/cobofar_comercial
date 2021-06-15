@@ -102,7 +102,7 @@ $fechaFactura=mysqli_result($respDatosFactura,0,5);
 
 $cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
@@ -129,6 +129,8 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$descuentoCabecera=$datDatosVenta['descuento'];
 	$cod_funcionario=$datDatosVenta['cod_chofer'];
 	$tipoPago=$datDatosVenta['cod_tipopago'];
+	$tipoDoc=$datDatosVenta['nombre'];
+	$codTipoDoc=$datDatosVenta['cod_tipo_doc'];
 }
 $nombreFuncionario=nombreVisitador($cod_funcionario);
 $y=5;
@@ -190,7 +192,13 @@ $incremento=3;
 <p class="arial-12"><?=$nombreTxt2?></p>
 <label class="arial-12"><?=$sucursalTxt?></label><br>
 <label class="arial-12"><?=$direccionTxt?></label><br><br>
-<label class="arial-12">FACTURA</label><br>
+<?php
+  if($codTipoDoc==4){
+    ?><label class="arial-12">FACTURA (<?=$tipoDoc?>)</label><br><?php
+  }else{
+  	?><label class="arial-12">FACTURA</label><br><?php
+  }
+?>
 <label class="arial-12"><?=$ciudadTxt?></label><br>
 <label class="arial-12"><?="Telefono ".$telefonoTxt?></label><br>
 <label class="arial-12"><?="-------------------------------------------------------"?></label><br>
@@ -243,21 +251,25 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$yyy=$yyy+6;
 }
 $montoFinal=$montoTotal-$descuentoVenta;
-$montoTotal=number_format($montoTotal,2,'.','');
-$montoFinal=number_format($montoFinal,2,'.','');
+$montoTotal=number_format($montoTotal,1,'.','')."0";
+$montoFinal=number_format($montoFinal,1,'.','')."0";
 
-?><script>
+/*?><script>
      var subtotal=Math.ceil10(<?=$montoTotal?>, -1); 
      var subfinal=Math.ceil10(<?=$montoFinal?>, -1);    	
 </script>
 <?php
+
 if(isset($_GET["var_php2"])){
    $montoFinal=$_GET["var_php2"];
    $montoTotal=$_GET["var_php"];
 }else{
      echo "<script language='javascript'>
              window.location.href = window.location.href + '&var_php=' + subtotal + '&var_php2=' + subfinal;</script>";
-}
+}*/
+
+
+
 
 //$montoTotal2 = "<script> document.writeln(subtotal); </script>";
 //$montoFinal2 = "<script> document.writeln(subfinal); </script>";

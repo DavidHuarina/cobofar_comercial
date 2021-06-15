@@ -1,7 +1,7 @@
 <html>
     <head>
-        <title>Venta</title>
-        <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
+        <title>VENTA</title>
+        <link  rel="icon"   href="imagenes/carrito.png" type="image/png" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
