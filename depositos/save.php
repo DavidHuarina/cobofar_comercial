@@ -22,6 +22,7 @@ $monto_caja=0;
 $dirArchivo="";
 $archivoDefecto=0;
 $monto_caja=$_POST["monto_calc"];
+$monto_caja2=$_POST["monto_calc2"];
 if($_FILES['documentos_cabecera']["name"]){
       $filename = $_FILES['documentos_cabecera']["name"]; //Obtenemos el nombre original del archivos
       $source = $_FILES['documentos_cabecera']["tmp_name"]; //Obtenemos un nombre temporal del archivos    
@@ -54,10 +55,23 @@ if($_FILES['documentos_cabecera']["name"]){
   $archivoDefecto=1;
 }
 
-$sql="insert into $table (codigo,glosa, fecha,fecha_registro,cod_banco,cod_funcionario, nro_cuenta,monto_caja,monto_registrado,ubicacion_archivo,cod_estadoreferencial,cod_cuenta,fechaf,hora,horaf) 
-values($codigo,'$nombre','$fecha_ini','$fecha_registro','$rpt_banco','$cod_funcionario','$numero_cuenta','$monto_caja','$monto','$dirArchivo','1','$rpt_cuenta','$fecha_fin','$exahorainicial','$exahorafinal')";
+$sql="insert into $table (codigo,glosa, fecha,fecha_registro,cod_banco,cod_funcionario, nro_cuenta,monto_caja,monto_registrado,ubicacion_archivo,cod_estadoreferencial,cod_cuenta,fechaf,hora,horaf,monto_registradousd,monto_cajausd) 
+values($codigo,'$nombre','$fecha_ini','$fecha_registro','$rpt_banco','$cod_funcionario','$numero_cuenta','$monto_caja','$monto','$dirArchivo','1','$rpt_cuenta','$fecha_fin','$exahorainicial','$exahorafinal','$monto_caja2','$monto2')";
 $sql_inserta=mysqli_query($enlaceCon,$sql);
 if($sql_inserta==1){
+  if($monto_caja>0){
+     $sql="INSERT INTO cuentas_registrodeposito (cod_cuenta,cod_registrodeposito) VALUES('$rpt_cuenta','$codigo')";
+     $sql_inserta=mysqli_query($enlaceCon,$sql);
+  }  
+  if($monto_caja2>0){
+     $sql="INSERT INTO cuentas_registrodeposito (cod_cuenta,cod_registrodeposito) VALUES('$rpt_cuenta2','$codigo')";
+     $sql_inserta=mysqli_query($enlaceCon,$sql);
+  }
+
+
+  
+
+
   if($archivoDefecto==1){
      $directorio2=str_replace("/","@",$directorio2);
      echo "<script language='Javascript'>

@@ -284,7 +284,7 @@ function enviar_nav(f){
 	<?php
 	$cod_ciudad=$_COOKIE['global_agencia'];
 	echo "<form method='post' action=''>";
-	$sql="SELECT f.codigo,f.cod_funcionario,f.monto_registrado,f.monto_caja,f.fecha,f.glosa,f.nro_cuenta,f.cod_banco,f.ubicacion_archivo,f.cod_cuenta FROM registro_depositos f join funcionarios fu on fu.codigo_funcionario=f.cod_funcionario where f.cod_estadoreferencial=1 and fu.cod_ciudad='$cod_ciudad'";
+	$sql="SELECT f.codigo,f.cod_funcionario,f.monto_registrado,f.monto_caja,f.fecha,f.glosa,f.nro_cuenta,f.cod_banco,f.ubicacion_archivo,f.cod_cuenta,f.monto_registradousd FROM registro_depositos f join funcionarios fu on fu.codigo_funcionario=f.cod_funcionario where f.cod_estadoreferencial=1 and fu.cod_ciudad='$cod_ciudad'";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural</h1>";
@@ -303,6 +303,7 @@ function enviar_nav(f){
 	<th width='20%'>Descripción</th>
 	<th>Banco</th>
 	<th>Monto</th>
+	<th>Monto USD</th>
 	<th>Responsable</th>
 	<th>Fecha</th>
 	<th>Estado</th>
@@ -321,8 +322,10 @@ function enviar_nav(f){
         $responsable=nombreVisitador($dat["cod_funcionario"]);
 
         $monto=$dat['monto_registrado'];
+        $monto2=$dat['monto_registradousd'];
         $monto_caja=$dat['monto_caja'];
         $monto_formato=number_format($monto,2,'.',',');
+        $monto_formatoUSD=number_format($monto2,2,'.',',');
         $enlaceDetalles="<a href='$urlListArchivos?c=$codigo&b=0' target='_blank' class='btn btn-sm btn-info btn-fab' style='background:#BD9A22;'><i class='material-icons'>folder_open</i>&nbsp;</a>";
         $inputcheck="<input type='checkbox' name='codigo' value='$codigo'>";
 		echo "<tr>
@@ -330,6 +333,7 @@ function enviar_nav(f){
 		<td>$glosa</td>
 		<td>$banco</td>
 		<td align='right'>$monto_formato</td>
+		<td align='right'>$monto_formatoUSD ($)</td>
 		<td><small>$responsable</small></td>
 		<td>$fecha</td>
 		<td>$enlaceDetalles</td>

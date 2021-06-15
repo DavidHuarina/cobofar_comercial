@@ -31,7 +31,7 @@ $sql="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer
+	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -41,7 +41,7 @@ $sqlAnulado="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer
+	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -51,7 +51,7 @@ $sqlAnuladoReal="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer
+	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and s.fecha_anulacion BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -78,6 +78,8 @@ $respAnuladoReal=mysqli_query($enlaceCon,$sqlAnuladoReal);
 $totalVenta=0;
 $totalEfectivo=0;
 $totalTarjeta=0;
+$totalEfectivoUsd=0;
+$totalEfectivoBs=0;
 while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
@@ -85,13 +87,16 @@ while($datos=mysqli_fetch_array($resp)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
-	$montoVenta=ceiling($montoVenta,0.1);
+	$montoVenta=number_format($montoVenta,1,'.','');
 	$totalVenta=$totalVenta+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
-	
+	$montoDolares=$datos['monto_cancelado_usd'];
+	$tipoCambio=$datos['tipo_cambio'];
 	if($codTipoPago==1){
+		$totalEfectivoBs+=($montoDolares*$tipoCambio);
+		$totalEfectivoUsd+=$montoDolares;
 		$totalEfectivo+=$montoVenta;
 	}else{
 		$montoVenta=number_format($montoVenta,1,'.','');
@@ -114,7 +119,7 @@ while($datos=mysqli_fetch_array($respAnulado)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
-	$montoVenta=ceiling($montoVenta,0.1);
+	$montoVenta=number_format($montoVenta,1,'.','');
 	$totalVentaAnulada=$totalVentaAnulada+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
@@ -132,7 +137,7 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
-	$montoVenta=ceiling($montoVenta,0.1);
+	$montoVenta=number_format($montoVenta,1,'.','');
 	$totalVentaAnuladaReal=$totalVentaAnuladaReal+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
@@ -162,10 +167,14 @@ $saldoCajaChica4F=number_format($saldoCajaChica4,2,".",",");
 $saldoCajaChica5=$saldoCajaChica2-$totalVentaAnuladaReal;
 $saldoCajaChica5F=number_format($saldoCajaChica5,2,".",",");
 
+$saldoCajaChica6=$saldoCajaChica5-($totalEfectivoBs);
+if($saldoCajaChica6<0){
+	$saldoCajaChica6=0;
+}
 
 $fechaCajaCierre=strftime('%d/%m/%Y',strtotime($fecha_ini));
 $fechaCajaCierreFin=strftime('%d/%m/%Y',strtotime($fecha_fin));
 
 
-echo number_format($saldoCajaChica5,2,'.','');
+echo number_format($saldoCajaChica6,2,'.','')."#####".number_format($totalEfectivoUsd,2,'.','');
 

@@ -55,7 +55,7 @@ $sql="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd
+	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -65,7 +65,7 @@ $sqlAnulado="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd
+	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -75,7 +75,7 @@ $sqlAnuladoReal="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd
+	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and s.fecha_anulacion BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -103,6 +103,7 @@ $totalVenta=0;
 $totalEfectivo=0;
 $totalTarjeta=0;
 $totalEfectivoUsd=0;
+$totalEfectivoBs=0;
 while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
@@ -116,9 +117,11 @@ while($datos=mysqli_fetch_array($resp)){
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
 	$montoDolares=$datos['monto_cancelado_usd'];
+	$tipoCambio=$datos['tipo_cambio'];	
 	$personalCliente=nombreVisitador($datos['cod_chofer']);
 	
 	if($codTipoPago==1){
+		$totalEfectivoBs+=($montoDolares*$tipoCambio);
 		$totalEfectivoUsd+=$montoDolares;	
 		$totalEfectivo+=$montoVenta;
 	}else{
@@ -193,7 +196,11 @@ $saldoCajaChica4F=number_format($saldoCajaChica4,2,".",",");
 $saldoCajaChica5=$saldoCajaChica2-$totalVentaAnuladaReal;
 $saldoCajaChica5F=number_format($saldoCajaChica5,2,".",",");
 
-
+$saldoCajaChica6=$saldoCajaChica5-($totalEfectivoBs);
+if($saldoCajaChica6<0){
+	$saldoCajaChica6=0;
+}
+$saldoCajaChica6F=number_format($saldoCajaChica6,2,".",",");
 
 $nombreFuncionario=nombreVisitador($rpt_funcionario);
 $fechaCajaCierre=strftime('%d/%m/%Y',strtotime($fecha_ini));
@@ -224,8 +231,8 @@ $totalIngresosFormat=number_format($totalIngresos,2,".",",");
     <tr align="center" class="arial-8"><td><?="TOTAL EFECTIVO"?></td><td><?="$totalEfectivoF"?></td><td></td></tr>
     <tr align="center" class="arial-8"><td><?="TOTAL TARJETA"?></td><td><?="$totalTarjetaF"?></td><td></td></tr>
     <tr align="center" class="arial-8"><td><?="TOTAL VENTAS ANULADAS"?></td><td><?="$saldoCajaChica4F"?></td><td></td></tr>    
-    <tr align="center" class="arial-8"><td style='font-weight: bold'><?="TOTAL A DEPOSITAR"?></td><td style='font-weight: bold'><?="$saldoCajaChica5F"?></td><td></td></tr>
-    <tr align="center" class="arial-8"><td><?="MONTO RECIBIDO USD"?></td><td><?="$totalEfectivoFUSD ($)"?></td><td></td></tr>
+    <tr align="center" class="arial-8"><td style='font-weight: bold'><?="TOTAL A DEPOSITAR (BS)"?></td><td style='font-weight: bold'><?="$saldoCajaChica6F"?></td><td></td></tr>
+    <tr align="center" class="arial-8"><td style='font-weight: bold'><?="TOTAL A DEPOSITAR (USD)"?></td><td style='font-weight: bold'><?="$totalEfectivoFUSD ($)"?></td><td></td></tr>
    </table>
 <br><br>
 

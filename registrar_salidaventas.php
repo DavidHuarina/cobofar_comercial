@@ -904,7 +904,7 @@ function validar(f, ventaDebajoCosto,pedido){
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
-				if(($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()=="")&&$("#nitCliente").val()!=""&&$("#razonSocial").val()!=""){
+				if(($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()=="")&&$("#nitCliente").val()!=""&&$("#razonSocial").val()!=""&&($("#efectivoRecibidoUnidoUSD").val()==0||$("#efectivoRecibidoUnidoUSD").val()=="")){
 					errores++;
 					document.getElementById("efectivoRecibidoUnido").focus();
 					document.getElementById("efectivoRecibidoUnido").select();
@@ -965,6 +965,13 @@ function validar(f, ventaDebajoCosto,pedido){
 					$("#pedido_realizado").val(0);
 				   return(false);
 		  	  }// fin nro de tarjeta		  	
+		  	}else{
+		  	  if($("#nro_tarjeta").val()!=""){
+                errores2++;
+                alert("Debe cambiar el TIPO DE PAGO a PAGO CON TARJETA");
+				$("#pedido_realizado").val(0);
+				return(false);
+		  	  }	
 		  	}
 		  	//CONFIRMACION
 		  	if(errores2==0){
@@ -1202,7 +1209,7 @@ $tipoCambio=1;
 while($filaUSD=mysqli_fetch_array($respUsd)){
 		$tipoCambio=$filaUSD[0];	
 }
-?><input type="hidden" id="confirmacion_guardado" value="0"><input type="hidden" id="tipo_cambio_dolar" value="<?=$tipoCambio?>"><?php
+
 $usuarioVentas=$_COOKIE['global_usuario'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];
@@ -1307,6 +1314,7 @@ while($reg=mysqli_fetch_array($rs))
 
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
+	<input type="hidden" id="confirmacion_guardado" value="0"><input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
 	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" id="cod_medico" name="cod_medico" value="0">
 	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">

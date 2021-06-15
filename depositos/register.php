@@ -43,8 +43,12 @@ if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
         url: "ajaxCalcularMontoArqueo.php",
         data: parametros,   
         success:  function (resp) { 
+          var r=resp.split("#####");
           //alert(resp);
-          $("#monto_calc").val(resp);          
+          $("#monto_calc").val(r[0]); 
+          $("#monto_calc2").val(r[1]);
+          $("#monto").val(r[0]); 
+          $("#monto2").val(r[1]);          
         }
     });
  }
@@ -77,7 +81,7 @@ echo "<h1>$moduleNameSingular</h1>";
 </div>
 </center>-->
 <?php
-echo "<center><table class='table table-sm' width='60%'>";
+echo "<center><table class='table table-sm table-condensed' width='60%'>";
 
 echo "<tr><td align='left' class='bg-info text-white'>Descripción</td>";
 echo "<td align='left' colspan='3'>
@@ -105,7 +109,7 @@ echo "<tr><td align='left' class='bg-info text-white'>Fecha</td>";
 echo "<td align='left'>
 	<INPUT  type='date' class='form-control col-sm-10' value='$fecha_rptdefault' id='fecha_ini' size='10' name='fecha_ini'><INPUT  type='time' class='form-control col-sm-10' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>
 </td>";
-echo "<td align='left'>
+echo "<td align='left' colspan='2'>
   <INPUT  type='date' class='form-control col-sm-10' value='$fecha_rptdefault' id='fecha_fin' size='10' name='fecha_fin'><INPUT  type='time' class='form-control col-sm-10' value='$hora_rptfindefault' id='exahorafinal' size='10' name='exahorafinal'>
 </td>";
 echo "</tr>";
@@ -126,8 +130,8 @@ echo "<td align='left'>
 	echo "</select>
 </td>";
 echo "</tr>";*/
-echo "<tr><td align='left' class='bg-info text-white'>Cuenta</td>";
-echo "<td align='left'>
+echo "<tr><td align='left'class='text-white' width='15%' style='background:#888888'>Cuenta</td>";
+echo "<td align='left' width='30%'>
 <input type='hidden' value='1' name='rpt_banco'  id='rpt_banco'>
   <select name='rpt_cuenta'  id='rpt_cuenta' class='selectpicker form-control' data-style='btn btn-primary' data-live-search='true'>";
   $sql="select codigo, descripcion,moneda from cuentas_bancarias where estado=1 order by 2";
@@ -142,18 +146,38 @@ echo "<td align='left'>
     }   
   }
   echo "</select><input type='hidden' class='form-control' name='numero_cuenta' size='40'>
+</td><td align='left' width='15%' class='bg-success text-white'>Cuenta (USD)</td>";
+echo "<td align='left' width='20%'>
+  <select name='rpt_cuenta2'  id='rpt_cuenta2' class='selectpicker form-control' data-style='btn btn-success' data-live-search='true'>";
+  $sql="select codigo, descripcion,moneda from cuentas_bancarias where estado=1 order by 2";
+  $resp=mysqli_query($enlaceCon,$sql);
+  while($dat=mysqli_fetch_array($resp))
+  { $codigo_cat=$dat[0];
+    $nombre_cat=$dat[1]." (".$dat[1].")";
+    if($codigo_cat==1){  //BANCO MERCANTIL POR DEFECTO SELECCIONADO
+           echo "<option value='$codigo_cat' selected>$nombre_cat</option>";
+    }else{
+           echo "<option value='$codigo_cat'>$nombre_cat</option>";
+    }   
+  }
+  echo "</select>
 </td>";
 echo "</tr>";
 
-echo "<tr><td align='left' class='bg-info text-white'>Monto a Depositar</td>";
-echo "<td align='left' colspan='2'>
-  <input type='number' readonly class='form-control' name='monto_calc' id='monto_calc' step='any' required>
-</td><td align='right'>
- <a href='#' title='CALCULAR MONTO A DEPOSITAR' onclick='calcularMontoDepositado(); return false;' class='btn btn-fab btn-sm btn-primary'><i class='material-icons'>refresh</i></a>
+echo "<tr><td align='left' class=' text-white' style='background:#888888'>Monto a Depositar</td>";
+echo "<td align='left'>
+  <input type='number' readonly class='form-control col-sm-10' name='monto_calc' id='monto_calc' step='any' required>
+ <a href='#' title='CALCULAR MONTO A DEPOSITAR' onclick='calcularMontoDepositado(); return false;' class='btn btn-fab btn-sm btn-default col-sm-1 float-right' style='margin-top:-25px'><i class='material-icons'>refresh</i></a>
+</td><td align='left' class='bg-success text-white'>Monto a Depositar (USD)</td>";
+echo "<td align='left'>
+  <input type='number' readonly class='form-control' name='monto_calc2' id='monto_calc2' step='any' required>
 </td></tr>";
-echo "<tr><td align='left' class='bg-info text-white'>Monto Depositado</td>";
-echo "<td align='left' colspan='3'>
-	<input type='number' class='form-control' name='monto' step='any' required>
+echo "<tr><td align='left' class=' text-white' style='background:#888888'>Monto Depositado</td>";
+echo "<td align='left'>
+	<input type='number' class='form-control' name='monto' id='monto' step='any' required>
+</td><td align='left' class='bg-success text-white'>Monto Depositado (USD)</td>";
+echo "<td align='left'>
+  <input type='number' class='form-control' name='monto2' id='monto2' step='any' required>
 </td></tr>";
 echo "<tr><td align='left' class='bg-info text-white'>Adjuntar Archivo</td>";
 echo "<td align='left' colspan='3'>
