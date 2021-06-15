@@ -62,7 +62,7 @@ $sql="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes,s.salida_anulada
+	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes,s.salida_anulada,s.monto_cancelado_usd
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' and s.cod_tipopago=1 ";
@@ -72,7 +72,7 @@ $sqlTarjetas="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes,
+	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes,s.monto_cancelado_usd
 	(SELECT nombre from bancos where codigo=(SELECT cod_banco FROM tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes limit 1))nombre_banco,(SELECT nro_tarjeta FROM tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes limit 1)numero_tarjeta
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
@@ -85,7 +85,7 @@ $sqlAnuladoReal="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes
+	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes,s.monto_cancelado_usd
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and s.fecha_anulacion BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -124,6 +124,7 @@ echo "<br><table align='center' class='textomediano' width='100%'>
 
 $totalVenta=0;
 $totalEfectivo=0;
+$totalEfectivoUsd=0;
 while($datos=mysqli_fetch_array($resp)){
     $codigoSalida=$datos['cod_salida_almacenes'];	
 	$fechaVenta=$datos[0];
@@ -132,22 +133,24 @@ while($datos=mysqli_fetch_array($resp)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
-	$montoVenta=ceiling($montoVenta,0.1);
+	$montoVenta=number_format($montoVenta,1,'.','');
 	$totalVenta=$totalVenta+$montoVenta;	
 	
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
 	$personalCliente=nombreVisitador($datos['cod_chofer']);
-		
+	$montoDolares=$datos['monto_cancelado_usd'];	
 	if($codTipoPago==1){
-	    $totalEfectivo+=$montoVenta;		
+	    $totalEfectivo+=$montoVenta;
+	    $totalEfectivoUsd+=$montoDolares;		
 	}else{
 		$montoVenta=number_format($montoVenta,1,'.','');
 		$totalTarjeta+=$montoVenta;		
 	}
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	$totalEfectivoF=number_format($totalEfectivo,2,".",",");
+	$totalEfectivoFUSD=number_format($totalEfectivoUsd,2,".",",");
 	$totalTarjetaF=number_format($totalTarjeta,2,".",",");
 	
 	if($datos['salida_anulada']==0){
@@ -216,7 +219,7 @@ while($datos=mysqli_fetch_array($respTarjeta)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
-	$montoVenta=ceiling($montoVenta,0.1);
+	$montoVenta=number_format($montoVenta,1,'.','');
 	$totalVenta=$totalVenta+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
@@ -294,7 +297,7 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
-	$montoVenta=ceiling($montoVenta,0.1);
+	$montoVenta=number_format($montoVenta,1,'.','');
 	$totalVentaAnuladaReal=$totalVentaAnuladaReal+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
@@ -359,6 +362,10 @@ echo "<tr><th>Total Ventas Anuladas  </th>
 echo "<tr>
 	<th>Total a Depositar:</th>
 	<th align='right'>$saldoCajaChica5F</th>
+</tr>";
+echo "<tr>
+	<th>Monto Recibido (USD):</th>
+	<th align='right'>$totalEfectivoFUSD</th>
 </tr>";
 echo "<tr>
 	<th>Total Ingresos:</th>
