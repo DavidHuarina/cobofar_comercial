@@ -1526,8 +1526,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<tr>
 			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
 			<?php
-			$sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
-			where p.estado_activo=1 order by 2;";
+			if($_COOKIE["global_tipo_almacen"]==1){
+                 $sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
+			where p.estado_activo=1 and p.cod_proveedor>0 order by 2;";
+			}else{
+	             $sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
+			where p.estado_activo=1 and p.cod_proveedor<0 order by 2;"; 
+			}
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){

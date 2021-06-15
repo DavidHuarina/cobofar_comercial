@@ -454,8 +454,13 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 			<tr>
 			<td><select class="textogranderojo" name='itemTipoMaterial' style="width:300px">
 			<?php
-			$sqlTipo="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
-			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
+			if($_COOKIE["global_tipo_almacen"]==1){
+               $sqlTipo="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
+			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 and p.cod_proveedor>0 order by 2;";
+            }else{
+	           $sqlTipo="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
+			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 and p.cod_proveedor<0 order by 2;";
+            }
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){

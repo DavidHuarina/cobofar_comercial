@@ -79,6 +79,7 @@ var parametros={"codigo":codReg};
         success:  function (resp) { 
             $("#datos_anular").html(resp);
             $("#codigo_salida").val(codReg);
+            $("#contrasena_admin").val("");
             $("#modalAnularFactura").modal("show");           
       }
  }); 
@@ -102,6 +103,22 @@ function confirmarCodigo(){
             }
       }
  }); 
+}
+
+
+function obtenerCodigoGenerado(){
+  var cad1=$("input#idtxtcodigo").val();
+  var pss=$("input#contrasena_admin").val();
+  var parametros={"codigo":cad1,"pass":pss};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/insertarCodigoConfirmar.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("input#idtxtclave").val(resp); 
+      }
+ });  
 }
 function pressEnter(e, f){
     tecla = (document.all) ? e.keyCode : e.which;
@@ -757,6 +774,11 @@ echo "</form>";
                 </div>
                 <div class="card-footer">
                    <button class="btn btn-default" onclick="confirmarCodigo()">ANULAR</button>
+                   <?php 
+                    if($_COOKIE["global_usuario"]==-1){
+                       ?><input type="password" id="contrasena_admin" value="" class='form-control' style='background: #5DFF00;color:#000;' placeholder='pass_admin' size='50'><a class="btn btn-primary btn-sm btn-fab" style='background:#100F0F;color:#5DFF00;' href="#" onclick="obtenerCodigoGenerado(); return false;"><i class='material-icons'>lock</i></a><?php 
+                    }
+                   ?>                   
                 </div>
       </div>  
     </div>

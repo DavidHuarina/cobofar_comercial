@@ -31,7 +31,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),m.cantidad_presentacion,m.divi,(SELECT GROUP_CONCAT(p.nombre) from principios_activos p where p.codigo in (SELECT cod_principioactivo from principios_activosproductos where cod_material=m.codigo_material)) from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
 
 
-  if((int)$codigoMat>0||(int)$codigoMat==-100){
+  if((int)$codigoMat!=0){
         $sql=$sql." and m.codigo_material in (".$codigoMat.")";
   }else{
 	if($nombreItem!=""){
