@@ -372,9 +372,9 @@ function totales(){
 
     subtotalPrecio=Math.round(subtotalPrecio*100)/100;
 
-	subtotal=Math.round(subtotal*100)/100;
+	subtotal=Math.round(subtotal*10)/10;
 	
-	subtotal=Math.ceil10(subtotal, -1); 
+	subtotal=subtotal.toFixed(2); 
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 
     document.getElementById("totalVenta").value=subtotal;
@@ -424,8 +424,7 @@ function aplicarDescuento(f){
 	document.getElementById("descuentoVentaUSDPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
 	aplicarCambioEfectivo();
 	minimoEfectivo();
-	//totales();
-	
+	//totales();	
 }
 function aplicarDescuentoUSD(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
