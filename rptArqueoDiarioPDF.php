@@ -363,9 +363,9 @@ echo "<tr>
 	<th>Total a Depositar:</th>
 	<th align='right'>$saldoCajaChica5F</th>
 </tr>";
-echo "<tr>
+echo "<tr style='color:green'>
 	<th>Monto Recibido (USD):</th>
-	<th align='right'>$totalEfectivoFUSD</th>
+	<th align='right'>$totalEfectivoFUSD ($)</th>
 </tr>";
 echo "<tr>
 	<th>Total Ingresos:</th>

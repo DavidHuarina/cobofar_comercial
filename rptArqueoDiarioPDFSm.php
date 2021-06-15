@@ -225,7 +225,7 @@ $totalIngresosFormat=number_format($totalIngresos,2,".",",");
     <tr align="center" class="arial-8"><td><?="TOTAL TARJETA"?></td><td><?="$totalTarjetaF"?></td><td></td></tr>
     <tr align="center" class="arial-8"><td><?="TOTAL VENTAS ANULADAS"?></td><td><?="$saldoCajaChica4F"?></td><td></td></tr>    
     <tr align="center" class="arial-8"><td style='font-weight: bold'><?="TOTAL A DEPOSITAR"?></td><td style='font-weight: bold'><?="$saldoCajaChica5F"?></td><td></td></tr>
-    <tr align="center" class="arial-8"><td><?="MONTO RECIBIDO USD"?></td><td><?="$totalEfectivoFUSD"?></td><td></td></tr>
+    <tr align="center" class="arial-8"><td><?="MONTO RECIBIDO USD"?></td><td><?="$totalEfectivoFUSD ($)"?></td><td></td></tr>
    </table>
 <br><br>
 
