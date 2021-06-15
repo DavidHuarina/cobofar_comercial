@@ -339,6 +339,9 @@ $saldoCajaChica4F=number_format($saldoCajaChica4,2,".",",");
 $saldoCajaChica5=$saldoCajaChica2-$saldoCajaChica4;
 $saldoCajaChica5F=number_format($saldoCajaChica5,2,".",",");
 
+
+$totalIngresos=($totalEfectivo+$totalTarjeta)-$saldoCajaChica4;
+$totalIngresosFormat=number_format($totalIngresos,2,".",",");
 echo "<br><table align='center' class='textomediano' width='100%'>";
 
 $totalVentaFormat=number_format($totalVenta,2,".",",");
@@ -354,8 +357,12 @@ echo "<tr><th>Total Ventas Anuladas  </th>
 <th align='right'>$saldoCajaChica4F</th>
 </tr>";
 echo "<tr>
-	<th>Total Monto Cierre:</th>
+	<th>Total a Depositar:</th>
 	<th align='right'>$saldoCajaChica5F</th>
+</tr>";
+echo "<tr>
+	<th>Total Ingresos:</th>
+	<th align='right'>$totalIngresosFormat</th>
 </tr>";
 echo "</table></br>";
 

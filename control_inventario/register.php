@@ -48,7 +48,7 @@ echo "<tr><td align='left' class='bg-info text-white'>Proveedor</td>";
 echo "<td align='left'>
 	<select name='rpt_categoria'  id='rpt_categoria' class='selectpicker form-control' data-style='btn btn-primary' onchange='cambiarSubLinea()' data-live-search='true'>
 	<option value='' disabled selected>--Seleccione--</option>";
-	$sql="select cod_proveedor, nombre_proveedor from proveedores order by 2";
+	$sql="select cod_proveedor, nombre_proveedor from proveedores where cod_proveedor>0 order by 2";
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_cat=$dat[0];
