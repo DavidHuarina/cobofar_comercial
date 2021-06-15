@@ -196,7 +196,8 @@ $fechaCajaCierre=strftime('%d/%m/%Y',strtotime($fecha_ini));
 $fechaCajaCierreFin=strftime('%d/%m/%Y',strtotime($fecha_fin));
 $nombreFuncionario=nombreVisitador($rpt_funcionario);
 
-
+$totalIngresos=($totalEfectivo+$totalTarjeta)-$saldoCajaChica4;
+$totalIngresosFormat=number_format($totalIngresos,2,".",",");
 
 
 ?>
@@ -219,7 +220,8 @@ $nombreFuncionario=nombreVisitador($rpt_funcionario);
     <tr align="center" class="arial-8"><td><?="TOTAL EFECTIVO"?></td><td><?="$totalEfectivoF"?></td><td></td></tr>
     <tr align="center" class="arial-8"><td><?="TOTAL TARJETA"?></td><td><?="$totalTarjetaF"?></td><td></td></tr>
     <tr align="center" class="arial-8"><td><?="TOTAL VENTAS ANULADAS"?></td><td><?="$saldoCajaChica4F"?></td><td></td></tr>    
-    <tr align="center" class="arial-8"><td style='font-weight: bold'><?="TOTAL CIERRE DE CAJA EFECTIVO"?></td><td style='font-weight: bold'><?="$saldoCajaChica5F"?></td><td></td></tr>
+    <tr align="center" class="arial-8"><td style='font-weight: bold'><?="TOTAL A DEPOSITAR"?></td><td style='font-weight: bold'><?="$saldoCajaChica5F"?></td><td></td></tr>
+    <tr align="center" class="arial-8"><td><?="TOTAL INGRESOS"?></td><td><?="$totalIngresosFormat"?></td><td></td></tr>
    </table>
 <br><br>
 
