@@ -52,14 +52,22 @@ $hora_rptfindefault="23:00";
 $fecha_rptdefault=date("Y-m-d");
 $globalCiudad=$_COOKIE['global_agencia'];
 $globalUser=$_COOKIE['global_usuario'];
+
 echo "<h1>Reporte Arqueo Diario de Caja</h1><br>";
 echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker form-control'>";
-	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$globalCiudad' order by descripcion";
-	$resp=mysqli_query($enlaceCon,$sql);
+	
+	if(isset($_GET['sw'])){
+		$sql_ciudades="select cod_ciudad, descripcion from ciudades  order by descripcion";
+		$sql_personal="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios  order by paterno,materno,nombres"; 
+	}else{
+		$sql_ciudades="select cod_ciudad, descripcion from ciudades where cod_ciudad='$globalCiudad' order by descripcion";	
+		$sql_personal="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres"; 
+	}
+	$resp=mysqli_query($enlaceCon,$sql_ciudades);
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
@@ -71,8 +79,8 @@ echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 	}
 	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Personal</th><td><select name='rpt_funcionario' id='rpt_funcionario' class='selectpicker form-control' data-live-search='true' data-size='6'>";
-	$sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres"; 
-	$resp=mysqli_query($enlaceCon,$sql);
+	
+	$resp=mysqli_query($enlaceCon,$sql_personal);
 	while($dat=mysqli_fetch_array($resp))
 	{	$cod_funcionario=$dat[0];
 		$nombre_fun=$dat[1];
