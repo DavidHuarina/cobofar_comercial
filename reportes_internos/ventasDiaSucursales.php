@@ -42,7 +42,7 @@ foreach ($listAlma->lista as $alma) {
 $sql="SELECT SUM(MFACTURA) AS MONTO_V,YEAR(d.fecha) as anio,MONTH(d.fecha) as mes,DAY(d.fecha) as dia,MAX(fechat) AS HORA
 FROM VFICHAM d
 WHERE d.STA in ('V','M')
-AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND DATEPART(HOUR, d.fechat)>20  GROUP BY YEAR(d.fecha),MONTH(d.fecha),DAY(d.fecha);";
+AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND DATEPART(HOUR, d.fechat)>=22  GROUP BY YEAR(d.fecha),MONTH(d.fecha),DAY(d.fecha);";
 //echo $sql;
 if($dbh!=false){
      $stmt = $dbh->prepare($sql);
