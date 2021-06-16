@@ -12,8 +12,8 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 require_once __DIR__.'/../conexion_externa_farma.php';
 require_once '../function_web.php';
 
-$fechaInicio="14/04/2021";
-$fechaFinal="07/05/2021";
+$fechaInicio="01/05/2021";
+$fechaFinal="31/05/2021";
 $stringProductos="101401,
 101402,
 101403,
@@ -49,6 +49,7 @@ $stringProductos="101401,
     </tr>
    </thead>
 <?php
+$idprov=12;
 $listAlma=obtenerListadoAlmacenes();
 foreach ($listAlma->lista as $alma) {
       $age1=$alma->age1;
@@ -58,7 +59,7 @@ foreach ($listAlma->lista as $alma) {
 $sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,sum(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))-(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))*DESCTO3)/100))) AS MONTO_V
 FROM VFICHAD d LEFT JOIN APRODUCTOS P ON P.CPROD=d.CPROD
 WHERE d.STA in ('V','M')
-AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND P.CPROD IN ($stringProductos)
+AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND P.IDPROVEEDOR='$idprov'
 GROUP BY d.CPROD,P.DES;";
 //echo $sql;
 $stmt = $dbh->prepare($sql);

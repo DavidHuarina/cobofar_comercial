@@ -8,7 +8,29 @@ require("../funciones.php");
 if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
 
 ?>
-
+<style type="text/css">
+  .bootstrap-tagsinput .tag {
+  background: #5BC180 !important;
+  border: 1px solid #33FE89;
+  padding: 0 6px;
+  margin-right: 2px;
+  color: white;
+  border-radius: 4px;
+  height: 30px;
+  font-size: 16px;
+  padding-right: 5px;
+}
+.form-control{
+  background: #C0E7EE !important;
+}
+.bootstrap-tagsinput input{
+   background: #C0E7EE;
+    width: 200px;
+}
+.bootstrap-tagsinput input:focus{
+   background: #C0E7EE;
+}
+</style>
 <script>
 	function cambiarSubLinea(){
   var categoria=$("#rpt_banco").val();
@@ -134,11 +156,11 @@ echo "<tr><td align='left'class='text-white' width='15%' style='background:#8888
 echo "<td align='left' width='30%'>
 <input type='hidden' value='1' name='rpt_banco'  id='rpt_banco'>
   <select name='rpt_cuenta'  id='rpt_cuenta' class='selectpicker form-control' data-style='btn btn-primary' data-live-search='true'>";
-  $sql="select codigo, descripcion,moneda from cuentas_bancarias where estado=1 order by 2";
+  $sql="select codigo, descripcion,moneda from cuentas_bancarias where estado=1 and cod_moneda=1 order by 2";
   $resp=mysqli_query($enlaceCon,$sql);
   while($dat=mysqli_fetch_array($resp))
   { $codigo_cat=$dat[0];
-    $nombre_cat=$dat[1]." (".$dat[1].")";
+    $nombre_cat=$dat[1]." (".$dat[2].")";
     if($codigo_cat==1){  //BANCO MERCANTIL POR DEFECTO SELECCIONADO
            echo "<option value='$codigo_cat' selected>$nombre_cat</option>";
     }else{
@@ -149,11 +171,11 @@ echo "<td align='left' width='30%'>
 </td><td align='left' width='15%' class='bg-success text-white'>Cuenta (USD)</td>";
 echo "<td align='left' width='20%'>
   <select name='rpt_cuenta2'  id='rpt_cuenta2' class='selectpicker form-control' data-style='btn btn-success' data-live-search='true'>";
-  $sql="select codigo, descripcion,moneda from cuentas_bancarias where estado=1 order by 2";
+  $sql="select codigo, descripcion,moneda from cuentas_bancarias where estado=1 and cod_moneda=2 order by 2";
   $resp=mysqli_query($enlaceCon,$sql);
   while($dat=mysqli_fetch_array($resp))
   { $codigo_cat=$dat[0];
-    $nombre_cat=$dat[1]." (".$dat[1].")";
+    $nombre_cat=$dat[1]." (".$dat[2].")";
     if($codigo_cat==1){  //BANCO MERCANTIL POR DEFECTO SELECCIONADO
            echo "<option value='$codigo_cat' selected>$nombre_cat</option>";
     }else{
@@ -179,6 +201,11 @@ echo "<td align='left'>
 echo "<td align='left'>
   <input type='number' class='form-control' name='monto2' id='monto2' step='any' required>
 </td></tr>";
+echo "<tr><td align='left' class='bg-info text-white'>N. Recibo</td>";
+echo "<td align='left' colspan='3'>
+  <input type='text' class='form-control tagsinput' data-role='tagsinput' data-color='warning' name='nro_recibo_banco' id='nro_recibo_banco' value='' placeholder='Numero de Recibo'>
+</td></tr>";
+
 echo "<tr><td align='left' class='bg-info text-white'>Adjuntar Archivo</td>";
 echo "<td align='left' colspan='3'>
 	<small id='label_txt_documentos_cabecera'></small> 
