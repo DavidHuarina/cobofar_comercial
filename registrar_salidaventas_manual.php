@@ -1140,6 +1140,22 @@ function actualizarTablaMedicos(orden){
         }
     });	
 }
+function buscarMedicoTest(){
+   var codigo=$("#cod_medico").val();
+   var nom=$("#buscar_nom_doctor").val();
+   var app=$("#buscar_app_doctor").val();
+   var parametros={order_by:"codigo",cod_medico:codigo,nom_medico:nom,app_medico:app};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaMedicos.php",
+        data: parametros,
+        success:  function (resp) {
+        	actualizarListaInstitucion();
+        	$("#datos_medicos").html(resp);                 	   
+        }
+    });	
+}
 function actualizarListaInstitucion(){
    var parametros={cod:""};
    $.ajax({
@@ -2127,7 +2143,23 @@ if($banderaErrorFacturacion==0){
                 </div>                 
                 <br><br>
        </div>
-	   <div class="col-sm-6">       
+	   <div class="col-sm-6">  
+	   <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombres</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value=""/>
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Apellidos</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value=""/>
+                    </div>
+                  </div>
+                  <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest()'><i class='material-icons'>search</i></a>
+                </div>
+                <br>     
                    <table class="table table-bordered table-condensed">
                    	  <thead>
                    	  	<tr class="" style="background: #652BE9;color:#fff;"><th width="60%">Nombre</th><th>Matricula</th><th>-</th></tr>

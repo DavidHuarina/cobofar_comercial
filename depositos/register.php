@@ -201,9 +201,9 @@ echo "<td align='left'>
 echo "<td align='left'>
   <input type='number' class='form-control' name='monto2' id='monto2' step='any' required>
 </td></tr>";
-echo "<tr><td align='left' class='bg-info text-white'>N. Recibo</td>";
+echo "<tr><td align='left' class='bg-info text-white'>N. Recibo(s)</td>";
 echo "<td align='left' colspan='3'>
-  <input type='text' class='form-control tagsinput' data-role='tagsinput' data-color='warning' name='nro_recibo_banco' id='nro_recibo_banco' value='' placeholder='Numero de Recibo'>
+  <input type='text' class='form-control tagsinput' data-role='tagsinput' data-color='warning' name='nro_recibo_banco' id='nro_recibo_banco' value='' placeholder='Numero de Recibo(s)'>
 </td></tr>";
 
 echo "<tr><td align='left' class='bg-info text-white'>Adjuntar Archivo</td>";
