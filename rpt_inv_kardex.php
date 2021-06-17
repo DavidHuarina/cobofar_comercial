@@ -3,6 +3,8 @@ require('estilos_reportes_almacencentral.php');
 require('conexionmysqli.inc');
 require('function_formatofecha.php');
 require('function_comparafechas.php');
+require('funciones.php');
+
 ?>
 <style type="text/css">
 	.bg-plomoclaro{
@@ -167,14 +169,19 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			$suma_ingresosCaja=$suma_ingresosCaja+$cantidad_ingresoCaja;
 			$cantidad_kardexCaja=$cantidad_kardexCaja+$cantidad_ingresoCaja;
 
+			$cantidad_ingresoCajaF=formatNumberInt($cantidad_ingresoCaja);
+			$cantidad_kardexCajaF=formatNumberInt($cantidad_kardexCaja);
+			$cantidad_ingresoF=formatNumberInt($cantidad_ingreso);
+			$cantidad_kardexF=formatNumberInt($cantidad_kardex);
+
 			echo "<tr><td>Ingreso</td><td align='center'>$nro_ingreso</td><td align='center'>$fecha_consulta_format</td>
 			<td>&nbsp;$obs_ingreso</td>
-			<td align='right'>$cantidad_ingresoCaja</td>
+			<td align='right'>$cantidad_ingresoCajaF</td>
 			<td align='right'>0</td>
-			<td align='right'>$cantidad_kardexCaja</td>
-			<td align='right'class='bg-plomoclaro'>$cantidad_ingreso</td>
+			<td align='right'>$cantidad_kardexCajaF</td>
+			<td align='right'class='bg-plomoclaro'>$cantidad_ingresoF</td>
 			<td align='right'class='bg-plomoclaro'>0</td>
-			<td align='right'class='bg-plomoclaro'>$cantidad_kardex</td>
+			<td align='right'class='bg-plomoclaro'>$cantidad_kardexF</td>
 			<td align='left'>$nombre_ingreso</td><td>&nbsp;</td><td align='left'>$nombre_responsable</td></tr>";
 		}
 		//hacemos la consulta para salidas
@@ -220,15 +227,19 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			    }
 			}
 
+			$cantidad_salidaCajaF=formatNumberInt($cantidad_salidaCaja);
+			$cantidad_kardexCajaF=formatNumberInt($cantidad_kardexCaja);
+			$cantidad_salidaF=formatNumberInt($cantidad_salida);
+			$cantidad_kardexF=formatNumberInt($cantidad_kardex);
 			
 			echo "<tr><td>Salida</td><td align='center'>$nro_salida</td><td align='center'>$fecha_consulta_format</td>
 			   <td>&nbsp;$obs_salida</td>
 			   <td align='right'>0</td>
-			   <td align='right'>$cantidad_salidaCaja</td>
-			   <td align='right'>$cantidad_kardexCaja</td>
+			   <td align='right'>$cantidad_salidaCajaF</td>
+			   <td align='right'>$cantidad_kardexCajaF</td>
 			   <td align='right'class='bg-plomoclaro'>0</td>
-			   <td align='right'class='bg-plomoclaro'>$cantidad_salida</td>			   
-			   <td align='right'class='bg-plomoclaro'>$cantidad_kardex</td>
+			   <td align='right'class='bg-plomoclaro'>$cantidad_salidaF</td>			   
+			   <td align='right'class='bg-plomoclaro'>$cantidad_kardexF</td>
 			   <td align='left'>$nombre_salida</td><td align='left'>&nbsp;$nombre_territorio_destino</td><td align='left'>$nombre_responsable</td></tr>";
 		}
 	}
