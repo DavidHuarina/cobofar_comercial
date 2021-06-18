@@ -20,6 +20,9 @@ require('funciones.php');
 require('funcion_nombres.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 
+
+
+
 ?>
 <body>
 <style type="text/css">
@@ -36,6 +39,29 @@ include('phpqrcode/qrlib.php');
 <?php
 $cod_ciudad=$_COOKIE["global_agencia"];
 $codigoVenta=$_GET["codVenta"];
+$nroImpresiones=obtenerNumeroImpresiones($codigoVenta);
+$labelNroImpresiones="";
+if($nroImpresiones>0){
+	$labelNroImpresiones="<label class='arial-12'> (R)</label><br>";
+}
+
+
+
+$sqlInsert="select count(*) from `cantidad_impresiones` s where s.`cod_salida_almacen`=$codigoVenta";
+$respInsert=mysqli_query($enlaceCon,$sqlInsert);
+$nroItemsImp=mysqli_result($respInsert,0,0);
+
+
+$nroImpresionesNew=$nroImpresiones+1;
+if($nroItemsImp>0){
+	$sqlInsertImp="UPDATE cantidad_impresiones SET nro_impresion='$nroImpresionesNew' where cod_salida_almacen='$codigoVenta'";
+}else{	
+	$sqlInsertImp="INSERT INTO cantidad_impresiones (cod_salida_almacen,nro_impresion) VALUES('$codigoVenta','$nroImpresionesNew')";
+}
+mysqli_query($enlaceCon,$sqlInsertImp);
+
+
+
 
 //consulta cuantos items tiene el detalle
 $sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_almacen`=$codigoVenta";
@@ -310,6 +336,7 @@ $txtMonto=NumeroALetras::convertir($montoEntero);
 <label class="arial-12"><?="FECHA LIMITE DE EMISION: $fechaLimiteEmision"?></label><br>
 <label class="arial-12"><?="Proceso: $codigoVenta"?></label><br>
 <label class="arial-12"><?="Cajero(a): $nombreFuncionario"?></label><br>
+<?="$labelNroImpresiones"?>
 <label class="arial-12"><?="--------------------------------------------------------"?></label><br>
 <div style="width:75%"><label class="arial-12"><?=$txt2?></label><br></div>
 <?php

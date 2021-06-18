@@ -4,8 +4,10 @@ $order_by=$_GET["order_by"];
 $cod_medico=$_GET["cod_medico"];
 
 
-
-$sql="SELECT codigo,CONCAT(nombres,' ',apellidos) nombres,matricula from medicos where estado=1 ";
+$sql="(
+SELECT codigo,CONCAT(nombres,' ',apellidos) nombres,matricula from medicos where codigo='$cod_medico'
+) UNION (";
+$sql.="SELECT codigo,CONCAT(nombres,' ',apellidos) nombres,matricula from medicos where estado=1 ";
 
 if(isset($_GET["nom_medico"])){
    $sql.=" and nombres like '%".$_GET["nom_medico"]."%' ";
@@ -13,11 +15,11 @@ if(isset($_GET["nom_medico"])){
 if(isset($_GET["app_medico"])){
    $sql.=" and apellidos like '%".$_GET["app_medico"]."%' ";
 }
-if($cod_medico>0){
+/*if($cod_medico>0){
    $sql.=" or codigo='$cod_medico'";
-}
-$sql.=" order by $order_by desc limit 7 ";
-
+}*/
+$sql.=" order by $order_by desc limit 7) ";
+//echo $sql;
 $resp=mysqli_query($enlaceCon,$sql);
 $filaSeleccionado="";
 $filas="";

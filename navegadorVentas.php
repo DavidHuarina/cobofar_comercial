@@ -393,6 +393,18 @@ function mostrarRegistroConTarjeta(codigo){
     $("#codigo_salida_tarjeta").val(codigo);
     $("#modalPagoTarjeta").modal("show");   
 }
+function guardarRecetaVenta(medico,salida){
+    $("#nom_doctor").val("");
+    $("#ape_doctor").val("");
+    $("#dir_doctor").val("");
+    $("#mat_doctor").val("");
+    $("#n_ins_doctor").val("");
+    $("#cod_medico").val(medico);
+    $("#cod_salida").val(salida);
+    $("#nomcli").val($("#razonSocial").val());
+    actualizarTablaMedicos("apellidos");
+    $("#modalRecetaVenta").modal("show");
+}
 
 function removerRegistroConTarjeta(codigo){
     Swal.fire({
@@ -448,6 +460,129 @@ function guardarTarjetaVenta(){
  }
 }
 
+
+function nuevaInstitucion(){
+  var institucion=$("#ins_doctor").val();
+  if(institucion==-2){
+    if($("#div_ins_doctor").hasClass("d-none")){
+        $("#div_ins_doctor").removeClass("d-none")
+    }
+  }else{
+    if(!$("#div_ins_doctor").hasClass("d-none")){
+        $("#div_ins_doctor").addClass("d-none")
+    }
+  }
+}
+
+function guardarMedicoReceta(){
+    var nom_doctor=$("#nom_doctor").val();
+    var ape_doctor=$("#ape_doctor").val();
+    var dir_doctor=$("#dir_doctor").val();
+    var mat_doctor=$("#mat_doctor").val();
+    var n_ins_doctor=$("#n_ins_doctor").val();
+    var ins_doctor=$("#ins_doctor").val();
+    var esp_doctor=$("#esp_doctor").val();
+    var esp_doctor2=$("#esp_doctor2").val();
+    if(nom_doctor==""||ape_doctor==""){
+       //alerta
+    }else{
+        if(ins_doctor==-2&&n_ins_doctor==""){
+          //alerta
+        }else{
+            guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_ins_doctor,ins_doctor,esp_doctor,esp_doctor2);
+        }
+    }
+}
+
+function guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_ins_doctor,ins_doctor,esp_doctor,esp_doctor2){
+    var parametros={nom_doctor:nom_doctor,ape_doctor:ape_doctor,dir_doctor:dir_doctor,mat_doctor:mat_doctor,n_ins_doctor:n_ins_doctor,ins_doctor:ins_doctor,esp_doctor:esp_doctor,esp_doctor2:esp_doctor2};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxNuevoMedico.php",
+        data: parametros,
+        success:  function (resp) {
+            $("#nom_doctor").val("");
+            $("#ape_doctor").val("");
+            $("#dir_doctor").val("");
+            $("#mat_doctor").val("");
+            $("#n_ins_doctor").val("");
+            if(parseInt(resp)==1){
+               Swal.fire("Correcto!", "Se guardó el médico con éxito", "success");   
+               actualizarTablaMedicos("codigo");                       
+            }else{
+               Swal.fire("Error!", "Contactar con el administrador", "error");   
+            }            
+        }
+    }); 
+}
+
+function actualizarTablaMedicos(orden){
+    var codigo=$("#cod_medico").val();
+   var parametros={order_by:orden,cod_medico:codigo};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaMedicos.php",
+        data: parametros,
+        success:  function (resp) {
+            actualizarListaInstitucion();
+            $("#datos_medicos").html(resp);                        
+        }
+    }); 
+}
+
+
+function buscarMedicoTest(){
+   var codigo=$("#cod_medico").val();
+   var nom=$("#buscar_nom_doctor").val();
+   var app=$("#buscar_app_doctor").val();
+   var parametros={order_by:"codigo",cod_medico:codigo,nom_medico:nom,app_medico:app};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaMedicos.php",
+        data: parametros,
+        success:  function (resp) {
+            actualizarListaInstitucion();
+            $("#datos_medicos").html(resp);                        
+        }
+    }); 
+}
+function actualizarListaInstitucion(){
+   var parametros={cod:""};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaInstitucion.php",
+        data: parametros,
+        success:  function (resp) {
+            $("#ins_doctor").html(resp);   
+            $("#ins_doctor").selecpicker("refresh");                       
+        }
+    }); 
+}
+
+function asignarMedicoVenta(cod_medico){
+   var antMedico=$("#cod_medico").val();  
+   var codigo=$("#cod_salida").val();
+   if(antMedico==0){
+     var parametros={"codigo":codigo,"cod_medico":cod_medico};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveMedicoReceta.php",
+        data: parametros,
+        success:  function (resp) {  
+           window.location.reload();                      
+        }
+     });
+   }else{
+    alert("La RECETA ya fue registrada!, no se puede quitar ni cambiar.");
+   }
+}
+
+
         </script>
     </head>
     <body>
@@ -485,7 +620,22 @@ while($reg=mysqli_fetch_array($rs))
     $cadComboBancos=$cadComboBancos."<option value='$codBanco'>$nomBanco</option>";
    }
 
-
+$cadComboInstitucion = "";
+$consulta="SELECT c.codigo, c.nombre FROM instituciones c WHERE estado = 1 ORDER BY c.codigo ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codInstitucion = $reg["codigo"];
+    $nomInstitucion = $reg["nombre"];
+    $cadComboInstitucion=$cadComboInstitucion."<option value='$codInstitucion'>$nomInstitucion</option>";
+   }
+$cadComboEspecialidades = "";
+$consulta="SELECT c.codigo, c.nombre FROM especialidades c WHERE estado = 1 ORDER BY c.codigo ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codEsp = $reg["codigo"];
+    $nomEsp = $reg["nombre"];
+    $cadComboEspecialidades=$cadComboEspecialidades."<option value='$codEsp'>$nomEsp</option>";
+   }
 
 
 
@@ -533,7 +683,7 @@ $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado
+	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico
 	FROM salida_almacenes s, tipos_salida ts 
 	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 $sqlUser ";
 
@@ -566,6 +716,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$razonSocial=$dat[12];
 	$nitCli=$dat[13];
     $depositado=$dat['depositado'];
+    $codMedico=$dat['cod_medico'];
 	$montoFactura=number_format($dat['monto_final'],1,'.',',')."0";
     $fechaValidacion=0;
     if($fechaValidacion){
@@ -607,11 +758,18 @@ while ($dat = mysqli_fetch_array($resp)) {
       $estado_preparado= "";  
     }
     if($codTipoDoc==4){
-        $nro_correlativo="<i class='text-danger'>M-$nro_correlativo</i>";
+        $nro_correlativo="<i class=\"text-danger\">M-$nro_correlativo</i>";
     }else{
         $nro_correlativo="F-$nro_correlativo";
     }
-
+    $colorReceta="#14982C";
+    if($codMedico==""){
+      $codMedico=0;         
+    }
+    if($codMedico==0){
+        $colorReceta="#652BE9"; 
+    }
+    
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
@@ -634,18 +792,24 @@ while ($dat = mysqli_fetch_array($resp)) {
     }    
 	if($codTipoDoc==1){
         $htmlTarjeta="";
-      if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){
+        $htmlReceta="";
+        $htmlImpresion="";
+        if($salida_anulada!=1&&$estado_almacen==1){
+           $htmlReceta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>REGISTRAR RECETA</b><br>$nro_correlativo<br><i class=\"material-icons test-warning\" style=\"color:".$colorReceta.";font-size:40px;\">medical_services</i>' onclick='guardarRecetaVenta(".$codMedico.",".$codigo.");return false;' data-toggle='tooltip' style='background: ".$colorReceta.";color:#fff;'><i class='material-icons'>medical_services</i></a>";
+        }
+      if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){ 
+        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/invoice.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
         if($codTarjeta==1){            
-            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card_off</i></a>";            
+            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='<b>RELACIONAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-muted\">credit_card</i>' onclick='mostrarRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card_off</i></a>";            
         }else{
-            $htmlTarjeta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='Quitar Tarjeta' onclick='removerRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>"; 
+            $htmlTarjeta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>QUITAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-primary\">credit_card</i>' onclick='removerRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>"; 
         }          
       }  
-		echo "<td  bgcolor='$color_fondo'>$htmlTarjeta<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>";
+		echo "<td  bgcolor='$color_fondo'>$htmlReceta $htmlTarjeta $htmlImpresion <a href='dFactura.php?codigo_salida=$codigo' target='_BLANK' title='<b>DETALLE DE FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/fac_detalle.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/fac_detalle.png' width='30' border='0'></a>";
 		echo "</td>";
         /*<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a>*/
 	}else{
-		echo "<td  bgcolor='$color_fondo'><a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
+		echo "<td  bgcolor='$color_fondo'><a href='dFactura.php?codigo_salida=$codigo' target='_BLANK' title='<b>DETALLE DE FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/fac_detalle.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/fac_detalle.png' width='30' border='0'></a></td>";
 	}
 	
 	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
@@ -842,6 +1006,136 @@ echo "</form>";
     </div>
   </div>
 <!--    end small modal -->
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalRecetaVenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #652BE9;color:#fff;">
+                    <i class="material-icons">medical_services</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Datos del Médico</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+    <div class="col-sm-6">
+        <input type="hidden" id="cod_medico" value="">
+        <input type="hidden" id="cod_salida" value="">
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombre (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value=""/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Apellidos (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Dirección</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Matricula</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row d-none" id="div_ins_doctor">
+                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Institución</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" data-size='6'onchange="nuevaInstitucion();return false;" required>
+                           <?php echo "$cadComboInstitucion"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Especialidad</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6'required>
+                           <?php echo "$cadComboEspecialidades"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">2da Esp.</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" data-size='6'required>
+                        <option value="0">Ninguna</option>
+                          <?php echo "$cadComboEspecialidades"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="float-left">
+                        <button class="btn btn-default" onclick="guardarMedicoReceta();return false;">Guardar Nuevo</button>
+                </div>                 
+                <br><br>
+       </div>
+       <div class="col-sm-6">    
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombres</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value=""/>
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Apellidos</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value=""/>
+                    </div>
+                  </div>
+                  <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest();return false;'><i class='material-icons'>search</i></a>
+                </div>
+                <br>
+
+                   <table class="table table-bordered table-condensed">
+                      <thead>
+                        <tr class="" style="background: #652BE9;color:#fff;"><th width="60%">Nombre</th><th>Matricula</th><th>-</th></tr>
+                      </thead>
+                      <tbody id="datos_medicos">                        
+                      </tbody>
+                   </table>                      
+       </div>
+</div>                      
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
 
 
     </body>

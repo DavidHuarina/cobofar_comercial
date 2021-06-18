@@ -1,4 +1,7 @@
 <?php
+if(!isset($_COOKIE["global_usuario"])){
+  ?><script type="text/javascript">$( document ).ready(function() {Swal.fire("ERROR!", "Inicie Sesion!", "error");window.close();});</script><?php
+}
 set_time_limit(0);
 error_reporting(0);
 //header('Content-Type: text/html; charset=UTF-8'); 

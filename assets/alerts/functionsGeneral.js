@@ -281,3 +281,12 @@ function totalesTablaVertical(tabla,columna,fila){
   }
   $("tfoot tr").prepend("<th colspan='"+columna+"'>Totales</th>");   
 }
+
+$(document).ready(function() {    
+        $('[data-toggle="tooltip"]').tooltip({
+              animated: 'swing', //swing expand
+              placement: 'right',
+              html: true,
+              trigger : 'hover'
+          });
+});

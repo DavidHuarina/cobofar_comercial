@@ -1150,4 +1150,15 @@ function obtenerMontodepositado($fecha,$cod_personal){
   return $monto;
 }
 
+function obtenerNumeroImpresiones($codSal){
+   require("conexionmysqli2.inc");
+	$sql="SELECT nro_impresion FROM cantidad_impresiones where cod_salida_almacen='$codSal'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$imp=0;
+  while($detalle=mysqli_fetch_array($resp)){	
+  	$imp=$detalle[0];	
+  } 
+  return $imp;
+}
+
 ?>

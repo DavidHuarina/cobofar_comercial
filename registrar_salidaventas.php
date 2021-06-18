@@ -2137,7 +2137,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Institución</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" onchange="nuevaInstitucion();" required>
+                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" data-size='6' onchange="nuevaInstitucion();" required>
                            <?php echo "$cadComboInstitucion"; ?>
                        </select>
                     </div>
@@ -2147,7 +2147,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Especialidad</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" required>
+                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6' required>
                            <?php echo "$cadComboEspecialidades"; ?>
                        </select>
                     </div>
@@ -2157,7 +2157,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">2da Esp.</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" required>
+                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" data-size='6' required>
                       	<option value="0">Ninguna</option>
                           <?php echo "$cadComboEspecialidades"; ?>
                        </select>

@@ -1,4 +1,9 @@
-<?php $indexGerencia=1; //para no cargar en la pagina principal ?>
+<?php $indexGerencia=1; //para no cargar en la pagina principal
+if(!isset($_COOKIE["global_usuario"])){
+   ?><script type="text/javascript">window.location.href='index.html';</script><?php
+}
+
+ ?>
 <html>
 <head>
 	<meta charset="utf-8" />
