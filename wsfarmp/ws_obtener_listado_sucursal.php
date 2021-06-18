@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 function obtenerListadoSucursales(){
   require_once __DIR__.'/../conexionmysqli2.inc';
   mysqli_set_charset($enlaceCon,"utf8");
-  $consulta = "SELECT cod_ciudad,descripcion,direccion,cod_localidad from ciudades";
+  $consulta = "SELECT cod_ciudad,descripcion,direccion,cod_localidad  from ciudades where cod_estadoreferencial=1 and cod_ciudad in (select cod_ciudad from almacenes where estado_pedidos=1) order by descripcion";
   $resp = mysqli_query($enlaceCon,$consulta);
   $ff=0;
   $datos=[];

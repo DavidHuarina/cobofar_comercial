@@ -61,7 +61,7 @@ $respAnuladoReal=mysqli_query($enlaceCon,$sqlAnuladoReal);
   </thead>
   <tbody>
     <?php $index=1;
-      $totalEfectivo=0;
+     $totalEfectivo=0;
 		$totalTarjetas=0;
 		$totalAnuladas=0;
 		$total_ventas=0;

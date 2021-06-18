@@ -8,7 +8,6 @@ function envia_formulario(f, variableAdmin)
 	rpt_territorio=f.rpt_territorio.value;
 	var rpt_funcionario=$("#rpt_funcionario").val();
 	//rpt_funcionario=f.rpt_funcionario.value;
-
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
 	hora_ini=f.exahorainicial.value;
@@ -43,7 +42,6 @@ echo "<h1>Reporte Arqueo Diario de Caja S.</h1><br>";
 echo"<form method='post' action='rptArqueoDiarioPDF_sucursales.php'>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
-	
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker form-control'>";
 	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	$resp=mysqli_query($enlaceCon,$sql);
@@ -71,8 +69,7 @@ echo"<form method='post' action='rptArqueoDiarioPDF_sucursales.php'>";
 	echo"\n </table><br>";
 	echo "<center><input type='button' name='reporte' value='Ver Reporte' onClick='envia_formulario(this.form,$variableAdmin)' class='btn btn-info'>
 	</center><br>";
-	echo "<center><input type='button' name='reporte_detallado' value='Ver Reporte Detallado' onClick='envia_formulario_detallado(this.form)' class='btn btn-info'>
-	</center><br>";
+
 	echo"</form>";
 	echo "</div>";
 	echo"<script type='text/javascript' language='javascript'  src='dlcalendar.js'></script>";

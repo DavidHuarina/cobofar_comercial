@@ -40,16 +40,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             "totalComponentes"=>count($lista)     
                             );
             }
-          }else{
-              $resultado=array("estado"=>3, 
-                            "mensaje"=>"Error de funcion / parametros");
-          }
         }else{
-            $resultado=array("estado"=>4, 
-                            "mensaje"=>"Credenciales Incorrectas");
+            $resultado=array("estado"=>3, 
+                    "mensaje"=>"Error de funcion / parametros");
         }
-            header('Content-type: application/json');
-            echo json_encode($resultado);
+    }else{
+        $resultado=array("estado"=>4, 
+                        "mensaje"=>"Credenciales Incorrectas");
+    }
+    header('Content-type: application/json');
+    echo json_encode($resultado);
 }else{
     $resp=array("estado"=>5, 
                 "mensaje"=>"El acceso al WS es incorrecto");
@@ -92,14 +92,17 @@ function obtenerListadoStockProductos($idProd){
      $datos[$ff]['codigo']=$dat['codigo_material'];
      $datos[$ff]['nombre']=$dat['descripcion_material'];
      $arraySucursales=[];
-     $consultaAl = "SELECT cod_almacen,nombre_almacen FROM almacenes order by 2 ";
+     $consultaAl = "SELECT cod_almacen,nombre_almacen FROM almacenes where estado_pedidos=1 order by 2 ";
      $respAl = mysqli_query($enlaceCon,$consultaAl);
      $al=0;
      while ($datAl = mysqli_fetch_array($respAl)) {
-        $arraySucursales[$al]['codigo_sucursal']=obtenerSucursalporAlmacen($datAl['cod_almacen']);
-        $arraySucursales[$al]['sucursal']=$datAl['nombre_almacen'];
-        $arraySucursales[$al]['stock']=stockProducto($datAl['cod_almacen'],$dat['codigo_material']);
-        $al++;
+        $stock=stockProducto($datAl['cod_almacen'],$dat['codigo_material']);
+        if($stock>0){
+            $arraySucursales[$al]['stock']=$stock;
+            $arraySucursales[$al]['codigo_sucursal']=obtenerSucursalporAlmacen($datAl['cod_almacen']);
+            $arraySucursales[$al]['sucursal']=$datAl['nombre_almacen'];            
+            $al++;
+        }
      }
      $datos[$ff]['sucursales']=$arraySucursales;  
      $ff++;
