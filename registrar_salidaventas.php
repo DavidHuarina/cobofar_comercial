@@ -268,6 +268,27 @@ function ajaxRazonSocial(f){
 	ajax.send(null);
 }
 
+function ajaxNitCliente(f){
+	var contenedor;
+	var nitCliente=document.getElementById("nitCliente").value;
+	//if(nitCliente>0){
+
+	//}else{
+	 contenedor=document.getElementById("divNIT");
+	 var rsCliente=document.getElementById("razonSocial").value;
+	 ajaxNit=nuevoAjax();
+	 ajaxNit.open("GET", "ajaxNitCliente.php?rsCliente="+rsCliente,true);
+	 ajaxNit.onreadystatechange=function() {
+		if (ajaxNit.readyState==4) {
+			contenedor.innerHTML = ajaxNit.responseText;
+			//document.getElementById('razonSocial').focus();
+			ajaxClienteBuscar();
+		}
+	 }
+	 ajaxNit.send(null);		
+	//}
+}
+
 function ajaxClienteBuscar(f){
 	var contenedor;
 	contenedor=document.getElementById("divCliente");
@@ -1460,7 +1481,7 @@ $iconVentas2="point_of_sale";
 	
 	<td>
 		<div id='divRazonSocial'>
-			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social" style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();">
+			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social" style="text-transform:uppercase;"  onchange='ajaxNitCliente(this.form);' onkeyup="javascript:this.value=this.value.toUpperCase();">
 		</div>
 	</td>
 

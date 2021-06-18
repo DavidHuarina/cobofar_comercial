@@ -106,7 +106,7 @@ $sqlAnuladoReal.=" order by s.fecha, s.hora_salida";
 
 
 
-echo $sqlTarjetas;
+//echo $sqlTarjetas;
 $resp=mysqli_query($enlaceCon,$sql);
 $respTarjeta=mysqli_query($enlaceCon,$sqlTarjetas);
 $respAnuladoReal=mysqli_query($enlaceCon,$sqlAnuladoReal);
