@@ -55,9 +55,10 @@ if (Notification) {
 }
 
   $(document).ready(function() {
-    notificacion_navegador('FARMACIAS BOLIVIA','<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?> ','<?=$dirNoti?>imagenes/logoMinka.png');
+    notificacionMD('random','top','right',false,'add_alert','FARMACIAS BOLIVIA','<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?>','');
+    /*notificacion_navegador('FARMACIAS BOLIVIA','<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?> ','<?=$dirNoti?>imagenes/logoMinka.png');*/
 
-  /*Swal.fire({
+  /*<img src="<?=$dirNoti?>imagenes/logoMinka.png" width="40px" height="40px">Swal.fire({
       title: '<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?>',
       html:'Debe ingresar los <b>documentos pendientes</b>, ' +
     '<a href="navegador_ingresotransito.php">Aqui</a> ' +

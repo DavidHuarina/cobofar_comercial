@@ -34,7 +34,7 @@ $fechaAnulacion=date("Y-m-d");
   <table class="table table-sm table-condensed" cellspacing="0" >
             <tr><th colspan="2">Introduzca el codigo de confirmacion</th></tr>
             <tr><td class="bg-danger text-white">Codigo:</td><td><input type="text" id="idtxtcodigo" value="<?php echo "$codigoGenerado";?>" readonly class="form-control"></td></tr>
-            <tr><td class="bg-danger text-white">Clave:</td><td><input type="text" id="idtxtclave" value="" class="form-control" style="background: #A5F9EA;" autocomplete="off"></td></tr>
+            <tr><td class="bg-danger text-white">Clave:</td><td><input type="password" id="idtxtclave" value="" class="form-control" style="background: #A5F9EA;" autocomplete="off"></td></tr>
             <tr><td class="bg-danger text-white">Fecha:</td><td><input type="date" id="idtxtfecha" value="<?=$fechaAnulacion?>" class="form-control" readonly></td></tr>
   </table>  
   </center>  

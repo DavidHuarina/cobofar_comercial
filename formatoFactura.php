@@ -42,7 +42,7 @@ $codigoVenta=$_GET["codVenta"];
 $nroImpresiones=obtenerNumeroImpresiones($codigoVenta);
 $labelNroImpresiones="";
 if($nroImpresiones>0){
-	$labelNroImpresiones="<label class='arial-12'> (R)</label><br>";
+	//$labelNroImpresiones="<label class='arial-12'> (R)</label><br>";
 }
 
 

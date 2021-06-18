@@ -147,7 +147,10 @@ while($datos=mysqli_fetch_array($respAnulado)){
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
 	$montoVenta=number_format($montoVenta,1,'.','');
-	$totalVentaAnulada=$totalVentaAnulada+$montoVenta;
+	if($codTipoPago==1){
+		$totalVentaAnulada=$totalVentaAnulada+$montoVenta;
+	}
+	
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
@@ -166,7 +169,10 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
 	$montoVenta=number_format($montoVenta,1,'.','');
-	$totalVentaAnuladaReal=$totalVentaAnuladaReal+$montoVenta;
+	$codTipoPago=$datos[7];
+	if($codTipoPago==1){
+		$totalVentaAnuladaReal=$totalVentaAnuladaReal+$montoVenta;
+	}
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];

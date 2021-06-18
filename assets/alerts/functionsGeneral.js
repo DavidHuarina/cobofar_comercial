@@ -290,3 +290,23 @@ $(document).ready(function() {
               trigger : 'hover'
           });
 });
+
+function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
+  type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
+  color = Math.floor((Math.random() * 6) + 1);
+  if (fondo=='random'){
+    fondo=type[color];
+  } 
+    $.notify({
+      icon: icono,
+      message: cabecera+'<hr>'+'<div class="row"><div class="col-sm-3">'+pie+'</div><div class="col-sm-9"><small>'+mensaje+'</small></div></div>'
+
+    }, {
+      type: fondo,
+      timer: tiempo,
+      placement: {
+        from: from,
+        align: align
+      }
+    });
+  }

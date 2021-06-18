@@ -60,7 +60,7 @@ $resp = mysqli_query($enlaceCon,$consulta);
 //echo $consulta;
 	
 while ($dat = mysqli_fetch_array($resp)) {
-     $codigo = $dat[0];
+    $codigo = $dat[0];
     $fecha_salida = $dat[1];
     $fecha_salida_mostrar = "$fecha_salida[8]$fecha_salida[9]-$fecha_salida[5]$fecha_salida[6]-$fecha_salida[0]$fecha_salida[1]$fecha_salida[2]$fecha_salida[3]";
     $hora_salida = $dat[2];
@@ -149,7 +149,8 @@ while ($dat = mysqli_fetch_array($resp)) {
         echo "<td class='text-primary'><b>Tarjeta</b></td>";
     }else{
         echo "<td class='text-success'><b>Efectivo</b></td>";
-    }    
+    }  
+    $nroImpresiones=obtenerNumeroImpresiones($codigo);  
     if($codTipoDoc==1){
         $htmlTarjeta="";
         $htmlReceta="";
@@ -158,7 +159,7 @@ while ($dat = mysqli_fetch_array($resp)) {
            $htmlReceta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>REGISTRAR RECETA</b><br>$nro_correlativo<br><i class=\"material-icons test-warning\" style=\"color:".$colorReceta.";font-size:40px;\">medical_services</i>' onclick='guardarRecetaVenta(".$codMedico.",".$codigo.");return false;' data-toggle='tooltip' style='background: ".$colorReceta.";color:#fff;'><i class='material-icons'>medical_services</i></a>";
         }
       if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){ 
-        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/invoice.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
+        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/print.png\" width=\"60\" border=\"0\"><span class=\"badge badge-secondary\">R: $nroImpresiones </span>' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
         if($codTarjeta==1){            
             $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='<b>RELACIONAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-muted\">credit_card</i>' onclick='mostrarRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card_off</i></a>";            
         }else{
