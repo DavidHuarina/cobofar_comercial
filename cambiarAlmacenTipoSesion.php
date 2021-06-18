@@ -9,7 +9,7 @@ $global_agencia=$_COOKIE['global_agencia'];
               <form id="form1" class="form-horizontal" action="saveTipoAgencia.php" method="post">
               <div class="card">
                 <div class="card-header card-header-icon">
-                  <CENTER><h4 class="card-title"><b>Cambiar Tipo Agencia</b></h4></CENTER>
+                  <CENTER><h4 class="card-title"><b>Cambiar Tipo de Almacen</b></h4></CENTER>
                 </div>
                 
                 <div class="card-body">
@@ -17,7 +17,7 @@ $global_agencia=$_COOKIE['global_agencia'];
                     <table class="table table-striped">
                       <thead>
                         <tr>
-                          <th>Tipo Agencia</th>
+                          <th>Tipo Almacen</th>
                         </tr>
                       </thead>
                       <tbody>

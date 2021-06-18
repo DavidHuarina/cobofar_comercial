@@ -1,7 +1,7 @@
 <?php
 $table="registro_depositos";
-$moduleNameSingular="Registro de Depósito";
-$moduleNamePlural="Registro de Depósitos";
+$moduleNameSingular="Registro de Deposito";
+$moduleNamePlural="Registro de Depositos";
 
 $urlList="depositos/list.php";
 $urlList2="list.php";
