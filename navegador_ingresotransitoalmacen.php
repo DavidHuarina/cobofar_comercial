@@ -71,7 +71,7 @@ echo "<script language='Javascript'>
 	echo "<form method='post' action=''>";
 	$sql="SELECT s.cod_ingreso_almacen, s.cod_almacen, s.fecha, ts.nombre_tipoingreso, a.nombre_almacen, s.observaciones, s.nro_correlativo,s.estado_ingreso, s.nota_entrega
 	FROM ingreso_pendientes_almacenes s, tipos_ingreso ts, almacenes a 
-	where s.cod_tipoingreso=ts.cod_tipoingreso and s.cod_almacen='$global_almacen' and a.cod_almacen=s.cod_almacen and s.ingreso_anulado <> 1";
+	where s.cod_tipoingreso=ts.cod_tipoingreso and s.cod_almacen='$global_almacen' and a.cod_almacen=s.cod_almacen and s.ingreso_anulado <> 1 and s.nota_entrega>=800000 ";
 	
 	//echo $sql;
 	
