@@ -6,7 +6,7 @@ if(!function_exists('register_globals')){
 	register_globals();
 }else{
 }
-$conexion=mysql_connect("localhost","root","");
+$conexion=mysql_connect("p:localhost","root","");
 $bd=mysql_select_db("farmaciascomercial");
 
 $sqlX="SET NAMES 'utf8'";
