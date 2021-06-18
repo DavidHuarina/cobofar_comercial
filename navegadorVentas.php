@@ -144,6 +144,12 @@ function ajaxBuscarVentas(f){
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
 			HiddenBuscar();
+            $('[data-toggle="tooltip"]').tooltip({
+              animated: 'swing', //swing expand
+              placement: 'right',
+              html: true,
+              trigger : 'hover'
+          });
 		}
 	}
 	ajax.send(null)

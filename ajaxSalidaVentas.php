@@ -27,7 +27,7 @@ $consulta = "
     SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
     (select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
     s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-    (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado
+    (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico
     FROM salida_almacenes s, tipos_salida ts 
     WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 $sqlUser ";
 
@@ -76,6 +76,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     $razonSocial=$dat[12];
     $nitCli=$dat[13];
     $depositado=$dat['depositado'];
+    $codMedico=$dat['cod_medico'];
     $montoFactura=number_format($dat['monto_final'],1,'.',',')."0";
     $fechaValidacion=0;
     if($fechaValidacion){
@@ -117,11 +118,18 @@ while ($dat = mysqli_fetch_array($resp)) {
       $estado_preparado= "";  
     }
     if($codTipoDoc==4){
-        $nro_correlativo="<i class='text-danger'>M-$nro_correlativo</i>";
+        $nro_correlativo="<i class=\"text-danger\">M-$nro_correlativo</i>";
     }else{
         $nro_correlativo="F-$nro_correlativo";
     }
-
+    $colorReceta="#14982C";
+    if($codMedico==""){
+      $codMedico=0;         
+    }
+    if($codMedico==0){
+        $colorReceta="#652BE9"; 
+    }
+    
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
@@ -144,18 +152,24 @@ while ($dat = mysqli_fetch_array($resp)) {
     }    
     if($codTipoDoc==1){
         $htmlTarjeta="";
-      if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){
+        $htmlReceta="";
+        $htmlImpresion="";
+        if($salida_anulada!=1&&$estado_almacen==1){
+           $htmlReceta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>REGISTRAR RECETA</b><br>$nro_correlativo<br><i class=\"material-icons test-warning\" style=\"color:".$colorReceta.";font-size:40px;\">medical_services</i>' onclick='guardarRecetaVenta(".$codMedico.",".$codigo.");return false;' data-toggle='tooltip' style='background: ".$colorReceta.";color:#fff;'><i class='material-icons'>medical_services</i></a>";
+        }
+      if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){ 
+        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/invoice.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
         if($codTarjeta==1){            
-            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card_off</i></a>";            
+            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='<b>RELACIONAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-muted\">credit_card</i>' onclick='mostrarRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card_off</i></a>";            
         }else{
-            $htmlTarjeta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='Quitar Tarjeta' onclick='removerRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>"; 
+            $htmlTarjeta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>QUITAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-primary\">credit_card</i>' onclick='removerRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>"; 
         }          
       }  
-        echo "<td  bgcolor='$color_fondo'>$htmlTarjeta<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>";
+        echo "<td  bgcolor='$color_fondo'>$htmlReceta $htmlTarjeta $htmlImpresion <a href='dFactura.php?codigo_salida=$codigo' target='_BLANK' title='<b>DETALLE DE FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/fac_detalle.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/fac_detalle.png' width='30' border='0'></a>";
         echo "</td>";
         /*<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a>*/
     }else{
-        echo "<td  bgcolor='$color_fondo'><a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
+        echo "<td  bgcolor='$color_fondo'><a href='dFactura.php?codigo_salida=$codigo' target='_BLANK' title='<b>DETALLE DE FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/fac_detalle.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/fac_detalle.png' width='30' border='0'></a></td>";
     }
     
     /*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
