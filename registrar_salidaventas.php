@@ -274,7 +274,7 @@ function ajaxNitCliente(f){
 	//if(nitCliente>0){
 
 	//}else{
-	 contenedor=document.getElementById("divNIT");
+	 /*contenedor=document.getElementById("divNIT");
 	 var rsCliente=document.getElementById("razonSocial").value;
 	 ajaxNit=nuevoAjax();
 	 ajaxNit.open("GET", "ajaxNitCliente.php?rsCliente="+rsCliente,true);
@@ -285,7 +285,7 @@ function ajaxNitCliente(f){
 			ajaxClienteBuscar();
 		}
 	 }
-	 ajaxNit.send(null);		
+	 ajaxNit.send(null);*/		
 	//}
 }
 
