@@ -64,6 +64,8 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>			
 					<li><a href="navegador_dosificaciones.php" target="contenedorPrincipal">Dosificaciones de Facturas</a></li>
+					<li><a href="productos_estrella/list.php" target="contenedorPrincipal"><i class='material-icons'>star</i> Productos Estrella</a></li>
+					<li><a href="productos_clavo/list.php" target="contenedorPrincipal"><i class='material-icons'>push_pin</i> Productos Sin Rotación</a></li>
 					
 				</ul>	
 			</li>
@@ -109,7 +111,8 @@ include("datosUsuario.php");
 					</li>
 					<li><span>Ventas</span>
 						<ul>
-							<!--<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
+							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
+							<li><a href="rptOpVentasHora.php" target="contenedorPrincipal">Ventas x Hora</a></li><!--
 							<li><a href="rptOpVentasCategoria.php" target="contenedorPrincipal">Ventas x Clasificador</a></li>
 							<li><a href="rptOpVentasLineasProveedor.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>-->
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>

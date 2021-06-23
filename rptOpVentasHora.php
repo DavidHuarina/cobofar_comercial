@@ -2,14 +2,6 @@
 function envia_formulario(f)
 {	var fecha_ini, fecha_fin;
 	
-	var codTipoPago=new Array();
-	var j=0;
-	for(var i=0;i<=f.rpt_tipopago.options.length-1;i++)
-	{	if(f.rpt_tipopago.options[i].selected)
-		{	codTipoPago[j]=f.rpt_tipopago.options[i].value;
-			j++;
-		}
-	}
 	var codTipoTerritorio=new Array();
 	var j=0;
 	for(var i=0;i<=f.rpt_territorio.options.length-1;i++)
@@ -21,7 +13,7 @@ function envia_formulario(f)
 	
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
-	window.open('rptVentasSucursal.php?codTipoTerritorio='+codTipoTerritorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&codTipoPago='+codTipoPago+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,height=800');			
+	window.open('rptVentasHora.php?codTipoTerritorio='+codTipoTerritorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,height=800');			
 	return(true);
 }
 function envia_formulario_detalle(f)
@@ -79,7 +71,7 @@ require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("Y-m-d");
-echo "<h1>Reporte Ventas x Sucursal X meses</h1><br>";
+echo "<h1>Reporte Ventas x Hora</h1><br>";
 echo"<form method='post' action='rptOpKardexCostos.php'>";
 
 	echo"\n<table class='' align='center' cellSpacing='0' width='50%'>\n";
@@ -101,17 +93,6 @@ $globalAgencia=$_COOKIE["global_agencia"];
 		}else{
 		   echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";	
 		}		
-	}
-	echo "</select></td></tr>";
-
-	echo "<tr><th align='left' class='text-muted' >Tipo de Pago:</th>
-	<td><select name='rpt_tipopago' class='selectpicker form-control' multiple data-style='btn btn-primary' data-actions-box='true' required>";
-	$sql="select cod_tipopago, nombre_tipopago from tipos_pago order by 2";
-	$resp=mysqli_query($enlaceCon,$sql);
-	while($dat=mysqli_fetch_array($resp))
-	{	$codigo_pago=$dat[0];
-		$nombre_pago=$dat[1];
-		echo "<option value='$codigo_pago' selected>$nombre_pago</option>";
 	}
 	echo "</select></td></tr>";
 	
@@ -137,9 +118,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 	
 	echo"\n </table><br>";
 	require('home_almacen.php');
-	echo "<center><input type='button' name='reporte' value='Ver Reporte X Meses' onClick='envia_formulario(this.form)' class='btn btn-primary'>
-	<input type='button' name='reporte_detalle' value='Ver Reporte Detallado X Día' onClick='envia_formulario_detalle(this.form)' class='btn btn-info'>
-	<input type='button' name='reporte_detalle' value='Ver Reporte General' onClick='envia_formulario_resumido(this.form)' class='btn btn-success'>
+	echo "<center><input type='button' name='reporte' value='Ver Reporte' onClick='envia_formulario(this.form)' class='btn btn-primary'>
 	</center><br>";
 	echo"</form>";
 	echo "</div>";

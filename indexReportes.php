@@ -71,6 +71,7 @@ include("datosUsuario.php");
 					<li><span>Ventas</span>
 						<ul>
 							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
+							<li><a href="rptOpVentasHora.php" target="contenedorPrincipal">Ventas x Hora</a></li>
 							<!--<li><a href="rptOpVentasCategoria.php" target="contenedorPrincipal">Ventas x Clasificador</a></li>-->
 							<!--<li><a href="rptOpVentasLineasProveedor.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>-->
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>

@@ -27,7 +27,7 @@
 	echo "<tr><td align='center'>$nro_correlativo</td><td align='center'>$nota_entrega</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>&nbsp;$obs_salida</td></tr>";
 	echo "</table><br>";
 	
-	echo "<table class='texto'>";
+	echo "<table class='table table-striped table-success'>";
 	echo "<tr>
 	<th>Codigo</th><th>Material</th><th>Cantidad</th></tr>";
 	echo "<form method='post' action=''>";

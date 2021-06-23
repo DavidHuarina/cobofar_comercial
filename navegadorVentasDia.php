@@ -588,8 +588,8 @@ function asignarMedicoVenta(cod_medico){
    }
 }
 
-function irVentasDia(){
-    window.location.href="navegadorVentasDia.php";  
+function irVentasTodos(){
+    window.location.href="navegadorVentas.php";  
 }
         </script>
     </head>
@@ -656,25 +656,9 @@ $anulacionCodigo=mysqli_result($respConf,0,0);
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 
-echo "<h1>Listado de Ventas</h1>";
-echo "<table class='texto' cellspacing='0' width='90%'>
-<tr><th>Leyenda:</th>
-<th>Ventas Registradas</th><td bgcolor='#f9e79f' width='5%'></td>
-
-<th>Ventas Anuladas</th><td bgcolor='#e74c3c' width='5%'></td>
-<td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
-//<th>Ventas Depositadas</th><td bgcolor='#1abc9c' width='5%'></td>
-echo "<div class=''>
-		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
-        
-		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";		
-//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>        
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
-}
-echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
+echo "<h1>Ventas del Día</h1>";
+echo "<div class=''>";		
+echo "<input type='button' value='Volver al Listado Normal' class='btn btn-success' onclick='irVentasTodos()'>";
 echo "</div>";
 		
 echo "<div id='divCuerpo'>";
@@ -688,20 +672,16 @@ $sqlUser=" and s.cod_chofer='".$_COOKIE["global_usuario"]."' ";
 if($_COOKIE["global_usuario"]==-1){
   $sqlUser="";
 }
+$fecha1=date("Y-m-d");
 $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
 	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico
 	FROM salida_almacenes s, tipos_salida ts 
-	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 $sqlUser ";
+	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 AND '$fecha1'<=s.fecha AND s.fecha<='$fecha1' AND s.salida_anulada!=1 ";
 
-if($txtnroingreso!="")
-   {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
-   }
-if($fecha1!="" && $fecha2!="")
-   {$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
-   }
+
 $consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 100 ";
 //echo $consulta;
 //
@@ -804,18 +784,9 @@ while ($dat = mysqli_fetch_array($resp)) {
         $htmlTarjeta="";
         $htmlReceta="";
         $htmlImpresion="";
-        if($salida_anulada!=1&&$estado_almacen==1){
-           $htmlReceta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>REGISTRAR RECETA</b><br>$nro_correlativo<br><i class=\"material-icons test-warning\" style=\"color:".$colorReceta.";font-size:40px;\">medical_services</i>' onclick='guardarRecetaVenta(".$codMedico.",".$codigo.");return false;' data-toggle='tooltip' style='background: ".$colorReceta.";color:#fff;'><i class='material-icons'>medical_services</i></a>";
-        }
-      if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){ 
-        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/print.png\" width=\"60\" border=\"0\"><span class=\"badge badge-secondary\">R: $nroImpresiones </span>' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
-        if($codTarjeta==1){            
-            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='<b>RELACIONAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-muted\">credit_card</i>' onclick='mostrarRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card_off</i></a>";            
-        }else{
-            $htmlTarjeta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>QUITAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-primary\">credit_card</i>' onclick='removerRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>"; 
-        }          
-      }  
-		echo "<td  bgcolor='$color_fondo'>$htmlReceta $htmlTarjeta $htmlImpresion <a href='dFactura.php?codigo_salida=$codigo' target='_BLANK' title='<b>DETALLE DE FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/fac_detalle.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/fac_detalle.png' width='30' border='0'></a>";
+        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/print.png\" width=\"60\" border=\"0\"><span class=\"badge badge-secondary\">R: $nroImpresiones </span>' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>"; 
+ 
+		echo "<td  bgcolor='$color_fondo'>$htmlImpresion";
 		echo "</td>";
         /*<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a>*/
 	}else{
@@ -829,17 +800,8 @@ while ($dat = mysqli_fetch_array($resp)) {
 echo "</table></center><br>";
 echo "</div>";
 
-echo "<div class=''>
-		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
-        
-		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";
-        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>	
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
-}
-echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
+echo "<div class=''></td>";
+echo "<input type='button' value='Volver al Listado Normal' class='btn btn-success' onclick='irVentasTodos()'>";
     echo "</div>";
 	
 echo "</form>";
@@ -930,222 +892,6 @@ echo "</form>";
         <div id="pnldlgenespera"></div>
 
 
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalAnularFactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content card">
-                <div class="card-header card-header-danger card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">delete</i>
-                  </div>
-                  <h4 class="card-title text-danger font-weight-bold">Anulación de Facturas</h4>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <input type="hidden" name="codigo_salida" id="codigo_salida" value="0">
-                <div class="card-body" id="datos_anular">
-                   
-                </div>
-                <div class="card-footer">
-                   <button class="btn btn-default" onclick="confirmarCodigo()">ANULAR</button>
-                   <?php 
-                    if($_COOKIE["global_usuario"]==-1){
-                       ?><input type="password" id="contrasena_admin" value="" class='form-control' style='background: #5DFF00;color:#000;' placeholder='pass_admin' size='50'><a class="btn btn-primary btn-sm btn-fab" style='background:#100F0F;color:#5DFF00;' href="#" onclick="obtenerCodigoGenerado(); return false;"><i class='material-icons'>lock</i></a><?php 
-                    }
-                   ?>                   
-                </div>
-      </div>  
-    </div>
-  </div>
-<!--    end small modal -->
-
-
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
-    <div class="modal-content card">
-               <div class="card-header card-header-primary card-header-icon">
-                  <div class="card-icon" style="background: #96079D;color:#fff;">
-                    <i class="material-icons">credit_card</i>
-                  </div>
-                  <h4 class="card-title text-dark font-weight-bold">Pago con Tarjeta <small id="titulo_tarjeta"></small></h4>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <div class="card-body">
-                    <input type="hidden" id="codigo_salida_tarjeta">
-<div class="row">
-    <div class="col-sm-12">
-                 <div class="row">
-                  <label class="col-sm-3 col-form-label">Banco</label>
-                  <div class="col-sm-9">
-                    <div class="form-group">
-                      <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                       
-                          <?php echo "$cadComboBancos"; ?>
-                          <option value="0">Otro</option>
-                       </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-3 col-form-label">Numero <br>Tarjeta</label>
-                  <div class="col-sm-9">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #D7B3D8;" id="nro_tarjeta" name="nro_tarjeta" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
-                  <div class="col-sm-9">
-                    <div class="form-group">
-                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" value=""/>
-                    </div>
-                  </div>
-                </div>                
-                <br><br>
-       </div>
-</div>                
-
-                </div>
-                <div class="card-footer">
-                    <a href="#" onclick="guardarTarjetaVenta();return false;" class="btn btn-default btn-sm">GUARDAR</a>
-                </div>
-      </div>  
-    </div>
-  </div>
-<!--    end small modal -->
-
-
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalRecetaVenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content card">
-               <div class="card-header card-header-primary card-header-icon">
-                  <div class="card-icon" style="background: #652BE9;color:#fff;">
-                    <i class="material-icons">medical_services</i>
-                  </div>
-                  <h4 class="card-title text-dark font-weight-bold">Datos del Médico</h4>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <div class="card-body">
-<div class="row">
-    <div class="col-sm-6">
-        <input type="hidden" id="cod_medico" value="">
-        <input type="hidden" id="cod_salida" value="">
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">Nombre (*)</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value=""/>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">Apellidos (*)</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required/>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">Dirección</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required/>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">Matricula</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required/>
-                    </div>
-                  </div>
-                </div>
-                <div class="row d-none" id="div_ins_doctor">
-                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">Institución</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" data-size='6'onchange="nuevaInstitucion();return false;" required>
-                           <?php echo "$cadComboInstitucion"; ?>
-                       </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">Especialidad</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6'required>
-                           <?php echo "$cadComboEspecialidades"; ?>
-                       </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">2da Esp.</label>
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" data-size='6'required>
-                        <option value="0">Ninguna</option>
-                          <?php echo "$cadComboEspecialidades"; ?>
-                       </select>
-                    </div>
-                  </div>
-                </div>
-                <br>
-                <div class="float-left">
-                        <button class="btn btn-default" onclick="guardarMedicoReceta();return false;">Guardar Nuevo</button>
-                </div>                 
-                <br><br>
-       </div>
-       <div class="col-sm-6">    
-                <div class="row">
-                  <label class="col-sm-2 col-form-label">Nombres</label>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value=""/>
-                    </div>
-                  </div>
-                  <label class="col-sm-2 col-form-label">Apellidos</label>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value=""/>
-                    </div>
-                  </div>
-                  <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest();return false;'><i class='material-icons'>search</i></a>
-                </div>
-                <br>
-
-                   <table class="table table-bordered table-condensed">
-                      <thead>
-                        <tr class="" style="background: #652BE9;color:#fff;"><th width="60%">Nombre</th><th>Matricula</th><th>-</th></tr>
-                      </thead>
-                      <tbody id="datos_medicos">                        
-                      </tbody>
-                   </table>                      
-       </div>
-</div>                      
-                </div>
-      </div>  
-    </div>
-  </div>
-<!--    end small modal -->
 
 
 

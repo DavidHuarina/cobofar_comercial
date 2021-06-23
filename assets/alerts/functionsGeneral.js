@@ -299,7 +299,7 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
   } 
     $.notify({
       icon: icono,
-      message: cabecera+'<hr>'+'<div class="row"><div class="col-sm-3">'+pie+'</div><div class="col-sm-9"><small>'+mensaje+'</small></div></div>'
+      message: cabecera+'<hr>'+'<div class="row"><div class="col-sm-12"><small>'+mensaje+'</small></div></div><div class="col-sm-12 float-right" style="font-size:10px;text-align:right;">'+pie+'</div>'
 
     }, {
       type: fondo,
