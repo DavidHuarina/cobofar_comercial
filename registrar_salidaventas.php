@@ -105,6 +105,10 @@ function nuevoAjax()
 }
 
 function listaMateriales(f){
+	var stock=0;
+	if($("#solo_stock").is(":checked")){
+		stock=1;
+	}
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
 	var codForma=f.itemFormaMaterial.value;
@@ -126,7 +130,7 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio+"&codProv="+codTipo,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio+"&codProv="+codTipo+"&stock="+stock,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {			
 			contenedor.innerHTML = ajax.responseText;
@@ -145,6 +149,19 @@ function listaMateriales(f){
 	ajax.send(null)
 }
 
+function limpiarFormularioBusqueda(){
+	$("#itemTipoMaterial").val("0");
+	$("#itemFormaMaterial").val("0");
+	$("#itemAccionMaterial").val("0");
+	$("#itemPrincipioMaterial").val("0");
+	$("#itemNombreMaterial").val("");
+	$("#tipoSalida").val("0");
+	$("#itemCodigoMaterial").val("");
+	$(".selectpicker").selectpicker("refresh");
+	$("#solo_stock").prop( "checked", true );
+
+	
+}
 function ajaxTipoDoc(f){
 	var contenedor;
 	contenedor=document.getElementById("divTipoDoc");
@@ -1564,7 +1581,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		<table align='center'>
 			<tr><th>Proveedor</th><th>Forma F.</th><th>Accion T.</th></tr>
 			<tr>
-			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
+			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' id='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
 			<?php
 			if($_COOKIE["global_tipo_almacen"]==1){
                  $sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
@@ -1587,7 +1604,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td width="40%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemFormaMaterial' style="width:300px">
+			<td width="40%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemFormaMaterial' id='itemFormaMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1602,7 +1619,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td width="30%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemAccionMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemAccionMaterial' id='itemAccionMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1619,7 +1636,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 			</td>
 			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
 	     <tr>		
-			<td><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemPrincipioMaterial' style="width:300px">
+			<td><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemPrincipioMaterial' id='itemPrincipioMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
 			where pl.estado=1 order by 2;";
@@ -1641,12 +1658,17 @@ while($dat2=mysqli_fetch_array($resp2)){
 				</div>
 				
 			</td>
-			<td align="center">
-				<input type='button' id="enviar_busqueda" class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
+			<td align="center">				
+				<input type='button' id="enviar_busqueda" class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">	
+				<a href="#" class="btn btn-warning btn-fab float-right" title="Limpiar Formulario de Busqueda" data-toggle='tooltip' onclick="limpiarFormularioBusqueda();return false;"><i class="material-icons">cleaning_services</i></a>			
 			</td>
  			</tr>
 			
 		</table>
+		<div class="custom-control custom-checkbox small float-left" style="margin-left: 60px;">
+                    <input type="checkbox" class="" id="solo_stock" checked="">
+                    <label class="" for="solo_stock">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Solo Productos con Stock</label>
+                </div>
 		<div id="divListaMateriales">
 		</div>
 	

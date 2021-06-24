@@ -84,6 +84,20 @@ var parametros={"codigo":codReg};
       }
  }); 
 }
+function funVerifi3(codReg){   
+var parametros={"codigo":codReg};
+ $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/frmConfirmarCodigoSalida3.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#datos_anular_3").html(resp);
+            $("#codigo_salida_3").val(codReg);
+            $("#modalAnularFacturaRegente").modal("show");           
+      }
+ }); 
+}
 function confirmarCodigo(){   
   var cad1=$("input#idtxtcodigo").val();
   var cad2=$("input#idtxtclave").val(); 
@@ -100,6 +114,26 @@ function confirmarCodigo(){
             }else{
                Swal.fire("Error!","El codigo que ingreso es incorrecto","error");
                $("#modalAnularFactura").modal("hide");    
+            }
+      }
+ }); 
+}
+function confirmarCodigo3(){   
+  var cad1=$("input#idtxtcodigo").val();
+  var cad2=$("input#idtxtclave").val(); 
+  var parametros={"codigo":cad1,"clave":cad2};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/validacionCodigoConfirmar3.php",
+        data: parametros,
+        success:  function (resp) { 
+            resp=xtrim(resp);
+            if(resp=="" || resp=="OK") {
+                location.href='anular_venta.php?codigo_registro='+$("#codigo_salida").val();
+            }else{
+               Swal.fire("Error!","La clave que ingreso es incorrecta","error");
+               $("#modalAnularFacturaRegente").modal("hide");    
             }
       }
  }); 
@@ -219,6 +253,34 @@ function anular_salida(f)
         }
         else
         {   funVerifi(j_cod_registro);
+        }
+    }
+}
+
+function anular_salida_regente(f)
+{   var i;
+    var j=0;
+    var j_cod_registro, estado_preparado;
+    var fecha_registro;
+    for(i=0;i<=f.length-1;i++)
+    {   if(f.elements[i].type=='checkbox')
+        {   if(f.elements[i].checked==true)
+            {   j_cod_registro=f.elements[i].value;
+                fecha_registro=f.elements[i-2].value;
+                estado_preparado=f.elements[i-1].value;
+                j=j+1;
+            }
+        }
+    }
+    if(j>1)
+    {   alert('Debe seleccionar solamente un registro para anularlo.');
+    }
+    else
+    {   if(j==0)
+        {   alert('Debe seleccionar un registro para anularlo.');
+        }
+        else
+        {   funVerifi3(j_cod_registro);
         }
     }
 }
@@ -587,7 +649,9 @@ function asignarMedicoVenta(cod_medico){
     alert("La RECETA ya fue registrada!, no se puede quitar ni cambiar.");
    }
 }
-
+function anular_salida_none(){
+   alert("Usted no puede ANULAR la factura");  
+}
 function irVentasDia(){
     window.location.href="navegadorVentasDia.php";  
 }
@@ -668,12 +732,24 @@ echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
         
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";		
-//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>        
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
+//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+
+
+$user=$_COOKIE["global_usuario"];        
+$cargoUser=obtenerCargoPersonal($user);
+$linkJs="anular_salida_none(this.form)";
+if($cargoUser==31){
+   $linkJs="anular_salida_regente(this.form)";
 }
+if($user==-1){
+   $linkJs="anular_salida(this.form)";   
+}
+if($anulacionCodigo!=1){
+   $linkJs="anular_salida2(this.form)"; 
+}
+
+echo "<input type='button' value='Anular' class='btn btn-danger' onclick='$linkJs'>";
+
 echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
 echo "</div>";
 		
@@ -833,12 +909,9 @@ echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
         
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";
-        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>	
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
-}
+        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+
+echo "<input type='button' value='Anular' class='btn btn-danger' onclick='$linkJs'>";	
 echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
     echo "</div>";
 	
@@ -960,6 +1033,30 @@ echo "</form>";
   </div>
 <!--    end small modal -->
 
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAnularFacturaRegente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+                <div class="card-header card-header-danger card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">delete</i>
+                  </div>
+                  <h4 class="card-title text-danger font-weight-bold">Anulación de Facturas</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <input type="hidden" name="codigo_salida_3" id="codigo_salida_3" value="0">
+                <div class="card-body" id="datos_anular_3">
+                   
+                </div>
+                <div class="card-footer">
+                   <button class="btn btn-default" onclick="confirmarCodigo3()">ANULAR FACTURA</button>                  
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

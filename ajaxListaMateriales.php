@@ -74,6 +74,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 
 	$numFilas=mysqli_num_rows($resp);
 	if($numFilas>0){
+		$indexFila=0;
 		while($dat=mysqli_fetch_array($resp)){
 			$codigo=$dat[0];
 			$nombre=$dat[1];
@@ -99,15 +100,25 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			}
 			$precioProducto=redondear2($precioProducto);
 			
-			echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>($codigo) $nombre</a></div></td>
+			$mostrarFila=1;
+			if(isset($_GET["stock"])){
+				 if($_GET["stock"]==1&&$stockProducto<=0){
+                    $mostrarFila=0;
+				 }  	              
+			}
+			if($mostrarFila==1){
+				$indexFila++;
+			 echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>($codigo) $nombre</a></div></td>
 			<td>$linea</td>
 			<td>$principiostring</td>
 			<td>$stockProducto</td>
 			<td>$precioProducto</td>
-			</tr>";
+			 </tr>";				
+			}
 		}
-
-		
+		if($indexFila==0){
+		  echo "<tr><td colspan='5'>Sin Resultados en la busqueda.</td></tr>";	
+		}		
 	}else{
 		echo "<tr><td colspan='5'>Sin Resultados en la busqueda.</td></tr>";
 	}

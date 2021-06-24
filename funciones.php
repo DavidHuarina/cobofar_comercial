@@ -1166,7 +1166,7 @@ function obtenerMontoVentasHora($desde,$hasta,$sucursal,$hora){
 	$sql="SELECT count(s.cod_salida_almacenes) as cantidad,sum(s.monto_final) as monto,hour(s.hora_salida)hora,s.cod_almacen
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
-	and s.`fecha` BETWEEN '$desde1' and '$hasta' and hour(s.hora_salida)='$hora'
+	and s.`fecha` BETWEEN '$desde' and '$hasta' and hour(s.hora_salida)='$hora'
 	GROUP BY hour(s.hora_salida),s.cod_almacen;";
   $resp=mysqli_query($enlaceCon,$sql);
   $cantidad=0;	
@@ -1184,7 +1184,7 @@ function obtenerMontoVentasHoraTotal($desde,$hasta,$sucursal){
 	$sql="SELECT count(s.cod_salida_almacenes) as cantidad,sum(s.monto_final) as monto,s.cod_almacen
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
-	and s.`fecha` BETWEEN '$desde1' and '$hasta'
+	and s.`fecha` BETWEEN '$desde' and '$hasta'
 	GROUP BY s.cod_almacen;";
   $resp=mysqli_query($enlaceCon,$sql);
   $cantidad=0;	
