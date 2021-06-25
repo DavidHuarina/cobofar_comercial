@@ -52,10 +52,18 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 
     if((int)$codAccion>0){
         $sql=$sql." and m.codigo_material in (SELECT codigo_material FROM material_accionterapeutica where cod_accionterapeutica=".$codAccion.")";
+    }else{    	
+       if(isset($_GET['nomAccion'])&&$_GET['nomAccion']!=""){
+          $sql=$sql." and m.codigo_material in (SELECT a.codigo_material FROM material_accionterapeutica a JOIN acciones_terapeuticas at on at.cod_accionterapeutica=a.cod_accionterapeutica where at.nombre_accionterapeutica like '%".$_GET['nomAccion']."%' )";
+        }
     }
 
     if((int)$codPrincipio>0){
         $sql=$sql." and m.codigo_material in (SELECT cod_material FROM principios_activosproductos where cod_principioactivo=".$codPrincipio.")";
+    }else{
+    	if(isset($_GET['nomPrincipio'])&&$_GET['nomPrincipio']!=""){
+          $sql=$sql." and m.codigo_material in (SELECT a.cod_material FROM principios_activosproductos a JOIN principios_activos at on at.codigo=a.cod_principioactivo where at.nombre like '%".$_GET['nomPrincipio']."%' )";
+        }
     }    
 
 
@@ -108,7 +116,11 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			}
 			if($mostrarFila==1){
 				$indexFila++;
-			 echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>($codigo) $nombre</a></div></td>
+
+			if($stockProducto>0){
+				$stockProducto="<b class='textograndenegro' style='color:#C70039'>".$stockProducto."</b>";
+			}	
+			 echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")' style='color:#C70039'>($codigo) $nombre</a></div></td>
 			<td>$linea</td>
 			<td>$principiostring</td>
 			<td>$stockProducto</td>

@@ -200,7 +200,7 @@ function stockProductoFechas($almacen, $item,$fechaActual){
 	$stock2Caja=$cant_ingresos2-$cant_salidas2;
 	//echo $sql_ingresos;
     $cantPres=obtenerCantidadPresentacionProducto($item);    
-
+    mysqli_close($enlaceCon);
 	return $stock2+($stock2Caja*$cantPres);
 }
 
@@ -213,6 +213,7 @@ function precioProductoAlmacen($ciudad, $item){
 	{
        $precio=$dat_detalle[0];
 	}
+	mysqli_close($enlaceCon);
 	return($precio);
 }
 
@@ -235,7 +236,7 @@ function stockProductoVencido($almacen, $item){
 	$stock2Caja=$cant_ingresosCaja;
 
     $cantPres=obtenerCantidadPresentacionProducto($item);
-    
+    mysqli_close($enlaceCon);
 	return $stock2+($stock2Caja*$cantPres);
 }
 
@@ -255,6 +256,7 @@ function stockMaterialesEdit($almacen, $item, $cantidad){
 	}
 	$cadRespuesta=$cadRespuesta+$cantidad;
 	$cadRespuesta=redondear2($cadRespuesta);
+	mysqli_close($enlaceCon);
 	return($cadRespuesta);
 }
 function restauraCantidades($codigo_registro){

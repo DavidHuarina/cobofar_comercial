@@ -459,6 +459,7 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
 function mostrarRegistroConTarjeta(codigo){
     $("#titulo_tarjeta").html("");
     $("#codigo_salida_tarjeta").val(codigo);
+    //$("#monto_tarjeta").val();
     $("#modalPagoTarjeta").modal("show");   
 }
 function guardarRecetaVenta(medico,salida){
@@ -1075,13 +1076,13 @@ echo "</form>";
                     <input type="hidden" id="codigo_salida_tarjeta">
 <div class="row">
     <div class="col-sm-12">
-                 <div class="row">
+                 <div class="row d-none">
                   <label class="col-sm-3 col-form-label">Banco</label>
                   <div class="col-sm-9">
                     <div class="form-group">
                       <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                       
                           <?php echo "$cadComboBancos"; ?>
-                          <option value="0">Otro</option>
+                          <option value="0" selected>Otro</option>
                        </select>
                     </div>
                   </div>
