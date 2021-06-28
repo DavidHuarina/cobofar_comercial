@@ -455,6 +455,7 @@ function obtenerListadoEnvases(){
   return $precio;
 }
 
+
 function obtenerValoresVentasProducto($cod_prod,$ip,$fechaInicio,$fechaFinal){
   set_time_limit(0);
   require_once __DIR__.'/conexion_externa_farma.php';

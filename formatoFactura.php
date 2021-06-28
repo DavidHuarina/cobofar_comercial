@@ -12,6 +12,11 @@
 </script>
 <style type="text/css">
 	body {color:#727371 }
+	/*@media print {
+      body {
+        color:#C2C0C0 !important;
+      }
+    }*/
 </style>
 <?php
 $estilosVenta=1;

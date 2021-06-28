@@ -167,7 +167,7 @@ function limpiarFormularioBusqueda(){
 	$("#itemAccionMaterialNom").val("");
 	$("#itemPrincipioMaterialNom").val("");
 	$("#itemNombreMaterial").val("");
-	$("#tipoSalida").val("0");
+	//$("#tipoSalida").val("0");
 	$("#itemCodigoMaterial").val("");
 	$(".selectpicker").selectpicker("refresh");
 	$("#solo_stock").prop( "checked", true );
