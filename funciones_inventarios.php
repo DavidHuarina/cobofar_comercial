@@ -57,6 +57,11 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 			$sqlUpd="update ingreso_detalle_almacenes set cantidad_restante=cantidad_restante-$cantidadInsert where 
 			cod_ingreso_almacen='$codIngreso' and lote='$loteProducto' and cod_material='$codMaterial'";
 			$respUpd=mysqli_query($enlaceCon,$sqlUpd);
+
+			//DETALLE DE SALIDA E INGRESO CANTIDAD RESTANTE
+			$sqlSalidaIngreso="insert into salida_detalle_ingreso (cod_salida_almacen, cod_ingreso_almacen,material, cantidad_unitaria, cantidad_envase,nro_lote) values ('$cod_salida', '$codIngreso', '$codMaterial', '$cantidadInsert', 0,'$loteProducto')";
+			mysqli_query($enlaceCon,$sqlSalidaIngreso);
+
 			
 			if($respUpd!=1){
 				$banderaError=3;

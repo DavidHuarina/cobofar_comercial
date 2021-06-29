@@ -77,8 +77,8 @@ if($descuentoVenta=="" || $descuentoVenta==0){
 
 $vehiculo="";
 
-$fecha=formateaFechaVista($fecha);
-//$fecha=date("Y-m-d");
+//$fecha=formateaFechaVista($fecha);
+$fecha=date("Y-m-d");
 $hora=date("H:i:s");
 
 //SACAMOS LA CONFIGURACION PARA EL DOCUMENTO POR DEFECTO

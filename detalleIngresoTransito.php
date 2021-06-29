@@ -46,7 +46,7 @@
 		$dat_nombre_material=mysqli_fetch_array($resp_nombre_material);
 		$nombre_material=$dat_nombre_material[0];
 		echo "<tr>
-		<td>$codigo</td>
+		<td>$cod_material</td>
 		<td>$nombre_material</td>
 		<td align='center'>$cantidad_unitaria_formato</td></tr>";
 	}
