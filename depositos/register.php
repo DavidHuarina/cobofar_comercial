@@ -76,7 +76,22 @@ if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
  }
  function cambiarDescripcion(){
   var texto = $("#rpt_personal").find('option:selected').text();
+  //alert(texto);
   $("#nombre").val("Cierre. "+texto); 
+ }
+ function actualizarDatosPersonal(){
+    var parametros={"codigo":0};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxCalcularDatosPersonal.php",
+        data: parametros,   
+        success:  function (resp) { 
+          //alert(resp);
+          document.getElementById("rpt_personal").innerHTML=resp;
+          $("#rpt_personal").selectpicker('refresh');      
+        }
+    });
  }
 </script>
 <meta charset="utf-8">
@@ -123,7 +138,7 @@ if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
       echo "<option value='$codigo_funcionario'>$nombre_funcionario</option>";        
     }
   }
-  echo "</select></td></tr>";
+  echo "</select><a href='#' class='btn btn-deffault btn-fab btn-sm'><i class='material-icons' onclick='actualizarDatosPersonal();return false;' title='Actualizar Listado Personal'>refresh</i></a></td></tr>";
 }
 
 

@@ -48,9 +48,10 @@ function guardarVentaGeneral(){
         buttonsStyling: false
        }).then((result) => {
           if (result.value) {
-          	$("#confirmacion_guardado").val(1);
+          	document.getElementById("confirmacion_guardado").value=1;
+          	//$("#confirmacion_guardado").val(1);
             $('#guardarSalidaVenta').submit();  
-            //return(true);                 
+            //return(false);                 
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
@@ -867,14 +868,13 @@ $(document).ready(function() {
         alert("El monto recibido NO debe ser menor al monto total");
         return false;
       }else{
-      	var confirmacionRealizada=$("#confirmacion_guardado").val();
+      	//var confirmacionRealizada=$("#confirmacion_guardado").val();
+      	var confirmacionRealizada=document.getElementById("confirmacion_guardado").value;
       	console.log("Datos confirm:"+confirmacionRealizada+"")
       	if(parseInt(confirmacionRealizada)==1){
-      		return true;
-      		/*document.getElementById("btsubmit").value = "Enviando...";
+      		document.getElementById("btsubmit").innerHTML = "Enviando...";
             document.getElementById("btsubmit").disabled = true;
-            document.getElementById("btsubmitPedido").value = "Enviando...";
-            document.getElementById("btsubmitPedido").disabled = true;*/
+      		return true;      		
       	}else{
       		return guardarVentaGeneral();
       	}
@@ -1401,7 +1401,7 @@ while($reg=mysqli_fetch_array($rs))
 <tr align='left' class="text-white header">
 	<th colspan="2" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
 	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
-	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
+	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>]<b style=' font-size: 30px !important;color:#000;-webkit-text-stroke: 1px #fff;position:fixed;top:-5px;right:0px;'>[<?php echo $nombreAlmacenSesion;?>]</b></th>
 </tr>
 <tr class="bg-info text-white" align='center' style="color:#fff;background:#16B490 !important; font-size: 16px;">
 <th>Tipo de Doc.</th>
@@ -2172,14 +2172,14 @@ if($banderaErrorFacturacion==0){
                   </div>
                 </div>
                 <div class="row d-none" id="div_ins_doctor">
-                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
+                  <label class="col-sm-2 col-form-label">Institución (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
                       <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
-                    </div>
+                    </div><label style='font-size:10px;color:red;'>Ej: CLINICA PRIVADA, CENTRO DE SALUD</label><br>                    
                   </div>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                   <label class="col-sm-2 col-form-label">Institución</label>
                   <div class="col-sm-10">
                     <div class="form-group">
