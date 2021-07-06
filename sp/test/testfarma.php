@@ -1,13 +1,13 @@
 <?php
 
-    $direccion="http://farmaciasbolivia.tk:8888/cobofar_comercial/wsfarmp/";
+    $direccion="http://127.0.0.1:8888/cobofar_comercial/wsfarmp/";
     $sIde = "cobofar2021";
     $sKey = "34r567y3k8dsu3izx98l1re3oiu";
 
 
     //PARAMETROS PARA LA OBTENCION DEL SERVICIO CIUDADES
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoLocalidades");
-    $file="ws_obtener_listado_localidad.php";
+    //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoLocalidades");
+    //$file="ws_obtener_listado_localidad.php";
 
     //PARAMETROS PARA LA OBTENCION DEL SERVICIO SUCURSALES
     //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoSucursales");    
@@ -17,6 +17,10 @@
     //PARAMETROS PARA LA OBTENCION DEL SERVICIO PRODUCTOS
     //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoProductos");
     //$file="ws_obtener_listado_productos.php";
+
+    //PARAMETROS PARA LA OBTENCION DEL SERVICIO PRODUCTOS
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerStockProductos","codigo"=>"40");
+    $file="ws_obtener_listado_productos.php";
 
     $parametros=json_encode($parametros);
     // abrimos la sesión cURL

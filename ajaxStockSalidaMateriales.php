@@ -7,7 +7,7 @@ $indice = $_GET["indice"];
 
 //
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 
 $stockProducto=stockProducto($codAlmacen, $codMaterial);
 

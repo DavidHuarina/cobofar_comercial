@@ -1,12 +1,76 @@
+<script type="text/javascript">
+	function printDiv(nombreDiv) {
+     var contenido= document.getElementById(nombreDiv).innerHTML;
+     var contenidoOriginal= document.body.innerHTML;
+
+     document.body.innerHTML = contenido;
+
+     window.print();
+
+     document.body.innerHTML = contenidoOriginal;
+}
+</script>
+
+
 <?php
 $estilosVenta=1;
-require('fpdf.php');
-require('conexionmysqli.inc');
+require('conexionmysqli2.inc');
 require('funciones.php');
+require('funcion_nombres.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 
 
+
+
+?>
+<style type="text/css">
+	@font-face{font-family:'Lucida';font-style:normal;font-weight:normal;src:url(assets/lucida/type.ttf) format('truetype')}
+
+	div {color:#000;font-family: 'Lucida' !important; }
+	/*@media print {
+      body {
+        color:#C2C0C0 !important;
+      }
+    }*/
+</style>
+<body>
+<style type="text/css">
+	.arial-12{
+        font-size: 18px;  /*14*/
+	}
+	.arial-7{
+        font-size: 17px;  /*14*/
+	}
+	.arial-8{
+        font-size: 17px;  /*14*/
+	}
+</style>
+<?php
+$cod_ciudad=$_COOKIE["global_agencia"];
 $codigoVenta=$_GET["codVenta"];
+$nroImpresiones=obtenerNumeroImpresiones($codigoVenta);
+$labelNroImpresiones="";
+if($nroImpresiones>0){
+	//$labelNroImpresiones="<label class='arial-12'> (R)</label><br>";
+}
+
+
+
+$sqlInsert="select count(*) from `cantidad_impresiones` s where s.`cod_salida_almacen`=$codigoVenta";
+$respInsert=mysqli_query($enlaceCon,$sqlInsert);
+$nroItemsImp=mysqli_result($respInsert,0,0);
+
+
+$nroImpresionesNew=$nroImpresiones+1;
+if($nroItemsImp>0){
+	$sqlInsertImp="UPDATE cantidad_impresiones SET nro_impresion='$nroImpresionesNew' where cod_salida_almacen='$codigoVenta'";
+}else{	
+	$sqlInsertImp="INSERT INTO cantidad_impresiones (cod_salida_almacen,nro_impresion) VALUES('$codigoVenta','$nroImpresionesNew')";
+}
+mysqli_query($enlaceCon,$sqlInsertImp);
+
+
+
 
 //consulta cuantos items tiene el detalle
 $sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_almacen`=$codigoVenta";
@@ -15,53 +79,47 @@ $nroItems=mysqli_result($respNro,0,0);
 
 $tamanoLargo=230+($nroItems*5)-5;
 
-$pdf=new FPDF('P','mm',array(76,$tamanoLargo));
+?><div style="width:330;margin:0;padding-left:30px !important;padding-right:30px !important;height:<?=$tamanoLargo?>; font-family:Arial;">
+<?php	
 
-//header("Content-Type: text/html; charset=iso-8859-1 ");
-
-$pdf->SetMargins(0,0,0);
-$pdf->AddPage(); 
-$pdf->SetFont('Arial','',8);
-
-
-$sqlConf="select id, valor from configuracion_facturas where id=1";
+$sqlConf="select id, valor from configuracion_facturas where id=1 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nombreTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=10";
+$sqlConf="select id, valor from configuracion_facturas where id=10 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nombreTxt2=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=2";
+$sqlConf="select id, valor from configuracion_facturas where id=2 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $sucursalTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=3";
+$sqlConf="select id, valor from configuracion_facturas where id=3 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $direccionTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=4";
+$sqlConf="select id, valor from configuracion_facturas where id=4 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $telefonoTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=5";
+$sqlConf="select id, valor from configuracion_facturas where id=5 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $ciudadTxt=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=6";
+$sqlConf="select id, valor from configuracion_facturas where id=6 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $txt1=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=7";
+$sqlConf="select id, valor from configuracion_facturas where id=7 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $txt2=mysqli_result($respConf,0,1);
 
-$sqlConf="select id, valor from configuracion_facturas where id=8";
+$sqlConf="select id, valor from configuracion_facturas where id=8 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $txt3=mysqli_result($respConf,0,1);
 
 
-$sqlConf="select id, valor from configuracion_facturas where id=9";
+$sqlConf="select id, valor from configuracion_facturas where id=9 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nitTxt=mysqli_result($respConf,0,1);
 
@@ -77,13 +135,14 @@ $razonSocialCliente=mysqli_result($respDatosFactura,0,4);
 $razonSocialCliente=strtoupper($razonSocialCliente);
 $fechaFactura=mysqli_result($respDatosFactura,0,5);
 
-
+$cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
 $respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
+$tipoPago=1;
 while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$fechaVenta=$datDatosVenta[0];
 	$nombreTipoDoc=$datDatosVenta[1];
@@ -92,42 +151,105 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$descuentoVenta=$datDatosVenta[4];
 	$descuentoVenta=redondear2($descuentoVenta);
 	$horaFactura=$datDatosVenta[5];
-}
+	$montoTotal2=$datDatosVenta['monto_total'];
+	$montoFinal2=$datDatosVenta['monto_final'];
+	$montoEfectivo2=$datDatosVenta['monto_efectivo'];
+	$montoCambio2=$datDatosVenta['monto_cambio'];
+	$montoTotal2=redondear2($montoTotal2);
+	$montoFinal2=redondear2($montoFinal2);
 
+	$montoEfectivo2=redondear2($montoEfectivo2);
+	$montoCambio2=redondear2($montoCambio2);
+
+	$descuentoCabecera=$datDatosVenta['descuento'];
+	$cod_funcionario=$datDatosVenta['cod_chofer'];
+	$tipoPago=$datDatosVenta['cod_tipopago'];
+	$tipoDoc=$datDatosVenta['nombre'];
+	$codTipoDoc=$datDatosVenta['cod_tipo_doc'];
+}
+$nombreFuncionario=nombreVisitador($cod_funcionario);
 $y=5;
 $incremento=3;
+?>
 
-$pdf->SetXY(0,$y+3);		$pdf->Cell(0,0,$nombreTxt,0,0,"C");
-$y=$y+3;
-$pdf->SetXY(0,$y+3);		$pdf->Cell(0,0,$nombreTxt2,0,0,"C");
-$pdf->SetXY(0,$y+6);		$pdf->Cell(0,0,$sucursalTxt,0,0,"C");
-$pdf->SetXY(5,$y+9);		$pdf->MultiCell(70,3,$direccionTxt, 0,"C");
-$y=$y+6;
-$pdf->SetXY(0,$y+12);		$pdf->Cell(0,0,"FACTURA", 0,0,"C");
-$pdf->SetXY(0,$y+15);		$pdf->Cell(0,0,$ciudadTxt,0,0,"C");
-$pdf->SetXY(0,$y+18);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
-$pdf->SetXY(0,$y+21);		$pdf->Cell(0,0,"NIT: $nitTxt", 0,0,"C");
-$pdf->SetXY(0,$y+24);		$pdf->Cell(0,0,"$nombreTipoDoc Nro. $nroDocVenta", 0,0,"C");
-$pdf->SetXY(0,$y+27);		$pdf->Cell(0,0,"Autorizacion Nro. $nroAutorizacion", 0,0,"C");
+<script type="text/javascript">
+	// Conclusión
+(function() {
+  /**
+   * Ajuste decimal de un número.
+   *
+   * @param {String}  tipo  El tipo de ajuste.
+   * @param {Number}  valor El numero.
+   * @param {Integer} exp   El exponente (el logaritmo 10 del ajuste base).
+   * @returns {Number} El valor ajustado.
+   */
+  function decimalAdjust(type, value, exp) {
+    // Si el exp no está definido o es cero...
+    if (typeof exp === 'undefined' || +exp === 0) {
+      return Math[type](value);
+    }
+    value = +value;
+    exp = +exp;
+    // Si el valor no es un número o el exp no es un entero...
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+      return NaN;
+    }
+    // Shift
+    value = value.toString().split('e');
+    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+  }
 
-
-$pdf->SetXY(0,$y+30);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
-$pdf->SetXY(0,$y+32);		$pdf->MultiCell(0,3,utf8_decode($txt1),0,"C");
-$pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
-
-$y=$y+7;
-$pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,"FECHA: $fechaFactura $horaFactura",0,0,"C");
-$pdf->SetXY(0,$y+45);		$pdf->Cell(0,0,"Sr(es): ".utf8_decode($razonSocialCliente)."",0,0,"C");
-$pdf->SetXY(0,$y+48);		$pdf->Cell(0,0,"NIT/CI:	$nitCliente",0,0,"C");
-
-$y=$y+3;
-$pdf->SetXY(0,$y+51);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-$pdf->SetXY(15,$y+54);		$pdf->Cell(0,0,"CANT.");
-$pdf->SetXY(40,$y+54);		$pdf->Cell(0,0,"P.U.");
-$pdf->SetXY(58,$y+54);		$pdf->Cell(0,0,"IMPORTE");
-$pdf->SetXY(0,$y+58);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-
-
+  // Decimal round
+  if (!Math.round10) {
+    Math.round10 = function(value, exp) {
+      return decimalAdjust('round', value, exp);
+    };
+  }
+  // Decimal floor
+  if (!Math.floor10) {
+    Math.floor10 = function(value, exp) {
+      return decimalAdjust('floor', value, exp);
+    };
+  }
+  // Decimal ceil
+  if (!Math.ceil10) {
+    Math.ceil10 = function(value, exp) {
+      return decimalAdjust('ceil', value, exp);
+    };
+  }
+})();
+</script>
+<br>
+<center><p class="arial-12"><?=$nombreTxt?></p>
+<p class="arial-12"><?=$nombreTxt2?></p>
+<label class="arial-12"><?=$sucursalTxt?></label><br>
+<label class="arial-12"><?=$direccionTxt?></label><br><br>
+<?php
+  if($codTipoDoc==4){
+    ?><label class="arial-12">FACTURA (<?=$tipoDoc?>)</label><br><?php
+  }else{
+  	?><label class="arial-12">FACTURA</label><br><?php
+  }
+?>
+<label class="arial-12"><?=$ciudadTxt?></label><br>
+<label class="arial-12"><?="Telefono ".$telefonoTxt?></label><br>
+<label class="arial-12"><?="-------------------------------"?></label><br>
+<label class="arial-12"><?="NIT: $nitTxt"?></label><br>
+<label class="arial-12"><?="$nombreTipoDoc Nro. $nroDocVenta"?></label><br>
+<label class="arial-12"><?="Autorizacion Nro. $nroAutorizacion"?></label><br>
+<label class="arial-12"><?="-------------------------------"?></label><br>
+<label class="arial-12"><?=utf8_decode($txt1)?></label><br>
+<label class="arial-12"><?="-------------------------------"?></label><br><br>
+<label class="arial-12"><?="FECHA: $fechaFactura $horaFactura"?></label><br>
+<label class="arial-12"><?="Sr(es): ".utf8_decode($razonSocialCliente).""?></label><br>
+<label class="arial-12"><?="NIT/CI:	$nitCliente"?></label><br><br>
+<label class="arial-12"><?="================================"?></label><br>
+<table width="100%"><tr align="center" class="arial-12"><td><?="CANT."?></td><td><?="P.U."?></td><td><?="IMPORTE"?></td></tr></table>
+<label class="arial-12"><?="================================"?></label><br>
+<?php
 $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
 		sum(s.`descuento_unitario`), sum(s.`monto_unitario`) from `salida_detalle_almacenes` s, `material_apoyo` m where 
 		m.`codigo_material`=s.`cod_material` and s.`cod_salida_almacen`=$codigoVenta 
@@ -135,7 +257,7 @@ $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcio
 		order by s.orden_detalle";
 $respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 
-$yyy=62;
+$yyy=65;
 
 $montoTotal=0;
 while($datDetalle=mysqli_fetch_array($respDetalle)){
@@ -156,27 +278,45 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	
 	$precioUnitFactura=redondear2($precioUnitFactura);
 	
-	
-	$pdf->SetXY(5,$y+$yyy);		
-	$pdf->MultiCell(30,3,utf8_decode($codInterno),"C"); 
-	$pdf->SetXY(15,$y+$yyy);
-	$pdf->MultiCell(50,3,utf8_decode($nombreMat),"C");
-	$pdf->SetXY(20,$y+$yyy+4);		$pdf->Cell(0,0,"$cantUnit");
-	$pdf->SetXY(40,$y+$yyy+4);		$pdf->Cell(0,0,"$precioUnitFactura");
-	$pdf->SetXY(61,$y+$yyy+4);		$pdf->Cell(0,0,"$montoUnit");
-	$montoTotal=$montoTotal+$montoUnit;
-	
+	?>
+    <table width="100%"><tr class="arial-7"><td align="left">(<?=$codInterno?>)</td><td colspan="2" align="left"><?=$nombreMat?></td></tr>
+    <tr class="arial-8"><td align="left"><?="$cantUnit"?></td><td align="right"><?="$precioUnitFactura"?></td><td align="right"><?="$montoUnit"?></td></tr></table>
+	<?php
+	$montoTotal=$montoTotal+$montoUnit;	
 	$yyy=$yyy+6;
 }
-$pdf->SetXY(0,$y+$yyy+2);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");		
-$yyy=$yyy+5;
-
 $montoFinal=$montoTotal-$descuentoVenta;
+$montoTotal=number_format($montoTotal,1,'.','')."0";
+$montoFinal=number_format($montoFinal,1,'.','')."0";
 
-$pdf->SetXY(42,$y+$yyy);		$pdf->Cell(0,0,"Total Venta:  $montoTotal",0,0);
-$pdf->SetXY(44,$y+$yyy+4);		$pdf->Cell(0,0,"Descuento:  $descuentoVenta",0,0);
-$pdf->SetXY(43,$y+$yyy+8);		$pdf->Cell(0,0,"Total Final:  $montoFinal",0,0);
+/*?><script>
+     var subtotal=Math.ceil10(<?=$montoTotal?>, -1); 
+     var subfinal=Math.ceil10(<?=$montoFinal?>, -1);    	
+</script>
+<?php
 
+if(isset($_GET["var_php2"])){
+   $montoFinal=$_GET["var_php2"];
+   $montoTotal=$_GET["var_php"];
+}else{
+     echo "<script language='javascript'>
+             window.location.href = window.location.href + '&var_php=' + subtotal + '&var_php2=' + subfinal;</script>";
+}*/
+
+
+
+
+//$montoTotal2 = "<script> document.writeln(subtotal); </script>";
+//$montoFinal2 = "<script> document.writeln(subfinal); </script>";
+//$montoFinal=$montoTotal2-$descuentoVenta;
+?>
+<label class="arial-12"><?="================================"?></label><br>
+<table width="100%">
+	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Venta:  $montoTotal"?></td></tr>
+	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Descuento:  $descuentoVenta"?></td></tr>
+	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Final:  $montoFinal"?></td></tr>
+</table>
+<?php
 $arrayDecimal=explode('.', $montoFinal);
 if(count($arrayDecimal)>1){
 	list($montoEntero, $montoDecimal) = explode('.', $montoFinal);
@@ -188,18 +328,27 @@ if($montoDecimal==""){
 	$montoDecimal="00";
 }
 $txtMonto=NumeroALetras::convertir($montoEntero);
-$pdf->SetXY(5,$y+$yyy+11);		$pdf->MultiCell(0,3,"Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos",0,"L");
-$pdf->SetXY(0,$y+$yyy+19);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");		
-
-$yyy=$yyy+10;
-$pdf->SetXY(5,$y+$yyy+16);		$pdf->Cell(0,0,"CODIGO DE CONTROL: $codigoControl",0,0,"C");
-$pdf->SetXY(5,$y+$yyy+20);		$pdf->Cell(0,0,"FECHA LIMITE DE EMISION: $fechaLimiteEmision",0,0,"C");
-$pdf->SetXY(5,$y+$yyy+23);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------",0,0,"C");
-
-
-$pdf->SetXY(10,$y+$yyy+25);		$pdf->MultiCell(60,3,$txt2,0,"C");
-
-//GENERAMOS LA CADENA DEL QR
+?>
+<label class="arial-12"><?="Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos"?></label>
+<table width="100%">
+	<tr align="center" class="arial-8"><td width="50%"></td><td><?="Total Recibido:  $montoEfectivo2"?></td></tr>
+	<tr align="center" class="arial-8"><td width="50%"></td><td><?="Total Cambio:  $montoCambio2"?></td></tr>
+	<?php 
+	if($tipoPago==2){
+	?>
+	<tr align="center" class="arial-8"><td width="50%"><?="PAGO CON TARJETA"?></td><td></td></tr>
+	<?php	
+	}?>
+</table>
+<label class="arial-12"><?="================================"?></label><br>
+<label class="arial-12"><?="CODIGO DE CONTROL: $codigoControl"?></label><br>
+<label class="arial-12"><?="FECHA LIMITE DE EMISION: $fechaLimiteEmision"?></label><br>
+<label class="arial-12"><?="Proceso: $codigoVenta"?></label><br>
+<label class="arial-12"><?="Cajero(a): $nombreFuncionario"?></label><br>
+<?="$labelNroImpresiones"?>
+<label class="arial-12"><?="-------------------------------"?></label><br>
+<div style="width:75%"><label class="arial-12"><?=$txt2?></label><br></div>
+<?php
 $cadenaQR=$nitTxt."|".$nroDocVenta."|".$nroAutorizacion."|".$fechaVenta."|".$montoTotal."|".$montoTotal."|".$codigoControl."|".$nitCliente."|0|0|0|0";
 $codeContents = $cadenaQR; 
 
@@ -208,12 +357,12 @@ $fileName="qrs/".$fechahora.$nroDocVenta.".png";
     
 QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
 
-$pdf->Image($fileName , 23 ,$y+$yyy+38, 30, 30,'PNG');
+$txt3=iconv('utf-8', 'windows-1252', $txt3); 
+?>
+<img src="<?=$fileName?>">
+<div style="width:80%"><label class="arial-12"><?=$txt3?></label><br></div>
+<?php
 
-$pdf->SetXY(5,$y+$yyy+68);		$txt3=iconv('utf-8', 'windows-1252', $txt3); $pdf->MultiCell(60,3,$txt3,0,"C");
-//$pdf->Output();
-
-//consulta cuantos items tiene el detalle
 $sqlGlosa="select cod_tipopreciogeneral from `salida_almacenes` s where s.`cod_salida_almacenes`=$codigoVenta";
 $respGlosa=mysqli_query($enlaceCon,$sqlGlosa);
 $codigoPrecio=mysqli_result($respGlosa,0,0);
@@ -224,76 +373,14 @@ while($filaDesc=mysqli_fetch_array($resp1)){
 	    $txtGlosaDescuento=iconv('utf-8', 'windows-1252', $filaDesc[0]);		
 }
 if($txtGlosaDescuento!=""){
-	$pdf->SetXY(5,$y+$yyy+80); 
-	$pdf->SetFont('Arial','',6); $pdf->MultiCell(60,3,$txtGlosaDescuento,15,"C");
+	?><label class="arial-12"><?="-------------------------------"?></label><br>
+	<div style="width:80%"><label class="arial-7"><?=$txtGlosaDescuento?></label><br></div><?php
 }
-
-
-
-
-
-$tamanoLargo=200+($nroItems*3)-3;
-
-//$pdf=new FPDF('P','mm',array(76,$tamanoLargo));
-//$pdf->SetMargins(0,0,0);
-$pdf->AddPage(); 
-$pdf->SetFont('Arial','',8);
-
-$y=0;
-$incremento=3;
-
-$y=$y+(-12);
-$pdf->SetXY(0,$y+21);		$pdf->Cell(0,0,$nombreTxt,0,0,"C");
-$pdf->SetXY(0,$y+24);		$pdf->Cell(0,0,"$nombreTipoDoc Nro. $nroDocVenta", 0,0,"C");
-
-$y=$y+(-8);
-$pdf->SetXY(0,$y+36);		$pdf->Cell(0,0,"FECHA: $fechaVenta",0,0,"C");
-$pdf->SetXY(0,$y+39);		$pdf->Cell(0,0,"Sr(es): $razonSocialCliente",0,0,"C");
-
-$pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,utf8_decode("Válido para cambio por 7 días."),0,0,"C");
-
-
-$y=$y+(2);
-$pdf->SetXY(0,$y+45);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-$pdf->SetXY(15,$y+48);		$pdf->Cell(0,0,"ITEM");
-$pdf->SetXY(50,$y+48);		$pdf->Cell(0,0,"Cant.");
-//$pdf->SetXY(58,$y+48);		$pdf->Cell(0,0,"Importe");
-$pdf->SetXY(0,$y+52);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-
-
-$sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
-		sum(s.`descuento_unitario`), sum(s.`monto_unitario`), m.codigo_barras from `salida_detalle_almacenes` s, `material_apoyo` m where 
-		m.`codigo_material`=s.`cod_material` and s.`cod_salida_almacen`=$codigoVenta 
-		group by s.cod_material
-		order by 3";
-$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
-
-$yyy=55;
-
-$montoTotal=0;
-while($datDetalle=mysqli_fetch_array($respDetalle)){
-	$codInterno=$datDetalle[0];
-	$cantUnit=$datDetalle[1];
-	$cantUnit=redondear2($cantUnit);
-	$nombreMat=$datDetalle[2];
-	$precioUnit=$datDetalle[3];
-	$precioUnit=redondear2($precioUnit);
-	$descUnit=$datDetalle[4];
-	$montoUnit=$datDetalle[5];
-	$codigoBarras=$datDetalle[6];
-	$montoUnit=redondear2($montoUnit);
-	
-	$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(50,3,"$codigoBarras","C");
-	$pdf->SetXY(56,$y+$yyy+1);		$pdf->Cell(0,0,"$cantUnit");
-	//$pdf->SetXY(61,$y+$yyy+1);		$pdf->Cell(0,0,"$montoUnit");
-	$montoTotal=$montoTotal+$montoUnit;
-	
-	$yyy=$yyy+6;
-}
-$pdf->SetXY(0,$y+$yyy+2);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");		
-$yyy=$yyy+5;
-
-
-
-$pdf->Output();
 ?>
+</center>
+</div>
+</body>
+<script type="text/javascript">
+ javascript:window.print();
+ setTimeout(function () { window.location.href="registrar_salidaventas.php";}, 1000);
+</script>

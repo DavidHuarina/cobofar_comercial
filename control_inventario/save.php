@@ -25,11 +25,11 @@ if($sql_inserta==1){
 	{
 		$codigo_material=$dat[0];
 		$stock=stockProducto($codAlmacen, $codigo_material);
-		$sqlInsertDetalleInv.="($codigo,'$codigo_material','$stock','0','','0'),"; 
+		$sqlInsertDetalleInv.="($codigo,'$codigo_material','$stock','0','','0','$fecha_finrevision'),"; 
         
 	}
 	$sqlInsertDetalleInv = substr_replace($sqlInsertDetalleInv, '', -1, 1);
-    $sqlInsertDet="INSERT INTO $tableDetalle (cod_inventariosucursal,cod_material,cantidad,cantidad_registrada,observacion,revisado) VALUES ".$sqlInsertDetalleInv.";";	
+    $sqlInsertDet="INSERT INTO $tableDetalle (cod_inventariosucursal,cod_material,cantidad,cantidad_registrada,observacion,revisado,fecha_saldo) VALUES ".$sqlInsertDetalleInv.";";	
     $sqlDetalle_inserta=mysqli_query($enlaceCon,$sqlInsertDet);
 }
 echo "<script language='Javascript'>

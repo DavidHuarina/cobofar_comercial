@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("funciones.php");
 
 $codTipoDoc=$_GET['codTipoDoc'];

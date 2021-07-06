@@ -10,27 +10,63 @@
      document.body.innerHTML = contenidoOriginal;
 }
 </script>
+<style type="text/css">
+	body {color:#727371 }
+	/*@media print {
+      body {
+        color:#C2C0C0 !important;
+      }
+    }*/
+</style>
 <?php
 $estilosVenta=1;
 require('conexionmysqli2.inc');
 require('funciones.php');
+require('funcion_nombres.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 
+
+
+
 ?>
+<body>
 <style type="text/css">
 	.arial-12{
-        font-size: 12px;
+        font-size: 16px;  /*14*/
 	}
 	.arial-7{
-        font-size: 10px;
+        font-size: 14px;  /*14*/
 	}
 	.arial-8{
-        font-size: 11px;
+        font-size: 15px;  /*14*/
 	}
 </style>
 <?php
 $cod_ciudad=$_COOKIE["global_agencia"];
 $codigoVenta=$_GET["codVenta"];
+$nroImpresiones=obtenerNumeroImpresiones($codigoVenta);
+$labelNroImpresiones="";
+if($nroImpresiones>0){
+	//$labelNroImpresiones="<label class='arial-12'> (R)</label><br>";
+}
+
+
+
+$sqlInsert="select count(*) from `cantidad_impresiones` s where s.`cod_salida_almacen`=$codigoVenta";
+$respInsert=mysqli_query($enlaceCon,$sqlInsert);
+$nroItemsImp=mysqli_result($respInsert,0,0);
+
+
+$nroImpresionesNew=$nroImpresiones+1;
+if($nroItemsImp>0){
+	$sqlInsertImp="UPDATE cantidad_impresiones SET nro_impresion='$nroImpresionesNew' where cod_salida_almacen='$codigoVenta'";
+}else{	
+	$sqlInsertImp="INSERT INTO cantidad_impresiones (cod_salida_almacen,nro_impresion) VALUES('$codigoVenta','$nroImpresionesNew')";
+}
+mysqli_query($enlaceCon,$sqlInsertImp);
+
+
+
 
 //consulta cuantos items tiene el detalle
 $sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_almacen`=$codigoVenta";
@@ -39,7 +75,7 @@ $nroItems=mysqli_result($respNro,0,0);
 
 $tamanoLargo=230+($nroItems*5)-5;
 
-?><div style="width:320;height:<?=$tamanoLargo?>; font-family:Arial;">
+?><div style="width:320;margin:0;padding-left:30px !important;padding-right:30px !important;height:<?=$tamanoLargo?>; font-family:Arial;">
 <?php	
 
 $sqlConf="select id, valor from configuracion_facturas where id=1 and cod_ciudad='$cod_ciudad'";
@@ -95,13 +131,14 @@ $razonSocialCliente=mysqli_result($respDatosFactura,0,4);
 $razonSocialCliente=strtoupper($razonSocialCliente);
 $fechaFactura=mysqli_result($respDatosFactura,0,5);
 
-
+$cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
 $respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
+$tipoPago=1;
 while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$fechaVenta=$datDatosVenta[0];
 	$nombreTipoDoc=$datDatosVenta[1];
@@ -110,32 +147,107 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$descuentoVenta=$datDatosVenta[4];
 	$descuentoVenta=redondear2($descuentoVenta);
 	$horaFactura=$datDatosVenta[5];
-}
+	$montoTotal2=$datDatosVenta['monto_total'];
+	$montoFinal2=$datDatosVenta['monto_final'];
+	$montoEfectivo2=$datDatosVenta['monto_efectivo'];
+	$montoCambio2=$datDatosVenta['monto_cambio'];
+	$montoTotal2=redondear2($montoTotal2);
+	$montoFinal2=redondear2($montoFinal2);
 
+	$montoEfectivo2=redondear2($montoEfectivo2);
+	$montoCambio2=redondear2($montoCambio2);
+
+	$descuentoCabecera=$datDatosVenta['descuento'];
+	$cod_funcionario=$datDatosVenta['cod_chofer'];
+	$tipoPago=$datDatosVenta['cod_tipopago'];
+	$tipoDoc=$datDatosVenta['nombre'];
+	$codTipoDoc=$datDatosVenta['cod_tipo_doc'];
+}
+$sqlResponsable="select CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') from funcionarios where codigo_funcionario='".$cod_funcionario."'";
+$respResponsable=mysqli_query($enlaceCon,$sqlResponsable);
+$nombreFuncionario=mysqli_result($respResponsable,0,0);
+//$nombreFuncionario=nombreVisitador($cod_funcionario);
 $y=5;
 $incremento=3;
 ?>
+
+<script type="text/javascript">
+	// Conclusión
+(function() {
+  /**
+   * Ajuste decimal de un número.
+   *
+   * @param {String}  tipo  El tipo de ajuste.
+   * @param {Number}  valor El numero.
+   * @param {Integer} exp   El exponente (el logaritmo 10 del ajuste base).
+   * @returns {Number} El valor ajustado.
+   */
+  function decimalAdjust(type, value, exp) {
+    // Si el exp no está definido o es cero...
+    if (typeof exp === 'undefined' || +exp === 0) {
+      return Math[type](value);
+    }
+    value = +value;
+    exp = +exp;
+    // Si el valor no es un número o el exp no es un entero...
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+      return NaN;
+    }
+    // Shift
+    value = value.toString().split('e');
+    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+  }
+
+  // Decimal round
+  if (!Math.round10) {
+    Math.round10 = function(value, exp) {
+      return decimalAdjust('round', value, exp);
+    };
+  }
+  // Decimal floor
+  if (!Math.floor10) {
+    Math.floor10 = function(value, exp) {
+      return decimalAdjust('floor', value, exp);
+    };
+  }
+  // Decimal ceil
+  if (!Math.ceil10) {
+    Math.ceil10 = function(value, exp) {
+      return decimalAdjust('ceil', value, exp);
+    };
+  }
+})();
+</script>
 <br>
 <center><p class="arial-12"><?=$nombreTxt?></p>
 <p class="arial-12"><?=$nombreTxt2?></p>
 <label class="arial-12"><?=$sucursalTxt?></label><br>
 <label class="arial-12"><?=$direccionTxt?></label><br><br>
-<label class="arial-12">FACTURA</label><br>
+<?php
+  if($codTipoDoc==4){
+    ?><label class="arial-12">FACTURA (<?=$tipoDoc?>)</label><br><?php
+  }else{
+  	?><label class="arial-12">FACTURA</label><br><?php
+  }
+?>
 <label class="arial-12"><?=$ciudadTxt?></label><br>
 <label class="arial-12"><?="Telefono ".$telefonoTxt?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br>
+<label class="arial-12"><?="-------------------------------------------------------"?></label><br>
 <label class="arial-12"><?="NIT: $nitTxt"?></label><br>
 <label class="arial-12"><?="$nombreTipoDoc Nro. $nroDocVenta"?></label><br>
 <label class="arial-12"><?="Autorizacion Nro. $nroAutorizacion"?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br>
+<label class="arial-12"><?="--------------------------------------------------------"?></label><br>
 <label class="arial-12"><?=utf8_decode($txt1)?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br><br>
+<label class="arial-12"><?="--------------------------------------------------------"?></label><br><br>
 <label class="arial-12"><?="FECHA: $fechaFactura $horaFactura"?></label><br>
 <label class="arial-12"><?="Sr(es): ".utf8_decode($razonSocialCliente).""?></label><br>
 <label class="arial-12"><?="NIT/CI:	$nitCliente"?></label><br><br>
-<label class="arial-12"><?="============================================="?></label><br>
+<label class="arial-12"><?="======================================"?></label><br>
 <table width="100%"><tr align="center" class="arial-12"><td><?="CANT."?></td><td><?="P.U."?></td><td><?="IMPORTE"?></td></tr></table>
-<label class="arial-12"><?="============================================="?></label><br>
+<label class="arial-12"><?="======================================"?></label><br>
 <?php
 $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
 		sum(s.`descuento_unitario`), sum(s.`monto_unitario`) from `salida_detalle_almacenes` s, `material_apoyo` m where 
@@ -166,15 +278,38 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$precioUnitFactura=redondear2($precioUnitFactura);
 	
 	?>
-    <table width="100%"><tr align="center" class="arial-7"><td><?=$codInterno?></td><td colspan="2"><?=$nombreMat?></td></tr>
-    <tr align="center" class="arial-8"><td><?="$cantUnit"?></td><td><?="$precioUnitFactura"?></td><td><?="$montoUnit"?></td></tr></table>
+    <table width="100%"><tr class="arial-7"><td align="left">(<?=$codInterno?>)</td><td colspan="2" align="left"><?=$nombreMat?></td></tr>
+    <tr class="arial-8"><td align="left"><?="$cantUnit"?></td><td align="right"><?="$precioUnitFactura"?></td><td align="right"><?="$montoUnit"?></td></tr></table>
 	<?php
 	$montoTotal=$montoTotal+$montoUnit;	
 	$yyy=$yyy+6;
 }
 $montoFinal=$montoTotal-$descuentoVenta;
- ?>
-<label class="arial-12"><?="============================================="?></label><br>
+$montoTotal=number_format($montoTotal,1,'.','')."0";
+$montoFinal=number_format($montoFinal,1,'.','')."0";
+
+/*?><script>
+     var subtotal=Math.ceil10(<?=$montoTotal?>, -1); 
+     var subfinal=Math.ceil10(<?=$montoFinal?>, -1);    	
+</script>
+<?php
+
+if(isset($_GET["var_php2"])){
+   $montoFinal=$_GET["var_php2"];
+   $montoTotal=$_GET["var_php"];
+}else{
+     echo "<script language='javascript'>
+             window.location.href = window.location.href + '&var_php=' + subtotal + '&var_php2=' + subfinal;</script>";
+}*/
+
+
+
+
+//$montoTotal2 = "<script> document.writeln(subtotal); </script>";
+//$montoFinal2 = "<script> document.writeln(subfinal); </script>";
+//$montoFinal=$montoTotal2-$descuentoVenta;
+?>
+<label class="arial-12"><?="======================================"?></label><br>
 <table width="100%">
 	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Total Venta:  $montoTotal"?></td></tr>
 	<tr align="center" class="arial-8"><td width="60%"></td><td><?="Descuento:  $descuentoVenta"?></td></tr>
@@ -193,11 +328,24 @@ if($montoDecimal==""){
 }
 $txtMonto=NumeroALetras::convertir($montoEntero);
 ?>
-<label class="arial-12"><?="Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos"?></label><br><br>
-<label class="arial-12"><?="============================================="?></label><br>
+<label class="arial-12"><?="Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos"?></label>
+<table width="100%">
+	<tr align="center" class="arial-8"><td width="50%"></td><td><?="Total Recibido:  $montoEfectivo2"?></td></tr>
+	<tr align="center" class="arial-8"><td width="50%"></td><td><?="Total Cambio:  $montoCambio2"?></td></tr>
+	<?php 
+	if($tipoPago==2){
+	?>
+	<tr align="center" class="arial-8"><td width="50%"><?="PAGO CON TARJETA"?></td><td></td></tr>
+	<?php	
+	}?>
+</table>
+<label class="arial-12"><?="======================================"?></label><br>
 <label class="arial-12"><?="CODIGO DE CONTROL: $codigoControl"?></label><br>
 <label class="arial-12"><?="FECHA LIMITE DE EMISION: $fechaLimiteEmision"?></label><br>
-<label class="arial-12"><?="-------------------------------------------------------------------------------"?></label><br>
+<label class="arial-12"><?="Proceso: $codigoVenta"?></label><br>
+<label class="arial-12"><?="Cajero(a): $nombreFuncionario"?></label><br>
+<?="$labelNroImpresiones"?>
+<label class="arial-12"><?="--------------------------------------------------------"?></label><br>
 <div style="width:75%"><label class="arial-12"><?=$txt2?></label><br></div>
 <?php
 $cadenaQR=$nitTxt."|".$nroDocVenta."|".$nroAutorizacion."|".$fechaVenta."|".$montoTotal."|".$montoTotal."|".$codigoControl."|".$nitCliente."|0|0|0|0";
@@ -230,7 +378,8 @@ if($txtGlosaDescuento!=""){
 ?>
 </center>
 </div>
+</body>
 <script type="text/javascript">
  javascript:window.print();
- setTimeout(function () { window.location.href="registrar_salidaventas.php";}, 100);
+ setTimeout(function () { window.location.href="registrar_salidaventas.php";}, 1000);
 </script>

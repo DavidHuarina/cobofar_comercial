@@ -418,7 +418,7 @@ function obtenerListadoEnvases(){
    set_time_limit(0);
    error_reporting(0);
    require_once __DIR__.'/conexion_externa_farma.php';
-   $listAlma=obtenerListadoAlmacenes();//web service
+   $listAlma=obtenerListadoAlmacenesEspecifico("A{");//web service
    $precio=0;$index=0;$pv=[];
    foreach ($listAlma->lista as $alma) {
       $pv[$index]=0;
@@ -454,6 +454,7 @@ function obtenerListadoEnvases(){
   $dbh = null;
   return $precio;
 }
+
 
 function obtenerValoresVentasProducto($cod_prod,$ip,$fechaInicio,$fechaFinal){
   set_time_limit(0);

@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <?php 
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $num=$_GET['codigo'];
 
 $fechaActual=date("Y-m-d");

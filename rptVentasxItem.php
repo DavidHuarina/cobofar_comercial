@@ -15,8 +15,8 @@ if(!isset($_GET['rpt_ver'])){
 
 
 //desde esta parte viene el reporte en si
-$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
-$fecha_finconsulta=cambia_formatofecha($fecha_fin);
+$fecha_iniconsulta=$fecha_ini;//cambia_formatofecha($fecha_ini);
+$fecha_finconsulta=$fecha_fin;//cambia_formatofecha($fecha_fin);
 
 
 $rpt_territorio=$_GET['rpt_territorio'];
@@ -35,7 +35,7 @@ $sql="select m.`codigo_material`, m.`descripcion_material`,
 	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta'
 	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	group by m.`codigo_material` order by 3 desc;";
+	group by m.`codigo_material` ORDER BY s.cod_salida_almacenes desc ";//order by 3 desc;
 	
 $resp=mysqli_query($enlaceCon,$sql);
 
@@ -53,7 +53,7 @@ $totalVenta=0;
 while($datos=mysqli_fetch_array($resp)){	
 	$codItem=$datos[0];
 	$nombreItem=$datos[1];
-	$montoVenta=$datos[4];//$datos[2]; el monto es la sumatoria del monto unitario
+	$montoVenta=$datos[2];//$datos[2]; el monto es la sumatoria del monto unitario
 	$cantidad=$datos[3];
 	$nombreLinea=$datos["linea"];
 	$nombreProveedor=$datos["proveedor"];

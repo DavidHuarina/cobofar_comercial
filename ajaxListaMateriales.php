@@ -1,11 +1,10 @@
-<html>
-<body>
-<table align='center' class="texto">
-<tr>
+<br>
+<table align='center' class="table table-bordered table-sm" id="listaMaterialesTabla">
+<tr class='bg-primary text-white'>
 <th>Producto</th><th>Linea</th><th>Principio Activo</th><th>Stock</th><th>Precio</th></tr>
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("funciones.php");
 
 $codTipo=$_GET['codTipo'];
@@ -14,6 +13,7 @@ $codAccion=$_GET['codAccion'];
 $codPrincipio=$_GET['codPrincipio'];
 
 $nombreItem=$_GET['nombreItem'];
+//echo $nombreItem."<br>";
 $globalAlmacen=$_COOKIE['global_almacen'];
 $codCiudad=$_COOKIE['global_agencia'];
 $itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
@@ -31,7 +31,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),m.cantidad_presentacion,m.divi,(SELECT GROUP_CONCAT(p.nombre) from principios_activos p where p.codigo in (SELECT cod_principioactivo from principios_activosproductos where cod_material=m.codigo_material)) from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
 
 
-  if((int)$codigoMat>0){
+  if((int)$codigoMat!=0){
         $sql=$sql." and m.codigo_material in (".$codigoMat.")";
   }else{
 	if($nombreItem!=""){
@@ -39,7 +39,11 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 	}	
 
     if((int)$codTipo>0){
-        $sql=$sql." and m.cod_linea_proveedor=".$codTipo."";
+    	if(isset($_GET["codProv"])){
+          $sql=$sql." and m.cod_linea_proveedor in (SELECT cod_linea_proveedor from proveedores_lineas where cod_proveedor=".$_GET["codProv"].")";
+    	}else{
+    	  $sql=$sql." and m.cod_linea_proveedor=".$codTipo."";	
+    	}        
     }
 
     if((int)$codForma>0){
@@ -48,10 +52,18 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 
     if((int)$codAccion>0){
         $sql=$sql." and m.codigo_material in (SELECT codigo_material FROM material_accionterapeutica where cod_accionterapeutica=".$codAccion.")";
+    }else{    	
+       if(isset($_GET['nomAccion'])&&$_GET['nomAccion']!=""){
+          $sql=$sql." and m.codigo_material in (SELECT a.codigo_material FROM material_accionterapeutica a JOIN acciones_terapeuticas at on at.cod_accionterapeutica=a.cod_accionterapeutica where at.nombre_accionterapeutica like '%".$_GET['nomAccion']."%' )";
+        }
     }
 
     if((int)$codPrincipio>0){
         $sql=$sql." and m.codigo_material in (SELECT cod_material FROM principios_activosproductos where cod_principioactivo=".$codPrincipio.")";
+    }else{
+    	if(isset($_GET['nomPrincipio'])&&$_GET['nomPrincipio']!=""){
+          $sql=$sql." and m.codigo_material in (SELECT a.cod_material FROM principios_activosproductos a JOIN principios_activos at on at.codigo=a.cod_principioactivo where at.nombre like '%".$_GET['nomPrincipio']."%' )";
+        }
     }    
 
 
@@ -70,6 +82,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 
 	$numFilas=mysqli_num_rows($resp);
 	if($numFilas>0){
+		$indexFila=0;
 		while($dat=mysqli_fetch_array($resp)){
 			$codigo=$dat[0];
 			$nombre=$dat[1];
@@ -86,7 +99,7 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			
 			$ubicacionProducto=ubicacionProducto($globalAlmacen, $codigo);
 			
-			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='$codCiudad'";
+			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='-1'";
 			$rs=mysqli_query($enlaceCon,$consulta);
 			$registro=mysqli_fetch_array($rs);
 			$precioProducto=$registro[0];
@@ -95,23 +108,37 @@ $tipoSalidaVencimiento=mysqli_result($respConf,0,0);
 			}
 			$precioProducto=redondear2($precioProducto);
 			
-			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")'>$nombre</a></div></td>
+			$mostrarFila=1;
+			if(isset($_GET["stock"])){
+				 if($_GET["stock"]==1&&$stockProducto<=0){
+                    $mostrarFila=0;
+				 }  	              
+			}
+			if($mostrarFila==1){
+				$indexFila++;
+
+			if($stockProducto>0){
+				$stockProducto="<b class='textograndenegro' style='color:#C70039'>".$stockProducto."</b>";
+			}	
+			 echo "<tr><td><div class='textograndenegro'><a class='enlace_ref' href='javascript:setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")' style='color:#C70039'>($codigo) $nombre</a></div></td>
 			<td>$linea</td>
 			<td>$principiostring</td>
 			<td>$stockProducto</td>
 			<td>$precioProducto</td>
-			</tr>";
+			 </tr>";				
+			}
 		}
-
-		if($numFilas==1){
-			echo "<script>setMateriales(form1, $codigo, \"$nombre\",\"$cantidadPresentacion\",\"$divi\")</script>";
-		}
+		if($indexFila==0){
+		  echo "<tr><td colspan='5'>Sin Resultados en la busqueda.</td></tr>";	
+		}		
 	}else{
 		echo "<tr><td colspan='5'>Sin Resultados en la busqueda.</td></tr>";
 	}
 	
 ?>
 </table>
+<?php
+if($numFilas==1){
+			//$nombre=str_replace(,"",$nombre);
 
-</body>
-</html>
+}

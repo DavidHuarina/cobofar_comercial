@@ -5,7 +5,7 @@ require("funciones.php");
 
 $codMaterial = $_GET["codmat"];
 //
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $cadRespuesta="";
 $consulta="
     select peso from material_apoyo where codigo_material='$codMaterial'";

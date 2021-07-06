@@ -88,18 +88,21 @@ while($datos=mysqli_fetch_array($resp)){
 	$obsVenta=$datos[3];
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
+	$montoVenta=ceil_dec($montoVenta,1,".");
 	$totalVenta=$totalVenta+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
 	$personalCliente=nombreVisitador($datos['cod_chofer']);
-	$montoVentaFormat=number_format($montoVenta,2,".",",");
+	//$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
 	if($codTipoPago==1){
 		$totalEfectivo+=$montoVenta;
 	}else{
+		$montoVenta=number_format($montoVenta,1,'.','');
 		$totalTarjeta+=$montoVenta;
 	}
+	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	$totalEfectivoF=number_format($totalEfectivo,2,".",",");
 	$totalTarjetaF=number_format($totalTarjeta,2,".",",");
 	

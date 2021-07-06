@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("estilos_almacenes.inc");
 require("funciones.php");
 require("funciones_inventarios.php");

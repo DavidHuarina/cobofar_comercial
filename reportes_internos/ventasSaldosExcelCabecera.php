@@ -12,6 +12,9 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 
 require_once __DIR__.'/../conexion_externa_farma.php';
 //require_once '../function_web.php';
+
+
+// TODAS SUCURSALES DE MAYO
 $fechaInicio="15/05/2021";
 $fechaFinal="15/05/2021";
 if(isset($_GET["fi"])){

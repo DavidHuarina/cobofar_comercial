@@ -276,8 +276,37 @@ function totalesTablaVertical(tabla,columna,fila){
             var subtotalF=number_format(subtotal,2); 
             console.log("subtotal: "+subtotal);
       }
-      var html='<th>'+subtotalF+'</th>';
+      var html='<th style="text-align:right;">'+subtotalF+'</th>';
       $("tfoot tr").append(html);   
   }
   $("tfoot tr").prepend("<th colspan='"+columna+"'>Totales</th>");   
 }
+
+$(document).ready(function() {    
+        $('[data-toggle="tooltip"]').tooltip({
+              animated: 'swing', //swing expand
+              placement: 'right',
+              html: true,
+              trigger : 'hover'
+          });
+});
+
+function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
+  type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
+  color = Math.floor((Math.random() * 6) + 1);
+  if (fondo=='random'){
+    fondo=type[color];
+  } 
+    $.notify({
+      icon: icono,
+      message: cabecera+'<hr>'+'<div class="row"><div class="col-sm-12"><small>'+mensaje+'</small></div></div><div class="col-sm-12 float-right" style="font-size:10px;text-align:right;">'+pie+'</div>'
+
+    }, {
+      type: fondo,
+      timer: tiempo,
+      placement: {
+        from: from,
+        align: align
+      }
+    });
+  }

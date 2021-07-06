@@ -28,8 +28,11 @@ echo "<script language='JavaScript'>
 		}
 		</script>";
 require("conexionmysqli.inc");
+if($_COOKIE["admin_central"]==1){
+	$global_tipoalmacen=1;
+}
 if(isset($global_tipoalmacen)&&$global_tipoalmacen==1)
-{	require("estilos_almacenes_central.inc");
+{	require("estilos_almacenes.inc");
 }
 else
 {	require("estilos_almacenes.inc");
@@ -78,7 +81,7 @@ $fecha_rptdefault=date("d/m/Y");
 echo "<h1>Reporte Kardex de Existencia Fisica</h1><br>";
 echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
-	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' id='rpt_territorio' class='selectpicker form-control' onChange='cargalistadoAlmacenes()'>";
+	echo "<tr><th align='left'>Sucursal</th><td><select name='rpt_territorio' id='rpt_territorio' class='selectpicker form-control' data-size='6' data-live-search='true' onChange='cargalistadoAlmacenes()'>";
 	if($global_tipoalmacen==1)
 	{	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	}
@@ -86,7 +89,7 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
 	}
 	$resp=mysqli_query($enlaceCon,$sql);
-	echo "<option value=''></option>";
+	//echo "<option value=''></option>";
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
@@ -98,8 +101,24 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 		}
 	}
 	echo "</select></td></tr>";
-	echo "<tr><th align='left'>Sucursal</th><td><select name='rpt_almacen' id='rpt_almacen' class='selectpicker form-control'>";
 	
+
+	echo "<tr><th align='left'>Almacen</th><td><select name='rpt_almacen' id='rpt_almacen' class='selectpicker form-control'>";
+	
+	$sql="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$global_agencia'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp))
+	{	$codigo_almacen=$dat[0];
+		$nombre_almacen=$dat[1];
+		if($rpt_almacen==$codigo_almacen)
+		{	echo "<option value='$codigo_almacen' selected>$nombre_almacen</option>";
+		}
+		else
+		{	echo "<option value='$codigo_almacen'>$nombre_almacen</option>";
+		}
+	}
+
+
 	echo "</select><input type='hidden' value='2' name='tipo_item'></td></tr>";
 	echo "<tr><th align='left'>Productos</th><td><select name='rpt_item' id='rpt_item' class='selectpicker form-control col-sm-10'>";
 	

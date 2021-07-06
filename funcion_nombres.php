@@ -25,6 +25,16 @@ $sql="select nombre from bancos where codigo='$codigo'";
 	return($nombre_muestra);
 }
 
+function nombreBancoCuenta($codigo)
+{	require("conexionmysqli2.inc");
+$sql="select descripcion from cuentas_bancarias where codigo='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre_muestra=$dat[0];
+	return($nombre_muestra);
+}
+
+
 function nombreGestion($codigo)
 {	require("conexionmysqli2.inc");
 $sql="select g.`nombre_gestion` from `gestiones` g where g.`codigo_gestion`='$codigo'";

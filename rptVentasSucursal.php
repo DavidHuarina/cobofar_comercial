@@ -23,9 +23,7 @@ $diaPrimerMes=explode("-",$fecha_iniconsulta)[2];
 $diaUltimoMes=explode("-",$fecha_finconsulta)[2];
 
 $rpt_territorio=$_GET['codTipoTerritorio'];
-
 $fecha_reporte=date("d/m/Y");
-
 $nombre_territorio=obtenerNombreSucursalAgrupado($rpt_territorio);
 $nombre_territorio=str_replace(",",", ", $nombre_territorio);
 ?><style type="text/css"> 
@@ -41,7 +39,7 @@ $nombre_territorio=str_replace(",",", ", $nombre_territorio);
             overflow:scroll;
         }
     </style>
-<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Sucursal
+<table style='margin-top:-90 !important' align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Sucursal X Mes Cerrado
 	<br> De: <?=$fecha_ini?> A: <?=$fecha_fin?>
 	<br>Fecha Reporte: <?=$fecha_reporte?></tr></table>
 	<center><div style='width:70%;text-align:center;'><b>Sucursales:</b><br><small><?=$nombre_territorio?></small></div></center>
@@ -99,17 +97,24 @@ while($datosSuc=mysqli_fetch_array($respSucursal)){
     }  	
     $totalesHorizontal+=number_format($montoVenta,2,'.','');
   	if($montoVenta>0){//if($dateInicio==date("Y-m")."-01"){
-  		?><td><?=number_format($montoVenta,2,'.',',')?></td><?php
+  		?><td class="text-right"><?=number_format($montoVenta,2,'.',',')?></td><?php
   	}else{
-  		?><td class='text-muted'><?=number_format($montoVenta,2,'.',',')?></td><?php
+      ?>
+        <td class='text-muted text-right'><?=number_format($montoVenta,2,'.',',')?></td>
+      <?php 
+  		
   	}
     // para sumar mes
   	$fechaActual = date("Y-m-d", $tiempoInicio2);  	
   	$tiempoInicio2 += (float)strtotime("+1 month","$fechaActual");
   }
-  ?><th><?=number_format($totalesHorizontal,2,'.',',')?></th>  
- </tr>
+
+      ?><th class="text-right"><?=number_format($totalesHorizontal,2,'.',',')?></th>  
   <?php
+  
+  ?></tr>
+  <?php
+  
 }
 ?>
 </tbody><tfoot><tr></tr></tfoot></table></center></br>

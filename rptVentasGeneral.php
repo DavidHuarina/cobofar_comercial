@@ -3,14 +3,49 @@ require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
 require('conexionmysqli.inc');
 require('funcion_nombres.php');
+?>
+<script type="text/javascript">
+	function nuevoAjax()
+{	var xmlhttp=false;
+	try {
+			xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
+	} catch (e) {
+	try {
+		xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
+	} catch (E) {
+		xmlhttp = false;
+	}
+	}
+	if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+ 	xmlhttp = new XMLHttpRequest();
+	}
+	return xmlhttp;
+}
 
+ function mostrarStockProducto(codigo,nombre){
+ 	var indice = 1;
+ 	var codalm=$("#cod_almacen").val();
+ 	ajax=nuevoAjax();
+	ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codigo+"&codalm="+codalm+"&indice="+indice,true);
+	ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			$("#stock_producto"+indice).html(ajax.responseText);
+			$("#nombre_producto").val(nombre);
+	        $("#modalStockProducto").modal("show");
+		}
+	}
+	ajax.send(null);	 		
+  }	
+</script>
+<?php
 $fecha_ini=$_GET['fecha_ini'];
 $fecha_fin=$_GET['fecha_fin'];
+$codPersonal=$_GET['codPersonal'];
 
-
+$globalAlmacen=$_COOKIE["global_almacen"];
 //desde esta parte viene el reporte en si
-$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
-$fecha_finconsulta=cambia_formatofecha($fecha_fin);
+$fecha_iniconsulta=$fecha_ini;//cambia_formatofecha($fecha_ini);
+$fecha_finconsulta=$fecha_fin;//cambia_formatofecha($fecha_fin);
 
 $rpt_territorio=$_GET['rpt_territorio'];
 
@@ -26,10 +61,10 @@ $sql="select s.`fecha`,
 	(select c.nombre_cliente from clientes c where c.`cod_cliente`=s.cod_cliente) as cliente, 
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
-	s.`nro_correlativo`, s.`monto_final`, s.cod_salida_almacenes
+	s.`nro_correlativo`, s.`monto_final`, s.cod_salida_almacenes,s.cod_chofer
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' ";
+	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' and s.cod_chofer in ($codPersonal) ";
 
 $sql.=" order by s.fecha, s.nro_correlativo";
 
@@ -37,6 +72,7 @@ $resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='texto' width='70%'>
 <tr>
+<th>Personal</th>
 <th>Fecha</th>
 <th>Cliente</th>
 <th>Razon Social</th>
@@ -63,7 +99,7 @@ while($datos=mysqli_fetch_array($resp)){
 	$montoVenta=$datos[6];
 	$codSalida=$datos[7];
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
-	
+	$nombrePersonal=nombreVisitador($datos['cod_chofer']);
 	$totalVenta=$totalVenta+$montoVenta;
 	
 	$sqlX="select m.`codigo_material`, m.`descripcion_material`, 
@@ -84,14 +120,15 @@ while($datos=mysqli_fetch_array($resp)){
 		$codItem=$datosX[0];
 		$nombreItem=$datosX[1];
 		$montoVenta=$datosX[2];
-		$cantidad=$datosX[3];
-		
+		$cantidad=$datosX[3];		
 		$montoPtr=number_format($montoVenta,2,".",",");
 		$cantidadFormat=number_format($cantidad,0,".",",");
 		
 		$totalVentaX=$totalVentaX+$montoVenta;
-		$tablaDetalle.="<tr>
-		<td>$nombreItem</td>
+
+		$nombreItemSin = preg_replace("/[^a-zA-Z0-9]+/", "", $nombreItem);
+		$tablaDetalle.="<tr>		
+		<td><a href='#' style='font-size:14px' onclick='mostrarStockProducto(\"$codItem\",\"$nombreItemSin\");return false;'>($codItem) $nombreItem</a></td>
 		<td>$cantidadFormat</td>
 		<td>$montoPtr</td>		
 		</tr>";
@@ -105,6 +142,7 @@ while($datos=mysqli_fetch_array($resp)){
 
 	
 	echo "<tr>
+	<td>$nombrePersonal</td>
 	<td>$fechaVenta</td>
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
@@ -127,3 +165,45 @@ echo "</table></br>";
 
 include("imprimirInc.php");
 ?>
+<input type="hidden" id="cod_almacen" value="<?=$globalAlmacen?>">
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalStockProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content card">
+               <div class="card-header card-header-warning card-header-icon">
+                  <div class="card-icon" style="background: #96079D;color:#fff;">
+                    <i class="material-icons">inventory_2</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Stock Producto <small id="titulo_tarjeta"></small></h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+	<div class="col-sm-12">
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Producto</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">                      
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nombre_producto" name="nombre_producto" readonly value=""/>
+                    </div>
+                  </div>
+                </div> 
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Stock Sucursal</label>
+                  <div class="col-sm-9">
+                    <div class="form-group" id="stock_producto1">                      
+                      <input class="form-control" type="number" style="background: #A5F9EA;" id="stock_producto" name="stock_producto" readonly value=""/>
+                    </div>
+                  </div>
+                </div>                
+                <br><br>
+       </div>
+</div>                      
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->

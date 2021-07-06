@@ -37,6 +37,7 @@ function ShowBuscar(){
 	document.getElementById('divRecuadroExt').style.visibility='visible';
 	document.getElementById('divProfileData').style.visibility='visible';
 	document.getElementById('divProfileDetail').style.visibility='visible';
+    document.getElementById('nroProcesoBusqueda').focus();
 }
 
 function HiddenBuscar(){
@@ -78,7 +79,22 @@ var parametros={"codigo":codReg};
         success:  function (resp) { 
             $("#datos_anular").html(resp);
             $("#codigo_salida").val(codReg);
+            $("#contrasena_admin").val("");
             $("#modalAnularFactura").modal("show");           
+      }
+ }); 
+}
+function funVerifi3(codReg){   
+var parametros={"codigo":codReg};
+ $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/frmConfirmarCodigoSalida3.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#datos_anular_3").html(resp);
+            $("#codigo_salida_3").val(codReg);
+            $("#modalAnularFacturaRegente").modal("show");           
       }
  }); 
 }
@@ -102,11 +118,54 @@ function confirmarCodigo(){
       }
  }); 
 }
+function confirmarCodigo3(){   
+  var cad1=$("input#idtxtcodigo").val();
+  var cad2=$("input#idtxtclave").val(); 
+  var parametros={"codigo":cad1,"clave":cad2};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/validacionCodigoConfirmar3.php",
+        data: parametros,
+        success:  function (resp) { 
+            resp=xtrim(resp);
+            if(resp=="" || resp=="OK") {
+                location.href='anular_venta.php?codigo_registro='+$("#codigo_salida").val();
+            }else{
+               Swal.fire("Error!","La clave que ingreso es incorrecta","error");
+               $("#modalAnularFacturaRegente").modal("hide");    
+            }
+      }
+ }); 
+}
+
+
+function obtenerCodigoGenerado(){
+  var cad1=$("input#idtxtcodigo").val();
+  var pss=$("input#contrasena_admin").val();
+  var parametros={"codigo":cad1,"pass":pss};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/insertarCodigoConfirmar.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("input#idtxtclave").val(resp); 
+      }
+ });  
+}
+function pressEnter(e, f){
+    tecla = (document.all) ? e.keyCode : e.which;
+    if (tecla==13){
+        ajaxBuscarVentas(f);                              
+    }
+}
 function ajaxBuscarVentas(f){
-	var fechaIniBusqueda, fechaFinBusqueda, nroCorrelativoBusqueda, verBusqueda, global_almacen, clienteBusqueda;
+	var fechaIniBusqueda, fechaFinBusqueda, nroCorrelativoBusqueda,nroProcesoBusqueda, verBusqueda, global_almacen, clienteBusqueda;
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
 	fechaFinBusqueda=document.getElementById("fechaFinBusqueda").value;
 	nroCorrelativoBusqueda=document.getElementById("nroCorrelativoBusqueda").value;
+    nroProcesoBusqueda=document.getElementById("nroProcesoBusqueda").value;
 	verBusqueda=document.getElementById("verBusqueda").value;
 	global_almacen=document.getElementById("global_almacen").value;
 	clienteBusqueda=document.getElementById("clienteBusqueda").value;
@@ -114,11 +173,17 @@ function ajaxBuscarVentas(f){
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
 
-	ajax.open("GET", "ajaxSalidaVentas.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&nroCorrelativoBusqueda="+nroCorrelativoBusqueda+"&verBusqueda="+verBusqueda+"&global_almacen="+global_almacen+"&clienteBusqueda="+clienteBusqueda,true);
+	ajax.open("GET", "ajaxSalidaVentas.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&nroCorrelativoBusqueda="+nroCorrelativoBusqueda+"&verBusqueda="+verBusqueda+"&global_almacen="+global_almacen+"&clienteBusqueda="+clienteBusqueda+"&nroProcesoBusqueda="+nroProcesoBusqueda,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
 			HiddenBuscar();
+            $('[data-toggle="tooltip"]').tooltip({
+              animated: 'swing', //swing expand
+              placement: 'right',
+              html: true,
+              trigger : 'hover'
+          });
 		}
 	}
 	ajax.send(null)
@@ -188,6 +253,34 @@ function anular_salida(f)
         }
         else
         {   funVerifi(j_cod_registro);
+        }
+    }
+}
+
+function anular_salida_regente(f)
+{   var i;
+    var j=0;
+    var j_cod_registro, estado_preparado;
+    var fecha_registro;
+    for(i=0;i<=f.length-1;i++)
+    {   if(f.elements[i].type=='checkbox')
+        {   if(f.elements[i].checked==true)
+            {   j_cod_registro=f.elements[i].value;
+                fecha_registro=f.elements[i-2].value;
+                estado_preparado=f.elements[i-1].value;
+                j=j+1;
+            }
+        }
+    }
+    if(j>1)
+    {   alert('Debe seleccionar solamente un registro para anularlo.');
+    }
+    else
+    {   if(j==0)
+        {   alert('Debe seleccionar un registro para anularlo.');
+        }
+        else
+        {   funVerifi3(j_cod_registro);
         }
     }
 }
@@ -366,8 +459,54 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
 function mostrarRegistroConTarjeta(codigo){
     $("#titulo_tarjeta").html("");
     $("#codigo_salida_tarjeta").val(codigo);
+    //$("#monto_tarjeta").val();
     $("#modalPagoTarjeta").modal("show");   
 }
+function guardarRecetaVenta(medico,salida){
+    $("#nom_doctor").val("");
+    $("#ape_doctor").val("");
+    $("#dir_doctor").val("");
+    $("#mat_doctor").val("");
+    $("#n_ins_doctor").val("");
+    $("#cod_medico").val(medico);
+    $("#cod_salida").val(salida);
+    $("#nomcli").val($("#razonSocial").val());
+    actualizarTablaMedicos("apellidos");
+    $("#modalRecetaVenta").modal("show");
+}
+
+function removerRegistroConTarjeta(codigo){
+    Swal.fire({
+        title: '¿Quitar Tarjeta?',
+        text: "Se removerá la tarjeta de la Factura",
+         type: 'info',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-default',
+        confirmButtonText: 'Remover',
+        cancelButtonText: 'Cancelar',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            quitarTarjetaVenta(codigo)               
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+    });   
+}
+function quitarTarjetaVenta(codigo){
+  var parametros={"codigo":codigo};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveRemoveTarjetaVenta.php",
+        data: parametros,
+        success:  function (resp) {  
+           window.location.reload();                      
+        }
+    });
+}
+
 function guardarTarjetaVenta(){
     var codigo=$("#codigo_salida_tarjeta").val();
     var banco_tarjeta=$("#banco_tarjeta").val();
@@ -390,6 +529,133 @@ function guardarTarjetaVenta(){
  }
 }
 
+
+function nuevaInstitucion(){
+  var institucion=$("#ins_doctor").val();
+  if(institucion==-2){
+    if($("#div_ins_doctor").hasClass("d-none")){
+        $("#div_ins_doctor").removeClass("d-none")
+    }
+  }else{
+    if(!$("#div_ins_doctor").hasClass("d-none")){
+        $("#div_ins_doctor").addClass("d-none")
+    }
+  }
+}
+
+function guardarMedicoReceta(){
+    var nom_doctor=$("#nom_doctor").val();
+    var ape_doctor=$("#ape_doctor").val();
+    var dir_doctor=$("#dir_doctor").val();
+    var mat_doctor=$("#mat_doctor").val();
+    var n_ins_doctor=$("#n_ins_doctor").val();
+    var ins_doctor=$("#ins_doctor").val();
+    var esp_doctor=$("#esp_doctor").val();
+    var esp_doctor2=$("#esp_doctor2").val();
+    if(nom_doctor==""||ape_doctor==""){
+       //alerta
+    }else{
+        if(ins_doctor==-2&&n_ins_doctor==""){
+          //alerta
+        }else{
+            guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_ins_doctor,ins_doctor,esp_doctor,esp_doctor2);
+        }
+    }
+}
+
+function guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_ins_doctor,ins_doctor,esp_doctor,esp_doctor2){
+    var parametros={nom_doctor:nom_doctor,ape_doctor:ape_doctor,dir_doctor:dir_doctor,mat_doctor:mat_doctor,n_ins_doctor:n_ins_doctor,ins_doctor:ins_doctor,esp_doctor:esp_doctor,esp_doctor2:esp_doctor2};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxNuevoMedico.php",
+        data: parametros,
+        success:  function (resp) {
+            $("#nom_doctor").val("");
+            $("#ape_doctor").val("");
+            $("#dir_doctor").val("");
+            $("#mat_doctor").val("");
+            $("#n_ins_doctor").val("");
+            if(parseInt(resp)==1){
+               Swal.fire("Correcto!", "Se guardó el médico con éxito", "success");   
+               actualizarTablaMedicos("codigo");                       
+            }else{
+               Swal.fire("Error!", "Contactar con el administrador", "error");   
+            }            
+        }
+    }); 
+}
+
+function actualizarTablaMedicos(orden){
+    var codigo=$("#cod_medico").val();
+   var parametros={order_by:orden,cod_medico:codigo};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaMedicos.php",
+        data: parametros,
+        success:  function (resp) {
+            actualizarListaInstitucion();
+            $("#datos_medicos").html(resp);                        
+        }
+    }); 
+}
+
+
+function buscarMedicoTest(){
+   var codigo=$("#cod_medico").val();
+   var nom=$("#buscar_nom_doctor").val();
+   var app=$("#buscar_app_doctor").val();
+   var parametros={order_by:"codigo",cod_medico:codigo,nom_medico:nom,app_medico:app};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaMedicos.php",
+        data: parametros,
+        success:  function (resp) {
+            actualizarListaInstitucion();
+            $("#datos_medicos").html(resp);                        
+        }
+    }); 
+}
+function actualizarListaInstitucion(){
+   var parametros={cod:""};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaInstitucion.php",
+        data: parametros,
+        success:  function (resp) {
+            $("#ins_doctor").html(resp);   
+            $("#ins_doctor").selecpicker("refresh");                       
+        }
+    }); 
+}
+
+function asignarMedicoVenta(cod_medico){
+   var antMedico=$("#cod_medico").val();  
+   var codigo=$("#cod_salida").val();
+   if(antMedico==0){
+     var parametros={"codigo":codigo,"cod_medico":cod_medico};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveMedicoReceta.php",
+        data: parametros,
+        success:  function (resp) {  
+           window.location.reload();                      
+        }
+     });
+   }else{
+    alert("La RECETA ya fue registrada!, no se puede quitar ni cambiar.");
+   }
+}
+function anular_salida_none(){
+   alert("Usted no puede ANULAR la factura");  
+}
+function irVentasDia(){
+    window.location.href="navegadorVentasDia.php";  
+}
         </script>
     </head>
     <body>
@@ -427,7 +693,22 @@ while($reg=mysqli_fetch_array($rs))
     $cadComboBancos=$cadComboBancos."<option value='$codBanco'>$nomBanco</option>";
    }
 
-
+$cadComboInstitucion = "";
+$consulta="SELECT c.codigo, c.nombre FROM instituciones c WHERE estado = 1 ORDER BY c.codigo ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codInstitucion = $reg["codigo"];
+    $nomInstitucion = $reg["nombre"];
+    $cadComboInstitucion=$cadComboInstitucion."<option value='$codInstitucion'>$nomInstitucion</option>";
+   }
+$cadComboEspecialidades = "";
+$consulta="SELECT c.codigo, c.nombre FROM especialidades c WHERE estado = 1 ORDER BY c.codigo ASC";
+$rs=mysqli_query($enlaceCon,$consulta);
+while($reg=mysqli_fetch_array($rs))
+   {$codEsp = $reg["codigo"];
+    $nomEsp = $reg["nombre"];
+    $cadComboEspecialidades=$cadComboEspecialidades."<option value='$codEsp'>$nomEsp</option>";
+   }
 
 
 
@@ -444,36 +725,53 @@ echo "<h1>Listado de Ventas</h1>";
 echo "<table class='texto' cellspacing='0' width='90%'>
 <tr><th>Leyenda:</th>
 <th>Ventas Registradas</th><td bgcolor='#f9e79f' width='5%'></td>
-<th>Ventas Entregadas</th><td bgcolor='#1abc9c' width='5%'></td>
+
 <th>Ventas Anuladas</th><td bgcolor='#e74c3c' width='5%'></td>
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
-//
+//<th>Ventas Depositadas</th><td bgcolor='#1abc9c' width='5%'></td>
 echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
         
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";		
-//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>        
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
+//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+
+
+$user=$_COOKIE["global_usuario"];        
+$cargoUser=obtenerCargoPersonal($user);
+$linkJs="anular_salida_none(this.form)";
+if($cargoUser==31){
+   $linkJs="anular_salida_regente(this.form)";
 }
+if($user==-1){
+   $linkJs="anular_salida(this.form)";   
+}
+if($anulacionCodigo!=1){
+   $linkJs="anular_salida2(this.form)"; 
+}
+
+echo "<input type='button' value='Anular' class='btn btn-danger' onclick='$linkJs'>";
+
+echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
 echo "</div>";
 		
 echo "<div id='divCuerpo'>";
 echo "<center><table class='table table-sm'>";
-echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Tarjeta</th><th>&nbsp;</th></tr>";
+echo "<tr class='bg-info text-white'><th>&nbsp;</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>Monto</th>
+	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Proceso</th><th>Pago</th><th>&nbsp;</th></tr>";
 	
 echo "<input type='hidden' name='global_almacen' value='$global_almacen' id='global_almacen'>";
 
+$sqlUser=" and s.cod_chofer='".$_COOKIE["global_usuario"]."' ";
+if($_COOKIE["global_usuario"]==-1){
+  $sqlUser="";
+}
 $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit
+	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico
 	FROM salida_almacenes s, tipos_salida ts 
-	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 ";
+	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 $sqlUser ";
 
 if($txtnroingreso!="")
    {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
@@ -482,7 +780,7 @@ if($fecha1!="" && $fecha2!="")
    {$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
    }
 $consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 100 ";
-
+//echo $consulta;
 //
 $resp = mysqli_query($enlaceCon,$consulta);
 	
@@ -503,7 +801,22 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$codTipoDoc=$dat[11];
 	$razonSocial=$dat[12];
 	$nitCli=$dat[13];
-	
+    $depositado=$dat['depositado'];
+    $codMedico=$dat['cod_medico'];
+	$montoFactura=number_format($dat['monto_final'],1,'.',',')."0";
+    $fechaValidacion=0;
+    if($fechaValidacion){
+        $fechaValidacion=1;
+    }
+
+    $fecha_actual = strtotime(date("Y-m-d H:i:00",time()));
+    $fecha_entrada = strtotime($fecha_salida." ".$hora_salida." + 1 days");    
+    if($fecha_actual > $fecha_entrada){
+        $fechaValidacion=1;     
+    }
+
+
+
 	$anio_salida=intval("$fecha_salida[0]$fecha_salida[1]$fecha_salida[2]$fecha_salida[3]");
     if(!isset($_COOKIE["globalGestion"])){
       $globalGestionActual= date("Y");  
@@ -519,7 +832,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	if($numFilasEstado>0){
 		$color_fondo=mysqli_result($respEstadoColor,0,0);
 	}else{
-		$color_fondo="#ffffff";
+        $color_fondo="#ffffff";		
 	}	
 	$chk = "<input type='checkbox' name='codigo' value='$codigo'>";
 
@@ -530,36 +843,60 @@ while ($dat = mysqli_fetch_array($resp)) {
      if(!isset($estado_preparado)){
       $estado_preparado= "";  
     }
-
+    if($codTipoDoc==4){
+        $nro_correlativo="<i class=\"text-danger\">M-$nro_correlativo</i>";
+    }else{
+        $nro_correlativo="F-$nro_correlativo";
+    }
+    $colorReceta="#14982C";
+    if($codMedico==""){
+      $codMedico=0;         
+    }
+    if($codMedico==0){
+        $colorReceta="#652BE9"; 
+    }
+    
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
     echo "<td align='center'>&nbsp;$chk</td>";
-    echo "<td align='center'>$nro_correlativo</td>";
+    echo "<td align='center'><b>$nro_correlativo</b></td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
     echo "<td>$nombre_tiposalida</td>";
-    echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
+    echo "<td align='right'><b>$montoFactura</b></td>";
+    echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;P-$codigo</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Detalle'></a></td>";
 	*/
-    $codTarjeta=verificarTarjetaVenta($codigo);
-    if($codTarjeta>0){
-        echo "<td class='text-success'><b>SI</b></td>";
+    $codTarjeta=$dat['cod_tipopago'];
+    if($codTarjeta==2){
+        echo "<td class='text-primary'><b>Tarjeta</b></td>";
     }else{
-        echo "<td class='text-muted'><b>NO</b></td>";
-    }    
+        echo "<td class='text-success'><b>Efectivo</b></td>";
+    }  
+    $nroImpresiones=obtenerNumeroImpresiones($codigo);  
 	if($codTipoDoc==1){
         $htmlTarjeta="";
-        if($salida_anulada!=1&&$codTarjeta==0){
-            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='Relacionar Tarjeta' onclick='mostrarRegistroConTarjeta($codigo);return false;'><i class='material-icons'>credit_card</i></a>";
+        $htmlReceta="";
+        $htmlImpresion="";
+        if($salida_anulada!=1&&$estado_almacen==1){
+           $htmlReceta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>REGISTRAR RECETA</b><br>$nro_correlativo<br><i class=\"material-icons test-warning\" style=\"color:".$colorReceta.";font-size:40px;\">medical_services</i>' onclick='guardarRecetaVenta(".$codMedico.",".$codigo.");return false;' data-toggle='tooltip' style='background: ".$colorReceta.";color:#fff;'><i class='material-icons'>medical_services</i></a>";
         }
-		echo "<td  bgcolor='$color_fondo'>$htmlTarjeta<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>";
+      if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){ 
+        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/print.png\" width=\"60\" border=\"0\"><span class=\"badge badge-secondary\">R: $nroImpresiones </span>' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
+        if($codTarjeta==1){            
+            $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='<b>RELACIONAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-muted\">credit_card</i>' onclick='mostrarRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card_off</i></a>";            
+        }else{
+            $htmlTarjeta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>QUITAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-primary\">credit_card</i>' onclick='removerRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>"; 
+        }          
+      }  
+		echo "<td  bgcolor='$color_fondo'>$htmlReceta $htmlTarjeta $htmlImpresion <a href='dFactura.php?codigo_salida=$codigo' target='_BLANK' title='<b>DETALLE DE FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/fac_detalle.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/fac_detalle.png' width='30' border='0'></a>";
 		echo "</td>";
         /*<a href='formatoFacturaExtendido.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Extendida'></a>*/
 	}else{
-		echo "<td  bgcolor='$color_fondo'><a href='formatoNotaRemisionOficial.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
+		echo "<td  bgcolor='$color_fondo'><a href='dFactura.php?codigo_salida=$codigo' target='_BLANK' title='<b>DETALLE DE FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/fac_detalle.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/fac_detalle.png' width='30' border='0'></a></td>";
 	}
 	
 	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
@@ -573,22 +910,20 @@ echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
         
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";
-        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>	
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
-}
+        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+
+echo "<input type='button' value='Anular' class='btn btn-danger' onclick='$linkJs'>";	
+echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
     echo "</div>";
 	
 echo "</form>";
 
 ?>
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
+<div id="divProfileData" style="background-color:#FFF; width:750px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<h2 align='center' class='texto'>Buscar Ventas</h2>
 		<table align='center' class='texto'>
@@ -605,11 +940,17 @@ echo "</form>";
 				</td>
 			</tr>
 			<tr>
-				<td>Nro. de Documento</td>
+				<td>Nro. de Factura</td>
 				<td>
-				<input type='text' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='form-control'>
+				<input type='number' name='nroCorrelativoBusqueda' id="nroCorrelativoBusqueda" class='form-control'>
 				</td>
-			</tr>			
+			</tr>
+            <tr>
+                <td>Nro. de Proceso</td>
+                <td>
+                <input type='number' name='nroProcesoBusqueda' id="nroProcesoBusqueda" class='form-control' onkeypress="return pressEnter(event, this.form);" onkeyup="return pressEnter(event, this.form);">
+                </td>
+            </tr>			
 			<tr>
 				<td>Cliente:</td>
 				<td>
@@ -682,12 +1023,41 @@ echo "</form>";
                 </div>
                 <div class="card-footer">
                    <button class="btn btn-default" onclick="confirmarCodigo()">ANULAR</button>
+                   <?php 
+                    if($_COOKIE["global_usuario"]==-1){
+                       ?><input type="password" id="contrasena_admin" value="" class='form-control' style='background: #5DFF00;color:#000;' placeholder='pass_admin' size='50'><a class="btn btn-primary btn-sm btn-fab" style='background:#100F0F;color:#5DFF00;' href="#" onclick="obtenerCodigoGenerado(); return false;"><i class='material-icons'>lock</i></a><?php 
+                    }
+                   ?>                   
                 </div>
       </div>  
     </div>
   </div>
 <!--    end small modal -->
 
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAnularFacturaRegente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+                <div class="card-header card-header-danger card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">delete</i>
+                  </div>
+                  <h4 class="card-title text-danger font-weight-bold">Anulación de Facturas</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <input type="hidden" name="codigo_salida_3" id="codigo_salida_3" value="0">
+                <div class="card-body" id="datos_anular_3">
+                   
+                </div>
+                <div class="card-footer">
+                   <button class="btn btn-default" onclick="confirmarCodigo3()">ANULAR FACTURA</button>                  
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -706,13 +1076,13 @@ echo "</form>";
                     <input type="hidden" id="codigo_salida_tarjeta">
 <div class="row">
     <div class="col-sm-12">
-                 <div class="row">
+                 <div class="row d-none">
                   <label class="col-sm-3 col-form-label">Banco</label>
                   <div class="col-sm-9">
                     <div class="form-group">
                       <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                       
                           <?php echo "$cadComboBancos"; ?>
-                          <option value="0">Otro</option>
+                          <option value="0" selected>Otro</option>
                        </select>
                     </div>
                   </div>
@@ -745,6 +1115,136 @@ echo "</form>";
     </div>
   </div>
 <!--    end small modal -->
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalRecetaVenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #652BE9;color:#fff;">
+                    <i class="material-icons">medical_services</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Datos del Médico</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+    <div class="col-sm-6">
+        <input type="hidden" id="cod_medico" value="">
+        <input type="hidden" id="cod_salida" value="">
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombre (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value=""/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Apellidos (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Dirección</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Matricula</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row d-none" id="div_ins_doctor">
+                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Institución</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" data-size='6'onchange="nuevaInstitucion();return false;" required>
+                           <?php echo "$cadComboInstitucion"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Especialidad</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6'required>
+                           <?php echo "$cadComboEspecialidades"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">2da Esp.</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" data-size='6'required>
+                        <option value="0">Ninguna</option>
+                          <?php echo "$cadComboEspecialidades"; ?>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="float-left">
+                        <button class="btn btn-default" onclick="guardarMedicoReceta();return false;">Guardar Nuevo</button>
+                </div>                 
+                <br><br>
+       </div>
+       <div class="col-sm-6">    
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombres</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value=""/>
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Apellidos</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value=""/>
+                    </div>
+                  </div>
+                  <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest();return false;'><i class='material-icons'>search</i></a>
+                </div>
+                <br>
+
+                   <table class="table table-bordered table-condensed">
+                      <thead>
+                        <tr class="" style="background: #652BE9;color:#fff;"><th width="60%">Nombre</th><th>Matricula</th><th>-</th></tr>
+                      </thead>
+                      <tbody id="datos_medicos">                        
+                      </tbody>
+                   </table>                      
+       </div>
+</div>                      
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
 
 
     </body>

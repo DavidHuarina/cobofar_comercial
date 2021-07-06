@@ -9,6 +9,9 @@
 	function registrar_nav()
 		{	location.href='<?=$urlRegister?>';
 		}
+	function registrar_nav2()
+		{	location.href='<?=$urlRegister?>?rf=1';
+		}	
 		function editar_nav(f)
 		{
 			var i;
@@ -87,7 +90,7 @@ function enviar_nav(f){
 			}
 			else
 			{
-				if(confirm('Esta seguro de eliminar los datos.'))
+				if(confirm('Esta seguro de anular los datos.'))
 				{
 					location.href='<?=$urlDelete?>?datos='+datos+'&admin=1';
 				}
@@ -278,27 +281,33 @@ function enviar_nav(f){
            } 
          }
 </script>
+	
 	<?php
+	//utilizado para validar la eliminacion y edicion no se permite al dia siguiente. 
+	$fechaActual=date("Y-m-d");
+
 	$cod_ciudad=$_COOKIE['global_agencia'];
 	echo "<form method='post' action=''>";
-	$sql="SELECT codigo,cod_funcionario,monto_registrado,monto_caja,fecha,glosa,nro_cuenta,cod_banco,ubicacion_archivo FROM registro_depositos where cod_estadoreferencial=1";
+	$sql="SELECT f.codigo,f.cod_funcionario,f.monto_registrado,f.monto_caja,f.fecha,f.glosa,f.nro_cuenta,f.cod_banco,f.ubicacion_archivo,f.cod_cuenta,f.monto_registradousd,f.fecha_registro FROM registro_depositos f join funcionarios fu on fu.codigo_funcionario=f.cod_funcionario where f.cod_estadoreferencial=1 and f.cod_ciudad='$cod_ciudad' order by f.fecha desc;";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural</h1>";
-	
+	if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='registrar_nav()'>
-	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>	
-	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
-	</div>";
+	<!--input type='button' value='Editar' name='editar' class='btn btn-default' onclick='editar_nav(this.form)'-->
+	<input type='button' value='Anular' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
+	</div>";		
+	}
 	
 	
 	echo "<center><table class='table table-sm table-bordered'>";
 	echo "<tr class='bg-principal text-white'>
 	<th>&nbsp;</th>
-	<th width='20%'>Descripción</th>
+	<th width='20%'>Descripcion</th>
 	<th>Banco</th>
 	<th>Monto</th>
+	<th>Monto USD</th>
 	<th>Responsable</th>
 	<th>Fecha</th>
 	<th>Estado</th>
@@ -308,24 +317,40 @@ function enviar_nav(f){
 		$codigo=$dat[0];
 		$glosa=$dat['glosa'];
 		
+		$fechaDeposito=$dat['fecha_registro'];
+      
+		$date1 = new DateTime($fechaActual);
+		$date2 = new DateTime($fechaDeposito);
+		$diff = $date1->diff($date2);
+		// will output 2 days
+		//echo $diff->days . ' days ';
+
 		if($dat['fecha']==""){
 			$fecha="";
 		}else{
 			$fecha=strftime('%d/%m/%Y',strtotime($dat["fecha"]));
 		}
-		$banco=nombreBanco($dat["cod_banco"]);
+		$banco=nombreBancoCuenta($dat["cod_cuenta"]);
         $responsable=nombreVisitador($dat["cod_funcionario"]);
 
         $monto=$dat['monto_registrado'];
+        $monto2=$dat['monto_registradousd'];
         $monto_caja=$dat['monto_caja'];
         $monto_formato=number_format($monto,2,'.',',');
+        $monto_formatoUSD=number_format($monto2,2,'.',',');
         $enlaceDetalles="<a href='$urlListArchivos?c=$codigo&b=0' target='_blank' class='btn btn-sm btn-info btn-fab' style='background:#BD9A22;'><i class='material-icons'>folder_open</i>&nbsp;</a>";
-        $inputcheck="<input type='checkbox' name='codigo' value='$codigo'>";
+        if($diff->days<=1){
+	        $inputcheck="<input type='checkbox' name='codigo' value='$codigo'>";        	
+        }else{
+        	$inputcheck="";
+        }        
+
 		echo "<tr>
 		<td>$inputcheck</td>
 		<td>$glosa</td>
 		<td>$banco</td>
 		<td align='right'>$monto_formato</td>
+		<td align='right'>$monto_formatoUSD ($)</td>
 		<td><small>$responsable</small></td>
 		<td>$fecha</td>
 		<td>$enlaceDetalles</td>
@@ -333,11 +358,13 @@ function enviar_nav(f){
 	}
 	echo "</table></center><br>";
 	
+	if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
 	echo "<div class=''>
 	<input type='button' value='Adicionar' name='adicionar' class='btn btn-primary' onclick='registrar_nav()'>
-	<input type='button' value='Editar' name='Editar' class='btn btn-warning' onclick='editar_nav(this.form)'>
-	<input type='button' value='Eliminar' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
-	</div>";
+	<!--input type='button' value='Editar' name='editar' class='btn btn-default' onclick='editar_nav(this.form)'-->
+	<input type='button' value='Anular' name='eliminar' class='btn btn-danger' onclick='eliminar_nav(this.form)'>
+	</div>";		
+	}
 	
 	echo "</form>";
 ?>

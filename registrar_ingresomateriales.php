@@ -5,7 +5,7 @@ require("estilos_almacenes.inc");
 
 <html>
     <head>
-        <title>Busqueda</title>
+        <title>Ingreso x Traspaso Sucursal</title>
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="dlcalendar.js"></script>
         <script type='text/javascript' language='javascript'>
@@ -62,10 +62,11 @@ function ajaxNroSalida(){
 function listaMateriales(f){
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
+	var codItem=f.itemCodMaterial.value;
 	var nombreItem=f.itemNombreMaterial.value;
 	contenedor = document.getElementById('divListaMateriales');
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&nombreItem="+nombreItem,true);
+	ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&codItem="+codItem,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -85,15 +86,12 @@ function buscarMaterial(f, numMaterial){
 	document.getElementById('itemNombreMaterial').focus();	
 	
 }
-function setMateriales(f, cod, nombreMat, cantidadpresentacion, precio, margenlinea){
+function setMateriales(f, cod, nombreMat, cantidadpresentacion){
 	var numRegistro=f.materialActivo.value;
 	
 	document.getElementById('material'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
-	document.getElementById('divpreciocliente'+numRegistro).innerHTML=number_format(precio,2);
-	document.getElementById('margenlinea'+numRegistro).value=margenlinea;
-	
-	
+		
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
 	document.getElementById('divProfileDetail').style.visibility='hidden';
@@ -143,7 +141,7 @@ function fun13(cadIdOrg,cadIdDes)
 			var div_material;
 			div_material=document.getElementById("div"+num);			
 			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterial.php?codigo="+num,true);
+			ajax.open("GET","ajaxMaterialIngreso.php?codigo="+num,true);
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
@@ -172,19 +170,19 @@ function pressEnter(e, f){
 	}
 }
 function calculaPrecioCliente(preciocompra, index){
-	var costo=preciocompra.value;
+	/*var costo=preciocompra.value;
 	var margen=document.getElementById('margenlinea'+index).value;
 	var cantidad=document.getElementById('cantidad_unitaria'+index).value;
 	var costounitario=costo/cantidad;
 	var preciocliente=costounitario+(costounitario*(margen/100));
 	preciocliente=redondear(preciocliente,1);
 	preciocliente=number_format(preciocliente,2);
-	document.getElementById('preciocliente'+index).value=preciocliente;
+	document.getElementById('preciocliente'+index).value=preciocliente;*/
 	totalesMonto();
 }
 
 function totalesMonto(){
-	var cantidadTotal=0;
+	/*var cantidadTotal=0;
 	var precioTotal=0;
 	var montoTotal=0;
     for(var ii=1;ii<=num;ii++){
@@ -199,6 +197,7 @@ function totalesMonto(){
 	var descuentoTotal=document.getElementById("descuentoTotal").value;
 	var totalSD=montoTotal-descuentoTotal;
 	document.getElementById("totalCompraSD").value=totalSD;
+	*/
 	
 }
 
@@ -249,7 +248,7 @@ if(!isset($fecha)||$fecha=="")
 echo "<form action='guarda_ingresomateriales.php' method='post' name='form1' onsubmit='return checkSubmit();'>";
 echo "<table border='0' class='textotit' align='center'><tr><th>Registrar Ingreso de Materiales</th></tr></table><br>";
 echo "<table border='0' class='texto' cellspacing='0' align='center' width='90%' style='border:#ccc 1px solid;'>";
-echo "<tr><th>Numero de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Factura</th></tr>";
+echo "<tr><th>Numero de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Nro. Doc. Origen</th></tr>";
 echo "<tr>";
 $sql="select nro_correlativo from ingreso_almacenes where cod_almacen='$global_almacen' order by cod_ingreso_almacen desc";
 $resp=mysqli_query($enlaceCon,$sql);
@@ -269,7 +268,7 @@ echo "<input type='text' disabled='true' class='texto' value='$fecha' id='fecha'
 echo "<img id='imagenFecha' src='imagenes/fecha.bmp'>";
 echo "</td>";
 
-$sql1="select cod_tipoingreso, nombre_tipoingreso from tipos_ingreso order by nombre_tipoingreso";
+$sql1="select cod_tipoingreso, nombre_tipoingreso from tipos_ingreso where cod_tipoingreso=1003 order by nombre_tipoingreso";
 $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td align='center'><select name='tipo_ingreso' id='tipo_ingreso' class='texto'>";
 while($dat1=mysqli_fetch_array($resp1))
@@ -283,9 +282,10 @@ echo "<td align='center'><input type='number' class='texto' name='nro_factura' v
 echo "<tr><th>Proveedor</th>";
 echo "<th colspan='3'>Observaciones</th></tr>";
 $sql1="select p.cod_proveedor, p.nombre_proveedor, pl.margen_precio from proveedores p, proveedores_lineas pl 
-			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2";
+			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 and cod_proveedor=0 order by 2";
 $resp1=mysqli_query($enlaceCon,$sql1);
-echo "<tr><td align='center'><select name='proveedor' id='proveedor' class='texto' required>";
+echo "<tr><td align='center'>
+<select name='proveedor' id='proveedor' class='texto'>";
 echo "<option value=''>-</option>";
 while($dat1=mysqli_fetch_array($resp1))
 {   $codigo=$dat1[0];
@@ -317,16 +317,17 @@ echo "</table><br>";
 					<td width="5%" align="center">&nbsp;</td>
 					<td width="25%" align="center">Producto</td>
 					<td width="10%" align="center">Cantidad</td>
-					<!--td width="10%" align="center">Lote</td-->
+					<td width="10%" align="center">Lote</td>
 					<td width="10%" align="center">Vencimiento</td>
-					<td width="10%" align="center">CostoItem</td>
+					<!--td width="10%" align="center">CostoItem</td>
 					<td width="10%" align="center">PrecioCliente</td>
-					<td width="20%" align="center">Ubicacion</td>
+					<td width="20%" align="center">Ubicacion</td-->
 					<td width="10%" align="center">&nbsp;</td>
 				</tr>
 			</table>
 		</fieldset>
-		<table align="center"class="text" cellSpacing="1" cellPadding="2" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
+		
+		<!--table align="center"class="text" cellSpacing="1" cellPadding="2" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
 			<tr>
 				<td align='right'>Total Compra</td><td align='right'><input type='number' name='totalCompra' id='totalCompra' value='0' size='3' readonly></td>
 			</tr>
@@ -336,7 +337,7 @@ echo "</table><br>";
 			<tr>
 				<td align='right'>Total</td><td align='right'><input type='number' name='totalCompraSD' id='totalCompraSD' value='0' size='3' readonly></td>
 			</tr>
-		</table>
+		</table-->
 
 <?php
 
@@ -363,9 +364,9 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 <div id="divProfileData" style="background-color:#FFF; width:750px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center; height:445px; overflow-y: scroll;">
 		<table align='center' class="texto">
-			<tr><th>Linea</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><th>Linea</th><th>Codigo</th><th>Material</th><th>&nbsp;</th></tr>
 			<tr>
-			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="textomedianorojo" style="width:300px">
+			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="textomedianorojo" style="width:100px">
 			
 			<?php
 			$sqlTipo="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor), pl.margen_precio from proveedores p, proveedores_lineas pl 
@@ -383,6 +384,8 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 			</select>
 			</td>
 			<td>
+				<input type='text' name='itemCodMaterial' id="itemCodMaterial" class="textogranderojo"  onkeypress="return pressEnter(event, this.form);" size="6">
+			</td><td>
 				<input type='text' name='itemNombreMaterial' id="itemNombreMaterial" class="textogranderojo"  onkeypress="return pressEnter(event, this.form);">
 			</td>
 			<td>

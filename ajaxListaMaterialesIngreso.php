@@ -2,12 +2,13 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Linea</th><th>Producto</th><th>Stock</th></tr>
+<th>Linea</th><th>Codigo</th><th>Producto</th><th>Stock</th></tr>
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("funciones.php");
 $codTipo=$_GET['codTipo'];
+$codItem=$_GET['codItem'];
 $nombreItem=$_GET['nombreItem'];
 if(isset($_COOKIE['global_almacen'])){
 	$globalAlmacen=$_COOKIE['global_almacen'];
@@ -23,7 +24,10 @@ $itemsNoUtilizar="0";
 	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor)	
 	from material_apoyo m where estado=1 
 		and m.codigo_material not in ($itemsNoUtilizar)";
-	if($nombreItem!=""){
+	if($codItem!=""){
+		$sql=$sql. " and codigo_material='$codItem'";
+	}
+	if($nombreItem!="" && $codItem==""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
 	}
 	if($codTipo!=0){
@@ -52,7 +56,7 @@ $itemsNoUtilizar="0";
 				$margenLinea=0;
 			}
 			
-			echo "<tr><td>$linea</td><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\", $cantidadPresentacion, $precioProducto, $margenLinea)'>$nombre</a></div></td><td><div class='textograndenegro'>$stockProducto</div></td></tr>";
+			echo "<tr><td>$linea</td><td>$codigo</td><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\", $cantidadPresentacion, $precioProducto, $margenLinea)'>$nombre</a></div></td><td><div class='textograndenegro'>$stockProducto</div></td></tr>";
 		}
 	}else{
 		echo "<tr><td colspan='3'>Sin Resultados en la busqueda.</td></tr>";

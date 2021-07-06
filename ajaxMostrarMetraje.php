@@ -8,7 +8,7 @@ $indice = $_GET["indice"];
 //
 $nroMetros=0;
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $cadRespuesta="";
 $consulta="select item_metraje, nro_metros from material_apoyo WHERE codigo_material='$codMaterial'";
 $rs=mysqli_query($enlaceCon,$consulta);

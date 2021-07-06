@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require('conexionmysqli.inc');
+require('conexionmysqli2.inc');
 $item=$_GET['item'];
 $precio1=$_GET['precio1'];
 $precio2=$_GET['precio2'];

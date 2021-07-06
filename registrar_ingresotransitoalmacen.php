@@ -5,7 +5,7 @@ require("estilos.inc");
 $fecha=date("Y-m-d");
 $hora=date("H:i");
 
-$sql_datos_salidaorigen="select s.nro_correlativo, s.cod_tipoingreso, a.nombre_almacen,s.observaciones from ingreso_pendientes_almacenes s, almacenes a
+$sql_datos_salidaorigen="select s.nro_correlativo, s.cod_tipoingreso, a.nombre_almacen,s.observaciones,s.nota_entrega from ingreso_pendientes_almacenes s, almacenes a
 where a.cod_almacen=s.cod_almacen and s.cod_ingreso_almacen='$codigo_registro'";
 $resp_datos_salidaorigen=mysqli_query($enlaceCon, $sql_datos_salidaorigen);
 $datos_salidaorigen=mysqli_fetch_array($resp_datos_salidaorigen);
@@ -13,17 +13,18 @@ $correlativo_salidaorigen=$datos_salidaorigen[0];
 $tipo_salidaorigen=$datos_salidaorigen[1];
 $nombre_almacen_origen=$datos_salidaorigen[2];
 $observaciones=$datos_salidaorigen[3];
+$nota_entrega=$datos_salidaorigen['nota_entrega'];
 echo "<form action='guarda_ingresomaterialesalmacen.php' method='post'>";
 echo "<h1>Registrar Ingreso por Traspaso Central</h1>";
 echo "<input type='hidden' id='cod_ingreso_almacen' name='cod_ingreso_almacen' value='$codigo_registro'>";
 echo "<center>
 	<table class='texto'>";
-echo "<tr><th>Fecha</th><th>Nota de Ingreso</th><th>Tipo de Ingreso</th><th>Observaciones</th></tr>";
+echo "<tr><th>Fecha</th><th>Nota de Ingreso</th><th>Nro. Dco K</th><th>Tipo de Ingreso</th><th>Observaciones</th></tr>";
 echo "<tr><td>";
 	echo"<INPUT type='date' class='texto' value='$fecha' id='fecha' size='10' name='fecha' readonly>";
-echo "<td><input type='text' disabled='true' size='40' name='' value='Salida:$correlativo_salidaorigen $nombre_almacen_origen' class='texto'></td>";
+echo "<td><input type='text' disabled='true' size='20' name='' value='Salida:$correlativo_salidaorigen $nombre_almacen_origen' class='texto'></td>";
 echo "<input type='hidden' name='nota_ingreso' value='Salida:$correlativo_salidaorigen $nombre_almacen_origen'>";
-
+echo "<td align='center'><input type='text' class='texto' name='nota_entrega' value='$nota_entrega' readonly></td>";
 echo "<td align='center'><input type='text' class='texto' name='nombre_tipoingreso' value='TRASPASO CENTRAL' size='30' readonly></td>";
 echo "<input type='hidden' name='tipo_ingreso' value='1000'>";
 
@@ -35,15 +36,14 @@ echo "</table><br>";
 
 echo "<table class='texto'>";
 
-$sql_detalle_salida="select cod_ingreso_almacen, cod_material, sum(cantidad_unitaria), costo_almacen,lote,fecha_vencimiento,precio_bruto
-from ingreso_pendientes_detalle_almacenes where cod_ingreso_almacen='$codigo_registro' and cantidad_unitaria>0 
-group by cod_ingreso_almacen, cod_material";
+$sql_detalle_salida="select cod_ingreso_almacen, cod_material,cantidad_unitaria, costo_almacen,lote,fecha_vencimiento,precio_bruto,orden
+from ingreso_pendientes_detalle_almacenes where cod_ingreso_almacen='$codigo_registro' and cantidad_unitaria>0 order by orden";
 $resp_detalle_salida=mysqli_query($enlaceCon,$sql_detalle_salida);
 $cantidad_materiales=mysqli_num_rows($resp_detalle_salida);
 
 echo "<input type='hidden' name='codigo_salida' value='$codigo_registro'>";
 echo "<input type='hidden' name='cantidad_material' value='$cantidad_materiales'>";
-echo "<tr><th width='5%'>&nbsp;</th><th width='10%'>Codigo</th><th width='35%'>Material</th><th>Lote</th><th>Fecha Vencimiento</th><th>Precio Venta</th><th width='10%'>Cantidad de Origen</th><th>Cantidad Recibida</th></tr>";
+echo "<tr><th width='5%'>&nbsp;</th><th width='10%'>Codigo</th><th width='35%'>Material</th><th>Lote</th><th>Fecha Vencimiento</th><th>Precio Venta</th><th width='10%'>Cantidad de Origen</th><th>Cantidad Recibida</th><th>Orden</th></tr>";
 
 $indice_detalle=1;
 
@@ -60,6 +60,7 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	$resp_materiales=mysqli_query($enlaceCon, $sql_materiales);
 	$dat_materiales=mysqli_fetch_array($resp_materiales);
 	$nombre_material="$dat_materiales[1]";
+	$orden=$dat_detalle_salida['orden'];
 	$costo_almacen=number_format($costo_almacen,2,'.','');
     $cantidad_unitaria_formato=number_format($cantidad_unitaria,0,'.','');
     $costo_almacen_formato=number_format($costo_almacen,2,'.',',');
@@ -71,6 +72,7 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	
 	echo "<td align='center'>$lote</td><td align='center'>$fecha_ven</td><td align='center'>$costo_almacen_formato</td><td align='center'>$cantidad_unitaria_formato</td>";
 	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria_formato' class='form-control' readonly required></td>
+	<td>$orden</td>
 	</tr>";
 	$indice_detalle++;
 }

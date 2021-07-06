@@ -24,52 +24,64 @@ function envia_formulario(f)
 require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
-$fecha_rptdefault=date("d/m/Y");
+if($_COOKIE["admin_central"]==1){
+	$global_tipoalmacen=1;
+}
+
+$globalCiudad=$_COOKIE["global_agencia"];
+if(isset($_POST["rpt_territorio"])){
+	$rpt_territorio=$_POST["rpt_territorio"];
+}else{
+	$rpt_territorio=$_COOKIE["global_agencia"];
+}
+
+$fecha_rptdefault=date("Y-m-d");
 echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Documento</th></tr></table><br>";
 echo"<form method='post' action='rptOpKardexCostos.php'>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
-	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='texto'>";
-	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
+	echo "<tr><th align='left'>Sucursal</th><td><select name='rpt_territorio' class='selectpicker' data-live-search='true' data-size='6'>";
+	if($global_tipoalmacen==1)
+	{	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
+	}
+	else
+	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
+	}
+
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
-		echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
+		if($globalCiudad==$codigo_ciudad){
+		   echo "<option value='$codigo_ciudad' selected>$nombre_ciudad</option>";	
+		}else{
+		   //if(isset($_GET["admin"])){
+			  echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";	
+		   //}			
+		}
+		
 	}
 	echo "</select></td></tr>";
 
 	echo "<tr><th align='left'>Tipo de Documento:</th>
-	<td><select name='rpt_tipodoc' class='texto' multiple>";
+	<td><select name='rpt_tipodoc' multiple class='selectpicker' data-style='btn btn-info'>";
 	echo "<option value='1'>FACTURA</option>";
 	echo "<option value='2'>NOTA DE REMISION</option>";
 	echo "</select></td></tr>";
 	
 	echo "<tr><th align='left'>Ver:</th>
-	<td><select name='rpt_ver' class='texto'>";
+	<td><select name='rpt_ver' class='selectpicker' data-style='btn btn-info'>";
 	echo "<option value='0'>Todos</option>";
 	echo "<option value='1'>Ver No Cancelados</option>";
 	echo "</select></td></tr>";
 	
 	echo "<tr><th align='left'>Fecha inicio:</th>";
-			echo" <TD bgcolor='#ffffff'><INPUT  type='text' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial'>";
-    		echo" <IMG id='imagenFecha' src='imagenes/fecha.bmp'>";
-    		echo" <DLCALENDAR tool_tip='Seleccione la Fecha' ";
-    		echo" daybar_style='background-color: DBE1E7; font-family: verdana; color:000000;' ";
-    		echo" navbar_style='background-color: 7992B7; color:ffffff;' ";
-    		echo" input_element_id='exafinicial' ";
-    		echo" click_element_id='imagenFecha'></DLCALENDAR>";
-    		echo"  </TD>";
+			echo" <TD bgcolor='#ffffff'><INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial'>";
+			echo"  </TD>";
 	echo "</tr>";
 	echo "<tr><th align='left'>Fecha final:</th>";
-			echo" <TD bgcolor='#ffffff'><INPUT  type='text' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal'>";
-    		echo" <IMG id='imagenFecha1' src='imagenes/fecha.bmp'>";
-    		echo" <DLCALENDAR tool_tip='Seleccione la Fecha' ";
-    		echo" daybar_style='background-color: DBE1E7; font-family: verdana; color:000000;' ";
-    		echo" navbar_style='background-color: 7992B7; color:ffffff;' ";
-    		echo" input_element_id='exaffinal' ";
-    		echo" click_element_id='imagenFecha1'></DLCALENDAR>";
+			echo" <TD bgcolor='#ffffff'><INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal'>";
     		echo"  </TD>";
 	echo "</tr>";
 	

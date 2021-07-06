@@ -1,7 +1,7 @@
 <html>
     <head>
-        <title>Venta</title>
-        <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
+        <title>VENTA</title>
+        <link  rel="icon"   href="imagenes/carrito.png" type="image/png" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
@@ -12,7 +12,7 @@
         <script type="text/javascript" src="dist/bootstrap/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="dist/bootstrap/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
+        <!--<script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>-->
         <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
         <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
         <link rel="stylesheet" type="text/css" href="dist/demo.css"/>
@@ -23,6 +23,42 @@
         </style>
 	
 <script type='text/javascript' language='javascript'>
+	$(document).ready(function() {		
+        Mousetrap.bind('alt+q', function(){ if(num>0){var numeroFila=num;menos(numeroFila);} return false;});
+        Mousetrap.bind('alt+r', function(){ guardarRecetaVenta(); return false;});
+        //Mousetrap.bind('alt+t', function(){ $("#tipo_comprobante").focus(); return false; });
+        $('[data-toggle="tooltip"]').tooltip({
+              animated: 'swing', //swing expand
+              placement: 'right',
+              html: true,
+              trigger : 'hover'
+          });
+    });
+
+function guardarVentaGeneral(){
+   Swal.fire({
+        title: '¿Esta seguro de Facturar?',
+        text: "Se procederá con el guardado del documento",
+         type: 'info',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-default',
+        confirmButtonText: 'Facturar',
+        cancelButtonText: 'Cancelar',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+          	document.getElementById("confirmacion_guardado").value=1;
+          	//$("#confirmacion_guardado").val(1);
+            $('#guardarSalidaVenta').submit();  
+            //return(false);                 
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+    });
+    return false;
+}
+
 function mueveReloj(){
     momentoActual = new Date()
     hora = momentoActual.getHours()
@@ -70,6 +106,10 @@ function nuevoAjax()
 }
 
 function listaMateriales(f){
+	var stock=0;
+	if($("#solo_stock").is(":checked")){
+		stock=1;
+	}
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
 	var codForma=f.itemFormaMaterial.value;
@@ -78,8 +118,15 @@ function listaMateriales(f){
 	var nombreItem=f.itemNombreMaterial.value;
 	var tipoSalida=(f.tipoSalida.value);
 	var codigoMat=(f.itemCodigoMaterial.value);
-	contenedor = document.getElementById('divListaMateriales');
 
+	var nomAccion=f.itemAccionMaterialNom.value;
+	var nomPrincipio=f.itemPrincipioMaterialNom.value;
+
+   if(nomAccion==""&&nomPrincipio==""&&codigoMat==""&&nombreItem==""){
+     alert("Debe ingresar un criterio de busqueda");
+   }else{
+	contenedor = document.getElementById('divListaMateriales');
+    contenedor.innerHTML="<br><br><br><br><br><br><p class='text-muted'style='font-size:50px'>Buscando Producto(s)...</p>";
 	var arrayItemsUtilizados=new Array();	
 	var i=0;
 	for(var j=1; j<=num; j++){
@@ -91,17 +138,44 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio+"&codProv="+codTipo+"&stock="+stock+"&nomAccion="+nomAccion+"&nomPrincipio="+nomPrincipio,true);
 	ajax.onreadystatechange=function() {
-		if (ajax.readyState==4) {
-			$("#divListaMateriales").html(ajax.responseText);
-			//contenedor.innerHTML = ajax.responseText;
-			document.getElementById('itemCodigoMaterial').focus();	
+		if (ajax.readyState==4) {			
+			contenedor.innerHTML = ajax.responseText;
+			var oRows = document.getElementById('listaMaterialesTabla').getElementsByTagName('tr');
+            var nFilas = oRows.length;					
+			if(parseInt(nFilas)==2){
+				if(ajax.responseText!=""){
+				  document.getElementsByClassName('enlace_ref')[0].click();	
+				}				
+				//$(".enlace_ref").click();
+			}
+			//
+			document.getElementById('itemCodigoMaterial').focus();				
 		}		
 	}
 	ajax.send(null)
+   }
+
+
 }
 
+function limpiarFormularioBusqueda(){
+	$("#itemTipoMaterial").val("0");
+	$("#itemFormaMaterial").val("0");
+	$("#itemAccionMaterial").val("0");
+	$("#itemPrincipioMaterial").val("0");
+	$("#itemAccionMaterialNom").val("");
+	$("#itemPrincipioMaterialNom").val("");
+	$("#itemNombreMaterial").val("");
+	//$("#tipoSalida").val("0");
+	$("#itemCodigoMaterial").val("");
+	$(".selectpicker").selectpicker("refresh");
+	$("#solo_stock").prop( "checked", true );
+	$("#divListaMateriales").html("");
+
+	
+}
 function ajaxTipoDoc(f){
 	var contenedor;
 	contenedor=document.getElementById("divTipoDoc");
@@ -136,17 +210,43 @@ function actStock(indice){
 	contenedor=document.getElementById("idstock"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
     var codalm=document.getElementById("global_almacen").value;
-	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
-	ajax.onreadystatechange=function() {
+    if(codmat>0){
+      console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
+	  ajax=nuevoAjax();
+	  ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
+	  ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText;
+			//console.log(ajax.responseText);
+			//alert(ajax.responseText);
+			$("#idstock"+indice).html(ajax.responseText);
+			//contenedor.innerHTML = ajax.responseText;
+			
 			ajaxCargarSelectDescuentos(indice);
 		}
-	}
-	//verificarReceta(codmat,indice);
-	totales();
-	ajax.send(null);
+	  }
+	  ajax.send(null);
+	  //verificarReceta(codmat,indice);
+	  totales();	
+    }
+}
+function actStockSinBucle(indice){
+	var contenedor;
+	contenedor=document.getElementById("idstock"+indice);
+	var codmat=document.getElementById("materiales"+indice).value;
+    var codalm=document.getElementById("global_almacen").value;
+    if(codmat>0){
+      console.log("CodMat:"+codmat+" Indice:"+indice+" Alma:"+codalm)
+	  ajax=nuevoAjax();
+	  ajax.open("GET", "ajaxStockSalidaMateriales.php?codmat="+codmat+"&codalm="+codalm+"&indice="+indice,true);
+	  ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			//console.log(ajax.responseText);
+			//alert(ajax.responseText);
+			$("#idstock"+indice).html(ajax.responseText);
+		}
+	  }
+	  ajax.send(null);	
+    }
 }
 function ajaxCargarSelectDescuentos(indice){
 	var contenedor;
@@ -199,6 +299,27 @@ function ajaxRazonSocial(f){
 	ajax.send(null);
 }
 
+function ajaxNitCliente(f){
+	var contenedor;
+	var nitCliente=document.getElementById("nitCliente").value;
+	//if(nitCliente>0){
+
+	//}else{
+	 /*contenedor=document.getElementById("divNIT");
+	 var rsCliente=document.getElementById("razonSocial").value;
+	 ajaxNit=nuevoAjax();
+	 ajaxNit.open("GET", "ajaxNitCliente.php?rsCliente="+rsCliente,true);
+	 ajaxNit.onreadystatechange=function() {
+		if (ajaxNit.readyState==4) {
+			contenedor.innerHTML = ajaxNit.responseText;
+			//document.getElementById('razonSocial').focus();
+			ajaxClienteBuscar();
+		}
+	 }
+	 ajaxNit.send(null);*/		
+	//}
+}
+
 function ajaxClienteBuscar(f){
 	var contenedor;
 	contenedor=document.getElementById("divCliente");
@@ -227,9 +348,61 @@ function calculaMontoMaterial(indice){
 	montoUnitario=Math.round(montoUnitario*100)/100
 		
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;
-	
+	if(!$("#stock"+indice).val()>0){
+		actStockSinBucle(indice);
+	}
 	totales();
 }
+
+
+// Conclusión
+(function() {
+  /**
+   * Ajuste decimal de un número.
+   *
+   * @param {String}  tipo  El tipo de ajuste.
+   * @param {Number}  valor El numero.
+   * @param {Integer} exp   El exponente (el logaritmo 10 del ajuste base).
+   * @returns {Number} El valor ajustado.
+   */
+  function decimalAdjust(type, value, exp) {
+    // Si el exp no está definido o es cero...
+    if (typeof exp === 'undefined' || +exp === 0) {
+      return Math[type](value);
+    }
+    value = +value;
+    exp = +exp;
+    // Si el valor no es un número o el exp no es un entero...
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+      return NaN;
+    }
+    // Shift
+    value = value.toString().split('e');
+    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+  }
+
+  // Decimal round
+  if (!Math.round10) {
+    Math.round10 = function(value, exp) {
+      return decimalAdjust('round', value, exp);
+    };
+  }
+  // Decimal floor
+  if (!Math.floor10) {
+    Math.floor10 = function(value, exp) {
+      return decimalAdjust('floor', value, exp);
+    };
+  }
+  // Decimal ceil
+  if (!Math.ceil10) {
+    Math.ceil10 = function(value, exp) {
+      return decimalAdjust('ceil', value, exp);
+    };
+  }
+})();
 
 function totales(){	
 	var subtotal=0;
@@ -251,8 +424,9 @@ function totales(){
 
     subtotalPrecio=Math.round(subtotalPrecio*100)/100;
 
-	subtotal=Math.round(subtotal*100)/100;
+	subtotal=Math.round(subtotal*10)/10;
 	
+	subtotal=subtotal.toFixed(2); 
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 
     document.getElementById("totalVenta").value=subtotal;
@@ -302,8 +476,7 @@ function aplicarDescuento(f){
 	document.getElementById("descuentoVentaUSDPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
 	aplicarCambioEfectivo();
 	minimoEfectivo();
-	//totales();
-	
+	//totales();	
 }
 function aplicarDescuentoUSD(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
@@ -450,7 +623,8 @@ function encontrarMaterial(numMaterial){
            // alert(resp);           
         	$("#modalProductosCercanos").modal("show");
         	//RefreshTable('tablaPrincipalGeneral', 'ajax_encontrar_productos.php');
-        	$("#tabla_datos").html(resp); 
+        	$("#tabla_datos").html(resp);
+        	//document.getElementById("tabla_datos").innerHTML=resp; 
         	//tablaPrincipalGeneral.ajax.reload();        	   
         }
     });	
@@ -493,7 +667,22 @@ function setMaterialesSimilar(f, cod, nombreMat,cantPre='1',divi='1'){
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
     $("#modalProductosSimilares").modal("hide");
-	actStock(numRegistro);	
+    $(".boton2peque").removeAttr("accessKey");
+    document.getElementById("removeFila"+numRegistro).accessKey= "q";
+    actStock(numRegistro);
+}
+
+function obtenerLineaMaterial(cod,numRegistro){
+	var parametros={"codigo":cod};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxLineaProducto.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#cod_material"+numRegistro).attr("title",resp);                             	   
+        }
+    });	
 }
 
 function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
@@ -501,11 +690,14 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	$("#cantidad_presentacionboton"+numRegistro).css("color","#EC341B");
 	if(divi==1){
       $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
-	}	
+	}		
+
+	$(".boton2peque").removeAttr("accessKey");
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat+" ("+cod+")";
 	document.getElementById('cantidad_presentacion'+numRegistro).value=cantPre;
 	document.getElementById('divi'+numRegistro).value=divi;
+	
 	document.getElementById('cantidad_presentacionboton'+numRegistro).innerHTML=cantPre;
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -514,8 +706,9 @@ function setMateriales(f, cod, nombreMat,cantPre='1',divi='1'){
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 	document.getElementById("cantidad_unitaria"+numRegistro).select();
-
-	actStock(numRegistro);	
+	document.getElementById("removeFila"+numRegistro).accessKey= "q";
+    actStock(numRegistro);
+    obtenerLineaMaterial(cod,numRegistro);
 }
 function verificarReceta(cod,numRegistro){
 	ajax=nuevoAjax();
@@ -585,12 +778,14 @@ function mas(obj) {
 	if(num>=1000){
 		alert("No puede registrar mas de 15 items en una nota.");
 	}else{
+		var fila_actual=0;
 		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
 		var banderaItems0=0;
 		for(var j=1; j<=num; j++){
 			if(document.getElementById('materiales'+j)!=null){
 				if(document.getElementById('materiales'+j).value==0){
 					banderaItems0=1;
+					fila_actual=j;
 				}
 			}
 		}
@@ -611,17 +806,20 @@ function mas(obj) {
 			div_material=document.getElementById("div"+num);	
 			var cod_precio=document.getElementById("tipoPrecio").value;
 			var fecha=document.getElementById("fecha").value;				
-			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio+"&fecha="+fecha,true);
+			var ajaxFila=nuevoAjax();
+			ajaxFila.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio+"&fecha="+fecha,true);
 
-			ajax.onreadystatechange=function(){
-				if (ajax.readyState==4) {
-					div_material.innerHTML=ajax.responseText;
+			ajaxFila.onreadystatechange=function(){
+				if (ajaxFila.readyState==4) {
+					div_material.innerHTML=ajaxFila.responseText;
 					$('.selectpicker').selectpicker('refresh');
 					buscarMaterial(form1, num);
 				}
 			}		
-			ajax.send(null);
+			ajaxFila.send(null);
+		}else{
+			buscarMaterial(obj.form,fila_actual);
+			
 		}
 
 	}
@@ -643,9 +841,11 @@ function menos(numero) {
 function pressEnter(e, f){
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){
-		document.getElementById('itemCodigoMaterial').focus();	
-		listaMateriales(f);
-		return false;
+	    listaMateriales(f);	
+	    //$("#enviar_busqueda").click();
+	    //$("#enviar_busqueda").click();//Para mejorar la funcion	
+	    return false;    	   	    	
+		//listaMateriales(f);			
 	}
 }
 
@@ -665,13 +865,19 @@ $(document).ready(function() {
       var mensaje="";
       if(parseFloat($("#efectivoRecibido").val())<parseFloat($("#totalFinal").val())){
         mensaje+="<p></p>";
-        alert("El monto en efectivo NO debe ser menor al monto total");
+        alert("El monto recibido NO debe ser menor al monto total");
         return false;
       }else{
-      	document.getElementById("btsubmit").value = "Enviando...";
-        document.getElementById("btsubmit").disabled = true;
-        document.getElementById("btsubmitPedido").value = "Enviando...";
-        document.getElementById("btsubmitPedido").disabled = true;
+      	//var confirmacionRealizada=$("#confirmacion_guardado").val();
+      	var confirmacionRealizada=document.getElementById("confirmacion_guardado").value;
+      	console.log("Datos confirm:"+confirmacionRealizada+"")
+      	if(parseInt(confirmacionRealizada)==1){
+      		document.getElementById("btsubmit").innerHTML = "Enviando...";
+            document.getElementById("btsubmit").disabled = true;
+      		return true;      		
+      	}else{
+      		return guardarVentaGeneral();
+      	}
       }     
     });
 });	
@@ -749,7 +955,7 @@ function validar(f, ventaDebajoCosto,pedido){
 					$("#pedido_realizado").val(0);
 					return(false);
 				}
-				if($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()==""){
+				if(($("#efectivoRecibidoUnido").val()==0||$("#efectivoRecibidoUnido").val()=="")&&$("#nitCliente").val()!=""&&$("#razonSocial").val()!=""&&($("#efectivoRecibidoUnidoUSD").val()==0||$("#efectivoRecibidoUnidoUSD").val()=="")){
 					errores++;
 					document.getElementById("efectivoRecibidoUnido").focus();
 					document.getElementById("efectivoRecibidoUnido").select();
@@ -795,18 +1001,32 @@ function validar(f, ventaDebajoCosto,pedido){
               //guardarPedidoDesdeFacturacion(1);
               return false;
 		  }else{
+		  	var errores2=0;
 		  	if($("#tipoVenta").val()==2){
 		  	  if($("#nro_tarjeta").val()!=""){
                 if(!($("#monto_tarjeta").val()>0)){
+		  	       errores2++;
                    alert("Debe Ingresar el monto de la Tarjeta");
 					$("#pedido_realizado").val(0);
 				   return(false);
                 }
 		  	  }else{
+		  	  	errores2++;
 		  	  	alert("Debe Registrar los datos de la tarjeta");
 					$("#pedido_realizado").val(0);
 				   return(false);
 		  	  }// fin nro de tarjeta		  	
+		  	}else{
+		  	  if($("#nro_tarjeta").val()!=""){
+                errores2++;
+                alert("Debe cambiar el TIPO DE PAGO a PAGO CON TARJETA");
+				$("#pedido_realizado").val(0);
+				return(false);
+		  	  }	
+		  	}
+		  	//CONFIRMACION
+		  	if(errores2==0){
+		  		//return confirm('Quieres guardar la venta');
 		  	}
 		  }
 		}else{
@@ -825,6 +1045,12 @@ function validar(f, ventaDebajoCosto,pedido){
 		return(false);
 	}
 }
+/*$(document).ready(function(){
+    $('#guardarSalidaVenta').on("submit",function(){
+        guardarSalidaVenta();
+    });
+});*/
+
 var tipoVentaGlobal=1;
 function cambiarTipoVenta2(){
 	if(tipoVentaGlobal==1){
@@ -943,7 +1169,7 @@ function guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_i
 	        $("#n_ins_doctor").val("");
         	if(parseInt(resp)==1){
                Swal.fire("Correcto!", "Se guardó el médico con éxito", "success");   
-               actualizarTablaMedicos("apellidos");                 	   
+               actualizarTablaMedicos("codigo");                 	   
         	}else{
                Swal.fire("Error!", "Contactar con el administrador", "error");   
         	}            
@@ -954,6 +1180,24 @@ function guardarMedicoRecetaAjax(nom_doctor,ape_doctor,dir_doctor,mat_doctor,n_i
 function actualizarTablaMedicos(orden){
 	var codigo=$("#cod_medico").val();
    var parametros={order_by:orden,cod_medico:codigo};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListaMedicos.php",
+        data: parametros,
+        success:  function (resp) {
+        	actualizarListaInstitucion();
+        	$("#datos_medicos").html(resp);                 	   
+        }
+    });	
+}
+
+
+function buscarMedicoTest(){
+   var codigo=$("#cod_medico").val();
+   var nom=$("#buscar_nom_doctor").val();
+   var app=$("#buscar_app_doctor").val();
+   var parametros={order_by:"codigo",cod_medico:codigo,nom_medico:nom,app_medico:app};
    $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1010,7 +1254,16 @@ function mostrarRegistroConTarjeta(){
 	if($("#nro_tarjeta").val()>0){
       $("#titulo_tarjeta").html("(REGISTRADO)");
 	}
+	if($("#monto_tarjeta").val()==""){	  
+      $("#monto_tarjeta").val($("#totalFinal").val());
+      $("#efectivoRecibidoUnido").val($("#totalFinal").val());
+      $("#tipoVenta").val(2);
+      $(".selectpicker").selectpicker("refresh");
+      aplicarMontoCombinadoEfectivo(form1);
+      document.getElementById("nro_tarjeta").focus();
+	}
 	$("#modalPagoTarjeta").modal("show");	
+	//$("#nro_tarjeta").focus();	
 }
 function verificarPagoTargeta(){
   var nro_tarjeta=$("#nro_tarjeta").val();
@@ -1031,7 +1284,7 @@ $tipoCambio=1;
 while($filaUSD=mysqli_fetch_array($respUsd)){
 		$tipoCambio=$filaUSD[0];	
 }
-?><input type="hidden" id="tipo_cambio_dolar" value="<?=$tipoCambio?>"><?php
+
 $usuarioVentas=$_COOKIE['global_usuario'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];
@@ -1136,8 +1389,10 @@ while($reg=mysqli_fetch_array($rs))
 
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta">
+	<input type="hidden" id="confirmacion_guardado" value="0"><input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
 	<input type="hidden" id="pedido_realizado" value="0">
 	<input type="hidden" id="cod_medico" name="cod_medico" value="0">
+	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
 	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
 <table class='' width='100%' style='width:100%'>
 <tr align='center' class="text-white header" style="color:#fff;background:#30CA99; font-size: 16px;">
@@ -1146,7 +1401,7 @@ while($reg=mysqli_fetch_array($rs))
 <tr align='left' class="text-white header">
 	<th colspan="2" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
 	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
-	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
+	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>]<b style=' font-size: 30px !important;color:#000;-webkit-text-stroke: 1px #fff;position:fixed;top:-5px;right:0px;'>[<?php echo $nombreAlmacenSesion;?>]</b></th>
 </tr>
 <tr class="bg-info text-white" align='center' style="color:#fff;background:#16B490 !important; font-size: 16px;">
 <th>Tipo de Doc.</th>
@@ -1262,7 +1517,7 @@ $iconVentas2="point_of_sale";
 	
 	<td>
 		<div id='divRazonSocial'>
-			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social">
+			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social" style="text-transform:uppercase;"  onchange='ajaxNitCliente(this.form);' onkeyup="javascript:this.value=this.value.toUpperCase();">
 		</div>
 	</td>
 
@@ -1294,13 +1549,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 	</select>
 	<!--<input type="hidden" name="tipoPrecio" value="1">-->
 </td>
-<td><a href="#" title="Registrar Nuevo Cliente" onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a>
+<td><a href="#" title="Registrar Nuevo Cliente" data-toggle='tooltip' onclick="registrarNuevoCliente(); return false;" class="btn btn-warning btn-round btn-sm text-white">+</a>
 	<a href="#" onclick="guardarPedido(0)"
-	class="btn btn-danger btn-sm btn-fab float-right" style="background:#900C3F;color:#fff;" title="GUARDAR VENTA PERDIDA"><i class="material-icons">search_off</i></a>
+	class="btn btn-danger btn-sm btn-fab float-right" style="background:#900C3F;color:#fff;" title="GUARDAR VENTA PERDIDA" data-toggle='tooltip'><i class="material-icons">search_off</i></a>
 <a href="#" onclick="cambiarTipoVenta2()"
-	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
+	class="btn btn-info btn-sm btn-fab float-right" title="TIPO DE VENTA CORRIENTE" data-toggle='tooltip' id="boton_tipoventa2"><i class="material-icons"><?=$iconVentas2?></i></a>
 	<a href="#" onclick="guardarRecetaVenta()"
-	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" id="boton_receta"><i class="material-icons">medical_services</i></a>
+	class="btn btn-info btn-sm btn-fab float-right" style="background: #652BE9;color:#fff;" title="REGISTRAR RECETA" data-toggle='tooltip' id="boton_receta"><i class="material-icons">medical_services</i></a>
 </td>
 </tr>
 
@@ -1314,8 +1569,8 @@ while($dat2=mysqli_fetch_array($resp2)){
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table id="data0" class='table table-sm' width='100%' style='width:100%'>
 	<tr>
-		<td align="center" colspan="8" class="text-muted">
-			<b>Detalle de la Venta    </b>
+		<td align="center" colspan="8" class="text-success">
+			<b style='font-size:20px;'>Detalle de la Venta    </b>
 		</td>
 	</tr>
     <tr align="center" class="bg-info text-white" style='background:#16B490 !important;'>
@@ -1333,22 +1588,30 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 400px; top:30px; left:50px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 600px; top:30px; left:50px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
 <div id="divboton" style="position: absolute; top:20px; left:1210px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:1150px; height:350px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:1150px; height:550px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
-			<tr><th>Linea</th><th>Forma F.</th><th>Accion T.</th></tr>
+			<tr><th>Proveedor</th><th>Acción Terapéutica</th><th>Principio Activo</th></tr>
 			<tr>
-			<td><select class="textogranderojo" name='itemTipoMaterial' style="width:300px">
+			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' id='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
 			<?php
-			$sqlTipo="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
-			where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
+			if($_COOKIE["global_tipo_almacen"]==1){
+                 $sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
+			where p.estado_activo=1 and p.cod_proveedor>0 order by 2;";
+			}else{
+	             $sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
+			where p.estado_activo=1 and p.cod_proveedor<0 order by 2;"; 
+			}
+
+			
+
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){
@@ -1360,7 +1623,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td><select class="textogranderojo" name='itemFormaMaterial' style="width:300px">
+			<td width="40%"><select class="selectpicker col-sm-12 d-none" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemFormaMaterial' id='itemFormaMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1374,10 +1637,27 @@ while($dat2=mysqli_fetch_array($resp2)){
 			?>
 
 			</select>
-			</td>
-			<td><select class="textogranderojo" name='itemAccionMaterial' style="width:300px">
+			<select class="selectpicker col-sm-12 d-none" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemAccionMaterial' id='itemAccionMaterial' style="width:300px">
 			<?php
-			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
+			/*$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
+			where pl.estado=1 order by 2;";
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);*/
+			echo "<option value='0'>--</option>";
+			/*while($datTipo=mysqli_fetch_array($respTipo)){
+				$codTipoMat=$datTipo[0];
+				$nombreTipoMat=$datTipo[1];
+				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+			}*/
+			?>
+
+			</select>
+			<input type='text' placeholder='Acción Terapéutica' name='itemAccionMaterialNom' id='itemAccionMaterialNom' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
+			</td>
+			<td width="30%">
+				<select class="selectpicker col-sm-12 d-none" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemPrincipioMaterial' id='itemPrincipioMaterial' style="width:300px">
+			<?php
+			echo "<option value='0'>--</option>";
+			/*$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
 			where pl.estado=1 order by 2;";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
@@ -1385,41 +1665,34 @@ while($dat2=mysqli_fetch_array($resp2)){
 				$codTipoMat=$datTipo[0];
 				$nombreTipoMat=$datTipo[1];
 				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
-			}
-			?>
-
+			}*/
+			?>                 
 			</select>
+			<input type='text' placeholder='Principio Activo' name='itemPrincipioMaterialNom' id='itemPrincipioMaterialNom' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
 			</td>
-			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
-	     <tr>		
-			<td><select class="textogranderojo" name='itemPrincipioMaterial' style="width:300px">
-			<?php
-			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
-			where pl.estado=1 order by 2;";
-			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
-			echo "<option value='0'>--</option>";
-			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
-			}
-			?>
-
-			</select>
+			<tr><th>&nbsp;</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
+	     <tr>
+	     	<td>
+				<div class="custom-control custom-checkbox small float-left">
+                    <input type="checkbox" class="" id="solo_stock" checked="">
+                    <label class="text-dark font-weight-bold" for="solo_stock">&nbsp;&nbsp;&nbsp;Solo Productos con Stock</label>
+                </div>
 			</td>
 			<td>
 				<div class="row">
-					<div class="col-sm-3"><input type='number' placeholder='--' name='itemCodigoMaterial' id='itemCodigoMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>
+					<div class="col-sm-3"><input type='number' placeholder='--' name='itemCodigoMaterial' id='itemCodigoMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);" onkeyup="return pressEnter(event, this.form);"></div>
 					<div class="col-sm-9"><input type='text' placeholder='Descripción' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>				   
 				</div>
 				
-			</td>
-			<td align="center">
-				<input type='button' class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
+			</td>	
+					
+			<td align="center">				
+				<input type='button' id="enviar_busqueda" class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">	
+				<a href="#" class="btn btn-warning btn-fab float-right" title="Limpiar Formulario de Busqueda" data-toggle='tooltip' onclick="limpiarFormularioBusqueda();return false;"><i class="material-icons">cleaning_services</i></a>			
 			</td>
  			</tr>
 			
-		</table>
+		</table>		
 		<div id="divListaMateriales">
 		</div>
 	
@@ -1432,27 +1705,40 @@ while($dat2=mysqli_fetch_array($resp2)){
 	<table class="pie-montos">
       <tr>
         <td>
-	      <table id='' width='100%' border="0">
+	      <!--<table id='' width='100%' border="0">
 	      	<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
-		</tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
+		  </tr>
          
-		<tr>
-			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
-		</tr>
-	</table>
-      
+		  <tr>
+			<td align='right' width='60%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:33px;font-size:30px;width:80%;color:#fff;"></td>
+		  </tr>
+		  <tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;">Monto Recibido</td><td><input type='number' style="background:#B0B4B3;height:33px;width:80%;font-size:30px;" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+		  </tr>
+		  <tr>
+			<td align='right' width='60%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:33px;font-size:30px;width:80%;"></td>
+		   </tr>
+	     </table>-->
+         
+         <table id='' width='100%' border="0" style='float:right;margin-top: 30px;'>
+          <tr>
+          	<td style="font-weight:bold;font-size:12px;">MONTO FINAL Bs.</td>
+          	<td style="font-weight:bold;color:#777B77;font-size:12px;">TOTAL RECIBIDO</td>
+          	<td style="font-weight:bold;color:#777B77;font-size:12px;color:#057793;">TOTA CAMBIO Bs.</td>
+          </tr>
+          <tr>
+          	<td><input type='number' name='totalFinal' id='totalFinal' class='form-control' readonly style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#39ff14;' value='0.00'></td>
+          	<td><input type='number' class='form-control' style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#08FAEF;' name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);' value='0.00'></td>
+          	<td><input type='number' class='form-control' name='cambioEfectivo' id='cambioEfectivo' readonly style='height:40px;font-size:35px;width:80%;background:#383A3E !important; margin-top:4px; color:#ff8000;' value='0.00'></td>
+          </tr>
+	     </table>
+
         </td>
         <td>
         	<table id='' width='100%' border="0">
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">-</b></td>
+			<td align='left' width='90%' style="color:#777B77;font-size:12px;"></td><td align='LEFT'><b style="font-size:30px;color:#0691CD;">D</b><label style="color:#0691CD;">escuento <b style="font-size:30px;color:#0691CD;">F</b>inal</label></td>
 		</tr>
 
 		<tr>
@@ -1504,9 +1790,9 @@ if($banderaErrorFacturacion==0){
 			   <button type='button' class='btn btn-danger' onClick='location.href=\"navegador_ingresomateriales.php\"';>Cancelar</button>
 			   
             </div>	       
-            <h2 style='font-size:11px;color:#9EA09E; display:none;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
+            <h2 style='font-size:11px;color:#9EA09E;float:right;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
             
-            <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
+            <table style='width:450px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
             <tr>
                <td style='display:none;font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
              </tr>
@@ -1515,11 +1801,11 @@ if($banderaErrorFacturacion==0){
              </tr>
             <tr>
                <td style='font-size:12px;color:#0691CD; font-weight:bold;'>MONTO RECIBIDO Bs.</td>
-               <td style='font-size:12px;color:#189B22; font-weight:bold; display:none;'>EFECTIVO $ USD</td>
+               <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:30px;font-size:18px;width:100%;background:#A5F9EA !important;'  class='form-control' step='any' value='0' required></td>
-               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;display:none;' step='any'></td>
+               <td width='50%'><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:35px;font-size:30px;width:100%;background:#C4BDBD !important;color:#4574B9;'  class='form-control' step='any' value='0' required></td>
+               <td><a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:35px;font-size:30px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#059336;'step='any' class='form-control' value='0'></td>
              </tr>
             </table>
 
@@ -1543,7 +1829,7 @@ if($banderaErrorFacturacion==0){
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-md">
     <div class="modal-content card">
                <div class="card-header card-header-primary card-header-icon">
                   <div class="card-icon" style="background: #96079D;color:#fff;">
@@ -1557,13 +1843,13 @@ if($banderaErrorFacturacion==0){
                 <div class="card-body">
 <div class="row">
 	<div class="col-sm-12">
-		         <div class="row">
+		         <div class="row d-none">
                   <label class="col-sm-3 col-form-label">Banco</label>
                   <div class="col-sm-9">
                     <div class="form-group">
                       <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                      	
                           <?php echo "$cadComboBancos"; ?>
-                          <option value="0">Otro</option>
+                          <option value="0" selected>Otro</option>
                        </select>
                     </div>
                   </div>
@@ -1580,13 +1866,16 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
                   <div class="col-sm-9">
                     <div class="form-group">
-                      <input class="form-control" type="number" style="background: #A5F9EA;" id="monto_tarjeta" name="monto_tarjeta" value=""/>
+                      <input class="form-control" type="number" id="monto_tarjeta" name="monto_tarjeta" style='height:40px;font-size:35px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#057793;' step="any" value=""/>
                     </div>
                   </div>
-                </div>                
+                </div> 
+                <br>
+                <a href="#" data-dismiss="modal" aria-hidden="true" class="btn btn-info btn-sm">GUARDAR</a>               
                 <br><br>
        </div>
-</div>                      
+</div>                  
+
                 </div>
       </div>  
     </div>
@@ -1883,18 +2172,18 @@ if($banderaErrorFacturacion==0){
                   </div>
                 </div>
                 <div class="row d-none" id="div_ins_doctor">
-                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
+                  <label class="col-sm-2 col-form-label">Institución (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
                       <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
-                    </div>
+                    </div><label style='font-size:10px;color:red;'>Ej: CLINICA PRIVADA, CENTRO DE SALUD</label><br>                    
                   </div>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                   <label class="col-sm-2 col-form-label">Institución</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" onchange="nuevaInstitucion();" required>
+                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" data-size='6' onchange="nuevaInstitucion();" required>
                            <?php echo "$cadComboInstitucion"; ?>
                        </select>
                     </div>
@@ -1904,7 +2193,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Especialidad</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" required>
+                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6' required>
                            <?php echo "$cadComboEspecialidades"; ?>
                        </select>
                     </div>
@@ -1914,7 +2203,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">2da Esp.</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" required>
+                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" data-size='6' required>
                       	<option value="0">Ninguna</option>
                           <?php echo "$cadComboEspecialidades"; ?>
                        </select>
@@ -1927,7 +2216,24 @@ if($banderaErrorFacturacion==0){
                 </div>                 
                 <br><br>
        </div>
-	   <div class="col-sm-6">       
+	   <div class="col-sm-6">    
+	            <div class="row">
+                  <label class="col-sm-2 col-form-label">Nombres</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value=""/>
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Apellidos</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value=""/>
+                    </div>
+                  </div>
+                  <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest()'><i class='material-icons'>search</i></a>
+                </div>
+                <br>
+
                    <table class="table table-bordered table-condensed">
                    	  <thead>
                    	  	<tr class="" style="background: #652BE9;color:#fff;"><th width="60%">Nombre</th><th>Matricula</th><th>-</th></tr>
@@ -1945,6 +2251,6 @@ if($banderaErrorFacturacion==0){
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
- <script type="text/javascript">mueveReloj();nuevaInstitucion();</script>
+ <script type="text/javascript">nuevaInstitucion();</script>
 </body>
 </html>

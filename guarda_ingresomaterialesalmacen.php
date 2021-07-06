@@ -28,7 +28,7 @@ if(isset($_POST["cod_salida"])){
 }
 
 $tipo_ingreso=$_POST['tipo_ingreso'];
-$nota_entrega=0;
+$nota_entrega=$_POST['nota_entrega'];
 $nro_factura=$_POST['nro_factura'];
 $observaciones=$_POST['observaciones'];
 $proveedor=$_POST['proveedor'];
@@ -79,7 +79,7 @@ if($sql_inserta==1){
 			
 			//CONVERTIMOS A LA CANTIDAD DE PRESENTACION PARA MANEJAR TODO EN UNITARIOS
 			$cantidadPresentacion=obtenerCantidadPresentacionProducto($cod_material);
-			$cantidad=$cantidad*$cantidadPresentacion;
+			$cantidad=$cantidad;//*$cantidadPresentacion;
 
 			$costo=$precioUnitario;
 						
@@ -88,7 +88,7 @@ if($sql_inserta==1){
                 if(isset($_COOKIE['global_usuario'])){
                   $user=$_COOKIE['global_usuario'];             
                 }
-               actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user);
+               //actualizarPrecioSiEsMayor($cod_material,$precioUnitario,$user);
 			}
 			$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
 			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto, cod_ubicacionestante, cod_ubicacionfila, cantidad_envase, cantidad_restante_envase, porcentaje_descuento) 

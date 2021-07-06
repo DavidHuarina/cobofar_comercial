@@ -6,7 +6,7 @@ require("estilos_almacenesAjax.php");
 
 $nroSalida=$_GET["nroSalida"];
 
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $cadRespuesta="";
 $consulta="select s.`cod_salida_almacenes` from `salida_almacenes` s 
 		where s.`nro_correlativo`=$nroSalida and s.`cod_almacen`=$global_almacen and s.`cod_tiposalida`='1002'";

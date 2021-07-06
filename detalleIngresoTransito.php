@@ -27,7 +27,7 @@
 	echo "<tr><td align='center'>$nro_correlativo</td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>&nbsp;$obs_salida</td></tr>";
 	echo "</table><br>";
 	
-	echo "<table class='texto'>";
+	echo "<table class='table table-striped table-success'>";
 	echo "<tr><th>Codigo</th><th>Producto</th><th>Cantidad</th></tr>";
 	echo "<form method='post' action=''>";
 	$sql_detalle="select s.cod_material, sum(s.cantidad_unitaria),sum(s.cantidad_envase) from salida_detalle_almacenes s 
@@ -46,7 +46,7 @@
 		$dat_nombre_material=mysqli_fetch_array($resp_nombre_material);
 		$nombre_material=$dat_nombre_material[0];
 		echo "<tr>
-		<td>$codigo</td>
+		<td>$cod_material</td>
 		<td>$nombre_material</td>
 		<td align='center'>$cantidad_unitaria_formato</td></tr>";
 	}

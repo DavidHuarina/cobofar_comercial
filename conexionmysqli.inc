@@ -1,4 +1,7 @@
 <?php
+if(!isset($_COOKIE["global_usuario"])){
+  ?><script type="text/javascript">$( document ).ready(function() {Swal.fire("ERROR!", "Inicie Sesion!", "error");/*window.close();*/});</script><?php
+}
 set_time_limit(0);
 error_reporting(0);
 //header('Content-Type: text/html; charset=UTF-8'); 
@@ -39,6 +42,7 @@ if(!function_exists('register_globals')){
 
 //$enlaceCon=mysqli_connect("127.0.0.1","root","","farmaciasalmacen");
 $enlaceCon=mysqli_connect("p:127.0.0.1","root","4868422Marco","ventascobofar");
+
 if (mysqli_connect_errno())
 {
 	echo "Error en la conexión: " . mysqli_connect_error();

@@ -6,8 +6,8 @@ function envia_formulario(f, variableAdmin)
 	var hora_fin;
 	var rpt_territorio;
 	rpt_territorio=f.rpt_territorio.value;
-	var rpt_funcionario;
-	rpt_funcionario=f.rpt_funcionario.value;
+	var rpt_funcionario=$("#rpt_funcionario").val();
+	//rpt_funcionario=f.rpt_funcionario.value;
 
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
@@ -34,6 +34,20 @@ function envia_formulario2(f, variableAdmin)
 	window.open('rptArqueoDiarioPDFSm.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&hora_ini='+hora_ini+'&hora_fin='+hora_fin+'&variableAdmin='+variableAdmin+'&rpt_funcionario='+rpt_funcionario,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
+function actualizarDatosPersonal(){
+    var parametros={"codigo":0};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "depositos/ajaxCalcularDatosPersonal.php",
+        data: parametros,   
+        success:  function (resp) { 
+          //alert(resp);
+          document.getElementById("rpt_funcionario").innerHTML=resp;
+          $("#rpt_funcionario").selectpicker('refresh');      
+        }
+    });
+ }
 </script>
 <?php
 
@@ -70,8 +84,8 @@ echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 		}
 	}
 	echo "</select></td></tr>";
-	echo "<tr><th align='left'>Personal</th><td><select name='rpt_funcionario' class='selectpicker form-control'>";
-	$sql="select codigo_funcionario, CONCAT(nombres,' ',paterno,' ',materno) from funcionarios where estado=1 order by 2";
+	echo "<tr><th align='left'>Personal</th><td><select name='rpt_funcionario' id='rpt_funcionario' class='selectpicker form-control col-sm-11' data-live-search='true' data-size='6'>";
+	$sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres"; 
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
 	{	$cod_funcionario=$dat[0];
@@ -79,10 +93,10 @@ echo"<form method='post' action='rptArqueoDiarioPDF.php'>";
 		if($cod_funcionario==$globalUser){
 			echo "<option value='$cod_funcionario' selected>$nombre_fun</option>";			
 		}else{
-			echo "<option value='$codigo_ciudad'>$nombre_fun</option>";
+			echo "<option value='$cod_funcionario'>$nombre_fun</option>";
 		}
 	}
-	echo "</select></td></tr>";
+	echo "</select><a href='#' class='btn btn-deffault btn-fab btn-sm'><i class='material-icons' onclick='actualizarDatosPersonal();return false;' title='Actualizar Listado Personal'>refresh</i></a></td></tr>";
 	echo "<tr><th align='left'>Fecha Inicio:</th>";
 			echo" <TD bgcolor='#ffffff'>
 				<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial'><INPUT  type='time' class='texto' value='$hora_rptinidefault' id='exahorainicial' size='10' name='exahorainicial'>";

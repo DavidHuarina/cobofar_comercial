@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 $codVehiculo=$_GET['codVehiculo'];
 if($codVehiculo!=0){
 	$sql="select peso_maximo from vehiculos where codigo in ('$codVehiculo')";

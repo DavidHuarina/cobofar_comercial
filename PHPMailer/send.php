@@ -13,7 +13,7 @@ if($inicio==0){
 }    
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
-	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
+	$mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
 	$mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
 	$mail->Password = $mail_userpassword; 		// Tu contraseña de gmail

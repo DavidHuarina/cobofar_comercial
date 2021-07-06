@@ -29,6 +29,21 @@ if(isset($_POST['tipo_venta2'])){
    $cod_tipoVenta2=$_POST['tipo_venta2'];
 }
 
+$monto_bs=0;
+if(isset($_POST['efectivoRecibidoUnido'])){
+   $monto_bs=$_POST['efectivoRecibidoUnido'];
+}
+
+$monto_usd=0;
+if(isset($_POST['efectivoRecibidoUnidoUSD'])){
+   $monto_usd=$_POST['efectivoRecibidoUnidoUSD'];
+}
+
+$tipo_cambio=0;
+if(isset($_POST['tipo_cambio_dolar'])){
+   $tipo_cambio=$_POST['tipo_cambio_dolar'];
+}
+
 $codCliente=$_POST['cliente'];
 
 $tipoPrecio=$_POST['tipoPrecio'];
@@ -62,8 +77,8 @@ if($descuentoVenta=="" || $descuentoVenta==0){
 
 $vehiculo="";
 
-$fecha=formateaFechaVista($fecha);
-//$fecha=date("Y-m-d");
+//$fecha=formateaFechaVista($fecha);
+$fecha=date("Y-m-d");
 $hora=date("H:i:s");
 
 //SACAMOS LA CONFIGURACION PARA EL DOCUMENTO POR DEFECTO
@@ -129,10 +144,10 @@ $created_at=date("Y-m-d H:i:s");
 $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
 		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
 		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
-		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo, monto_cambio,cod_tipopago,created_by,created_at,cod_tipopreciogeneral,cod_tipoventa2)
+		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo, monto_cambio,cod_tipopago,created_by,created_at,cod_tipopreciogeneral,cod_tipoventa2,monto_cancelado_bs,monto_cancelado_usd,tipo_cambio)
 		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
-		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2')";
+		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2','$monto_bs','$monto_usd','$tipo_cambio')";
 		//echo $sql_inserta;
 $sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
@@ -145,7 +160,7 @@ if($sql_inserta==1){
     }
 
     //TARJETA INSERTAR
-    if(isset($_POST['nro_tarjeta'])&&$_POST['nro_tarjeta']!=""&&$tipoVenta==2){
+    if(isset($_POST['nro_tarjeta'])&&$_POST['nro_tarjeta']!=""){//&&$tipoVenta==2
        $nro_tarjeta=$_POST['nro_tarjeta'];
        $monto_tarjeta=$_POST['monto_tarjeta'];
        $banco_tarjeta=$_POST['banco_tarjeta'];
