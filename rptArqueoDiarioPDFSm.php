@@ -204,7 +204,7 @@ $saldoCajaChica5F=number_format($saldoCajaChica5,2,".",",");
 
 $saldoCajaChica6=$saldoCajaChica5-($totalEfectivoBs);
 if($saldoCajaChica6<0){
-	$saldoCajaChica6=0;
+	//$saldoCajaChica6=0;
 }
 $saldoCajaChica6F=number_format($saldoCajaChica6,2,".",",");
 

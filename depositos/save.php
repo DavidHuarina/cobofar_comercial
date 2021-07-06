@@ -56,8 +56,8 @@ if($_FILES['documentos_cabecera']["name"]){
   $archivoDefecto=1;
 }
 
-$sql="insert into $table (codigo,glosa, fecha,fecha_registro,cod_banco,cod_funcionario, nro_cuenta,monto_caja,monto_registrado,ubicacion_archivo,cod_estadoreferencial,cod_cuenta,fechaf,hora,horaf,monto_registradousd,monto_cajausd,nro_recibo) 
-values($codigo,'$nombre','$fecha_ini','$fecha_registro','$rpt_banco','$cod_funcionario','$numero_cuenta','$monto_caja','$monto','$dirArchivo','1','$rpt_cuenta','$fecha_fin','$exahorainicial','$exahorafinal','$monto_caja2','$monto2','$nro_recibos')";
+$sql="insert into $table (codigo,glosa, fecha,fecha_registro,cod_banco,cod_funcionario, nro_cuenta,monto_caja,monto_registrado,ubicacion_archivo,cod_estadoreferencial,cod_cuenta,fechaf,hora,horaf,monto_registradousd,monto_cajausd,nro_recibo,cod_ciudad) 
+values($codigo,'$nombre','$fecha_ini','$fecha_registro','$rpt_banco','$cod_funcionario','$numero_cuenta','$monto_caja','$monto','$dirArchivo','1','$rpt_cuenta','$fecha_fin','$exahorainicial','$exahorafinal','$monto_caja2','$monto2','$nro_recibos','$cod_ciudad')";
 $sql_inserta=mysqli_query($enlaceCon,$sql);
 if($sql_inserta==1){
   if($monto_caja>0){

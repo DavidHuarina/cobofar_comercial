@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
+<meta charset="utf-8">
 <head>
 
   <meta content="text/html; charset=ISO-8859-1">
@@ -65,7 +65,13 @@
                       Entrar
                     </button>
                     <hr>
-                    <p class='text-danger'></p>
+                    <?php
+                    if(isset($_GET["ma"])){
+                       ?><label class='text-danger' style='position:fixed;'><b>MAC: <?=$_GET["ma"]?></b></label><?php
+                    }else{
+                       ?><label class='text-success' style='position:fixed;'><b>Datos incorrectos, vuelve a intentarlo :(</b></label><?php
+                    }?>
+                    
                   </form>
                 </div>
               </div>

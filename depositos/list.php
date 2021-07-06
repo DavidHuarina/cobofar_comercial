@@ -288,7 +288,7 @@ function enviar_nav(f){
 
 	$cod_ciudad=$_COOKIE['global_agencia'];
 	echo "<form method='post' action=''>";
-	$sql="SELECT f.codigo,f.cod_funcionario,f.monto_registrado,f.monto_caja,f.fecha,f.glosa,f.nro_cuenta,f.cod_banco,f.ubicacion_archivo,f.cod_cuenta,f.monto_registradousd,f.fecha_registro FROM registro_depositos f join funcionarios fu on fu.codigo_funcionario=f.cod_funcionario where f.cod_estadoreferencial=1 and fu.cod_ciudad='$cod_ciudad' order by f.fecha desc;";
+	$sql="SELECT f.codigo,f.cod_funcionario,f.monto_registrado,f.monto_caja,f.fecha,f.glosa,f.nro_cuenta,f.cod_banco,f.ubicacion_archivo,f.cod_cuenta,f.monto_registradousd,f.fecha_registro FROM registro_depositos f join funcionarios fu on fu.codigo_funcionario=f.cod_funcionario where f.cod_estadoreferencial=1 and f.cod_ciudad='$cod_ciudad' order by f.fecha desc;";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural</h1>";

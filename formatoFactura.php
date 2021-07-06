@@ -163,7 +163,10 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$tipoDoc=$datDatosVenta['nombre'];
 	$codTipoDoc=$datDatosVenta['cod_tipo_doc'];
 }
-$nombreFuncionario=nombreVisitador($cod_funcionario);
+$sqlResponsable="select CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') from funcionarios where codigo_funcionario='".$cod_funcionario."'";
+$respResponsable=mysqli_query($enlaceCon,$sqlResponsable);
+$nombreFuncionario=mysqli_result($respResponsable,0,0);
+//$nombreFuncionario=nombreVisitador($cod_funcionario);
 $y=5;
 $incremento=3;
 ?>

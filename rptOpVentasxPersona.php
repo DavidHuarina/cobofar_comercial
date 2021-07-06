@@ -92,7 +92,13 @@ echo"<form method='post' action=''>";
 		  echo "<option value='$codigo_funcionario'>$nombre_funcionario</option>";				
 		}
 	}
-	echo "</select><a href='#' class='btn btn-deffault btn-fab btn-sm'><i class='material-icons' onclick='actualizarDatosPersonal();return false;' title='Actualizar Listado Personal'>refresh</i></a></td></tr>";
+	if($global_tipoalmacen==1)
+	{	echo "</select><a href='#' class='btn btn-deffault btn-fab btn-sm'><i class='material-icons'  title='Actualizar Listado Personal'>refresh</i></a></td></tr>";
+	}
+	else
+	{	echo "</select><a href='#' class='btn btn-deffault btn-fab btn-sm'><i class='material-icons' onclick='actualizarDatosPersonal();return false;' title='Actualizar Listado Personal'>refresh</i></a></td></tr>";
+	}
+
 	echo "<tr><th align='left'>Fecha inicio:</th>";
 			echo" <TD bgcolor='#ffffff'><INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial'>";
     		echo"  </TD>";

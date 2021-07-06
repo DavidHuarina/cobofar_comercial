@@ -49,8 +49,14 @@ include("datosUsuario.php");
 
 			<!--<img src="imagenes/personal.png" class="rounded" width="35" height="35">--><?php echo " ".$nombreUsuarioSesion?> [<?php echo $nombreAlmacenSesion;?>]&nbsp;&nbsp;&nbsp;[<?php echo $fechaSistemaSesion?>  <?php echo $horaSistemaSesion;?>]
 			<a title="Cambiar Tipo de Agencia" style="color:#5A8A85; " href='cambiarAlmacenTipoSesion.php' target="contenedorPrincipal">[ <?=$nombreTipoAlmacen;?> ]</a>
-			<button onclick="location.href='salir.php'" style="position:relative;right:-30 !important;z-index:99999;background:#EF6A09 !important;" class="btn btn-success btn-fab btn-sm"><i class="fa fa-close"></i></button>	
-
+			<a  style="position:relative;right:-30 !important;z-index:99999;" class="dropdown-toggle simple-text logo-mini" data-toggle="dropdown"><img src="<?=$imagenLogin?>" width="40" height="40" class="rounded-circle"/></a>
+				<ul class="dropdown-menu" style="width:200px;margin-top: 15px;">
+					<li><a href="editImagen.php" target="contenedorPrincipal">Cambiar Foto de Perfil</a></li>
+    				<li><a href="editPerfil.php" target="contenedorPrincipal">Cambiar Contraseña</a></li>
+    				<!--<li><a href="cambiarAlmacenTipoSesion.php">Ir a Suministros</a></li>-->
+    				<li><hr class="dropdown-divider"></li>
+    				<li><a href="salir.php"><i class="material-icons" style="font-size: 16px">logout</i> Salir</a></li>
+  				</ul>	          
 		</div>
 	</div>
 	

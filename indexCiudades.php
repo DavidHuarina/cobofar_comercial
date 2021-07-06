@@ -80,8 +80,7 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 
-</body>
-</html>
+
 
 <div class="panel">
 <!-- Navbar -->
@@ -100,10 +99,26 @@
 <?php
 require_once 'conexionmysqli2.inc';
 require_once 'funciones.php';
+
+$usuario=$_COOKIE["global_usuario"];
+$link="indexVentas.php";
+if($usuario==2||$usuario==1||$usuario==387||$usuario==392||$usuario==391||$usuario==8||$usuario==22||$usuario==21||$usuario==8){
+        $link="indexReportes.php";
+      }else{      
+        if($cod_cargo==1000||$cod_cargo==1001 || $cod_cargo==1017 || $cod_cargo==1018){
+         $link="indexGerencia.php";
+        }
+        if($cod_cargo==1002){
+         $link="indexAlmacenReg.php";
+        }
+        if($cod_cargo==29||$cod_cargo==30||$cod_cargo==31||$cod_cargo==32||$cod_cargo==33||$cod_cargo==34||$usuario==33||$usuario==32||$usuario==31||$usuario==388||$usuario==29){
+         $link="indexVentas.php";
+        }    
+      }
 ?>
 <script type="text/javascript">
   function cambiarSucursalGlobal(codCiudad){
-    var parametros={"cod_ciudad":codCiudad,"url":"indexVentas.php"};
+    var parametros={"cod_ciudad":codCiudad,"url":"<?=$link?>"};
       $.ajax({
         type: "POST",
         dataType: 'html',
@@ -131,7 +146,7 @@ include("conexionmysqli2.inc");
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="salir.php">Salir</a>
+                  <a class="dropdown-item" href="salir.php"><i class="material-icons" style="font-size: 16px" >logout</i> Salir</a>
                 </div>
               </li>
             </ul>
@@ -140,18 +155,18 @@ include("conexionmysqli2.inc");
       </nav>
 <!-- End Navbar -->
 <section class="after-loop">
-  <div class="page-header login-page header-filter" filter-color="black" style="background-image: url('imagenes/login.jpg'); background-size: cover;  height: 100px; " >
+  <div class="login-page header-filter" filter-color="black" style="background-image: url('imagenes/login.jpg'); background-size: cover;   height:100%;" >
     <div class="container">
-      <div class="div-center text-center">
+      <div class="div-center text-center text-white">
         <img src="imagenes/farmacias_bolivia1.gif" width="460" height="90" alt="">
         <h3><b><FONT FACE="Arial">Bienvenid@! <?=$nombreUsuarioSesion?></FONT></b></h3>
         <h5 class="">Seleccione la Sucursal con la que realizará las VENTAS el día de HOY </h5>
       </div>
       <div class="row">
         <?php
-        $sqlAgencias = "SELECT distinct f.cod_ciudad,(SELECT nombre_almacen from almacenes where cod_ciudad=f.cod_ciudad and cod_tipoalmacen=1 LIMIT 1)almacen,(select fecha from salida_almacenes where cod_almacen in (SELECT cod_almacen from almacenes where cod_ciudad=f.cod_ciudad) and cod_chofer!='".$_COOKIE["global_usuario"]."' and cod_tiposalida='1001' order by fecha desc limit 1)ultimaventa FROM `funcionarios_agencias` f where f.codigo_funcionario='".$_COOKIE["global_usuario"]."' ORDER BY 3 desc;";
+        $sqlAgencias = "SELECT distinct f.cod_ciudad,(SELECT nombre_almacen from almacenes where cod_ciudad=f.cod_ciudad and cod_tipoalmacen=1 LIMIT 1)almacen,(select fecha from salida_almacenes where cod_almacen in (SELECT cod_almacen from almacenes where cod_ciudad=f.cod_ciudad) and cod_chofer='".$_COOKIE["global_usuario"]."' and cod_tiposalida='1001' order by fecha desc limit 1)ultimaventa FROM `funcionarios_agencias` f where f.codigo_funcionario='".$_COOKIE["global_usuario"]."' ORDER BY 3 desc;";
         //echo $sqlAgencias;
-        $temas=["card-themes","card-snippets","card-templates","card-guides"];
+        $temas=["card-themes","card-snippets text-dark","card-templates","card-guides"];
         $resp = mysqli_query($enlaceCon,$sqlAgencias);
         $ind=0;
         while($detalle=mysqli_fetch_array($resp)){
@@ -164,9 +179,14 @@ include("conexionmysqli2.inc");
           }
           if($ind%3==0){
             $estilo=$temas[2];
+           
           }
           if($ind%4==0){
             $estilo=$temas[3];
+
+          }
+          if($ind%6==0){
+
           }
           $codCiudad=$detalle[0];
           $nombreCiudad=$detalle[1];
@@ -179,7 +199,7 @@ include("conexionmysqli2.inc");
         <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
          <a href="#" class="after-loop-item card border-0 <?=$estilo?> shadow-lg" onclick="cambiarSucursalGlobal('<?=$codCiudad?>');return false;">
             <div class="card-body d-flex align-items-end flex-column text-right">
-               <h4><?=$nombreCiudad?></h4>
+               <h3><b><?=$nombreCiudad?></b></h3>
                <p class="w-85 text-small"><?=$ultimaVenta?></p>
                <i class="material-icons">store_mall_directory</i>
             </div>
@@ -187,8 +207,9 @@ include("conexionmysqli2.inc");
         </div>  
         <?php }
         ?>  
-        <div id="resp"></div> 
       </div>
+      <div id="resp"></div> 
+      <br><br><br><br><br><br><br><br>
     </div>
   </div>
 </section>
@@ -214,3 +235,8 @@ if(!isset($_GET['opcion'])){
     </script><?php
   }
 }
+
+?>
+</body>
+</html>
+<?php
