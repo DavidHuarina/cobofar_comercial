@@ -95,11 +95,11 @@
             </div>
      
           </div>
-          
-<?php
+ <?php
 require_once 'conexionmysqli2.inc';
 require_once 'funciones.php';
-
+include("datosUsuario.php");
+include("conexionmysqli2.inc");
 $usuario=$_COOKIE["global_usuario"];
 $link="indexVentas.php";
 if($usuario==2||$usuario==1||$usuario==387||$usuario==392||$usuario==391||$usuario==8||$usuario==22||$usuario==21||$usuario==8){
@@ -117,23 +117,35 @@ if($usuario==2||$usuario==1||$usuario==387||$usuario==392||$usuario==391||$usuar
       }
 ?>
 <script type="text/javascript">
-  function cambiarSucursalGlobal(codCiudad){
-    var parametros={"cod_ciudad":codCiudad,"url":"<?=$link?>"};
-      $.ajax({
-        type: "POST",
-        dataType: 'html',
-        url: "saveSucursalSesion.php",
-        data: parametros,
-        success:  function (resp) { 
-          $("#resp").html(resp);      
+  function cambiarSucursalGlobal(codCiudad,sucursal){
+   Swal.fire({
+        title: "Sucursal " + sucursal,
+        text: "¿Estas Seguro, <?=$nombreUsuarioSesion?>?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: "Entrar a "+sucursal,
+        cancelButtonText: "No",
+    })
+    .then(resultado => {
+        if (resultado.value) {
+            var parametros={"cod_ciudad":codCiudad,"url":"<?=$link?>"};
+            $.ajax({
+              type: "POST",
+              dataType: 'html',
+              url: "saveSucursalSesion.php",
+              data: parametros,
+              success:  function (resp) { 
+                $("#resp").html(resp);      
+              }
+          });
+        } else {
+            return false;
         }
-    }); 
+    });
+     
   }
 </script>
-<?php
-include("datosUsuario.php");
-include("conexionmysqli2.inc");
-?>
+
 <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">
               <li class="nav-item"><h6 class="text-white">[<?=$nombreUsuarioSesion?>] COBOFAR - COMERCIAL</h6></li>
@@ -161,6 +173,7 @@ include("conexionmysqli2.inc");
         <img src="imagenes/farmacias_bolivia1.gif" width="460" height="90" alt="">
         <h3><b><FONT FACE="Arial">Bienvenid@! <?=$nombreUsuarioSesion?></FONT></b></h3>
         <h5 class="">Seleccione la Sucursal con la que realizará las VENTAS el día de HOY </h5>
+        <!--<h5 class="text-danger">Si no aparece la sucursal comuniquese con el departamento de sistemas.</h5>-->
       </div>
       <div class="row">
         <?php
@@ -197,7 +210,7 @@ include("conexionmysqli2.inc");
           }          
         ?>
         <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
-         <a href="#" class="after-loop-item card border-0 <?=$estilo?> shadow-lg" onclick="cambiarSucursalGlobal('<?=$codCiudad?>');return false;">
+         <a href="#" class="after-loop-item card border-0 <?=$estilo?> shadow-lg" onclick="cambiarSucursalGlobal('<?=$codCiudad?>','<?=$nombreCiudad?>');return false;">
             <div class="card-body d-flex align-items-end flex-column text-right">
                <h3><b><?=$nombreCiudad?></b></h3>
                <p class="w-85 text-small"><?=$ultimaVenta?></p>

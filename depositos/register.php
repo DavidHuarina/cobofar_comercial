@@ -127,7 +127,7 @@ echo "<td align='left' colspan='3'>
 
 if(obtenerCargoPersonal($_COOKIE["global_usuario"])==31){
    echo "<tr><th align='left' class='bg-info text-white'>Personal</th><td><select name='rpt_personal' id='rpt_personal' class='selectpicker' data-live-search='true' data-style='btn btn-info' onchange='cambiarDescripcion()'>";
-  $sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' order by paterno,materno,nombres";
+  $sql="SELECT codigo_funcionario,CONCAT(paterno,' ',materno,' ',nombres)personal FROM funcionarios WHERE cod_ciudad='$globalCiudad' or codigo_funcionario in (SELECT codigo_funcionario from funcionarios_agencias where cod_ciudad='$globalCiudad') and codigo_funcionario!='-1' order by paterno,materno,nombres";
   $resp=mysqli_query($enlaceCon,$sql);
   while($dat=mysqli_fetch_array($resp))
   { $codigo_funcionario=$dat[0];

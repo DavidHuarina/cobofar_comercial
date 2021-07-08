@@ -19,8 +19,8 @@ $fecha_iniconsulta=$fecha_ini;//cambia_formatofecha($fecha_ini);
 $fecha_finconsulta=$fecha_fin;//cambia_formatofecha($fecha_fin);
 
 
-$rpt_territorio=$_GET['rpt_territorio'];
-
+//$rpt_territorio=$_GET['rpt_territorio'];
+$rpt_territorio=$_GET['codTipoTerritorio'];
 $fecha_reporte=date("d/m/Y");
 
 $nombre_territorio=nombreTerritorio($rpt_territorio);
@@ -35,7 +35,7 @@ $sql="select m.`codigo_material`, m.`descripcion_material`,
 	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta'
 	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	group by m.`codigo_material` ORDER BY s.cod_salida_almacenes desc ";//order by 3 desc;
+	group by m.`codigo_material` ORDER BY 3 desc ";//order by 3 desc;
 	
 $resp=mysqli_query($enlaceCon,$sql);
 

@@ -46,7 +46,7 @@ if(isset($_POST["rpt_territorio"])){
 }else{
 	$rpt_territorio=$_COOKIE["global_agencia"];
 }
-echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Vendedor</th></tr></table><br>";
+echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Dispensador</th></tr></table><br>";
 echo"<form method='post' action=''>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";

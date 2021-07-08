@@ -1214,5 +1214,31 @@ function obtenerMontoVentasHoraTotal($desde,$hasta,$sucursal){
   mysqli_close($enlaceCon);
   return array($cantidad,$monto);
 }
+function obtenerMontoVentasPersonalHoraTotal($desde,$hasta,$sucursal,$codPersonal){
+	$estilosVenta=1;
+	require("conexionmysqli2.inc");
+	$sql="SELECT sum(sd.monto_unitario) montoVenta,count(s.cod_salida_almacenes)cantidadVentas
+from `salida_almacenes` s,
+     `salida_detalle_almacenes` sd, `funcionarios` f
+where s.`cod_salida_almacenes` = sd.`cod_salida_almacen` and
+      s.`fecha` BETWEEN '$desde' and
+      '$hasta'      and
+      s.`salida_anulada` = 0 and
+      s.`cod_almacen` in (
+                           select a.`cod_almacen`
+                           from `almacenes` a
+                           where a.`cod_ciudad` = '$sucursal'
+      ) and 
+      s.`cod_chofer`=f.`codigo_funcionario` and f.codigo_funcionario in ($codPersonal)";
+  $resp=mysqli_query($enlaceCon,$sql);
+  $cantidad=0;	
+  $monto=0;				
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $cantidad=$detalle[1]; 
+       $monto=$detalle[0];   		
+  }  
+  mysqli_close($enlaceCon);
+  return array($cantidad,$monto);
+}
 
 ?>

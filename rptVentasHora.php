@@ -47,7 +47,7 @@ $tiempoFin = strtotime(date("Y-m-t", strtotime($fecha_finconsulta)).""); //obten
 ?>
 <br><center><table align='center' class='texto' width='70%' id='ventasSucursal'>
   <thead>
-<tr><th width="20%" style="background: #E6E1DF">Hora</th><th align="right" style="background: #E6E1DF">Cantidad Atenciones</th><th align="right" style="background: #E6E1DF">Monto</th><th align="right" style="background: #E6E1DF">% Cantidad</th><th align="right" style="background: #E6E1DF">% Monto</th>
+<tr><th>&nbsp;</th><th width="20%" style="background: #E6E1DF">Hora</th><th align="right" style="background: #E6E1DF">Cantidad Atenciones</th><th align="right" style="background: #E6E1DF">Monto</th><th align="right" style="background: #E6E1DF">% Cantidad</th><th align="right" style="background: #E6E1DF">% Monto</th>
 </tr><!--<th style="background: #E6E1DF">Sucursal</th>-->
 </thead>
 <tbody>
@@ -80,7 +80,7 @@ $index=0;
     }
     $arrPor['0_'.$i]=$porc;   
     $arrPorCant['c_0_'.$i]=$porcCnt;    
-    ?><tr id="0_<?=$i?>"><td><b><?=$hora?></b></td><td align="right"><b><?=$datos[0]?></b></td><td align="right"><?=number_format($montoHora,2,'.',',')?></td><td id="c_0_<?=$i?>" align="right"><?=number_format($porcCnt,2,'.','')." %"?></td><td align="right"><?=number_format($porc,2,'.','')." %"?></td></tr>
+    ?><tr id="0_<?=$i?>"><td>&nbsp;</td><td><b><?=$hora?></b></td><td align="right"><?=$datos[0]?></td><td align="right"><?=number_format($montoHora,2,'.',',')?></td><td id="c_0_<?=$i?>" align="right"><?=number_format($porcCnt,2,'.','')." %"?></td><td align="right"><?=number_format($porc,2,'.','')." %"?></td></tr>
     <?php       
   }
   $ind = array_search(max($arrPor),$arrPor); 

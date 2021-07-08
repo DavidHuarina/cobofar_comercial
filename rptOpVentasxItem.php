@@ -4,7 +4,16 @@ function envia_formulario(f)
 	rpt_territorio=f.rpt_territorio.value;
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
-	window.open('rptVentasxItem.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+	var codTipoTerritorio=new Array();
+	var j=0;
+	for(var i=0;i<=f.rpt_territorio.options.length-1;i++)
+	{	if(f.rpt_territorio.options[i].selected)
+		{	codTipoTerritorio[j]=f.rpt_territorio.options[i].value;
+			j++;
+		}
+	}
+	
+	window.open('rptVentasxItem.php?codTipoTerritorio='+codTipoTerritorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
 </script>
@@ -28,7 +37,7 @@ echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Item</th><
 echo"<form method='post' action=''>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
-	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='selectpicker' data-live-search='true' data-size='6'>";
+	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' data-live-search='true' title='-- Elija una sucursal --'  id='rpt_territorio' multiple data-actions-box='true' data-style='select-with-transition' data-actions-box='true' data-size='10' class='selectpicker form-control' required>";
 	if($global_tipoalmacen==1)
 	{	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
 	}
@@ -36,7 +45,7 @@ echo"<form method='post' action=''>";
 	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
 	}
 	$resp=mysqli_query($enlaceCon,$sql);
-	echo "<option value=''></option>";
+	echo "";
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];

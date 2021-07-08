@@ -93,7 +93,7 @@ include("datosUsuario.php");
 							<!--li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>
 							<li><a href="rptOpVentasxItem.php" target="contenedorPrincipal">Ventas x Item</a></li>
 							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
-							<li><a href="rptOpVentasxPersona.php" target="contenedorPrincipal">Ventas x Vendedor</a></li-->
+							<li><a href="rptOpVentasxPersona.php" target="contenedorPrincipal">Ventas x Dispensador</a></li-->
 							<!--li><a href="rptOpKardexCliente.php" target="contenedorPrincipal">Kardex x Cliente</a></li-->
 						</ul>	
 					</li>

@@ -4,12 +4,13 @@ header("Content-Transfer-Encoding: Binary");
 header("Content-disposition: attachment; filename=\"archivofacilito.txt\""); 
 
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli2.inc');
 require('funcion_nombres.php');
 
 $codAnio=$_GET['codAnio'];
 $codMes=$_GET['codMes'];
-
+$rpt_territorio=$_GET['codTipoTerritorio'];
+$tipo=$_GET['tipo'];
 $fecha_reporte=date("d/m/Y");
 
 
@@ -17,23 +18,30 @@ $fecha_reporte=date("d/m/Y");
 //echo "<h1>Libro de Ventas</h1>";
 
 $sqlConf="select id, valor from configuracion_facturas where id=1";
-$respConf=mysql_query($sqlConf);
-$nombreTxt=mysql_result($respConf,0,1);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$nombreTxt=mysqli_result($respConf,0,1);
 
 $sqlConf="select id, valor from configuracion_facturas where id=9";
-$respConf=mysql_query($sqlConf);
-$nitTxt=mysql_result($respConf,0,1);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$nitTxt=mysqli_result($respConf,0,1);
 
 //echo "<h3>Periodo Año: $codAnio  Mes: $codMes</h3>";
 //echo "<h3>Nombre o Razon Social: $nombreTxt  NIT: $nitTxt</h3>";
+if($tipo>0){
+	if($tipo==1){
+		$sqlTipo=" and s.cod_tipo_doc='1' ";
+	}else{
+		$sqlTipo=" and s.cod_tipo_doc='4' ";
+	}	
+}
 
-
-$sql="select f.nro_factura, DATE_FORMAT(f.fecha, '%d/%m/%Y'), f.importe, f.razon_social, f.nit, d.nro_autorizacion, e.abreviatura, f.codigo_control
-	from facturas_venta f, dosificaciones d, estados_factura e
-	where f.cod_dosificacion=d.cod_dosificacion and e.cod_estado=f.cod_estado
-	and YEAR(f.fecha)=$codAnio and MONTH(f.fecha)=$codMes order by f.fecha";
-	
-$resp=mysql_query($sql);
+$sql="select f.nro_factura, DATE_FORMAT(f.fecha, '%d/%m/%Y'), f.importe, f.razon_social, f.nit, d.nro_autorizacion, e.abreviatura, f.codigo_control,(SELECT descripcion FROM ciudades where cod_ciudad=f.cod_sucursal)nombre_ciudad,s.cod_tipo_doc
+	from facturas_venta f, dosificaciones d, estados_factura e,salida_almacenes s
+	where f.cod_dosificacion=d.cod_dosificacion and e.cod_estado=f.cod_estado and s.cod_salida_almacenes=f.cod_venta
+	and YEAR(f.fecha)=$codAnio and MONTH(f.fecha)=$codMes and f.cod_sucursal in ($rpt_territorio) 
+	$sqlTipo order by f.fecha, f.nro_factura";
+//echo $sql;	
+$resp=mysqli_query($enlaceCon,$sql);
 
 /*echo "<br><table align='center' class='texto' width='70%'>
 <tr>
@@ -57,7 +65,7 @@ $resp=mysql_query($sql);
 </tr>";
 */
 $indice=1;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$nroFactura=$datos[0];
 	$fecha=$datos[1];
 	$importe=$datos[2];
