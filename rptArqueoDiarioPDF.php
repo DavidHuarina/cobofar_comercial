@@ -305,14 +305,18 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
 	$montoVenta=number_format($montoVenta,1,'.','');
-	$totalVentaAnuladaReal=$totalVentaAnuladaReal+$montoVenta;
+	$codTipoPago=$datos[7];
+	if($codTipoPago==1){
+		$totalVentaAnuladaReal=$totalVentaAnuladaReal+$montoVenta;
+	}
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
 	$personalCliente=nombreVisitador($datos['cod_chofer']);
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
-	echo "<tr>
+	if($codTipoPago==1){
+		echo "<tr>
 	<td>$fechaVenta $horaVenta</td>
 	<td>$personalCliente</td>
 	<td>$nombreCliente</td>
@@ -322,6 +326,18 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	<td>$datosDoc</td>
 	<td align='right'>$montoVentaFormat</td>
 	</tr>";
+	}else{
+		 echo "<tr style='color:red'>
+	<td><strike>$fechaVenta $horaVenta</strike></td>
+	<td><strike>$personalCliente</strike></td>
+	<td><strike>$nombreCliente</strike></td>
+	<td><strike>$razonSocial</strike></td>
+	<td><strike>$obsVenta</strike></td>
+	<td><strike>$nombreTipoPago</strike></td>
+	<td><strike>$datosDoc</strike></td>
+	<td align='right'><strike>$montoVentaFormat</strike></td>
+	</tr>";
+	}
 }
 
 $totalVentaAnuladaFormat=number_format($totalVentaAnuladaReal,2,".",",");
@@ -351,7 +367,7 @@ $saldoCajaChica5F=number_format($saldoCajaChica5,2,".",",");
 
 $saldoCajaChica6=$saldoCajaChica5-($totalEfectivoBs);
 if($saldoCajaChica6<0){
-	$saldoCajaChica6=0;
+	//$saldoCajaChica6=0;
 }
 $saldoCajaChica6F=number_format($saldoCajaChica6,2,".",",");
 $totalIngresos=($totalEfectivo+$totalTarjeta)-$saldoCajaChica4;

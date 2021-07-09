@@ -84,6 +84,20 @@ var parametros={"codigo":codReg};
       }
  }); 
 }
+function funVerifi3(codReg){   
+var parametros={"codigo":codReg};
+ $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/frmConfirmarCodigoSalida3.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#datos_anular_3").html(resp);
+            $("#codigo_salida_3").val(codReg);
+            $("#modalAnularFacturaRegente").modal("show");           
+      }
+ }); 
+}
 function confirmarCodigo(){   
   var cad1=$("input#idtxtcodigo").val();
   var cad2=$("input#idtxtclave").val(); 
@@ -100,6 +114,26 @@ function confirmarCodigo(){
             }else{
                Swal.fire("Error!","El codigo que ingreso es incorrecto","error");
                $("#modalAnularFactura").modal("hide");    
+            }
+      }
+ }); 
+}
+function confirmarCodigo3(){   
+  var cad1=$("input#idtxtcodigo").val();
+  var cad2=$("input#idtxtclave").val(); 
+  var parametros={"codigo":cad1,"clave":cad2};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/validacionCodigoConfirmar3.php",
+        data: parametros,
+        success:  function (resp) { 
+            resp=xtrim(resp);
+            if(resp=="" || resp=="OK") {
+                location.href='anular_venta.php?codigo_registro='+$("#codigo_salida").val();
+            }else{
+               Swal.fire("Error!","La clave que ingreso es incorrecta","error");
+               $("#modalAnularFacturaRegente").modal("hide");    
             }
       }
  }); 
@@ -219,6 +253,34 @@ function anular_salida(f)
         }
         else
         {   funVerifi(j_cod_registro);
+        }
+    }
+}
+
+function anular_salida_regente(f)
+{   var i;
+    var j=0;
+    var j_cod_registro, estado_preparado;
+    var fecha_registro;
+    for(i=0;i<=f.length-1;i++)
+    {   if(f.elements[i].type=='checkbox')
+        {   if(f.elements[i].checked==true)
+            {   j_cod_registro=f.elements[i].value;
+                fecha_registro=f.elements[i-2].value;
+                estado_preparado=f.elements[i-1].value;
+                j=j+1;
+            }
+        }
+    }
+    if(j>1)
+    {   alert('Debe seleccionar solamente un registro para anularlo.');
+    }
+    else
+    {   if(j==0)
+        {   alert('Debe seleccionar un registro para anularlo.');
+        }
+        else
+        {   funVerifi3(j_cod_registro);
         }
     }
 }
@@ -397,6 +459,7 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
 function mostrarRegistroConTarjeta(codigo){
     $("#titulo_tarjeta").html("");
     $("#codigo_salida_tarjeta").val(codigo);
+    //$("#monto_tarjeta").val();
     $("#modalPagoTarjeta").modal("show");   
 }
 function guardarRecetaVenta(medico,salida){
@@ -587,8 +650,12 @@ function asignarMedicoVenta(cod_medico){
     alert("La RECETA ya fue registrada!, no se puede quitar ni cambiar.");
    }
 }
-
-
+function anular_salida_none(){
+   alert("Usted no puede ANULAR la factura");  
+}
+function irVentasDia(){
+    window.location.href="navegadorVentasDia.php";  
+}
         </script>
     </head>
     <body>
@@ -666,12 +733,25 @@ echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
         
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";		
-//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>        
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
+//<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+
+
+$user=$_COOKIE["global_usuario"];        
+$cargoUser=obtenerCargoPersonal($user);
+$linkJs="anular_salida_none(this.form)";
+if($cargoUser==31){
+   $linkJs="anular_salida_regente(this.form)";
 }
+if($user==-1){
+   $linkJs="anular_salida(this.form)";   
+}
+if($anulacionCodigo!=1){
+   $linkJs="anular_salida2(this.form)"; 
+}
+
+echo "<input type='button' value='Anular' class='btn btn-danger' onclick='$linkJs'>";
+
+echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
 echo "</div>";
 		
 echo "<div id='divCuerpo'>";
@@ -795,7 +875,8 @@ while ($dat = mysqli_fetch_array($resp)) {
         echo "<td class='text-primary'><b>Tarjeta</b></td>";
     }else{
         echo "<td class='text-success'><b>Efectivo</b></td>";
-    }    
+    }  
+    $nroImpresiones=obtenerNumeroImpresiones($codigo);  
 	if($codTipoDoc==1){
         $htmlTarjeta="";
         $htmlReceta="";
@@ -804,7 +885,7 @@ while ($dat = mysqli_fetch_array($resp)) {
            $htmlReceta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>REGISTRAR RECETA</b><br>$nro_correlativo<br><i class=\"material-icons test-warning\" style=\"color:".$colorReceta.";font-size:40px;\">medical_services</i>' onclick='guardarRecetaVenta(".$codMedico.",".$codigo.");return false;' data-toggle='tooltip' style='background: ".$colorReceta.";color:#fff;'><i class='material-icons'>medical_services</i></a>";
         }
       if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){ 
-        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/invoice.png\" width=\"60\" border=\"0\">' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
+        $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/print.png\" width=\"60\" border=\"0\"><span class=\"badge badge-secondary\">R: $nroImpresiones </span>' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        
         if($codTarjeta==1){            
             $htmlTarjeta="<a href='#' class='btn btn-default btn-fab btn-sm' title='<b>RELACIONAR TARJETA</b><br>$nro_correlativo<br><i class=\"material-icons text-muted\">credit_card</i>' onclick='mostrarRegistroConTarjeta($codigo);return false;' data-toggle='tooltip'><i class='material-icons'>credit_card_off</i></a>";            
         }else{
@@ -829,12 +910,10 @@ echo "<div class=''>
 		<input type='button' value='Registrar' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
         
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'></td>";
-        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>	
-if($anulacionCodigo==1){
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida(this.form)'>";
-}else{
-	echo "<input type='button' value='Anular' class='btn btn-danger' onclick='anular_salida2(this.form)'>";	
-}
+        //<input type='button' value='Editar' class='btn btn-primary' onclick='editar_salida(this.form)'>
+
+echo "<input type='button' value='Anular' class='btn btn-danger' onclick='$linkJs'>";	
+echo "<input type='button' value='Ventas del Dia' class='btn btn-warning' onclick='irVentasDia()'>";
     echo "</div>";
 	
 echo "</form>";
@@ -955,6 +1034,30 @@ echo "</form>";
   </div>
 <!--    end small modal -->
 
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAnularFacturaRegente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+                <div class="card-header card-header-danger card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">delete</i>
+                  </div>
+                  <h4 class="card-title text-danger font-weight-bold">Anulación de Facturas</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <input type="hidden" name="codigo_salida_3" id="codigo_salida_3" value="0">
+                <div class="card-body" id="datos_anular_3">
+                   
+                </div>
+                <div class="card-footer">
+                   <button class="btn btn-default" onclick="confirmarCodigo3()">ANULAR FACTURA</button>                  
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -973,13 +1076,13 @@ echo "</form>";
                     <input type="hidden" id="codigo_salida_tarjeta">
 <div class="row">
     <div class="col-sm-12">
-                 <div class="row">
+                 <div class="row d-none">
                   <label class="col-sm-3 col-form-label">Banco</label>
                   <div class="col-sm-9">
                     <div class="form-group">
                       <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                       
                           <?php echo "$cadComboBancos"; ?>
-                          <option value="0">Otro</option>
+                          <option value="0" selected>Otro</option>
                        </select>
                     </div>
                   </div>

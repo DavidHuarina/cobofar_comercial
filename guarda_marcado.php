@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <?php
 
 require("conexionmysqli.inc");
@@ -5,10 +6,10 @@ require("estilos.inc");
 require("funcion_nombres.php");
 
 $claveMarcado=$_POST["clave_marcado"];
-
+$user=$_POST["rpt_personal"];
 $fechaActual=date("Y-m-d H:i:s");
 
-$sql="select codigo_funcionario from usuarios_sistema where contrasena='$claveMarcado'";
+$sql="select codigo_funcionario from usuarios_sistema where contrasena= BINARY '$claveMarcado' and codigo_funcionario='$user' ";
 $resp=mysqli_query($enlaceCon,$sql);
 $numFilas=mysqli_num_rows($resp);
 
@@ -21,14 +22,24 @@ if($numFilas>0){
 		$respInsert=mysqli_query($enlaceCon,$sqlInsert);
 		
 		echo "<script language='Javascript'>
-			alert('MARCADO EXITOSO!!!!!!!. Bienvenido $nombreUsuario');
-			location.href='registrar_marcado.php';
+		swal({
+    title: 'Correcto!',
+    text: 'Usuario: $nombreUsuario',
+    type: 'success'
+}).then(function() {
+    window.location = 'registrar_marcado.php';
+});
 			</script>";
 	}
 }else{
 	echo "<script language='Javascript'>
-			alert('ERROR!!!!.');
-			location.href='registrar_marcado.php';
+	swal({
+    title: 'ERROR!!!!.',
+    text: 'No se guardó el Marcado.',
+    type: 'error'
+}).then(function() {
+    window.location = 'registrar_marcado.php';
+});
 			</script>";	
 }
 ?>

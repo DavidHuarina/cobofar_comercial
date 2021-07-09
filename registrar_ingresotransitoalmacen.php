@@ -36,15 +36,14 @@ echo "</table><br>";
 
 echo "<table class='texto'>";
 
-$sql_detalle_salida="select cod_ingreso_almacen, cod_material, sum(cantidad_unitaria), costo_almacen,lote,fecha_vencimiento,precio_bruto
-from ingreso_pendientes_detalle_almacenes where cod_ingreso_almacen='$codigo_registro' and cantidad_unitaria>0 
-group by cod_ingreso_almacen, cod_material";
+$sql_detalle_salida="select cod_ingreso_almacen, cod_material,cantidad_unitaria, costo_almacen,lote,fecha_vencimiento,precio_bruto,orden
+from ingreso_pendientes_detalle_almacenes where cod_ingreso_almacen='$codigo_registro' and cantidad_unitaria>0 order by orden";
 $resp_detalle_salida=mysqli_query($enlaceCon,$sql_detalle_salida);
 $cantidad_materiales=mysqli_num_rows($resp_detalle_salida);
 
 echo "<input type='hidden' name='codigo_salida' value='$codigo_registro'>";
 echo "<input type='hidden' name='cantidad_material' value='$cantidad_materiales'>";
-echo "<tr><th width='5%'>&nbsp;</th><th width='10%'>Codigo</th><th width='35%'>Material</th><th>Lote</th><th>Fecha Vencimiento</th><th>Precio Venta</th><th width='10%'>Cantidad de Origen</th><th>Cantidad Recibida</th></tr>";
+echo "<tr><th width='5%'>&nbsp;</th><th width='10%'>Codigo</th><th width='35%'>Material</th><th>Lote</th><th>Fecha Vencimiento</th><th>Precio Venta</th><th width='10%'>Cantidad de Origen</th><th>Cantidad Recibida</th><th>Orden</th></tr>";
 
 $indice_detalle=1;
 
@@ -61,6 +60,7 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	$resp_materiales=mysqli_query($enlaceCon, $sql_materiales);
 	$dat_materiales=mysqli_fetch_array($resp_materiales);
 	$nombre_material="$dat_materiales[1]";
+	$orden=$dat_detalle_salida['orden'];
 	$costo_almacen=number_format($costo_almacen,2,'.','');
     $cantidad_unitaria_formato=number_format($cantidad_unitaria,0,'.','');
     $costo_almacen_formato=number_format($costo_almacen,2,'.',',');
@@ -72,6 +72,7 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	
 	echo "<td align='center'>$lote</td><td align='center'>$fecha_ven</td><td align='center'>$costo_almacen_formato</td><td align='center'>$cantidad_unitaria_formato</td>";
 	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria_formato' class='form-control' readonly required></td>
+	<td>$orden</td>
 	</tr>";
 	$indice_detalle++;
 }

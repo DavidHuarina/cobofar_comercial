@@ -49,8 +49,14 @@ include("datosUsuario.php");
 
 			<!--<img src="imagenes/personal.png" class="rounded" width="35" height="35">--><?php echo " ".$nombreUsuarioSesion?> [<?php echo $nombreAlmacenSesion;?>]&nbsp;&nbsp;&nbsp;[<?php echo $fechaSistemaSesion?>  <?php echo $horaSistemaSesion;?>]
 			<a title="Cambiar Tipo de Agencia" style="color:#5A8A85; " href='cambiarAlmacenTipoSesion.php' target="contenedorPrincipal">[ <?=$nombreTipoAlmacen;?> ]</a>
-			<button onclick="location.href='salir.php'" style="position:relative;right:-30 !important;z-index:99999;background:#EF6A09 !important;" class="btn btn-success btn-fab btn-sm"><i class="fa fa-close"></i></button>	
-
+			<a  style="position:relative;right:-30 !important;z-index:99999;" class="dropdown-toggle simple-text logo-mini" data-toggle="dropdown"><img src="<?=$imagenLogin?>" width="40" height="40" class="rounded-circle"/></a>
+				<ul class="dropdown-menu" style="width:200px;margin-top: 15px;">
+					<li><a href="editImagen.php" target="contenedorPrincipal">Cambiar Foto de Perfil</a></li>
+    				<li><a href="editPerfil.php" target="contenedorPrincipal">Cambiar Contraseña</a></li>
+    				<!--<li><a href="cambiarAlmacenTipoSesion.php">Ir a Suministros</a></li>-->
+    				<li><hr class="dropdown-divider"></li>
+    				<li><a href="salir.php"><i class="material-icons" style="font-size: 16px">logout</i> Salir</a></li>
+  				</ul>	          
 		</div>
 	</div>
 	
@@ -64,6 +70,8 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="programas/clientes/inicioClientes.php" target="contenedorPrincipal">Clientes</a></li>			
 					<li><a href="navegador_dosificaciones.php" target="contenedorPrincipal">Dosificaciones de Facturas</a></li>
+					<li><a href="productos_estrella/list.php" target="contenedorPrincipal"><i class='material-icons'>star</i> Productos Estrella</a></li>
+					<li><a href="productos_clavo/list.php" target="contenedorPrincipal"><i class='material-icons'>push_pin</i> Productos Sin Rotación</a></li>
 					
 				</ul>	
 			</li>
@@ -109,7 +117,8 @@ include("datosUsuario.php");
 					</li>
 					<li><span>Ventas</span>
 						<ul>
-							<!--<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
+							<li><a href="rptOpVentasSucursal.php" target="contenedorPrincipal">Ventas x Sucursal</a></li>
+							<li><a href="rptOpVentasHora.php" target="contenedorPrincipal">Ventas x Hora</a></li><!--
 							<li><a href="rptOpVentasCategoria.php" target="contenedorPrincipal">Ventas x Clasificador</a></li>
 							<li><a href="rptOpVentasLineasProveedor.php" target="contenedorPrincipal">Ventas x Linea y Proveedor</a></li>-->
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>

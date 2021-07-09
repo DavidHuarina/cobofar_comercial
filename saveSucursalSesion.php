@@ -14,5 +14,13 @@ while($dat=mysqli_fetch_array($resp)){
 setcookie("global_tipo_almacen",1,time()+3600*24*30, '/');
 setcookie("global_agencia",$cod_ciudad,time()+3600*24*30, '/');
 setcookie("global_almacen",$codigo,time()+3600*24*30, '/');
+if(isset($_POST["url"])){
+	$url=$_POST["url"];
+ ?>
+<script type="text/javascript">window.location.href='<?=$url?>';</script>
+<?php
+}else{
 ?>
 <script type="text/javascript">parent.window.location.href=window.parent.location;</script>
+<?php	
+}

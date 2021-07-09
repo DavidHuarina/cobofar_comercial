@@ -179,7 +179,7 @@ input[type=number] {
   text-decoration:none
   }
 .after-loop .card-themes{
-  background-color:#dd3d31
+  background-color:#900C3F
   }
   .after-loop .card-snippets{
   background-color:#ffc107
@@ -195,7 +195,7 @@ input[type=number] {
 
 /* ROJO */
 .sidebar[data-background-color=rojo]{
-  background-color:#dd3d31
+  background-color:#900C3F
   }
 .sidebar[data-background-color=rojo] .nav .nav-item .nav-link{
     color:#fff
@@ -213,7 +213,7 @@ input[type=number] {
   color:#fff
   }
 .sidebar[data-background-color=rojo] .sidebar-background:after{
-  background:#dd3d31;opacity:.8
+  background:#900C3F;opacity:.8
   }
 .sidebar[data-background-color=rojo] .logo:after,.sidebar[data-background-color=rojo] .nav li.separator:after,.sidebar[data-background-color=rojo] .user:after{
   background-color:hsla(0,0%,100%,.3)

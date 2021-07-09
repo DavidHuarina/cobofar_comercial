@@ -12,8 +12,13 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 require_once __DIR__.'/../conexion_externa_farma.php';
 require_once '../function_web.php';
 
+<<<<<<< HEAD
 $fechaInicio="01/01/2020";
 $fechaFinal="30/06/2021";
+=======
+$fechaInicio="20/05/2021";
+$fechaFinal="20/06/2021";
+>>>>>>> 2bc973a3cf440d088b22c7c50013706300cf052c
 $stringProductos="101401,
 101402,
 101403,
@@ -59,7 +64,7 @@ foreach ($listAlma->lista as $alma) {
 $sql="SELECT d.CPROD,P.DES,SUM(CAN+CAN1) AS CANTIDAD,sum(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))-(((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))-((((PREUNIT*(CAN+CAN1))-(((PREUNIT*(CAN+CAN1))*DESCTO1)/100))*DESCTO2)/100))*DESCTO3)/100))) AS MONTO_V
 FROM VFICHAD d LEFT JOIN APRODUCTOS P ON P.CPROD=d.CPROD
 WHERE d.STA in ('V','M')
-AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND P.IDPROVEEDOR='$idprov'
+AND d.tipo in ('F') AND d.fecha BETWEEN '$fechaInicio' AND '$fechaFinal' AND P.CPROD IN ($stringProductos)
 GROUP BY d.CPROD,P.DES;";
 //echo $sql;
 $stmt = $dbh->prepare($sql);

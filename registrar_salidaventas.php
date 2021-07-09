@@ -48,9 +48,10 @@ function guardarVentaGeneral(){
         buttonsStyling: false
        }).then((result) => {
           if (result.value) {
-          	$("#confirmacion_guardado").val(1);
+          	document.getElementById("confirmacion_guardado").value=1;
+          	//$("#confirmacion_guardado").val(1);
             $('#guardarSalidaVenta').submit();  
-            //return(true);                 
+            //return(false);                 
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
@@ -105,6 +106,10 @@ function nuevoAjax()
 }
 
 function listaMateriales(f){
+	var stock=0;
+	if($("#solo_stock").is(":checked")){
+		stock=1;
+	}
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
 	var codForma=f.itemFormaMaterial.value;
@@ -113,8 +118,15 @@ function listaMateriales(f){
 	var nombreItem=f.itemNombreMaterial.value;
 	var tipoSalida=(f.tipoSalida.value);
 	var codigoMat=(f.itemCodigoMaterial.value);
+
+	var nomAccion=f.itemAccionMaterialNom.value;
+	var nomPrincipio=f.itemPrincipioMaterialNom.value;
+
+   if(nomAccion==""&&nomPrincipio==""&&codigoMat==""&&nombreItem==""){
+     alert("Debe ingresar un criterio de busqueda");
+   }else{
 	contenedor = document.getElementById('divListaMateriales');
-    contenedor.innerHTML="<br><br><p class='text-muted'>Buscando Producto(s)...</p>";
+    contenedor.innerHTML="<br><br><br><br><br><br><p class='text-muted'style='font-size:50px'>Buscando Producto(s)...</p>";
 	var arrayItemsUtilizados=new Array();	
 	var i=0;
 	for(var j=1; j<=num; j++){
@@ -126,7 +138,7 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio+"&codProv="+codTipo,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codigoMat="+codigoMat+"&codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&tipoSalida="+tipoSalida+"&codForma="+codForma+"&codAccion="+codAccion+"&codPrincipio="+codPrincipio+"&codProv="+codTipo+"&stock="+stock+"&nomAccion="+nomAccion+"&nomPrincipio="+nomPrincipio,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {			
 			contenedor.innerHTML = ajax.responseText;
@@ -143,8 +155,27 @@ function listaMateriales(f){
 		}		
 	}
 	ajax.send(null)
+   }
+
+
 }
 
+function limpiarFormularioBusqueda(){
+	$("#itemTipoMaterial").val("0");
+	$("#itemFormaMaterial").val("0");
+	$("#itemAccionMaterial").val("0");
+	$("#itemPrincipioMaterial").val("0");
+	$("#itemAccionMaterialNom").val("");
+	$("#itemPrincipioMaterialNom").val("");
+	$("#itemNombreMaterial").val("");
+	//$("#tipoSalida").val("0");
+	$("#itemCodigoMaterial").val("");
+	$(".selectpicker").selectpicker("refresh");
+	$("#solo_stock").prop( "checked", true );
+	$("#divListaMateriales").html("");
+
+	
+}
 function ajaxTipoDoc(f){
 	var contenedor;
 	contenedor=document.getElementById("divTipoDoc");
@@ -274,7 +305,7 @@ function ajaxNitCliente(f){
 	//if(nitCliente>0){
 
 	//}else{
-	 contenedor=document.getElementById("divNIT");
+	 /*contenedor=document.getElementById("divNIT");
 	 var rsCliente=document.getElementById("razonSocial").value;
 	 ajaxNit=nuevoAjax();
 	 ajaxNit.open("GET", "ajaxNitCliente.php?rsCliente="+rsCliente,true);
@@ -285,7 +316,7 @@ function ajaxNitCliente(f){
 			ajaxClienteBuscar();
 		}
 	 }
-	 ajaxNit.send(null);		
+	 ajaxNit.send(null);*/		
 	//}
 }
 
@@ -837,14 +868,13 @@ $(document).ready(function() {
         alert("El monto recibido NO debe ser menor al monto total");
         return false;
       }else{
-      	var confirmacionRealizada=$("#confirmacion_guardado").val();
+      	//var confirmacionRealizada=$("#confirmacion_guardado").val();
+      	var confirmacionRealizada=document.getElementById("confirmacion_guardado").value;
       	console.log("Datos confirm:"+confirmacionRealizada+"")
       	if(parseInt(confirmacionRealizada)==1){
-      		return true;
-      		/*document.getElementById("btsubmit").value = "Enviando...";
+      		document.getElementById("btsubmit").innerHTML = "Enviando...";
             document.getElementById("btsubmit").disabled = true;
-            document.getElementById("btsubmitPedido").value = "Enviando...";
-            document.getElementById("btsubmitPedido").disabled = true;*/
+      		return true;      		
       	}else{
       		return guardarVentaGeneral();
       	}
@@ -1224,10 +1254,16 @@ function mostrarRegistroConTarjeta(){
 	if($("#nro_tarjeta").val()>0){
       $("#titulo_tarjeta").html("(REGISTRADO)");
 	}
-	if($("#monto_tarjeta").val()==""){
-      $("#monto_tarjeta").val($("#efectivoRecibidoUnido").val());
+	if($("#monto_tarjeta").val()==""){	  
+      $("#monto_tarjeta").val($("#totalFinal").val());
+      $("#efectivoRecibidoUnido").val($("#totalFinal").val());
+      $("#tipoVenta").val(2);
+      $(".selectpicker").selectpicker("refresh");
+      aplicarMontoCombinadoEfectivo(form1);
+      document.getElementById("nro_tarjeta").focus();
 	}
 	$("#modalPagoTarjeta").modal("show");	
+	//$("#nro_tarjeta").focus();	
 }
 function verificarPagoTargeta(){
   var nro_tarjeta=$("#nro_tarjeta").val();
@@ -1365,7 +1401,7 @@ while($reg=mysqli_fetch_array($rs))
 <tr align='left' class="text-white header">
 	<th colspan="2" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>]</th>
 	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;"><label class="text-white"><b>REGISTRO DE VENTAS</b></label></th>
-	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]</th>
+	<th colspan="4" style="color:#fff;background:#30CA99; font-size: 16px;">[<?php echo $nombreUsuarioSesion?>]<b style=' font-size: 30px !important;color:#000;-webkit-text-stroke: 1px #fff;position:fixed;top:-5px;right:0px;'>[<?php echo $nombreAlmacenSesion;?>]</b></th>
 </tr>
 <tr class="bg-info text-white" align='center' style="color:#fff;background:#16B490 !important; font-size: 16px;">
 <th>Tipo de Doc.</th>
@@ -1562,9 +1598,9 @@ while($dat2=mysqli_fetch_array($resp2)){
 <div id="divProfileData" style="background-color:#FFF; width:1150px; height:550px; position:absolute; top:50px; left:70px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
-			<tr><th>Proveedor</th><th>Forma F.</th><th>Accion T.</th></tr>
+			<tr><th>Proveedor</th><th>Acción Terapéutica</th><th>Principio Activo</th></tr>
 			<tr>
-			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
+			<td width="30%"><select class="selectpicker col-sm-12" name='itemTipoMaterial' id='itemTipoMaterial' data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' style="width:300px"> <!-- data-live-search='true' data-size='6' data-style='btn btn-default btn-lg '-->
 			<?php
 			if($_COOKIE["global_tipo_almacen"]==1){
                  $sqlTipo="select p.cod_proveedor,p.nombre_proveedor from proveedores p
@@ -1587,7 +1623,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 			</select>
 			</td>
-			<td width="40%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemFormaMaterial' style="width:300px">
+			<td width="40%"><select class="selectpicker col-sm-12 d-none" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemFormaMaterial' id='itemFormaMaterial' style="width:300px">
 			<?php
 			$sqlTipo="select pl.cod_forma_far,pl.nombre_forma_far from formas_farmaceuticas pl 
 			where pl.estado=1 order by 2;";
@@ -1601,10 +1637,27 @@ while($dat2=mysqli_fetch_array($resp2)){
 			?>
 
 			</select>
-			</td>
-			<td width="30%"><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemAccionMaterial' style="width:300px">
+			<select class="selectpicker col-sm-12 d-none" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemAccionMaterial' id='itemAccionMaterial' style="width:300px">
 			<?php
-			$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
+			/*$sqlTipo="select pl.cod_accionterapeutica,pl.nombre_accionterapeutica from acciones_terapeuticas pl 
+			where pl.estado=1 order by 2;";
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);*/
+			echo "<option value='0'>--</option>";
+			/*while($datTipo=mysqli_fetch_array($respTipo)){
+				$codTipoMat=$datTipo[0];
+				$nombreTipoMat=$datTipo[1];
+				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+			}*/
+			?>
+
+			</select>
+			<input type='text' placeholder='Acción Terapéutica' name='itemAccionMaterialNom' id='itemAccionMaterialNom' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
+			</td>
+			<td width="30%">
+				<select class="selectpicker col-sm-12 d-none" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemPrincipioMaterial' id='itemPrincipioMaterial' style="width:300px">
+			<?php
+			echo "<option value='0'>--</option>";
+			/*$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
 			where pl.estado=1 order by 2;";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
@@ -1612,27 +1665,18 @@ while($dat2=mysqli_fetch_array($resp2)){
 				$codTipoMat=$datTipo[0];
 				$nombreTipoMat=$datTipo[1];
 				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
-			}
-			?>
-
+			}*/
+			?>                 
 			</select>
+			<input type='text' placeholder='Principio Activo' name='itemPrincipioMaterialNom' id='itemPrincipioMaterialNom' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
 			</td>
-			<tr><th>Principio Act.</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
-	     <tr>		
-			<td><select class="selectpicker col-sm-12" data-live-search='true' data-size='6' data-style='btn btn-default btn-lg ' name='itemPrincipioMaterial' style="width:300px">
-			<?php
-			$sqlTipo="select pl.codigo,pl.nombre from principios_activos pl 
-			where pl.estado=1 order by 2;";
-			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
-			echo "<option value='0'>--</option>";
-			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
-			}
-			?>
-
-			</select>
+			<tr><th>&nbsp;</th><th>Codigo / Producto</th><th>&nbsp;</th></tr>
+	     <tr>
+	     	<td>
+				<div class="custom-control custom-checkbox small float-left">
+                    <input type="checkbox" class="" id="solo_stock" checked="">
+                    <label class="text-dark font-weight-bold" for="solo_stock">&nbsp;&nbsp;&nbsp;Solo Productos con Stock</label>
+                </div>
 			</td>
 			<td>
 				<div class="row">
@@ -1640,13 +1684,15 @@ while($dat2=mysqli_fetch_array($resp2)){
 					<div class="col-sm-9"><input type='text' placeholder='Descripción' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);"></div>				   
 				</div>
 				
-			</td>
-			<td align="center">
-				<input type='button' id="enviar_busqueda" class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">
+			</td>	
+					
+			<td align="center">				
+				<input type='button' id="enviar_busqueda" class='btn btn-info' value='Buscar' onClick="listaMateriales(this.form)">	
+				<a href="#" class="btn btn-warning btn-fab float-right" title="Limpiar Formulario de Busqueda" data-toggle='tooltip' onclick="limpiarFormularioBusqueda();return false;"><i class="material-icons">cleaning_services</i></a>			
 			</td>
  			</tr>
 			
-		</table>
+		</table>		
 		<div id="divListaMateriales">
 		</div>
 	
@@ -1797,13 +1843,13 @@ if($banderaErrorFacturacion==0){
                 <div class="card-body">
 <div class="row">
 	<div class="col-sm-12">
-		         <div class="row">
+		         <div class="row d-none">
                   <label class="col-sm-3 col-form-label">Banco</label>
                   <div class="col-sm-9">
                     <div class="form-group">
                       <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                      	
                           <?php echo "$cadComboBancos"; ?>
-                          <option value="0">Otro</option>
+                          <option value="0" selected>Otro</option>
                        </select>
                     </div>
                   </div>
@@ -2126,14 +2172,14 @@ if($banderaErrorFacturacion==0){
                   </div>
                 </div>
                 <div class="row d-none" id="div_ins_doctor">
-                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
+                  <label class="col-sm-2 col-form-label">Institución (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
                       <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
-                    </div>
+                    </div><label style='font-size:10px;color:red;'>Ej: CLINICA PRIVADA, CENTRO DE SALUD</label><br>                    
                   </div>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                   <label class="col-sm-2 col-form-label">Institución</label>
                   <div class="col-sm-10">
                     <div class="form-group">

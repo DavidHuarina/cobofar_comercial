@@ -1,6 +1,6 @@
 <?php
 if(!isset($_COOKIE["global_usuario"])){
-  ?><script type="text/javascript">$( document ).ready(function() {Swal.fire("ERROR!", "Inicie Sesion!", "error");window.close();});</script><?php
+  ?><script type="text/javascript">$( document ).ready(function() {Swal.fire("ERROR!", "Inicie Sesion!", "error");/*window.close();*/});</script><?php
 }
 set_time_limit(0);
 error_reporting(0);
@@ -40,7 +40,7 @@ if(!function_exists('register_globals')){
 
 }
 
-$enlaceCon=mysqli_connect("p:localhost","root","","farmaciascomercial");
+$enlaceCon=mysqli_connect("p:127.0.0.1","root","","farmaciascomercial");
 //$enlaceCon=mysqli_connect("p:127.0.0.1","root","4868422Marco","ventascobofar");
 if (mysqli_connect_errno())
 {

@@ -200,7 +200,7 @@ function stockProductoFechas($almacen, $item,$fechaActual){
 	$stock2Caja=$cant_ingresos2-$cant_salidas2;
 	//echo $sql_ingresos;
     $cantPres=obtenerCantidadPresentacionProducto($item);    
-
+    mysqli_close($enlaceCon);
 	return $stock2+($stock2Caja*$cantPres);
 }
 
@@ -213,6 +213,7 @@ function precioProductoAlmacen($ciudad, $item){
 	{
        $precio=$dat_detalle[0];
 	}
+	mysqli_close($enlaceCon);
 	return($precio);
 }
 
@@ -235,7 +236,7 @@ function stockProductoVencido($almacen, $item){
 	$stock2Caja=$cant_ingresosCaja;
 
     $cantPres=obtenerCantidadPresentacionProducto($item);
-    
+    mysqli_close($enlaceCon);
 	return $stock2+($stock2Caja*$cantPres);
 }
 
@@ -255,6 +256,7 @@ function stockMaterialesEdit($almacen, $item, $cantidad){
 	}
 	$cadRespuesta=$cadRespuesta+$cantidad;
 	$cadRespuesta=redondear2($cadRespuesta);
+	mysqli_close($enlaceCon);
 	return($cadRespuesta);
 }
 function restauraCantidades($codigo_registro){
@@ -1049,6 +1051,22 @@ function descargarPDFArqueoCaja($nom,$html){
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
 
+  function descargarPDFControlado($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('letter', 'portrait');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(535, 25, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 6, array(0,0,0)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFArqueo.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
 
   function guardarPDFArqueoCaja($nom,$html,$rutaGuardado){
     //aumentamos la memoria  
@@ -1159,6 +1177,42 @@ function obtenerNumeroImpresiones($codSal){
   	$imp=$detalle[0];	
   } 
   return $imp;
+}
+function obtenerMontoVentasHora($desde,$hasta,$sucursal,$hora){
+	$estilosVenta=1;
+	require("conexionmysqli2.inc");
+	$sql="SELECT count(s.cod_salida_almacenes) as cantidad,sum(s.monto_final) as monto,hour(s.hora_salida)hora,s.cod_almacen
+	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	and s.`fecha` BETWEEN '$desde' and '$hasta' and hour(s.hora_salida)='$hora'
+	GROUP BY hour(s.hora_salida),s.cod_almacen;";
+  $resp=mysqli_query($enlaceCon,$sql);
+  $cantidad=0;	
+  $monto=0;				
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $cantidad=$detalle[0]; 
+       $monto=$detalle[1];   		
+  }  
+  mysqli_close($enlaceCon);
+  return array($cantidad,$monto);
+}
+function obtenerMontoVentasHoraTotal($desde,$hasta,$sucursal){
+	$estilosVenta=1;
+	require("conexionmysqli2.inc");
+	$sql="SELECT count(s.cod_salida_almacenes) as cantidad,sum(s.monto_final) as monto,s.cod_almacen
+	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad` in ($sucursal))
+	and s.`fecha` BETWEEN '$desde' and '$hasta'
+	GROUP BY s.cod_almacen;";
+  $resp=mysqli_query($enlaceCon,$sql);
+  $cantidad=0;	
+  $monto=0;				
+  while($detalle=mysqli_fetch_array($resp)){	
+  	   $cantidad=$detalle[0]; 
+       $monto=$detalle[1];   		
+  }  
+  mysqli_close($enlaceCon);
+  return array($cantidad,$monto);
 }
 
 ?>

@@ -84,12 +84,23 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 
 	echo"\n<table class='' align='center' cellSpacing='0' width='50%'>\n";
 	echo "<tr><th align='left' class='text-muted'>Sucursal</th><td><select name='rpt_territorio' data-live-search='true' title='-- Elija una sucursal --'  id='rpt_territorio' multiple data-actions-box='true' data-style='select-with-transition' data-actions-box='true' data-size='10' class='selectpicker form-control' required>";
-	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad>0 order by descripcion";
+$globalAgencia=$_COOKIE["global_agencia"];
+	if($_COOKIE["admin_central"]==1){
+       $sql="select cod_ciudad, descripcion from ciudades where cod_ciudad>0 order by descripcion";    
+	}else{
+	   
+       $sql="select cod_ciudad, descripcion from ciudades where cod_ciudad>0 and cod_ciudad='$globalAgencia' order by descripcion";
+	}
+	
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
-		echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
+		if($codigo_ciudad==$globalAgencia){
+           echo "<option value='$codigo_ciudad' selected>$nombre_ciudad</option>";
+		}else{
+		   echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";	
+		}		
 	}
 	echo "</select></td></tr>";
 
@@ -100,7 +111,7 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_pago=$dat[0];
 		$nombre_pago=$dat[1];
-		echo "<option value='$codigo_pago'>$nombre_pago</option>";
+		echo "<option value='$codigo_pago' selected>$nombre_pago</option>";
 	}
 	echo "</select></td></tr>";
 	

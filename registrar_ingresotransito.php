@@ -67,7 +67,7 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	$dat_materiales=mysqli_fetch_array($resp_materiales);
 	$nombre_material="$dat_materiales[1]";
 
-	echo "<td>$nombre_material</td>";
+	echo "<td>($cod_material) $nombre_material</td>";
 	echo "<input type='hidden' value='$cod_material' name='material$indice_detalle'>";
 	echo "<input type='hidden' value='$cantidad_unitaria' name='cantidad_origen$indice_detalle'>";
 	echo "<input type='hidden' value='$costo_almacen' name='precio$indice_detalle'>";

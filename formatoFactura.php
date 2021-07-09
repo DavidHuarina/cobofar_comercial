@@ -12,6 +12,11 @@
 </script>
 <style type="text/css">
 	body {color:#727371 }
+	/*@media print {
+      body {
+        color:#C2C0C0 !important;
+      }
+    }*/
 </style>
 <?php
 $estilosVenta=1;
@@ -42,7 +47,7 @@ $codigoVenta=$_GET["codVenta"];
 $nroImpresiones=obtenerNumeroImpresiones($codigoVenta);
 $labelNroImpresiones="";
 if($nroImpresiones>0){
-	$labelNroImpresiones="<label class='arial-12'> (R)</label><br>";
+	//$labelNroImpresiones="<label class='arial-12'> (R)</label><br>";
 }
 
 
@@ -158,7 +163,10 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$tipoDoc=$datDatosVenta['nombre'];
 	$codTipoDoc=$datDatosVenta['cod_tipo_doc'];
 }
-$nombreFuncionario=nombreVisitador($cod_funcionario);
+$sqlResponsable="select CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') from funcionarios where codigo_funcionario='".$cod_funcionario."'";
+$respResponsable=mysqli_query($enlaceCon,$sqlResponsable);
+$nombreFuncionario=mysqli_result($respResponsable,0,0);
+//$nombreFuncionario=nombreVisitador($cod_funcionario);
 $y=5;
 $incremento=3;
 ?>

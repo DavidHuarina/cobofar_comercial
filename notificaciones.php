@@ -26,6 +26,15 @@ while($datNoti=mysqli_fetch_array($respNoti)){
       $plural="";
      }    
 }
+
+$nombre_almacen="";
+$sqlAlma="SELECT nombre_almacen from almacenes where cod_almacen='$global_almacen' ";
+$respAlma=mysqli_query($enlaceCon,$sqlAlma);
+while($datAlma=mysqli_fetch_array($respAlma)){
+     $nombre_almacen=strtoupper($datAlma[0]);    
+}
+
+
 $narchivo=explode("/",$_SERVER["REQUEST_URI"]);
 $archivoname=$narchivo[count($narchivo)-1];
 $soloname=explode(".",$archivoname)[0];
@@ -55,9 +64,10 @@ if (Notification) {
 }
 
   $(document).ready(function() {
-    notificacion_navegador('FARMACIAS BOLIVIA','<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?> ','<?=$dirNoti?>imagenes/logoMinka.png');
+    notificacionMD('random','top','right',10,'add_alert','<b style="font-size:30px"><?=$ingresoPendiente?></b> INGRESO<?=$plural?> PENDIENTE<?=$plural?>','<b><?=$nombre_almacen?></b>, Tiene <b style="font-size:20px"><?=$ingresoPendiente?></b> INGRESO<?=$plural?> PENDIENTE<?=$plural?>. Debe registrarlos <a href="<?=$dirNoti?>navegador_ingresotransito.php" target="_blank">aqui</a>.','COBOFAR COMERCIAL - FARMACIAS BOLIVIA');
+    /*notificacion_navegador('FARMACIAS BOLIVIA','<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?> ','<?=$dirNoti?>imagenes/logoMinka.png');*/
 
-  /*Swal.fire({
+  /*<img src="<?=$dirNoti?>imagenes/logoMinka.png" width="40px" height="40px">Swal.fire({
       title: '<?=$ingresoPendiente?> INGRESO<?=$plural?> PENDIENTE<?=$plural?>',
       html:'Debe ingresar los <b>documentos pendientes</b>, ' +
     '<a href="navegador_ingresotransito.php">Aqui</a> ' +

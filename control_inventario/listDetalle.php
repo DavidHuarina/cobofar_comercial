@@ -391,7 +391,7 @@ function enviar_nav(f){
     	}    	
     }
 	echo "<form method='post' action=''>";
-	$sql="SELECT s.codigo,s.cod_material,m.descripcion_material,s.cantidad,s.cantidad_registrada,s.observacion,s.revisado,s.fecha_saldo from $tableDetalle s join material_apoyo m on m.codigo_material=s.cod_material where s.cod_inventariosucursal=$cod_inventario $stringFiltro order by m.descripcion_material";
+	$sql="SELECT s.codigo,s.cod_material,m.descripcion_material,s.cantidad,s.cantidad_registrada,s.observacion,s.revisado,s.fecha_saldo,(SELECT nombre_linea_proveedor FROM proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor)linea from $tableDetalle s join material_apoyo m on m.codigo_material=s.cod_material where s.cod_inventariosucursal=$cod_inventario $stringFiltro order by m.descripcion_material";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>$moduleNamePlural '$nombreTxt'</h1>";
@@ -408,8 +408,9 @@ function enviar_nav(f){
 	echo "<center><table class='table table-sm table-condensed table-bordered'>";
 	echo "<tr class='bg-info text-white'>
 	<th width='1%'>&nbsp;</th>
-	<th>Codigo</th>
+	<th>Codigo</th>	
 	<th width='25%'>Producto</th>
+	<th>Linea</th>
 	<th>Fecha Saldo</th>
 	<th width='3%'>Existencia</th>
 	<th width='3%'>Cantidad Registrada</th>
@@ -456,11 +457,12 @@ function enviar_nav(f){
 			$cantidad_registrada=$dat[3];
 			$dif=0;
 		}
-
+        $lineaProv="<small class='text-muted'>".$dat['linea']."</small>";
 		echo "<tr id='fila$codigo' class='filas'>
 		<td>$index</td>
 		<td style='text-align:left; background:#EEF0E9;color:#000;'>$cod_material</td>
 		<td align='left' style='text-align:left; background:#EEF0E9;color:#000;'>$nombre</td>
+		<td align='left' style='text-align:left; background:#EEF0E9;color:#000;'>$lineaProv</td>
 		<td align='left' style='text-align:left; background:#EEF0E9;color:#000;'><input type='date' value='$fechaSaldo' id='fecha$codigo' class='form-control' min='$fechaSaldo' style='text-align:left; background:#EEF0E9;color:#000;'></td>
 		<td align='right' style='text-align:right' id='cantidad_stock$codigo'>$cantidad</td>
 		<td><input type='hidden' value='$cantidad' id='cantidad$codigo'><input type='number' class='texto' value='$cantidad_registrada' onfocus='marcarFila($codigo)' style='text-align:right' id='cantidad_registrada$codigo' onchange='restarFila($codigo)' onkeyup='restarFila($codigo)' onkeydown='restarFila($codigo)' $readonly></td>

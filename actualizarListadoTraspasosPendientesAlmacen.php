@@ -1,5 +1,5 @@
 <?php
-ini_set('memory_limit','1G');
+//ini_set('memory_limit','1G');
 set_time_limit(0);
 require_once __DIR__.'/conexion_externa_farma.php';
 $estilosVenta=1;
@@ -85,7 +85,7 @@ $fecha_real=date("Y-m-d");
                $sql="DELETE FROM ingreso_pendientes_detalle_almacenes WHERE cod_ingreso_almacen=$codigo";
                $sqlDelete=mysqli_query($enlaceCon,$sql);
                 
-               $sqlDetalle="SELECT CPROD,PREVEN,PREUNIT,HCAN,FECVEN,HCAN1,DCAN,DCAN1,LOTEFAB,DIV FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
+               $sqlDetalle="SELECT CPROD,PREVEN,PREUNIT,HCAN,FECVEN,HCAN1,DCAN,DCAN1,LOTEFAB,DIV,APU  FROM ADETALLE WHERE DCTO=$dctoOrigen AND TIPO='K' AND DAGE1='$age1'";
              //  echo $sqlDetalle."<br>";
         $dbh = new ConexionFarma(); 
         $stmtDetalle = $dbh->prepare($sqlDetalle);
@@ -104,7 +104,8 @@ $fecha_real=date("Y-m-d");
           }
           $fechaVenMaterial=$rowDet["FECVEN"];
           $loteFabMaterial=$rowDet["LOTEFAB"];
-          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial','$fechaVenMaterial','$loteFabMaterial')";
+          $APU=$rowDet["APU"];
+          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote,orden) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioMaterial','$fechaVenMaterial','$loteFabMaterial',$APU)";
           //echo $consultaDetalle."<br>";
           $sql_insertaDetalle = mysqli_query($enlaceCon,$consultaDetalle);
         }
