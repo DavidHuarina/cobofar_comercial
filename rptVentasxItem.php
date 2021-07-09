@@ -29,13 +29,14 @@ echo "<table align='center' class='textotit' width='100%'><tr><td align='center'
 	<br>Territorio: $nombre_territorio <br> De: $fecha_ini A: $fecha_fin
 	<br>Fecha Reporte: $fecha_reporte</tr></table>";
 	
-$sql="select m.`codigo_material`, m.`descripcion_material`, 
+$sql="SELECT m.`codigo_material`, m.`descripcion_material`, 
 	sum(sd.monto_unitario)montoVenta, sum(sd.cantidad_unitaria),sum(sd.cantidad_unitaria*sd.monto_unitario),(SELECT nombre_linea_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor) as linea,(SELECT nombre_proveedor from proveedores where cod_proveedor=(SELECT cod_proveedor from proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor)) as proveedor,m.cod_linea_proveedor
 	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
 	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta'
 	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and
-	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
-	group by m.`codigo_material` ORDER BY s.cod_salida_almacenes desc ";//order by 3 desc;
+	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio') and 
+	s.cod_tiposalida=1001 
+	group by m.`codigo_material` ORDER BY 3 desc ";//order by 3 desc;
 	
 $resp=mysqli_query($enlaceCon,$sql);
 
