@@ -12,8 +12,13 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 require_once __DIR__.'/../conexion_externa_farma.php';
 require_once '../function_web.php';
 
+<<<<<<< HEAD
+$fechaInicio="01/01/2020";
+$fechaFinal="30/06/2021";
+=======
 $fechaInicio="20/05/2021";
 $fechaFinal="20/06/2021";
+>>>>>>> 2bc973a3cf440d088b22c7c50013706300cf052c
 $stringProductos="101401,
 101402,
 101403,
@@ -49,7 +54,7 @@ $stringProductos="101401,
     </tr>
    </thead>
 <?php
-$idprov=12;
+$idprov=759;
 $listAlma=obtenerListadoAlmacenes();
 foreach ($listAlma->lista as $alma) {
       $age1=$alma->age1;

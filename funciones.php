@@ -1,5 +1,11 @@
 <?php
 $estilosVenta=1;
+
+function formatonumeroDec($valor) { 
+   $float_redondeado=number_format($valor, 2); 
+   return $float_redondeado; 
+}
+
 function obtenerValorConfiguracion($id){
 	$estilosVenta=1;
 	require("conexionmysqli2.inc");
