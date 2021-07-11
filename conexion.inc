@@ -6,7 +6,7 @@ if(!function_exists('register_globals')){
 	register_globals();
 }else{
 }
-$conexion=mysql_connect("p:localhost","root","4868422Marco");
+$conexion=mysql_connect("p:10.10.1.11","lunita@10.10.1.155","4868422Marco$");
 $bd=mysql_select_db("cobofar_comercial");
 
 $sqlX="SET NAMES 'utf8'";

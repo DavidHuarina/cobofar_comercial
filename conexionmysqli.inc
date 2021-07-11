@@ -43,7 +43,7 @@ if(!function_exists('register_globals')){
 }
 
 //$enlaceCon=mysqli_connect("127.0.0.1","root","","farmaciasalmacen");
-$enlaceCon=mysqli_connect("p:127.0.0.1","root","4868422Marco","cobofar_comercial");
+$enlaceCon=mysqli_connect("p:10.10.1.11","mluna@10.10.1.155","4868422Marco$","cobofar_comercial");
 
 if (mysqli_connect_errno())
 {
