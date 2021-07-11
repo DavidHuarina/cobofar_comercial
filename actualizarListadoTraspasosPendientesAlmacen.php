@@ -119,7 +119,7 @@ $fecha_real=date("Y-m-d");
           $codMaterial=$rowDet["CPROD"];
           //$precioMaterial=(float)$rowDet["PREUNIT"];//APLICAR EL 
           $precioCosto=(float)$rowDet["PRECOSTO"];//APLICAR EL 
-          $precioMaterial=(float)$rowDet["PREUNIT"]-(float)$rowDet["PREUNIT"]*0.18;//APLICAR EL PORCENTAJE 18% DE DESCUENTO
+          //$precioMaterial=(float)$rowDet["PREUNIT"]-(float)$rowDet["PREUNIT"]*0.18;//APLICAR EL PORCENTAJE 18% DE DESCUENTO
           /*$cantidadMaterial=$rowDet["DCAN"];
           if($cantidadMaterial==0){
             $cantidadMaterial=$rowDet["DCAN1"];
@@ -132,7 +132,7 @@ $fecha_real=date("Y-m-d");
           $fechaVenMaterial=$rowDet["FECVEN"];
           $loteFabMaterial=$rowDet["LOTEFAB"];
           $APU=$rowDet["APU"];
-          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote,orden) values($codigo,$codMaterial,$cantidadMaterial,'$precioMaterial','$precioCosto','$fechaVenMaterial','$loteFabMaterial',$APU)";
+          $consultaDetalle="insert into ingreso_pendientes_detalle_almacenes (cod_ingreso_almacen,cod_material,cantidad_unitaria,precio_bruto,costo_almacen,fecha_vencimiento,lote,orden) values($codigo,$codMaterial,$cantidadMaterial,'$precioCosto','$precioCosto','$fechaVenMaterial','$loteFabMaterial',$APU)";
           //echo $consultaDetalle."<br>";
           $sql_insertaDetalle = mysqli_query($enlaceCon,$consultaDetalle);
         }

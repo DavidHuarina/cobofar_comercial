@@ -254,7 +254,6 @@ function obtenerListadoProveedoresWeb(){
     $dbh = new ConexionFarma();
     $dbh->setHost($ip);
     $sql="SELECT REPLACE((CAST((SELECT count(*) FROM $tabla_detalle WHERE DCTO=$dcto AND TIPO='$tipo') AS CHAR)+
-        CAST((SELECT SUM(APU) FROM $tabla_detalle WHERE DCTO=$dcto AND TIPO='$tipo') AS CHAR)+
         CAST((SELECT SUM(CPROD) FROM $tabla_detalle WHERE DCTO=$dcto AND TIPO='$tipo')AS CHAR)+CAST($dcto AS CHAR)),' ','') AS CODIGO";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -272,10 +271,8 @@ function obtenerListadoProveedoresWeb(){
     $dbh->setHost($ip);
     $dbh->start($ip);
     $sqlDetalle="SELECT CASE
-                      WHEN REPLACE((CAST((SELECT count(*) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO='A') AS CHAR)+
-                          CAST((SELECT SUM(APU) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO='A') AS CHAR)+
-                          CAST((SELECT SUM(CPROD) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO1=$dcto AND v.TIPO='A')AS CHAR)+CAST((SELECT DCTO FROM $tabla WHERE DCTO1=$dcto AND TIPO='A')AS CHAR)),' ','') = '$codigoUnico'
-                        THEN (SELECT DCTO FROM $tabla WHERE DCTO1=$dcto AND TIPO='A')
+                      WHEN REPLACE((CAST((SELECT count(*) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO=$dcto AND v.TIPO='A') AS CHAR)+CAST((SELECT SUM(CPROD) FROM $tabla_detalle vd join $tabla v on vd.DCTO=v.DCTO and vd.TIPO=v.TIPO WHERE v.DCTO=$dcto AND v.TIPO='A')AS CHAR)+CAST((SELECT DCTO FROM $tabla WHERE DCTO=$dcto AND TIPO='A')AS CHAR)),' ','') = '$codigoUnico'
+                        THEN (SELECT DCTO FROM $tabla WHERE DCTO=$dcto AND TIPO='A')
                         ELSE 0
                       END as EXISTE";
     $stmt = $dbh->prepare($sqlDetalle);
@@ -510,3 +507,4 @@ function obtenerValoresSaldosProducto($cod_prod,$ip,$fechaFinal){
   $dbh=null;
   return array($saldoCajas,$saldoUnidad,$fechaVen,$lote);
 }
+

@@ -102,7 +102,7 @@ include("datosUsuario.php");
 include("conexionmysqli2.inc");
 $usuario=$_COOKIE["global_usuario"];
 $link="indexVentas.php";
-if($usuario==2||$usuario==1||$usuario==387||$usuario==392||$usuario==391||$usuario==8||$usuario==22||$usuario==21||$usuario==8){
+if($usuario==2||$usuario==1||$usuario==387||$usuario==392||$usuario==391||$usuario==8||$usuario==22||$usuario==21||$usuario==8||$usuario==5||$usuario==3){
         $link="indexReportes.php";
       }else{      
         if($cod_cargo==1000||$cod_cargo==1001 || $cod_cargo==1017 || $cod_cargo==1018){

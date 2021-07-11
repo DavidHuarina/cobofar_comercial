@@ -507,6 +507,40 @@ function quitarTarjetaVenta(codigo){
     });
 }
 
+
+function removerDolaresPago(codigo){
+    Swal.fire({
+        title: '¿Quitar Dolares?',
+        text: "Se quitará el monto en dolar recibido",
+         type: 'info',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-default',
+        confirmButtonText: 'Quitar',
+        cancelButtonText: 'Cancelar',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            quitarDolaresPago(codigo)               
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+    });   
+}
+function quitarDolaresPago(codigo){
+  var parametros={"codigo":codigo};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveRemoveDolares.php",
+        data: parametros,
+        success:  function (resp) {  
+           window.location.reload();                      
+        }
+    });
+}
+
+
 function guardarTarjetaVenta(){
     var codigo=$("#codigo_salida_tarjeta").val();
     var banco_tarjeta=$("#banco_tarjeta").val();
@@ -769,7 +803,7 @@ $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico
+	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico,monto_cancelado_usd
 	FROM salida_almacenes s, tipos_salida ts 
 	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 $sqlUser ";
 
@@ -803,6 +837,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$nitCli=$dat[13];
     $depositado=$dat['depositado'];
     $codMedico=$dat['cod_medico'];
+    $montoCanceladoUSD=$dat['monto_cancelado_usd'];
 	$montoFactura=number_format($dat['monto_final'],1,'.',',')."0";
     $fechaValidacion=0;
     if($fechaValidacion){
@@ -883,6 +918,10 @@ while ($dat = mysqli_fetch_array($resp)) {
         $htmlImpresion="";
         if($salida_anulada!=1&&$estado_almacen==1){
            $htmlReceta="<a href='#' class='btn btn-primary btn-fab btn-sm' title='<b>REGISTRAR RECETA</b><br>$nro_correlativo<br><i class=\"material-icons test-warning\" style=\"color:".$colorReceta.";font-size:40px;\">medical_services</i>' onclick='guardarRecetaVenta(".$codMedico.",".$codigo.");return false;' data-toggle='tooltip' style='background: ".$colorReceta.";color:#fff;'><i class='material-icons'>medical_services</i></a>";
+
+           if($montoCanceladoUSD>0){
+              $htmlReceta.="<a href='#' class='btn btn-info btn-fab btn-sm' title='<b>QUITAR DOLARES</b><br>$nro_correlativo' onclick='removerDolaresPago(".$codigo.");return false;' data-toggle='tooltip' style='background:#3FDA21; color:#fff;'><i class='material-icons'>money_off</i></a>";            
+           }
         }
       if($fechaValidacion==0&&$salida_anulada!=1&&$estado_almacen==1){ 
         $htmlImpresion="<a href='formatoFactura.php?codVenta=$codigo' target='_BLANK' title='<b>IMPRIMIR FACTURA</b><br>$nro_correlativo<br><img src=\"imagenes/print.png\" width=\"60\" border=\"0\"><span class=\"badge badge-secondary\">R: $nroImpresiones </span>' data-toggle='tooltip'><img src='imagenes/print.png' width='30' border='0'></a>";        

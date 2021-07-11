@@ -15,6 +15,22 @@ function envia_formulario(f)
 	window.open('rptLibroVentas.php?codTipoTerritorio='+codTipoTerritorio+'&codAnio='+codAnio+'&codMes='+codMes+'&tipo='+tipo,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
+function envia_formulario2(f)
+{	var codAnio,codMes,tipo;
+	codAnio=f.cod_anio.value;
+	codMes=f.cod_mes.value;
+	tipo=f.rpt_tipo.value;
+	var codTipoTerritorio=new Array();
+	var j=0;
+	for(var i=0;i<=f.rpt_territorio.options.length-1;i++)
+	{	if(f.rpt_territorio.options[i].selected)
+		{	codTipoTerritorio[j]=f.rpt_territorio.options[i].value;
+			j++;
+		}
+	}
+	window.open('rptLibroVentasAnuladas.php?codTipoTerritorio='+codTipoTerritorio+'&codAnio='+codAnio+'&codMes='+codMes+'&tipo='+tipo,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+	return(true);
+}
 function envia_formularioTXT(f)
 {	var codAnio,codMes,tipo;
 	codAnio=f.cod_anio.value;
@@ -95,9 +111,10 @@ echo "<td width='15%'><select name='rpt_tipo' id='rpt_tipo' data-style='btn btn-
 echo "</select></td></tr>";
 echo "</table></center>";
 
-echo "<div class='divBotones'>
+echo "<div class=''>
 <input type='button' class='boton' value='Reporte HTML' onClick='envia_formulario(this.form)'>
-<input type='button' class='boton' value='Reporte txt' onClick='envia_formularioTXT(this.form)'>";
+<input type='button' class='boton' value='Reporte txt' onClick='envia_formularioTXT(this.form)'>
+<input type='button' class='boton2' value='Reporte Facturas Anuladas' onClick='envia_formulario2(this.form)'>";
 
 echo "</form>";
 ?>

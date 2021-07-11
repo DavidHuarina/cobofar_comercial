@@ -11,7 +11,17 @@ function obtenerValorConfiguracion($id){
 	}
 	return($codigo);
 }
-
+function obtenerEstadoMigradoAlmacen($alma){
+  $estilosVenta=1;
+  require("conexionmysqli2.inc");
+  $sql_detalle="SELECT estado_migrado from almacenes where cod_almacen='$alma'";
+  $estado=0;				
+  $resp=mysqli_query($enlaceCon,$sql_detalle);
+  while($detalle=mysqli_fetch_array($resp)){	
+       $estado=$detalle[0];   		
+  }  
+  return $estado;
+}
 function obtenerInicioActividadesSucursal($id){
 	$estilosVenta=1;
 	require("conexionmysqli2.inc");
@@ -1240,5 +1250,15 @@ where s.`cod_salida_almacenes` = sd.`cod_salida_almacen` and
   mysqli_close($enlaceCon);
   return array($cantidad,$monto);
 }
-
+function obtenerAGE1AnterioirSucursal($almacen){
+	$estilosVenta=1;
+	require("conexionmysqli2.inc");
+	$sql = "SELECT c.codigo_anterior FROM almacenes a join ciudades c on c.cod_ciudad=a.cod_ciudad where a.cod_almacen='$almacen';";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$codigo='';
+	while ($dat = mysqli_fetch_array($resp)) {
+	  $codigo=$dat['codigo_anterior'];
+	}
+	return($codigo);
+}
 ?>

@@ -1,17 +1,18 @@
 <?php
 function obtenerIPAnterioirSucursal($ipCentral,$age1){
+  $age1=utf8_decode($age1);
   set_time_limit(0);
-  require_once __DIR__.'/conexion_externa_farma_solo.php';
   $dbh = conexionSqlServer($ipCentral,"Gestion");  
   $ip="";
   if($dbh!=false){
     $sql="SELECT IP FROM ALMACEN WHERE AGE1='$age1';";
     $stmt=sqlsrv_query($dbh,$sql);    
-    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    while ($row = sqlsrv_fetch_array($stmt)) {
       $ip=$row['IP'];         
     }
     sqlsrv_close($dbh);
-  }  
+  } 
+  //echo utf8_decode($sql)."-IP"; 
   return $ip;
 }
 
@@ -216,15 +217,8 @@ function conexionSqlServer($ip,$database){
   $uid = "sistema";     
   $pwd = "sistema";
   if($ip!="10.10.1.11"){
-     $enlaceCon=mysqli_connect("127.0.0.1","root","","farmaciasalmacen");
-     $sql = "SELECT ip FROM sucursales_minusculas where ip='$ipCon'";
-     $resp = mysqli_query($enlaceCon,$sql);
-     $ipSuc=mysqli_result($resp,0,0);
      $pwd="B0l1v14.@1202";
-     if($serverName==$ipSuc){
-          $pwd="B0l1v14.@1202";
-     }
-  }    
+  }   
   $databaseName = $database;  
   $connectionInfo = array("UID" => $uid, "PWD" => $pwd, "Database"=>$databaseName);  
   $conn = sqlsrv_connect( $serverName, $connectionInfo);  
@@ -233,7 +227,7 @@ function conexionSqlServer($ip,$database){
   }else{  
      return false;
   }  
-  //sqlsrv_close( $conn);  
+  //sqlsrv_close( $conn); 
 }
 
 function cargarValoresVentasYSaldosProductoOficial3($almacen,$ipAlma,$fecha_venta2,$fecha_venta_al2,$fecha_saldo2,$ageAlma,$tipo,$linea){
@@ -421,15 +415,66 @@ function obtenerMontoVentasGeneradasAnterior($dateInicio,$dateFin,$codigoSuc){
   return $montoVenta;
 }
 
-function obtenerAGE1AnterioirSucursal($almacen){
-  $estilosVenta=1;
-  require("conexionmysqli2.inc");
-  $sql = "SELECT c.codigo_anterior FROM almacenes a join ciudades c on c.cod_ciudad=a.cod_ciudad where a.cod_almacen='$almacen';";
-  $resp=mysqli_query($enlaceCon,$sql);
-  $codigo='';
-  while ($dat = mysqli_fetch_array($resp)) {
-    $codigo=$dat['codigo_anterior'];
-  }
-  return($codigo);
+
+function stockProductoFechasAnterior($codAlma, $item,$fechaActual){
+    $estilosVenta=1;
+    $ipCentral="10.10.1.11";
+    $ageAlma=obtenerAGE1AnterioirSucursal($codAlma);
+    $ipAlma=obtenerIPAnterioirSucursal($ipCentral,$ageAlma);
+    
+    $informacion=cargarValoresVentasYSaldosProductoOficialArrayAlmacen($codAlma,$ipAlma,$fechaActual,$ageAlma,1,$item);
+    
+    //INFO PRODUCTO
+    $datosFila=$informacion;               
+    //datos obtenidos
+    $ingresos=$datosFila[0];
+    $ingresos_unidad=$datosFila[1];
+    $salidas=$datosFila[2];
+    $salidas_unidad=$datosFila[3];
+    //modificar proceso que mostrará en el cuadro 
+
+    //STOCK SUCURSAL
+    $totalIngresos=$ingresos_unidad[$codigo_cat]+($ingresos[$codigo_cat]*$cantidad_presentacion);
+    $totalSalidas=abs($salidas_unidad[$codigo_cat])+(abs($salidas[$codigo_cat])*$cantidad_presentacion); 
+    $cantSaldo=number_format($totalIngresos-$totalSalidas,2,'.','');
+    if($cantSaldo<0){
+      $cantSaldo=0;
+    }
+    return $cantSaldo;
 }
 
+
+function cargarValoresVentasYSaldosProductoOficialArrayAlmacen($almacen,$ipAlma,$fecha_saldo2,$ageAlma,$tipo,$productos){
+  $ageAlma=utf8_decode($ageAlma);
+  set_time_limit(0);
+  //$ageAlma=str_replace("\\","\\\\",$ageAlma);
+  $codigoUserScan=$_COOKIE['global_usuario'];
+  //echo $ageAlma."_".$ipAlma;
+  $dbh = conexionSqlServer($ipAlma,"Gestion"); 
+  $ingresos=[];
+  $ingresos_unidad=[];
+  $salida=[];
+  $salida_unidad=[];
+  if($dbh!=false){
+    $error=0;
+    //INGRESOS
+    $sqlIngreso="SELECT D.CPROD,ISNULL(SUM(D.DCAN-D.HCAN),0)INGRESO,ISNULL(SUM(D.DCAN1-D.HCAN1),0)INGRESO_UNIDAD FROM VDETALLE D WHERE D.TIPO in ('A','D','S','I') AND AGE1='$ageAlma' and D.FECHA<='$fecha_saldo2' AND D.CPROD in ($productos) GROUP BY D.CPROD;";
+    $stmt=sqlsrv_query($dbh,$sqlIngreso);
+    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+      $ingresos[$row['CPROD']]=$row['INGRESO']; 
+      $ingresos_unidad[$row['CPROD']]=$row['INGRESO_UNIDAD'];               
+    }
+    //echo $sqlIngreso;
+    //SALIDAS
+    $sqlSalida="SELECT D.CPROD,ISNULL(SUM(D.DCAN-D.HCAN),0)SALIDA,ISNULL(SUM(D.DCAN1-D.HCAN1),0)SALIDA_UNIDAD FROM VDETALLE D WHERE D.TIPO in ('K','F','O') AND AGE1='$ageAlma' and D.FECHA<='$fecha_saldo2' AND D.CPROD in ($productos) GROUP BY D.CPROD;";
+    $stmt=sqlsrv_query($dbh,$sqlSalida);
+    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+      $salida[$row['CPROD']]=$row['SALIDA'];  
+      $salida_unidad[$row['CPROD']]=$row['SALIDA_UNIDAD'];            
+    }
+    //echo $sqlSalida;
+  }else{
+    $error=1;
+  }
+  return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$error);
+}
