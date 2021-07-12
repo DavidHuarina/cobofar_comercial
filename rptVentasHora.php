@@ -79,7 +79,8 @@ $index=0;
       $porcCnt=0; 
     }
     $arrPor['0_'.$i]=$porc;   
-    $arrPorCant['c_0_'.$i]=$porcCnt;    
+    //$arrPorCant['c_0_'.$i]=$porcCnt;    
+    $arrPorCant['0_'.$i]=$porcCnt;    
     ?><tr id="0_<?=$i?>"><td>&nbsp;</td><td><b><?=$hora?></b></td><td align="right"><?=$datos[0]?></td><td align="right"><?=number_format($montoHora,2,'.',',')?></td><td id="c_0_<?=$i?>" align="right"><?=number_format($porcCnt,2,'.','')." %"?></td><td align="right"><?=number_format($porc,2,'.','')." %"?></td></tr>
     <?php       
   }

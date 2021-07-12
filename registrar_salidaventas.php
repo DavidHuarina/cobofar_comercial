@@ -56,6 +56,8 @@ function guardarVentaGeneral(){
             return(false);
           }
     });
+    //$(".swal2-modal").css('background-color', '#000');//Optional changes the color of the sweetalert 
+    $(".swal2-container").css('background-color', 'rgba(43, 165, 137, 1)');//changes the color of the overlay
     return false;
 }
 
@@ -681,6 +683,7 @@ function obtenerLineaMaterial(cod,numRegistro){
         data: parametros,
         success:  function (resp) { 
             $("#cod_material"+numRegistro).attr("title",resp);                             	   
+            $("#cod_material"+numRegistro).append("<br><small class='text-primary'>"+resp+"</small>");                             	   
         }
     });	
 }
@@ -1273,6 +1276,30 @@ function verificarPagoTargeta(){
   	$("#boton_tarjeta").attr("style","background:#96079D");
   }
 }
+function mostrarListadoNits(){
+	var rs=$("#razonSocial").val();
+	//$("#nitCliente").val("");
+	var parametros={"rs":rs};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "listaRazonActual.php",
+        data: parametros,
+        success:  function (resp) { 
+        	var re=resp.split("#####");
+           $("#lista_nits").html(re[0]);  
+           if(parseInt(re[1])==1){
+              asignarNit(re[2]);
+           }else{
+             $("#modalAsignarNit").modal("show");                  	   	
+           }                 
+        }
+    });	
+}
+function asignarNit(nit){
+   $("#nitCliente").val(nit); 
+   $("#modalAsignarNit").modal("hide");      
+}
 </script>
 <?php
 if(!isset($fecha)||$fecha==""){   
@@ -1517,8 +1544,12 @@ $iconVentas2="point_of_sale";
 	
 	<td>
 		<div id='divRazonSocial'>
-			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social" style="text-transform:uppercase;"  onchange='ajaxNitCliente(this.form);' onkeyup="javascript:this.value=this.value.toUpperCase();">
-		</div>
+          <input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razón social" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  onchange='ajaxNitCliente(this.form);'>          
+        </div>
+        <span class="input-group-btn" style="position:absolute;width:10px !important;">
+            <a href="#" class="btn btn-rose btn-sm" onclick="mostrarListadoNits();return false;"><span class="material-icons">person_search</span> Encontrar NIT
+            </a>
+          </span>
 	</td>
 
 	<td align='center'>
@@ -1917,7 +1948,11 @@ if($banderaErrorFacturacion==0){
                                      while($filaObs=mysqli_fetch_array($resp)){
                                      		$codigo=$filaObs[0];
                                      		$nombre=$filaObs[1];	
-                                     		 ?><option value="<?=$codigo;?>"><?=$nombre?></option><?php 
+                                     		if($codigo==4){//no existe prod en el inventario
+                                     		 ?><option value="<?=$codigo;?>" selected><?=$nombre?></option><?php 
+                                     		}else{
+ 											  ?><option value="<?=$codigo;?>"><?=$nombre?></option><?php				
+                                     		}
                                      }
                                     ?>
                                   </select>
@@ -1963,8 +1998,9 @@ if($banderaErrorFacturacion==0){
                       <th>#</th>
                       <th>Producto</th>
                       <th>Sucursal</th>
-                      <th width="45%">Dirección</th>
+                      <th width="40%">Dirección</th>
                       <th>Stock</th>
+                      <th>Precio</th>
                       </tr>
                     </thead>
                     <tbody id="tabla_datos">
@@ -2143,7 +2179,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Nombre (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value=""/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value="" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
@@ -2151,7 +2187,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Apellidos (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
@@ -2159,7 +2195,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Dirección</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
@@ -2167,7 +2203,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Matricula</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
@@ -2175,7 +2211,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Institución (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div><label style='font-size:10px;color:red;'>Ej: CLINICA PRIVADA, CENTRO DE SALUD</label><br>                    
                   </div>
                 </div>
@@ -2193,7 +2229,7 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Especialidad</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6' required>
+                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6' required >
                            <?php echo "$cadComboEspecialidades"; ?>
                        </select>
                     </div>
@@ -2221,13 +2257,13 @@ if($banderaErrorFacturacion==0){
                   <label class="col-sm-2 col-form-label">Nombres</label>
                   <div class="col-sm-4">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value=""/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value="" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                   <label class="col-sm-2 col-form-label">Apellidos</label>
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value=""/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value="" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                   <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest()'><i class='material-icons'>search</i></a>
@@ -2248,6 +2284,31 @@ if($banderaErrorFacturacion==0){
     </div>
   </div>
 <!--    end small modal -->
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAsignarNit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content card">
+               <div class="card-header card-header-rose card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">person_search</i>
+                  </div>
+                  <h4 class="card-title text-rose font-weight-bold">Nit Encontrados</h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                	<table class="table table-sm table-condensed table-bordered"><thead><tr><th class="bg-info">Razón Social</th><th class="bg-info">NIT</th><th class="bg-info">-</th></tr></thead>
+                	<tbody id="lista_nits"></tbody></table>   
+                	<p>Seleccione el NIT correspondiente</p>                  
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>

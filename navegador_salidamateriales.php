@@ -297,8 +297,9 @@ echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>Le
 echo "<div class=''>
 <input type='button' value='Registrar Salida' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
-		<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
+		
 </div>";
+//<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
 
 echo "<div id='divCuerpo'>";
 echo "<center><table class='table table-sm'>";
@@ -413,10 +414,10 @@ echo "</div>";
 echo "<div class=''>
 <input type='button' value='Registrar Salida' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
-		<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
+		
 </div>";
 
-
+//<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
 echo "</form>";
 
 ?>

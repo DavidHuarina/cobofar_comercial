@@ -1170,15 +1170,15 @@ echo "</form>";
                   </button>
                 </div>
                 <div class="card-body">
-<div class="row">
-    <div class="col-sm-6">
         <input type="hidden" id="cod_medico" value="">
         <input type="hidden" id="cod_salida" value="">
+<div class="row">
+    <div class="col-sm-6">
                 <div class="row">
                   <label class="col-sm-2 col-form-label">Nombre (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value=""/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="nom_doctor" required value="" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
@@ -1186,7 +1186,7 @@ echo "</form>";
                   <label class="col-sm-2 col-form-label">Apellidos (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="ape_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
@@ -1194,7 +1194,7 @@ echo "</form>";
                   <label class="col-sm-2 col-form-label">Dirección</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="dir_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
@@ -1202,23 +1202,23 @@ echo "</form>";
                   <label class="col-sm-2 col-form-label">Matricula</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="mat_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                 </div>
-                <div class="row d-none" id="div_ins_doctor">
-                  <label class="col-sm-2 col-form-label">Nombre <br>Institución (*)</label>
+                <div class="row" id="div_ins_doctor">
+                  <label class="col-sm-2 col-form-label">Institución (*)</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required/>
-                    </div>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="n_ins_doctor" id="n_ins_doctor" value="" required style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                    </div><label style='font-size:10px;color:red;'>Ej: CLINICA PRIVADA, CENTRO DE SALUD</label><br>                    
                   </div>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                   <label class="col-sm-2 col-form-label">Institución</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" data-size='6'onchange="nuevaInstitucion();return false;" required>
+                      <select class="selectpicker form-control" name="ins_doctor" id="ins_doctor" data-style="btn btn-primary" data-live-search="true" data-size='6' onchange="nuevaInstitucion();" required>
                            <?php echo "$cadComboInstitucion"; ?>
                        </select>
                     </div>
@@ -1228,7 +1228,7 @@ echo "</form>";
                   <label class="col-sm-2 col-form-label">Especialidad</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6'required>
+                      <select class="selectpicker form-control" name="esp_doctor"id="esp_doctor" data-style="btn btn-info" data-live-search="true" data-size='6' required >
                            <?php echo "$cadComboEspecialidades"; ?>
                        </select>
                     </div>
@@ -1238,7 +1238,7 @@ echo "</form>";
                   <label class="col-sm-2 col-form-label">2da Esp.</label>
                   <div class="col-sm-10">
                     <div class="form-group">
-                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" data-size='6'required>
+                      <select class="selectpicker form-control" name="esp_doctor2"id="esp_doctor2" data-style="btn btn-info" data-live-search="true" data-size='6' required>
                         <option value="0">Ninguna</option>
                           <?php echo "$cadComboEspecialidades"; ?>
                        </select>
@@ -1247,7 +1247,7 @@ echo "</form>";
                 </div>
                 <br>
                 <div class="float-left">
-                        <button class="btn btn-default" onclick="guardarMedicoReceta();return false;">Guardar Nuevo</button>
+                        <button class="btn btn-default" onclick="guardarMedicoReceta();">Guardar Nuevo</button>
                 </div>                 
                 <br><br>
        </div>
@@ -1256,16 +1256,16 @@ echo "</form>";
                   <label class="col-sm-2 col-form-label">Nombres</label>
                   <div class="col-sm-4">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value=""/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_nom_doctor" value="" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
                   <label class="col-sm-2 col-form-label">Apellidos</label>
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value=""/>
+                      <input class="form-control" type="text" style="background: #A5F9EA;" id="buscar_app_doctor" value="" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                   </div>
-                  <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest();return false;'><i class='material-icons'>search</i></a>
+                  <a href="#" class='btn btn-success btn-sm btn-fab float-right' onclick='buscarMedicoTest()'><i class='material-icons'>search</i></a>
                 </div>
                 <br>
 

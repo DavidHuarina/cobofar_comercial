@@ -36,18 +36,18 @@ require("conexionmysqli2.inc");
 
 <td width="10%" align="center">
 	<div id='idstock<?php echo $num;?>'>
-		<input type='hidden' id='stock<?php echo $num;?>' name='stock<?php echo $num;?>' value=''>
+		<input type='hidden' id='stock<?php echo $num;?>' name='stock<?php echo $num;?>' value='' style="font-size:15px;background: #ADF8FA;">
 	</div>
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" min="1" id="cantidad_unitaria<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' name="cantidad_unitaria<?php echo $num;?>" onChange='ajaxPrecioItem(<?php echo $num;?>);' step="1" value="1" required> 
+	<input class="inputnumber" type="number" min="1" id="cantidad_unitaria<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' name="cantidad_unitaria<?php echo $num;?>" onChange='ajaxPrecioItem(<?php echo $num;?>);' step="1" value="1" required style="font-size:15px;background: #ADF8FA;"> 
 </td>
 
 
 <td align="center" width="10%">
 	<div id='idprecio<?php echo $num;?>'>
-		<input class="inputnumber" type="number" min="0.0001" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' onChange='ajaxPrecioItem(<?php echo $num;?>);' step="any" required>
+		<input class="inputnumber" type="number" min="0.0001" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' onChange='ajaxPrecioItem(<?php echo $num;?>);' step="any" required style="font-size:15px;background: #ADF8FA;">
 	</div>
 </td>
 
@@ -64,11 +64,11 @@ require("conexionmysqli2.inc");
 			echo "</select>";
 			//echo $sql1;
 			?>
-	<input class="inputnumber"type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' onChange='ajaxPrecioItem(<?php echo $num;?>);'  value="0" step="0.01" readonly>
+	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='ajaxPrecioItem(<?php echo $num;?>);' onChange='ajaxPrecioItem(<?php echo $num;?>);'  value="0" step="0.01" readonly style="font-size:15px;background: #ADF8FA;">
 </td>
 
 <td align="center" width="15%">
-	<input class="inputnumber" type="number" value="0" id="montoMaterial<?php echo $num;?>" name="montoMaterial<?php echo $num;?>" value="0"  step="0.01"  required readonly> 
+	<input class="inputnumber" type="number" value="0" id="montoMaterial<?php echo $num;?>" name="montoMaterial<?php echo $num;?>" value="0"  step="0.01"  required readonly style="font-size:15px;background: #ADF8FA;"> 
 </td>
 
 <td align="center"  width="10%" ><input class="boton2peque" id="removeFila<?php echo $num;?>" type="button" value="-" onclick="menos(<?php echo $num;?>)" /></td>

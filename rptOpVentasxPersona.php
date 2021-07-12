@@ -82,7 +82,7 @@ echo"<form method='post' action=''>";
 
 	
 	$resp=mysqli_query($enlaceCon,$sql);
-	echo "<option value=''></option>";
+	//echo "<option value=''></option>";
 	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_funcionario=$dat[0];
 		$nombre_funcionario=$dat[1];
