@@ -344,6 +344,7 @@ if($global_tipo_almacen!=2){
 
 <td align='center' id="div_almacen">
 	<select name='almacen' id='almacen'  class='selectpicker form-control' data-style='btn btn-primary' data-live-search='true' data-size='6'>
+		<option value="0">--------</option>
 <?php
 	$sql3="select cod_almacen, nombre_almacen from almacenes where cod_almacen<>'$global_almacen' and cod_tipoalmacen='$global_tipo_almacen' order by nombre_almacen";
 	$resp3=mysqli_query($enlaceCon,$sql3);

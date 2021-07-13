@@ -101,7 +101,8 @@ var parametros={"codigo":codReg};
 function confirmarCodigo(){   
   var cad1=$("input#idtxtcodigo").val();
   var cad2=$("input#idtxtclave").val(); 
-  var parametros={"codigo":cad1,"clave":cad2};
+  var per=$("#rpt_personal").val(); 
+  var parametros={"codigo":cad1,"clave":cad2,"per":per};
   $.ajax({
         type: "GET",
         dataType: 'html',
@@ -110,7 +111,7 @@ function confirmarCodigo(){
         success:  function (resp) { 
             resp=xtrim(resp);
             if(resp=="" || resp=="OK") {
-                location.href='anular_venta.php?codigo_registro='+$("#codigo_salida").val();
+                location.href='anular_venta.php?codigo_registro='+$("#codigo_salida").val()+'&id_caja='+per;
             }else{
                Swal.fire("Error!","El codigo que ingreso es incorrecto","error");
                $("#modalAnularFactura").modal("hide");    
@@ -118,6 +119,20 @@ function confirmarCodigo(){
       }
  }); 
 }
+function actualizarDatosPersonal(){
+    var parametros={"codigo":0};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "depositos/ajaxCalcularDatosPersonal.php",
+        data: parametros,   
+        success:  function (resp) { 
+          //alert(resp);
+          document.getElementById("rpt_personal").innerHTML=resp;
+          $("#rpt_personal").selectpicker('refresh');      
+        }
+    });
+ }
 function confirmarCodigo3(){   
   var cad1=$("input#idtxtcodigo").val();
   var cad2=$("input#idtxtclave").val(); 

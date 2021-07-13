@@ -85,11 +85,11 @@ $sqlAnuladoReal="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.cod_salida_almacenes,s.monto_cancelado_usd,s.tipo_cambio
+	s.hora_salida,s.cod_chofer_anulacion,s.cod_salida_almacenes,s.monto_cancelado_usd,s.tipo_cambio,s.cod_chofer
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
-	and s.fecha_anulacion BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
-
+	and s.fecha_anulacion BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer_anulacion`='$rpt_funcionario' ";
+//echo $sqlAnuladoReal;
 
 if($variableAdmin==1){
 	$sql.=" and s.cod_tipo_doc in (1,2,3,4)";
@@ -116,7 +116,7 @@ echo "<br><table align='center' class='textomediano' width='100%'>
 <tr><th colspan='8'>Detalle de Ventas (EFECTIVO)</th></tr>
 <tr>
 <th>Fecha</th>
-<th>Personal</th>
+<th>Cajero(a)</th>
 <th>Cliente</th>
 <th>Razon Social</th>
 <th>Observaciones</th>
@@ -206,7 +206,7 @@ echo "<br><table align='center' class='textomediano' width='100%'>
 <tr><th colspan='10'>Detalle de Ventas (TARJETA)</th></tr>
 <tr>
 <th>Fecha</th>
-<th>Personal</th>
+<th>Cajero(a)</th>
 <th>Cliente</th>
 <th>Razon Social</th>
 <th>Observaciones</th>
@@ -285,10 +285,11 @@ echo "</table></br>";
 //VENTAS ANULADAS REAL
 
 echo "<br><table align='center' class='textomediano' width='100%'>
-<tr><th colspan='8'>Detalle de Ventas (ANULADAS)</th></tr>
+<tr><th colspan='9'>Detalle de Ventas (ANULADAS)</th></tr>
 <tr>
 <th>Fecha</th>
-<th>Personal</th>
+<th>Cajero(a)</th>
+<th>Cajero(a) Origen</th>
 <th>Cliente</th>
 <th>Razon Social</th>
 <th>Observaciones</th>
@@ -312,13 +313,15 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
 	$horaVenta=$datos[9];
-	$personalCliente=nombreVisitador($datos['cod_chofer']);
+	$personalCliente=nombreVisitador($datos['cod_chofer_anulacion']);
+	$personalClienteOrigen=nombreVisitador($datos['cod_chofer']);
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
 	if($codTipoPago==1){
 		echo "<tr>
 	<td>$fechaVenta $horaVenta</td>
 	<td>$personalCliente</td>
+	<td>$personalClienteOrigen</td>
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
 	<td>$obsVenta</td>
@@ -330,6 +333,7 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 		 echo "<tr style='color:red'>
 	<td><strike>$fechaVenta $horaVenta</strike></td>
 	<td><strike>$personalCliente</strike></td>
+	<td><strike>$personalClienteOrigen</strike></td>
 	<td><strike>$nombreCliente</strike></td>
 	<td><strike>$razonSocial</strike></td>
 	<td><strike>$obsVenta</strike></td>
@@ -342,6 +346,7 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 
 $totalVentaAnuladaFormat=number_format($totalVentaAnuladaReal,2,".",",");
 echo "<tr>
+	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>

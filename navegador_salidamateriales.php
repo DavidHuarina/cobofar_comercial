@@ -298,8 +298,12 @@ echo "<div class=''>
 <input type='button' value='Registrar Salida' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
 		
-</div>";
-//<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
+";
+if($_COOKIE["global_usuario"]==-1){
+     echo "<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>";
+}
+echo "</div>";
+//
 
 echo "<div id='divCuerpo'>";
 echo "<center><table class='table table-sm'>";
@@ -415,7 +419,11 @@ echo "<div class=''>
 <input type='button' value='Registrar Salida' name='adicionar' class='btn btn-primary' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='btn btn-info' onclick='ShowBuscar()'>
 		
-</div>";
+";
+if($_COOKIE["global_usuario"]==-1){
+     echo "<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>";
+}
+echo "</div>";
 
 //<input type='button' value='Anular Salida' class='btn btn-danger' onclick='anular_salida(this.form)'>
 echo "</form>";

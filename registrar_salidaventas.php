@@ -57,7 +57,7 @@ function guardarVentaGeneral(){
           }
     });
     //$(".swal2-modal").css('background-color', '#000');//Optional changes the color of the sweetalert 
-    $(".swal2-container").css('background-color', 'rgba(43, 165, 137, 1)');//changes the color of the overlay
+    //$(".swal2-container").css('background-color', 'rgba(43, 165, 137, 1)');//changes the color of the overlay
     return false;
 }
 

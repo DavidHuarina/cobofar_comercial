@@ -49,7 +49,14 @@ while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	}
 }
 
-$sql="update salida_almacenes set salida_anulada=1, estado_salida=3,fecha_anulacion=NOW() where cod_salida_almacenes='$codigo_registro'";
+$codChoferAnulacion=$_COOKIE["global_usuario"];
+if(isset($_GET["id_caja"])){
+   if($_GET["id_caja"]>0){
+   	  $codChoferAnulacion=$_GET["id_caja"];
+   } 
+}
+
+$sql="update salida_almacenes set salida_anulada=1, estado_salida=3,fecha_anulacion=NOW(),cod_chofer_anulacion='$codChoferAnulacion' where cod_salida_almacenes='$codigo_registro'";
 $resp=mysqli_query($enlaceCon,$sql);
 
 $sql="update facturas_venta set cod_estado=2 where cod_venta='$codigo_registro'";
@@ -62,8 +69,13 @@ if($banderaCorreo==1){
 	header("location:sendEmailVenta.php?codigo=$codigo_registro&evento=2&tipodoc=1");
 }else{
 	echo "<script language='Javascript'>
-		alert('El registro fue anulado.');
-		location.href='navegadorVentas.php';
+	Swal.fire({
+    title: 'Anulado!',
+    text: 'La venta fue anulada.',
+    type: 'success'
+}).then(function() {
+    location.href='navegadorVentas.php';
+});
 		</script>";	
 }
 

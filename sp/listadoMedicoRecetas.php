@@ -1,33 +1,15 @@
 <?php
+header("Pragma: public");
+header("Expires: 0");
+$filename = "datos_market.xls";
+header("Content-type: application/x-msdownload");
+header("Content-Disposition: attachment; filename=$filename");
+header("Pragma: no-cache");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+
 require_once __DIR__.'/../conexion_externa_farma.php';
 require_once '../function_web.php';
-?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>
-   MEDICOS - RECETAS
-  </title>
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-</head>
-<body class="bg-conexion">
-  <style type="text/css"> 
-        thead tr th { 
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background-color: #ffffff;
-        }
-    
-        .table-responsive { 
-            height:200px;
-            overflow:scroll;
-        }
-    </style>
-<br><br>
-<?php 
+
 $fechaInicio="01/01/2021";
 $fechaFinal="30/06/2021";
 
@@ -98,6 +80,3 @@ foreach ($listAlma->lista as $alma) {
 </div>
 <br><br>
  </center>
-
-</body>
-</html>

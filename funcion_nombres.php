@@ -59,6 +59,14 @@ $sql="select concat(paterno,' ',nombres) from funcionarios where codigo_funciona
 	return($nombre);
 }
 
+function nombreFuncionarioReal($codigo)
+{	require("conexionmysqli2.inc");
+$sql="select concat(nombres,' ',materno,' ',paterno) from funcionarios where codigo_funcionario='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$nombre=mysqli_result($resp,0,0);
+	return($nombre);
+}
+
 function nombreTerritorio($codigo)
 {	require("conexionmysqli2.inc");
 $sql="select descripcion from ciudades where cod_ciudad='$codigo'";
