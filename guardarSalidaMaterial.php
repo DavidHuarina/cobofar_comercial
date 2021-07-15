@@ -169,7 +169,7 @@ if($sql_inserta==1){
     }
 
 
-	if($facturacionActivada==1){
+	if($facturacionActivada==1 && $tipoDoc==1){
 		//insertamos la factura
 		$sqlInsertFactura="insert into facturas_venta (cod_dosificacion, cod_sucursal, nro_factura, cod_estado, razon_social, nit, fecha, importe, 
 		codigo_control, cod_venta) values ('$cod_dosificacion','$globalSucursal','$nro_correlativo','1','$razonSocial','$nitCliente','$fecha','$totalFinal',
@@ -213,7 +213,7 @@ if($sql_inserta==1){
 	$sqlUpdMonto="update salida_almacenes set monto_total='$montoTotalVentaDetalle', monto_final='$montoTotalConDescuento' 
 				where cod_salida_almacenes='$codigo'";
 	$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-	if($facturacionActivada==1){
+	if($facturacionActivada==1 && $tipoDoc==1){
 		$sqlUpdMonto="update facturas_venta set importe='$montoTotalConDescuento' 
 					where cod_venta='$codigo'";
 		$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);

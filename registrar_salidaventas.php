@@ -1455,7 +1455,6 @@ while($reg=mysqli_fetch_array($rs))
 		$resp=mysqli_query($enlaceCon,$sql);
 
 		echo "<select class='selectpicker form-control' data-style='btn-info' name='tipoDoc' id='tipoDoc' onChange='ajaxNroDoc(form1)' required>";
-		echo "<option value=''>-</option>";
 		while($dat=mysqli_fetch_array($resp)){
 			$codigo=$dat[0];
 			$nombre=$dat[1];

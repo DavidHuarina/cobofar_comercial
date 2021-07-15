@@ -33,7 +33,7 @@ $sql="select s.`fecha`,
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
 	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' and 
-	s.cod_tipo_doc in ($codTipoDoc)";
+	s.cod_tipo_doc in (1,4)";
 
 if($rpt_ver==1){
 	$sql.=" and s.estado_salida=4 ";

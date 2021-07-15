@@ -100,6 +100,7 @@ if($variableAdmin==1){
 	$sqlTarjetas.=" and s.cod_tipo_doc in (1,4)";
 	$sqlAnuladoReal.=" and s.cod_tipo_doc in (1,4)";
 }
+
 $sql.=" order by s.fecha, s.hora_salida";
 $sqlTarjetas.=" order by s.fecha, s.hora_salida";
 $sqlAnuladoReal.=" order by s.fecha, s.hora_salida";
@@ -113,13 +114,12 @@ $respAnuladoReal=mysqli_query($enlaceCon,$sqlAnuladoReal);
 
 
 echo "<br><table align='center' class='textomediano' width='100%'>
-<tr><th colspan='8'>Detalle de Ventas (EFECTIVO)</th></tr>
+<tr><th colspan='7'>Detalle de Ventas (EFECTIVO)</th></tr>
 <tr>
 <th>Fecha</th>
 <th>Cajero(a)</th>
 <th>Cliente</th>
 <th>Razon Social</th>
-<th>Observaciones</th>
 <th>TipoPago</th>
 <th>Documento</th>
 <th>Monto [Bs]</th>
@@ -166,7 +166,6 @@ while($datos=mysqli_fetch_array($resp)){
 	<td>$personalCliente</td>
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
-	<td>$obsVenta</td>
 	<td>$nombreTipoPago</td>
 	<td>$datosDoc</td>
 	<td align='right'>$montoVentaFormat</td>
@@ -177,7 +176,6 @@ while($datos=mysqli_fetch_array($resp)){
 	<td><strike>$personalCliente</strike></td>
 	<td><strike>$nombreCliente</strike></td>
 	<td><strike>$razonSocial</strike></td>
-	<td><strike>$obsVenta</strike></td>
 	<td><strike>$nombreTipoPago</strike></td>
 	<td><strike>$datosDoc</strike></td>
 	<td align='right'>$montoVentaFormat</td>
@@ -193,7 +191,6 @@ echo "<tr>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
-	<td>&nbsp;</td>
 	<th>Total Efectivo:</th>
 	<th align='right'>$totalEfectivoF</th>
 </tr>";
@@ -203,13 +200,12 @@ echo "</table></br>";
 
 
 echo "<br><table align='center' class='textomediano' width='100%'>
-<tr><th colspan='10'>Detalle de Ventas (TARJETA)</th></tr>
+<tr><th colspan='9'>Detalle de Ventas (TARJETA)</th></tr>
 <tr>
 <th>Fecha</th>
 <th>Cajero(a)</th>
 <th>Cliente</th>
 <th>Razon Social</th>
-<th>Observaciones</th>
 <th>TipoPago</th>
 <th>Documento</th>
 <th>Banco</th>
@@ -254,7 +250,6 @@ while($datos=mysqli_fetch_array($respTarjeta)){
 	<td>$personalCliente</td>
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
-	<td>$obsVenta</td>
 	<td>$nombreTipoPago</td>
 	<td>$datosDoc</td>
 	<td>$bancoNombre</td>
@@ -265,7 +260,6 @@ while($datos=mysqli_fetch_array($respTarjeta)){
 
 $totalVentaFormat=number_format($totalVenta,2,".",",");
 echo "<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
@@ -285,14 +279,13 @@ echo "</table></br>";
 //VENTAS ANULADAS REAL
 
 echo "<br><table align='center' class='textomediano' width='100%'>
-<tr><th colspan='9'>Detalle de Ventas (ANULADAS)</th></tr>
+<tr><th colspan='8'>Detalle de Ventas (ANULADAS)</th></tr>
 <tr>
 <th>Fecha</th>
 <th>Cajero(a)</th>
 <th>Cajero(a) Origen</th>
 <th>Cliente</th>
 <th>Razon Social</th>
-<th>Observaciones</th>
 <th>TipoPago</th>
 <th>Documento</th>
 <th>Monto [Bs]</th>
@@ -324,7 +317,6 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	<td>$personalClienteOrigen</td>
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
-	<td>$obsVenta</td>
 	<td>$nombreTipoPago</td>
 	<td>$datosDoc</td>
 	<td align='right'>$montoVentaFormat</td>
@@ -336,7 +328,6 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 	<td><strike>$personalClienteOrigen</strike></td>
 	<td><strike>$nombreCliente</strike></td>
 	<td><strike>$razonSocial</strike></td>
-	<td><strike>$obsVenta</strike></td>
 	<td><strike>$nombreTipoPago</strike></td>
 	<td><strike>$datosDoc</strike></td>
 	<td align='right'><strike>$montoVentaFormat</strike></td>
@@ -346,7 +337,6 @@ while($datos=mysqli_fetch_array($respAnuladoReal)){
 
 $totalVentaAnuladaFormat=number_format($totalVentaAnuladaReal,2,".",",");
 echo "<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
@@ -380,26 +370,26 @@ $totalIngresosFormat=number_format($totalIngresos,2,".",",");
 echo "<br><table align='center' class='textomediano' width='100%'>";
 
 $totalVentaFormat=number_format($totalVenta,2,".",",");
-echo "<tr>
+echo "<tr style='font-size:15px;'>
 	<th>Total Efectivo:</th>
 	<th align='right'>$totalEfectivoF</th>
 </tr>";
-echo "<tr>
+echo "<tr style='font-size:15px;'>
 	<th>Total Tarjeta Deb/Cred:</th>
 	<th align='right'>$totalTarjetaF</th>
 </tr>";
-echo "<tr><th>Total Ventas Anuladas  </th>
+echo "<tr style='font-size:15px;'><th>Total Ventas Anuladas  </th>
 <th align='right'>$saldoCajaChica4F</th>
 </tr>";
-echo "<tr>
+echo "<tr style='font-size:25px;'>
 	<th>Total a Depositar (Bs):</th>
 	<th align='right'>$saldoCajaChica6F</th>
 </tr>";
-echo "<tr style='color:green'>
+echo "<tr style='color:green;font-size:25px;'>
 	<th>Monto Recibido (USD):</th>
 	<th align='right'>$totalEfectivoFUSD ($)</th>
 </tr>";
-echo "<tr>
+echo "<tr style='font-size:25px;'>
 	<th>Total Ingresos:</th>
 	<th align='right'>$totalIngresosFormat</th>
 </tr>";
@@ -409,11 +399,11 @@ $html = ob_get_clean();
 
 $nombreFuncionario=nombreVisitador($rpt_funcionario);
 if(!isset($_GET["ruta"])){	
-	descargarPDFArqueoCaja("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html);	
+	descargarPDFArqueoCajaVertical("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html);	
 }else{
 	$rutaCompleta=$_GET["ruta"];
 	$rutaCompleta=str_replace("@","/",$rutaCompleta);
-	guardarPDFArqueoCaja("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html,$rutaCompleta);
+	guardarPDFArqueoCajaVertical("Cierre.".strftime('%d-%m-%Y',strtotime($fecha_ini)).".".$nombreFuncionario,$html,$rutaCompleta);
 	echo "<script language='Javascript'>
       alert('Los datos fueron registrados exitosamente.');
       location.href='depositos/list.php';

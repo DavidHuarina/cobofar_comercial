@@ -1066,6 +1066,21 @@ function descargarPDFArqueoCaja($nom,$html){
     $mydompdf->set_base_path('assets/libraries/plantillaPDFArqueo.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
+  function descargarPDFArqueoCajaVertical($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('legal', 'portrait');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 970, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFArqueo.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
 
   function descargarPDFControlado($nom,$html){
     //aumentamos la memoria  
@@ -1091,6 +1106,25 @@ function descargarPDFArqueoCaja($nom,$html){
     require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
     $mydompdf = new DOMPDF();
     $mydompdf->set_paper('legal', 'landscape');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+
+    $output = $mydompdf->output();
+    $directorio=explode("/Cierre",$rutaGuardado)[0];
+    if(!file_exists($directorio)){
+         mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+    }
+    //echo $rutaGuardado;
+    file_put_contents($rutaGuardado, $output);
+  }
+  function guardarPDFArqueoCajaVertical($nom,$html,$rutaGuardado){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('legal', 'portrait');
     ob_clean();
     $mydompdf->load_html($html);
     $mydompdf->render();

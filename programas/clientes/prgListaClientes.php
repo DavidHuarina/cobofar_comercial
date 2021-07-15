@@ -21,7 +21,7 @@ echo "</tr>";
 $consulta="
     SELECT c.cod_cliente, c.nombre_cliente, c.nit_cliente, c.dir_cliente, c.cod_area_empresa, a.descripcion,c.paterno
     FROM clientes AS c INNER JOIN ciudades AS a ON c.cod_area_empresa = a.cod_ciudad 
-    WHERE 1 = 1 ORDER BY c.nombre_cliente ASC
+    WHERE 1 = 1  and c.codcliente!=146 ORDER BY c.nombre_cliente ASC
 ";
 $rs=mysqli_query($enlaceCon,$consulta);
 $cont=0;

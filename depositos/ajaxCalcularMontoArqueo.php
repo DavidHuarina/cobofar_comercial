@@ -31,7 +31,7 @@ $sql="select s.`fecha`,
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
-	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio
+	s.hora_salida,s.cod_chofer,s.monto_cancelado_usd,s.tipo_cambio,s.salida_anulada
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1)
 	and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha_iniconsultahora' and '$fecha_finconsultahora' and s.`cod_chofer`='$rpt_funcionario' ";
@@ -99,8 +99,10 @@ while($datos=mysqli_fetch_array($resp)){
 		$totalEfectivoUsd+=$montoDolares;
 		$totalEfectivo+=$montoVenta;
 	}else{
-		$montoVenta=number_format($montoVenta,1,'.','');
-		$totalTarjeta+=$montoVenta;
+		if($datos['salida_anulada']==0){
+		  $montoVenta=number_format($montoVenta,1,'.','');
+		  $totalTarjeta+=$montoVenta;
+		}
 	}
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	$totalEfectivoF=number_format($totalEfectivo,2,".",",");

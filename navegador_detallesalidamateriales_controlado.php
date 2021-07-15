@@ -143,7 +143,7 @@ $horaImp=date("H:i");
 	echo "<form method='post' action=''>";
 	
 	$sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_vencimiento, 
-		s.cantidad_unitaria, s.precio_unitario, s.`descuento_unitario`, s.`monto_unitario`,s.cantidad_envase,(SELECT nombre_proveedor FROM proveedores where cod_proveedor=(SELECT cod_proveedor FROM proveedores_lineas where cod_linea_proveedor=151))nombre_proveedor 
+		s.cantidad_unitaria, s.precio_unitario, s.`descuento_unitario`, s.`monto_unitario`,s.cantidad_envase,(SELECT nombre_proveedor FROM proveedores where cod_proveedor=(SELECT cod_proveedor FROM proveedores_lineas where cod_linea_proveedor=m.cod_linea_proveedor))nombre_proveedor 
 		from salida_detalle_almacenes s, material_apoyo m
 		where s.cod_salida_almacen='$codigo' and s.cod_material=m.codigo_material";
 	//echo $sql_detalle;
