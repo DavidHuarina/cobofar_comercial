@@ -120,12 +120,12 @@ function guardarPedidoDesdeFacturacion(guardar){
     
     var index=0;
     for (var i=1; i<=parseInt(cantidad_material); i++) {
-    	//if(parseInt($("#stock"+i).val())==0){
+    	if($("#stock"+i).length>0){
             index++;
             //objeto en string para cambiar el nombre al post   
             var detalle='{"stock'+index+'":'+$("#stock"+i).val()+',"materiales'+index+'":'+$("#materiales"+i).val()+',"cantidad_unitaria'+index+'":'+$("#cantidad_unitaria"+i).val()+',"precio_unitario'+index+'":'+$("#precio_unitario"+i).val()+',"descuentoProducto'+index+'":'+$("#descuentoProducto"+i).val()+',"montoMaterial'+index+'":'+$("#montoMaterial"+i).val()+'}'; 
             parametros = Object.assign(parametros,JSON.parse(detalle)); //unir el obtejo detalle al obtejo principal
-    	//}
+    	}
     }
 
 	//PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    

@@ -16,8 +16,8 @@ $globalAgencia=$_COOKIE["global_agencia"];
 $globalFuncionario=$_COOKIE["global_usuario"];
 
 $fecha_actual = date("d-m-Y");
-$fechaMinimaVenta= date("Y-m-d",strtotime($fecha_actual."- 1 week")); 
-$sql="SELECT f.codigo_funcionario,CONCAT(f.paterno,' ',f.materno,' ',f.nombres)personal FROM funcionarios f WHERE f.codigo_funcionario in (SELECT codigo_funcionario from funcionarios_agencias where cod_ciudad='$globalAgencia') or f.codigo_funcionario in (select DISTINCT cod_chofer from salida_almacenes where cod_almacen in (SELECT cod_almacen from almacenes where cod_ciudad='$globalAgencia') and fecha>='$fechaMinimaVenta' and cod_chofer!=-1) order by paterno,materno,nombres";	
+$fechaMinimaVenta= date("Y-m-d",strtotime($fecha_actual."")); 
+$sql="SELECT f.codigo_funcionario,CONCAT(f.paterno,' ',f.materno,' ',f.nombres)personal FROM funcionarios f WHERE f.codigo_funcionario in (select DISTINCT cod_chofer from salida_almacenes where cod_almacen in (SELECT cod_almacen from almacenes where cod_ciudad='$globalAgencia') and fecha>='$fechaMinimaVenta' and cod_chofer!=-1) order by paterno,materno,nombres";	
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
 	while($dat=mysqli_fetch_array($resp))

@@ -1,16 +1,18 @@
 <?php
 require("conexionmysqli.inc");
 require("estilos.inc");
+require("funcion_nombres.php");
 
 $fechaInicio=$_POST['exafinicial'];
 $fechaFinal=$_POST['exaffinal'];
 
-
-echo "<h1>Reporte Marcados de Personal</h1>";
-$globalCiudad=$_COOKIE["global_agencia"];
+$globalCiudad=$_POST['rpt_territorio'];
+$nombreTerritorio=nombreTerritorio($globalCiudad);
+echo "<h1>Reporte Marcados de Personal - $nombreTerritorio</h1>";
+//$globalCiudad=$_COOKIE["global_agencia"];
 $sqlPersonal="select distinct(f.codigo_funcionario), concat(f.paterno,' ',f.materno,' ',f.nombres) from marcados_personal m, funcionarios f
 where f.codigo_funcionario=m.cod_funcionario and 
-m.fecha_marcado BETWEEN '$fechaInicio 00:00:00' and '$fechaFinal 23:59:59' and f.cod_ciudad='$globalCiudad'";
+m.fecha_marcado BETWEEN '$fechaInicio 00:00:00' and '$fechaFinal 23:59:59' and f.codigo_funcionario in (select DISTINCT cod_chofer from salida_almacenes where cod_almacen in (SELECT cod_almacen from almacenes where cod_ciudad='$globalCiudad') and fecha>='$fechaInicio' and fecha<='$fechaFinal' and cod_chofer!=-1)";
 $respPersonal=mysqli_query($enlaceCon,$sqlPersonal);
 
 echo "<center><table class='table table-bordered'>";
